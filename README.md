@@ -1,4 +1,4 @@
-# soudegesu.github.io
+# blog
 github pages with Jekyll.
 
 ## Requirements
