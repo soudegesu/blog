@@ -1,0 +1,7 @@
+# /_data/authors.yml
+
+soudegesu:
+  name: "soudegesu"
+  #avatar: "avatar_icon.png"  # 丸囲みの枠内に表示したい画像のファイル名を指定する (images/ 配下にファイルを置いておく)
+  bio: "Software engineer"
+  twitter: "alten_manten"
