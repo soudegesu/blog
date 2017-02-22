@@ -23,7 +23,7 @@ gem install bundler
 bundle install --path vendor/bundler
 ```
 
-* build
+* build(local)
 ```
-bundle exec jekyll serve -s docs -w
+bundle exec jekyll serve -s docs -w --config _config.yml,_config_dev.yml
 ```
