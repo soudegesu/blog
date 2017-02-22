@@ -27,15 +27,17 @@ exclude:
 
 defaults:
   - scope:
-    path: ""
-    type: posts
-  values:
-    author_profile: true
-    layout: single
-    read_time: true
-    comments: true
-    share: true
-    related: true
+      path: ""
+      type: posts
+    values:
+      author_profile: true
+      layout: single
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      sidevar:
+        nav: docs
 
 # Site Author
 # see _data/authors.yml
@@ -54,7 +56,7 @@ social:
 analytics:
   provider: "google-universal"
   google:
-    tracking_id: "UA-1234567-8"
+    tracking_id: ""
 
 # Timezone
 timezone: Asia/Tokyo
