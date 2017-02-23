@@ -15,6 +15,7 @@ url: "https://soudegesu.github.io"
 baseurl: "/blog"
 repository: "soudegesu/blog"
 teaser: "/assets/images/soudegesu.jpg"
+theme: minimal-mistakes-jekyll
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
 comments:
