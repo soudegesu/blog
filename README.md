@@ -25,5 +25,5 @@ bundle install --path vendor/bundler
 
 * build(local)
 ```
-bundle exec jekyll serve -s docs -w --config _config.yml,_config_dev.yml
+bundle exec jekyll serve -s docs -w --config docs/_config.yml,docs/_config_dev.yml
 ```
