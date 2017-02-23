@@ -2,4 +2,4 @@
 .sass-cahce
 
 _site
-vendor
+/vendor
