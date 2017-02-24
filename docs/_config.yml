@@ -12,7 +12,7 @@ title_separator: "-"
 name: "soudegsu"
 description: "記憶力が乏しいのでメモる"
 url: "http://www.soudegesu.com"
-baseurl: "/blog"
+baseurl: ""
 repository: "soudegesu/blog"
 teaser: "/assets/images/soudegesu.jpg"
 theme: minimal-mistakes-jekyll
