@@ -6,7 +6,7 @@ categories: docker
 
 自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。
 
-#### Dockerfile を作成する
+## Dockerfile を作成する
 
 まず、dockerのバージョンが古かったので、[公式サイト](https://www.docker.com/products/docker#/mac)からmac用のdockerを再度ダウンロードし、アップデートしておきます。
 
@@ -42,7 +42,7 @@ RUN echo "finished setup !!"
 
 ```
 
-#### Dockerfile をビルドしてイメージを作成する
+## Dockerfile をビルドしてイメージを作成する
 
 `docker build` コマンドを実行すると以下のようなエラーが出ました。
 
@@ -83,7 +83,7 @@ Step 3/3 : RUN echo "finished setup !!"
 (以下略)
 ```
 
-#### コンテナを起動して確認する
+## コンテナを起動して確認する
 
 次に `docker run` コマンドでコンテナを起動しましょう。 コンテナ起動後にコンテナ内で操作を行う場合に以下のオプションは良く利用されます。
 * -i：コンテナの標準入力を開きます

@@ -8,7 +8,7 @@ categories: docker docker-compose
 
 個人的にはcliのオプション指定が長くなっていくのがあまり好きではないので、今回はdocker-composeを使用して、もう少しお手軽に起動にこぎつけたいと思います。
 
-#### docker-compose をインストールする
+## docker-compose をインストールする
 以下のサイトからdocker-toolboxをインストールしましょう。
 その中にdocker-composeも含まれています。
 
@@ -55,7 +55,7 @@ dockerfileの箇所に作成したDockerfileを指定しておくことで、起
 
 なお、mysqlの公式のコンテナの場合、コンテナ内のdocker-entrypoint-initdb.dをホスト上の任意のディレクトリを対象としてアタッチすることで、起動時にディレクトリ配下のsqlを流し込んで初期化してくれます。
 
-#### docker-compose で起動する
+## docker-compose で起動する
 それでは起動してみましょう。
 
 ```
@@ -126,7 +126,7 @@ mysql> show tables;
 
 ```
 
-#### ちなみに
+## ちなみに
 既存のimageを使用して `docker-compose up` を実行することも可能です。場合に応じて設定を変更してください。
 
 ```
