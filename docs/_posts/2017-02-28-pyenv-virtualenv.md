@@ -49,7 +49,7 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 *hoge* ディレクトリ配下を任意のpythonバージョンで動作するようにしましょう。
 pythonのバージョンを確認しておきます。
 ``` bash
-makedir hoge
+mkdir hoge
 cd hoge
 python -V
 > Python 2.7.6
