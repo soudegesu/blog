@@ -5,7 +5,9 @@ categories: tensorflow
 tags: tensorflow
 ---
 
-anacondaの仮想環境に対して、tensorflowをインストールします。
+ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。
+
+今回はanacondaの仮想環境に対して、tensorflowをインストールします。
 
 ## 環境
 * Anaconda 4.3.0
@@ -30,7 +32,7 @@ anaconda の方でのパッケージ管理でインストール可能かを調�
 
 * pypi
 
-`` bash
+``` bash
 anaconda search -t pypi tensorflow
 
 >Using Anaconda API: https://api.anaconda.org
