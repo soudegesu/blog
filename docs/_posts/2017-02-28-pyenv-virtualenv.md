@@ -2,6 +2,9 @@
 title: "pyenvとpyenv-virtualenvでanacondaと共存する"
 date: 2017-02-28 11:49:00 +0900
 categories: pyenv anaconda
+tags: python pyenv pyenv-virtualenv anaconda
+permalink: /python/pyenv/anaconda
+
 ---
 ## はじめに
 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
