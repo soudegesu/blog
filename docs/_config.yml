@@ -15,7 +15,7 @@ url: "https://www.soudegesu.com"
 baseurl: ""
 repository: "soudegesu/blog"
 teaser: "/assets/images/soudegesu.jpg"
-theme: jekyll-theme-architect
+theme: minimal-mistakes-jekyll
 breadcrumbs: true
 words_per_minute: 200
 comments:

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 gem 'github-pages', group: :jekyll_plugins
-gem "jekyll-theme-architect"
+gem "minimal-mistakes-jekyll"
 
 group :jekyll_plugins, :test do
   gem "jekyll-archives"
