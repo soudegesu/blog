@@ -42,7 +42,9 @@ DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメイ�
 そのため
 * 「Create record in Route 53」 でCNAMEレコードを作成し
 *  少し待つ(10分くらい?)
-で検証が終了します。ね、簡単でしょう？
+で検証が終了します。
+
+ね、簡単でしょう？
 
 ![add_cname_records]({{site.baseurl}}/assets/images/20180131/add_record.png)
 
