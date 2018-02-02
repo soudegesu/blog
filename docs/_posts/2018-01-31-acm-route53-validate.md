@@ -12,7 +12,7 @@ permalink: /blog/aws/validate-certification-manager
 
 ## Route53でCertification Managerのドメイン検証ができるようになった
 
-![acm_validate]({{site.baseurl}}/images/20180131/acm_validate.png)
+![acm_validate]({{site.baseurl}}/assets/images/20180131/acm_validate.png)
 
 [DNS を使って AWS Certificate Manager の検証を簡単に](https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/)
 の記事にも記載があるように、2017/11に `AWS Certification Manager(以下ACM)` のSSL証明書取得の際の検証手順に *Route53のDNS検証* が追加されました。実はこれは、ACMで取得したSSL証明書の *取得* だけではなく *更新* においてもとても大きな利点があるので、今回はそれを紹介します。
@@ -44,7 +44,7 @@ DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメイ�
 *  少し待つ(10分くらい?)
 で検証が終了します。ね、簡単でしょう？
 
-![add_cname_records]({{site.baseurl}}/images/20180131/add_record.png)
+![add_cname_records]({{site.baseurl}}/assets/images/20180131/add_record.png)
 
 ## SSL証明書"更新"の違い
 ### ACMのSSL証明書有効期限は13ヶ月
