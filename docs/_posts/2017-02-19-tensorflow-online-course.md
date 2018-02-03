@@ -2,6 +2,7 @@
 title: "TensorFlowのオンライン学習サイトを利用してみる"
 date: 2017-02-19 01:36:00 +0900
 categories: tensorflow 
+lang: ja
 ---
 
 ## 機械学習を身につけたい意欲

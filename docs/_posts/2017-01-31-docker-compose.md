@@ -4,6 +4,7 @@ description: "docker-composeコマンドを使用して、mysqlのdockerコン�
 date: 2017-01-31 16:36:00 +0900
 categories: docker docker-compose
 permalink: /docker/docker-compose/mysql
+lang: ja
 ---
 
 前回の記事で `docker build` からの `docker run` コマンドを使用することでmysqlのdockerコンテナの起動ができました。

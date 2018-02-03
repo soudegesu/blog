@@ -199,6 +199,11 @@ sass:
   sass_dir: _sass
   style: compressed # http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
 
+# i18n
+languages: ["ja", "en"]
+default_lang: "ja"
+exclude_from_localization: ["assets", "javascript", "images", "css"]
+parallel_localization: true
 
 # Outputting
 permalink: /:categories/:title/
@@ -208,12 +213,13 @@ timezone: Asia/Tokyo
 
 
 # Plugins
-gems:
+plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-polyglot
   - jemoji
 
 # mimic GitHub Pages with --safe

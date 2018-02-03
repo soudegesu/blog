@@ -3,6 +3,7 @@ title: "Anaconda環境にTensorflowをインストールする"
 date: 2017-03-06 00:55:00 +0900
 categories: tensorflow
 tags: tensorflow
+lang: ja
 ---
 
 ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。

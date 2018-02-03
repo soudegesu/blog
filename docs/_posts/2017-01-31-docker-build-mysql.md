@@ -5,7 +5,7 @@ date: 2017-01-31 16:21:00 +0900
 categories: docker
 tags: docker image Dockerfile
 permalink: /docker/image/build
-
+lang: ja
 ---
 
 自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。
