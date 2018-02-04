@@ -67,10 +67,6 @@ Java9で導入された `Java Platform Module System(JPMS)` の仕様により�
 JDKを差し替えただけでは既存のJavaアプリケーションが動かない可能性が高いです。
 そのため、Module Systemに対応するためにはいくつか段階を経る必要があります。
 
-### 基本方針
-* 変更はできるだけ小さいステップで行う
-
-
 ### Step 1. Module Systemの基礎を勉強する
 まず、Module Systemに関する知識がなければModule Systemの勉強をしましょう。
 私の場合、ヌーラボさんが「[ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法](https://nulab-inc.com/ja/blog/nulab/java9-migration/)」 にて紹介されているを参考に学習しました。
@@ -90,8 +86,14 @@ JDKを差し替えただけでは既存のJavaアプリケーションが動か�
 
 ### Step 2. 依存ライブラリのバージョンアップを行う
 Step 1で基本が理解できたら、**Java8のうちに依存ライブラリのバージョンアップをやりましょう** 。
-今のところJava8/Java9両方をサポートしているライブラリが大半なので、Java8の
 
+|ライブラリ|
+|---|
+|springboot|
+|dropwizard-metric|
+|lombok|
+|mariadb-java-client|
+|jmockit|
 
 
 ### Step 3. Unnamed Moduleにマイグレーションする
