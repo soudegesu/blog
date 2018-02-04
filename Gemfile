@@ -9,5 +9,6 @@ group :jekyll_plugins, :test do
   gem "jekyll-gist"
   gem "jekyll-feed"
   gem "jekyll-polyglot"
-  gem "jemoji"  
+  gem "jemoji"
+  gem 'ruby-oembed'
 end
