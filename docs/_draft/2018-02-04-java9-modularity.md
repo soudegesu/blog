@@ -1,6 +1,6 @@
 ---
 title: "既存JavaプロジェクトをModule System(Project Jigsaw)に対応させるステップ"
-description: "既に稼働しているJavaアプリケーションをJava9のProject Jigsaw(Modular System)に適用させるためのステップをまとめました"
+description: "既存JavaアプリケーションをJava9のProject Jigsaw(Modular System)に適用させるための5ステップ。これからのJavaでエンジニアが抑えておきたいポイントを紹介"
 date: 2018-02-04 00:00:00 +0900
 categories: java
 tags: java java9 modular jigsaw gradle springboot modulepath JPMS
@@ -11,7 +11,7 @@ lang: ja
 {:toc}
 
 ## はじめに
-今回はJava 9(Module System)移行に関して説明します。
+今回はJava 9で追加されたModule System移行に関して説明します。
 自身で手を動かすことで、JavaのプロダクションコードをJPMSに適用するための作業手順の目処がたったのでまとめておきます。
 
 実は社内向けにも同様の発表はしていて、その際のスライドは以下になります。
@@ -45,7 +45,7 @@ Javaのリリースロードマップの中で注目すべきは **サポート�
 * リリースタイミングが柔軟にコントロールできない
 * テストコード(非機能含む)が整備されていない
 
-そのようなプロジェクトの場合には、Oracle社からのLong Term Supportを受けるなどして適宜自分たちのペースでマイグレーション計画をしていくことになるでしょう。
+そのようなプロジェクトの場合には、Oracle社からの長期サポートを受けるなどして適宜自分たちのペースでマイグレーション計画をしていくことになるでしょう。
 
 ### Java8はいつまでサポートされるか
 実は **2018/01/31現在でOracle社がJava 8のサポートを2018/09→2019/01へ延長した** こともあり、実際どうなるかはまだわかりません。 **いつJava8から移行するか**を決断するための材料としても、「Javaのサポート期限」の話題は今後も慎重にウォッチした方が良いでしょう。
@@ -66,18 +66,33 @@ Javaが先程のリリースサイクルになった場合に他に留意すべ�
 Java9で導入された `Java Platform Module System(JPMS)` の仕様により、
 JDKを差し替えただけでは既存のJavaアプリケーションが動かない可能性が高いです。
 そのため、Module Systemに対応するためにはいくつか段階を経る必要があります。
-以降では実際に実施してみた手順を紹介します。
 
-なお、Module Systemそのものの紹介や各Module(Unnamed/Automatic/Named)の紹介は割愛します。
+### 基本方針
+* 変更はできるだけ小さいステップで行う
 
-
-### Module Systemのおさらい 
-
-### マイグレーションを妨げるModule System最大の敵
 
 ### Step 1. Module Systemの基礎を勉強する
+まず、Module Systemに関する知識がなければModule Systemの勉強をしましょう。
+私の場合、ヌーラボさんが「[ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法](https://nulab-inc.com/ja/blog/nulab/java9-migration/)」 にて紹介されているを参考に学習しました。
+
+* [Virtual Java User GroupのJava9マイグレーション動画](https://www.youtube.com/watch?v=NKY2FYTCo7I&t=1905s) を見る
+    * Githubにリポジトリも公開されているので、手を動かす
+* 書籍 **Java9 Modularity** を読む
+    * マイグレーションよりも、modulepathの動きとクラス解決の話を中心に読んだほうが良い
+    * 英語弱者もKindleがあればOK
+
+このステップで
+* Moduleの種類(Unnamed/Automatic/Named)と違いを理解する
+* classpathとmodulepathでのクラスロードの違いを理解する
+が身につけばOKだと思います。
+
+やはりCLIで動作確認して動きを
 
 ### Step 2. 依存ライブラリのバージョンアップを行う
+Step 1で基本が理解できたら、**Java8のうちに依存ライブラリのバージョンアップをやりましょう** 。
+今のところJava8/Java9両方をサポートしているライブラリが大半なので、Java8の
+
+
 
 ### Step 3. Unnamed Moduleにマイグレーションする
 
@@ -91,4 +106,6 @@ JDKを差し替えただけでは既存のJavaアプリケーションが動か�
 ### マイグレーション時には細かなリリースをする
 
 ## 参考にさせていただいたページ
+
+* [ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法](https://nulab-inc.com/ja/blog/nulab/java9-migration/)
 
