@@ -109,7 +109,7 @@ Step 1で基本が理解できたら、**Java8のうちに依存ライブラリ�
 
 ライブラリ毎に「Java9に対応」の内容は異なるとは思いますが、おそらく、**ライブラリ間の競合は加味されていない** と考えた方が自然です。私見として「モジュール単体としてはAutomatic Moduleとして使用可能」な位だろうと推察しています。
 
-実際問題、Named Moduleにマイグレーションする場合には、 **module path上で同じjavaのパッケージを持った複数のライブラリが存在しない状態** にする必要があります。依存ライブラリが古かったり多かったりするとパッケージの重複は大体発生しエラーになるので、スタックトレースを見つつワークアラウンドで対応することになりました。
+実際問題、Named Moduleにマイグレーションする場合には、 **modulepath上で同じjavaのパッケージを持った複数のライブラリが存在しない状態** にする必要があります。依存ライブラリが古かったり多かったりするとパッケージの重複エラーが発生するケースが多く、スタックトレースを見つつワークアラウンドで対応することになりました。
 
 ### Step 3. Unnamed Moduleにマイグレーションする
 
@@ -118,6 +118,20 @@ Unnamed Moduleはclasspathを用いてクラスをロードする方式であ�
 
 ### Step 4. Named Moduelにマイグレーションする
 
+Named Moduleはメインモジュールの `module-info.java` に定義されている情報を基にmodulepath上に配備されているモジュールをロードしていきます。
+
+その際、Step 2でも少し触れましたが **modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合** は以下のようなエラーが出力されるでしょう。(springbootが依存している `embed tomcate`のライブラリ間でパッケージが競合している場合)
+
+```
+エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
+エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.criteriaを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.metamodelを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります
+```
 
 
 ### Step 5. 負荷試験とリソースモニタリングをする
