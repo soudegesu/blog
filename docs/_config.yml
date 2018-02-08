@@ -220,6 +220,7 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-polyglot
+  - jekyll_oembed
   - jemoji
 
 # mimic GitHub Pages with --safe

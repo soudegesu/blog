@@ -1,9 +1,9 @@
 ---
-title: "既存JavaプロジェクトをModule System(Project Jigsaw)に対応させるステップ"
-description: "既存JavaアプリケーションをJava9のProject Jigsaw(Modular System)に適用させるための5ステップ。これからのJavaでエンジニアが抑えておきたいポイントを紹介"
+title: "JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ"
+description: "JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます"
 date: 2018-02-04 00:00:00 +0900
 categories: java
-tags: java java9 modular jigsaw gradle springboot modulepath JPMS
+tags: java java9 modular jigsaw gradle springboot modulepath classpath JPMS
 lang: ja
 ---
 
@@ -16,6 +16,8 @@ lang: ja
 
 実は [社内向けにも同様の発表](https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou) はしています。
 少しネガティブなニュアンスで資料を書いていますが、社内の(いろんな意味で)危機意識を煽るため、という背景もあったので、その点ご了承ください。
+
+{% oembed https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou %}
 
 ## 注意点
 2018/1時点での情報を基に記載をしていますので、今後変更になる可能性があります。
