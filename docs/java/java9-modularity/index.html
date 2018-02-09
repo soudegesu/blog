@@ -16,8 +16,8 @@
 <meta property="og:locale" content="ja" />
 <meta name="description" content="JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます" />
 <meta property="og:description" content="JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます" />
-<link rel="canonical" href="http://localhost:4000/java/java9-modularity/" />
-<meta property="og:url" content="http://localhost:4000/java/java9-modularity/" />
+<link rel="canonical" href="https://www.soudegesu.com/java/java9-modularity/" />
+<meta property="og:url" content="https://www.soudegesu.com/java/java9-modularity/" />
 <meta property="og:site_name" content="そうなんでげす" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-02-04T00:00:00+09:00" />
@@ -26,11 +26,11 @@
 <meta name="twitter:creator" content="@alten_manten" />
 <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 <script type="application/ld+json">
-{"name":null,"description":"JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"http://localhost:4000/java/java9-modularity/","publisher":null,"image":null,"headline":"JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ","dateModified":"2018-02-04T00:00:00+09:00","datePublished":"2018-02-04T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/java/java9-modularity/"},"@context":"http://schema.org"}</script>
+{"name":null,"description":"JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/java/java9-modularity/","publisher":null,"image":null,"headline":"JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ","dateModified":"2018-02-04T00:00:00+09:00","datePublished":"2018-02-04T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/java/java9-modularity/"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -42,7 +42,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -81,7 +81,7 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">そうなんでげす</a>
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
         <ul class="visible-links">
           
         </ul>
@@ -107,7 +107,7 @@
     
       
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <a href="https://www.soudegesu.com/" itemprop="item"><span itemprop="name">Home</span></a>
           <meta itemprop="position" content="1" />
         </li>
         <span class="sep">/</span>
@@ -115,7 +115,7 @@
       
         
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <a href="http://localhost:4000/java" itemprop="item"><span itemprop="name">Java</span></a>
+          <a href="https://www.soudegesu.com/java" itemprop="item"><span itemprop="name">Java</span></a>
           <meta itemprop="position" content="2" />
         </li>
         <span class="sep">/</span>
@@ -141,7 +141,7 @@
   
     <div class="author__avatar">
       
-        <img src="http://localhost:4000/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
       
     </div>
   
@@ -568,20 +568,20 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ http://localhost:4000/java/java9-modularity/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ https://www.soudegesu.com/java/java9-modularity/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/java/java9-modularity/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.soudegesu.com/java/java9-modularity/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http://localhost:4000/java/java9-modularity/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/java/java9-modularity/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/java/java9-modularity/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/java/java9-modularity/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/aws/validate-certification-manager" class="pagination--pager" title="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い
+      <a href="https://www.soudegesu.com/aws/validate-certification-manager" class="pagination--pager" title="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い
 ">Previous</a>
     
     
@@ -624,7 +624,7 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
       <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -632,7 +632,21 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
       </footer>
     </div>
 
-    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
 
 
 
@@ -641,7 +655,7 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
   
   <script type="text/javascript">
   	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  	var disqus_shortname = 'soudegesu-dev';
+  	var disqus_shortname = 'soudegesu';
 
   	/* * * DON'T EDIT BELOW THIS LINE * * */
   	(function() {
