@@ -116,6 +116,7 @@ exclude:
   - CHANGELOG
   - config
   - Gemfile
+  - Gemfile.lock
   - Gruntfile.js
   - gulpfile.js
   - LICENSE
@@ -123,7 +124,8 @@ exclude:
   - node_modules
   - package.json
   - Rakefile
-  - README
+  - README.md
+  - Makefile
   - tmp
   - /docs # ignore Minimal Mistakes /docs
   - /test # ignore Minimal Mistakes /test
