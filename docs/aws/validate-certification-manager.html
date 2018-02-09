@@ -1,0 +1,522 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い | そうなんでげす</title>
+<meta property="og:title" content="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="ja" />
+<meta name="description" content="AWS Certification Managerで発行されるSSL証明書には自動更新されるための条件があるのです。" />
+<meta property="og:description" content="AWS Certification Managerで発行されるSSL証明書には自動更新されるための条件があるのです。" />
+<link rel="canonical" href="http://localhost:4000/aws/validate-certification-manager" />
+<meta property="og:url" content="http://localhost:4000/aws/validate-certification-manager" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-31T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"AWS Certification Managerで発行されるSSL証明書には自動更新されるための条件があるのです。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"http://localhost:4000/aws/validate-certification-manager","publisher":null,"image":null,"headline":"AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い","dateModified":"2018-01-31T00:00:00+09:00","datePublished":"2018-01-31T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/aws/validate-certification-manager"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="http://localhost:4000/aws" itemprop="item"><span itemprop="name">Aws</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="http://localhost:4000/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 31, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <ul id="markdown-toc">
+  <li><a href="#route53でcertification-managerのドメイン検証ができるようになった" id="markdown-toc-route53でcertification-managerのドメイン検証ができるようになった">Route53でCertification Managerのドメイン検証ができるようになった</a></li>
+  <li><a href="#ssl証明書発行の違い" id="markdown-toc-ssl証明書発行の違い">SSL証明書”発行”の違い</a>    <ul>
+      <li><a href="#e-mail検証は手間がかかる" id="markdown-toc-e-mail検証は手間がかかる">E-mail検証は手間がかかる</a></li>
+      <li><a href="#dns検証によって検証ステップが格段に簡素になる" id="markdown-toc-dns検証によって検証ステップが格段に簡素になる">DNS検証によって検証ステップが格段に簡素になる</a></li>
+    </ul>
+  </li>
+  <li><a href="#ssl証明書更新の違い" id="markdown-toc-ssl証明書更新の違い">SSL証明書”更新”の違い</a>    <ul>
+      <li><a href="#acmのssl証明書有効期限は13ヶ月" id="markdown-toc-acmのssl証明書有効期限は13ヶ月">ACMのSSL証明書有効期限は13ヶ月</a></li>
+      <li><a href="#acm更新のプロセス" id="markdown-toc-acm更新のプロセス">ACM更新のプロセス</a>        <ul>
+          <li><a href="#aws側によるacmの自動検証と自動更新" id="markdown-toc-aws側によるacmの自動検証と自動更新">①AWS側によるACMの自動検証と自動更新</a></li>
+          <li><a href="#ドメイン管理者に催促メールを通知" id="markdown-toc-ドメイン管理者に催促メールを通知">②ドメイン管理者に催促メールを通知</a></li>
+          <li><a href="#awsアカウントに催促メールを通知" id="markdown-toc-awsアカウントに催促メールを通知">③AWSアカウントに催促メールを通知</a></li>
+          <li><a href="#手動でのacm検証作業" id="markdown-toc-手動でのacm検証作業">④手動でのACM検証作業</a></li>
+        </ul>
+      </li>
+      <li><a href="#e-mail検証の自動更新条件は複雑" id="markdown-toc-e-mail検証の自動更新条件は複雑">E-mail検証の自動更新条件は複雑</a></li>
+      <li><a href="#dns検証の自動更新条件は単純" id="markdown-toc-dns検証の自動更新条件は単純">DNS検証の自動更新条件は単純</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたページ" id="markdown-toc-参考にさせていただいたページ">参考にさせていただいたページ</a></li>
+</ul>
+
+<h2 id="route53でcertification-managerのドメイン検証ができるようになった">Route53でCertification Managerのドメイン検証ができるようになった</h2>
+
+<p><img src="/assets/images/20180131/acm_validate.png" alt="acm_validate" /></p>
+
+<p><a href="https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/">DNS を使って AWS Certificate Manager の検証を簡単に</a>
+の記事にも記載があるように、2017/11に <code class="highlighter-rouge">AWS Certification Manager(以下ACM)</code> のSSL証明書取得の際の検証手順に <em>Route53のDNS検証</em> が追加されました。実はこれは、ACMで取得したSSL証明書の <em>取得</em> だけではなく <em>更新</em> においてもとても大きな利点があるので、今回はそれを紹介します。</p>
+
+<h2 id="ssl証明書発行の違い">SSL証明書”発行”の違い</h2>
+<h3 id="e-mail検証は手間がかかる">E-mail検証は手間がかかる</h3>
+<p>従来、ACMにてSSL証明書を取得する際のドメイン検証の方法は、Certificatioin Managerで証明書発行依頼を出した後、受信したE-mailの本文に記載されている一時リンクを踏んで承認ボタンを押す、という手続きを踏んでいました。</p>
+
+<p>その際の注意点は、<em>AWSからの検証確認メールを受信できるメール受信箱が必要になる</em> ことでした。
+私の場合、会社が取得しているドメインのサブドメインを委譲してもらい新規プロダクトを実装することが多いため、
+身近にいないドメイン管理者(別部署や別会社)の受信箱にのみメールが届いてしまい、
+自分のタイミングで承認ボタンを押すことができませんでした。
+そのため、私の場合は自分のAWSアカウント内にE-mail検証のためのメール受信箱を作成していました。</p>
+
+<p>自前のAWSアカウント内で検証を完結させるためには、</p>
+<ul>
+  <li>受信ボックス代わりになるS3バケットを作成し</li>
+  <li>Route53にTXTレコードやMXレコードを作成し</li>
+  <li>SNSで受けたメールをS3に振り分け、</li>
+  <li>S3バケットで受け取ったメール本文をダウンロードして、リンクを踏む</li>
+</ul>
+
+<p>という手順を踏まなくてはいけません。</p>
+
+<p>こちらの設定の手順はクラスメソッドさんのブログ「 <a href="https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/">[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた</a> 」に掲載されておりますので、
+興味のある方はご参照ください。</p>
+
+<h3 id="dns検証によって検証ステップが格段に簡素になる">DNS検証によって検証ステップが格段に簡素になる</h3>
+<p>DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメインの有効性を確認します。
+そのため</p>
+<ul>
+  <li>「Create record in Route 53」 でCNAMEレコードを作成し</li>
+  <li>少し待つ(10分くらい?)
+で検証が終了します。</li>
+</ul>
+
+<p>ね、簡単でしょう？</p>
+
+<p><img src="/assets/images/20180131/add_record.png" alt="add_cname_records" /></p>
+
+<h2 id="ssl証明書更新の違い">SSL証明書”更新”の違い</h2>
+<h3 id="acmのssl証明書有効期限は13ヶ月">ACMのSSL証明書有効期限は13ヶ月</h3>
+<p>ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、1年程経過したらSSL証明書の更新作業が発生します。
+これはSSL証明書を運用されている人でしたら毎度のことなのですが、 <em>証明書の更新時期を忘れないよう</em> に通知の仕組みを入れたり、
+引き継ぎをしたり様々な工夫をされていることかと思います。</p>
+
+<h3 id="acm更新のプロセス">ACM更新のプロセス</h3>
+<p>まず、ACMのSSL証明書更新の全体の流れを抑えましょう。</p>
+
+<h4 id="aws側によるacmの自動検証と自動更新">①AWS側によるACMの自動検証と自動更新</h4>
+<p>ACM期限切れの60日前に自動更新可能なものかAWS側で検証し、検証に成功した場合には自動更新を実施してくれます。(自動更新の条件は後述します)</p>
+
+<h4 id="ドメイン管理者に催促メールを通知">②ドメイン管理者に催促メールを通知</h4>
+<p>①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります)</p>
+
+<h4 id="awsアカウントに催促メールを通知">③AWSアカウントに催促メールを通知</h4>
+<p>②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。</p>
+
+<h4 id="手動でのacm検証作業">④手動でのACM検証作業</h4>
+<p>メールに記載されたURLにアクセスし、承認ボタンを押すことでACMの検証が完了します。
+ただし、実際にACMが更新されるまでに数時間程度のタイムラグが発生することをAWSでは謳っています。</p>
+
+<p>①にも記載の通り、素晴らしいことにACMはSSL証明書を自動更新することができます。
+ただし、自動更新するためには条件がありますので、以下に説明します。</p>
+
+<h3 id="e-mail検証の自動更新条件は複雑">E-mail検証の自動更新条件は複雑</h3>
+<p>E-mailで検証したSSL証明書の自動更新の条件は以下になります。</p>
+<ol>
+  <li>発行したSSL証明書がAWSリソースでを使用されていること</li>
+  <li>インターネットからのHTTPSリクエストを許可すること</li>
+  <li>証明書記載のFQDNが名前解決できること</li>
+</ol>
+
+<p><code class="highlighter-rouge">2</code> に関して言えば、Public ELBでもSecurityGroupでアクセス制限を施しているケースや、
+Internal ELBを使っている場合には適用されません。</p>
+
+<p><code class="highlighter-rouge">3</code> に関して言えば、ワイルドカードドメインの場合では、ゾーンAPEX、wwwドメインで名前解決できる必要があります。
+例えば、 「*.soudegesu.com」の場合には「soudegesu.com」と「www.soudegesu.com」での解決が必要です。</p>
+
+<p>加えて、仮に3つの条件を満たしていても、複数のリージョンで同一ドメイン名を使用している場合には、正しく名前解決できずにNGとなってしまうそうです。</p>
+
+<p>つまり、E-mail検証での証明書自動更新は仕様上、適用条件が限定的なのです。</p>
+
+<h3 id="dns検証の自動更新条件は単純">DNS検証の自動更新条件は単純</h3>
+
+<p>DNS検証で作成したSSL証明書の自動更新のルールはどうでしょうか。
+AWSのドキュメントをパッと漁れなかったので、サポートに問い合わせてみたところ、以下のような回答をいただきました。</p>
+
+<ol>
+  <li>発行したSSL証明書がAWSリソースでを使用されていること</li>
+  <li>証明書発行の際に設定された <code class="highlighter-rouge">CNAME</code> レコードが残っていること</li>
+</ol>
+
+<p>こちらの方が適用条件が単純明快です。
+インターネット経由の通信要件やプロトコル、ドメインの縛りがありません。
+証明書リクエスト時に追加するCNAMEレコードを消さないように死守するだけでよいのです。</p>
+
+<p><a href="https://www.terraform.io/">Terraform</a> や <a href="https://github.com/codenize-tools/roadworker">roadworker</a> といったコード化ツールを使っていればなおのこと敷居は下がりますね。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>今回は2種類の検証方法を比較しながらDNS検証の優位性を説明しました。</p>
+
+<p>DNS検証は事前準備の手間を省略でき、発行時のステップも少ないです。</p>
+
+<p>また、証明書の自動更新の適用条件も広いため、オススメです。</p>
+
+<p>稼働中のサービスがいきなりSSL証明書の期限切れでエラーを吐き続けるといったリスクを緩和するためにも、DNS検証のSSL証明書に切り替えていく価値はあると思います。(一応Route53はSLA100%ですし)</p>
+
+<h2 id="参考にさせていただいたページ">参考にさせていただいたページ</h2>
+<ul>
+  <li><a href="https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/">DNS を使って AWS Certificate Manager の検証を簡単に</a></li>
+  <li><a href="https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/">[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-01-31T00:00:00+09:00">January 31, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い http://localhost:4000/aws/validate-certification-manager" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/aws/validate-certification-manager" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/aws/validate-certification-manager" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/aws/validate-certification-manager" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/blog/hugo/" class="pagination--pager" title="ブログ(静的サイト)をHUGOを使って作成する
+">Previous</a>
+    
+    
+      <a href="http://localhost:4000/java/java9-modularity/" class="pagination--pager" title="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu-dev';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>

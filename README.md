@@ -19,5 +19,5 @@ rbenv exec bundle install --path vendor/bundler
 
 * build(local)
 ```
-rbenv exec bundle exec jekyll serve -s docs -w --config docs/_config.yml,docs/_config_dev.yml
+rbenv exec bundle exec jekyll serve -s . -d docs -w --config _config.yml,_config_dev.yml
 ```

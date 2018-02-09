@@ -1,0 +1,1337 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-02-09T12:19:15+09:00</updated><id>http://localhost:4000/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ</title><link href="http://localhost:4000/java/java9-modularity/" rel="alternate" type="text/html" title="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ" /><published>2018-02-04T00:00:00+09:00</published><updated>2018-02-04T00:00:00+09:00</updated><id>http://localhost:4000/java/java9-modularity</id><content type="html" xml:base="http://localhost:4000/java/java9-modularity/">&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#注意点&quot; id=&quot;markdown-toc-注意点&quot;&gt;注意点&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#どうなるこれからのjava&quot; id=&quot;markdown-toc-どうなるこれからのjava&quot;&gt;どうなる？これからのJava&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#半年に1度訪れるjava-seのリリース&quot; id=&quot;markdown-toc-半年に1度訪れるjava-seのリリース&quot;&gt;半年に1度訪れるJava SEのリリース&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ウォッチすべき話題はjavaのサポート期限&quot; id=&quot;markdown-toc-ウォッチすべき話題はjavaのサポート期限&quot;&gt;ウォッチすべき話題はJavaのサポート期限&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#java8はいつまでサポートされるか&quot; id=&quot;markdown-toc-java8はいつまでサポートされるか&quot;&gt;Java8はいつまでサポートされるか&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#他にも気をつけておいた方が良いこと&quot; id=&quot;markdown-toc-他にも気をつけておいた方が良いこと&quot;&gt;他にも気をつけておいた方が良いこと&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#module-systemへのマイグレーションに挑戦&quot; id=&quot;markdown-toc-module-systemへのマイグレーションに挑戦&quot;&gt;Module Systemへのマイグレーションに挑戦&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#step-1-module-systemの基礎を勉強する&quot; id=&quot;markdown-toc-step-1-module-systemの基礎を勉強する&quot;&gt;Step 1. Module Systemの基礎を勉強する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#step-2-依存ライブラリのバージョンアップを行う&quot; id=&quot;markdown-toc-step-2-依存ライブラリのバージョンアップを行う&quot;&gt;Step 2. 依存ライブラリのバージョンアップを行う&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険&quot; id=&quot;markdown-toc-ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険&quot;&gt;ライブラリのリリースノートを読んで「大丈夫だな」と早合点するのは危険&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#step-3-unnamed-moduleにマイグレーションする&quot; id=&quot;markdown-toc-step-3-unnamed-moduleにマイグレーションする&quot;&gt;Step 3. Unnamed Moduleにマイグレーションする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#step-4-named-moduelにマイグレーションする&quot; id=&quot;markdown-toc-step-4-named-moduelにマイグレーションする&quot;&gt;Step 4. Named Moduelにマイグレーションする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#step-5-負荷試験とリソースモニタリングをする&quot; id=&quot;markdown-toc-step-5-負荷試験とリソースモニタリングをする&quot;&gt;Step 5. 負荷試験とリソースモニタリングをする&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたページ&quot; id=&quot;markdown-toc-参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;はじめに&quot;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;今回はJava 9で追加されたModule System移行に関して説明します。
+自身で手を動かすことで、JavaのプロダクションコードをJPMSに適用するための作業手順の一定の目処がたったのでまとめておきます。&lt;/p&gt;
+
+&lt;p&gt;実は &lt;a href=&quot;https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou&quot;&gt;社内向けにも同様の発表&lt;/a&gt; はしています。
+少しネガティブなニュアンスで資料を書いていますが、社内の(いろんな意味で)危機意識を煽るため、という背景もあったので、その点ご了承ください。&lt;/p&gt;
+
+&lt;div class=&quot;embed-container rich &quot;&gt;&lt;iframe allowfullscreen=&quot;true&quot; allowtransparency=&quot;true&quot; frameborder=&quot;0&quot; height=&quot;596&quot; id=&quot;talk_frame_426422&quot; mozallowfullscreen=&quot;true&quot; src=&quot;//speakerdeck.com/player/0891ffc8f49a450284c48eabf1e1ccbd&quot; style=&quot;border:0; padding:0; margin:0; background:transparent;&quot; webkitallowfullscreen=&quot;true&quot; width=&quot;710&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;注意点&quot;&gt;注意点&lt;/h2&gt;
+&lt;p&gt;2018/1時点での情報を基に記載をしていますので、今後変更になる可能性があります。
+最新の情報と照らし合わせながら適宜情報の補填を行っていただければと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;どうなるこれからのjava&quot;&gt;どうなる？これからのJava&lt;/h2&gt;
+&lt;p&gt;ここではまず最初に、足元のJPMSの話ではなく、Javaエンジニアが把握しておくべき今後の全体的な流れについて触れておきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;半年に1度訪れるjava-seのリリース&quot;&gt;半年に1度訪れるJava SEのリリース&lt;/h3&gt;
+&lt;p&gt;昨年のJava Oneにて Java9 以降のJavaのリリースロードマップが発表されました。
+要点だけまとめると以下になります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;リリース頻度は半年に1度(次は2018/3、その次は2018/9)&lt;/li&gt;
+  &lt;li&gt;バージョニングは &lt;code class=&quot;highlighter-rouge&quot;&gt;9&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;10&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;11&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Oracle社のページでは &lt;code class=&quot;highlighter-rouge&quot;&gt;yy.MM&lt;/code&gt; 形式で記載されているで注意&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;時間軸でリリースがされていくため、期限までに実装終了したフィーチャーがリリース対象の機能として取り込まれる
+    &lt;ul&gt;
+      &lt;li&gt;early access buildはリリース3ヶ月前から提供される&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ウォッチすべき話題はjavaのサポート期限&quot;&gt;ウォッチすべき話題はJavaのサポート期限&lt;/h3&gt;
+&lt;p&gt;Javaのリリースロードマップの中で注目すべきは &lt;strong&gt;サポート期限&lt;/strong&gt; です。
+リリースラインが1本化されたことで、&lt;strong&gt;複数のJavaのバージョンが並行サポートされることがなくなり&lt;/strong&gt; ます。
+つまり、Javaの進化に合わせて、自分のプロダクトも追随していく必要がある、というわけです。
+例えば、Java 10が出たら、Java 9はその時点でサポート終了ということです。&lt;/p&gt;
+
+&lt;p&gt;ルールとして一見わかりやすくはあるものの、以下のようなプロジェクトの場合はJavaのリリースサイクルに追従していくのは容易なことではありません。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;リリースサイクルが長い&lt;/li&gt;
+  &lt;li&gt;リリースタイミングが柔軟にコントロールできない&lt;/li&gt;
+  &lt;li&gt;テストコード(非機能含む)が整備されていない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;そのようなプロジェクトの場合には、Oracle社からの長期サポートを受けるなどして適宜自分たちのペースでマイグレーション計画をしていくことになるでしょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;java8はいつまでサポートされるか&quot;&gt;Java8はいつまでサポートされるか&lt;/h3&gt;
+&lt;p&gt;実は &lt;strong&gt;2018/01/31現在でOracle社がJava 8のサポートを2018/09→2019/01へ延長した&lt;/strong&gt; こともあり、実際どうなるかはまだわかりません。 &lt;strong&gt;いつJava8から移行するか&lt;/strong&gt;を決断するための材料としても、「Javaのサポート期限」の話題は今後も慎重にウォッチした方が良いでしょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;他にも気をつけておいた方が良いこと&quot;&gt;他にも気をつけておいた方が良いこと&lt;/h3&gt;
+
+&lt;p&gt;Javaが先程のリリースサイクルになった場合に他に留意すべき点も補足しておきます。
+以下のようなポイントを中心に情報収集やearly access buildでの動作確認を早めにしておくと良いと感じました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;周辺のエコシステムが追従できているか
+    &lt;ul&gt;
+      &lt;li&gt;アプリケーションを構成する依存ライブラリ&lt;/li&gt;
+      &lt;li&gt;実行環境として使用するパブリッククラウド&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;重要な仕様変更が入っているか
+    &lt;ul&gt;
+      &lt;li&gt;JPMSのような大きな仕様変更&lt;/li&gt;
+      &lt;li&gt;パッケージの移動や非推奨になったAPI&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;module-systemへのマイグレーションに挑戦&quot;&gt;Module Systemへのマイグレーションに挑戦&lt;/h2&gt;
+&lt;p&gt;Java9で導入された &lt;code class=&quot;highlighter-rouge&quot;&gt;Java Platform Module System(JPMS)&lt;/code&gt; の仕様により、
+JDKを差し替えただけでは既存のJavaアプリケーションが動かない可能性が高いです。
+そのため、Module Systemに対応するためにはいくつか段階を経る必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;step-1-module-systemの基礎を勉強する&quot;&gt;Step 1. Module Systemの基礎を勉強する&lt;/h3&gt;
+&lt;p&gt;まず、Module Systemに関する知識がなければModule Systemの勉強をしましょう。
+私の場合、ヌーラボさんが「&lt;a href=&quot;https://nulab-inc.com/ja/blog/nulab/java9-migration/&quot;&gt;ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法&lt;/a&gt;」 にて紹介されている内容を参考に学習しました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=NKY2FYTCo7I&amp;amp;t=1905s&quot;&gt;Virtual Java User GroupのJava9マイグレーション動画&lt;/a&gt; を見る
+    &lt;ul&gt;
+      &lt;li&gt;Githubにリポジトリも公開されているので、一緒に手を動かすのがオススメ&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;書籍 &lt;strong&gt;Java9 Modularity&lt;/strong&gt; を読む
+    &lt;ul&gt;
+      &lt;li&gt;マイグレーションよりも、modulepathの動きとクラス解決の話を中心に読んだほうが良い&lt;/li&gt;
+      &lt;li&gt;英語弱者もKindleがあれば大丈夫&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;このステップでは&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Moduleの種類(Unnamed/Automatic/Named)と違いを理解する&lt;/li&gt;
+  &lt;li&gt;classpathとmodulepathでのクラスロードの違いを理解する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;が身につけばOKだと感じました。&lt;/p&gt;
+
+&lt;p&gt;余裕があれば、Module SystemのBootstrapのコードを読んでおくと更に理解が捗ると思います。
+(System#initPhase2の処理あたりからブレークポイント貼って読むといいです)&lt;/p&gt;
+
+&lt;h3 id=&quot;step-2-依存ライブラリのバージョンアップを行う&quot;&gt;Step 2. 依存ライブラリのバージョンアップを行う&lt;/h3&gt;
+&lt;p&gt;Step 1で基本が理解できたら、&lt;strong&gt;Java8のうちに依存ライブラリのバージョンアップをやりましょう&lt;/strong&gt; 。 
+リリースノートでJava9対応を謳っているライブラリはJava8でも動作可能なものが大半なので、今の内にJava9(Module System)対応版のバージョンまで依存ライブラリのバージョンを更新するのが良いです。
+理由は単純で、 &lt;strong&gt;Module Systemに対応させるのも多少時間がかかるのに、ライブラリ自体のマイナーアップグレードの対応も同時に行うのは苦行&lt;/strong&gt; だからです。変更箇所が多いと、細かな変更を見落としがちになり、デグレードを引き起こす原因になります。また、ライブラリの更新と合わせて、細かく商用環境にデプロイすることで、リスクを減らしながらマイグレーションすることができます。&lt;/p&gt;
+
+&lt;p&gt;なお、参考までに私のプロジェクトでは主にライブラリを使用していて(モジュールの正式名称での記載は省略)、これらを最新の安定版まで全てアップグレードしました。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ライブラリ&lt;/th&gt;
+      &lt;th&gt;Java9対応状況&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;springboot(embed tomcat)&lt;/td&gt;
+      &lt;td&gt;2.x 〜(2018/2リリース予定)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;dropwizard-metric&lt;/td&gt;
+      &lt;td&gt;不明&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;lombok&lt;/td&gt;
+      &lt;td&gt;済&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;mariadb-java-client&lt;/td&gt;
+      &lt;td&gt;済&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;jmockit&lt;/td&gt;
+      &lt;td&gt;済&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;gradle&lt;/td&gt;
+      &lt;td&gt;未&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;加えて、リポジトリがマルチモジュール構成になっているという点が特徴です。&lt;/p&gt;
+
+&lt;h4 id=&quot;ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険&quot;&gt;ライブラリのリリースノートを読んで「大丈夫だな」と早合点するのは危険&lt;/h4&gt;
+
+&lt;p&gt;このステップのポイントとして、リリースノートの情報だけで自プロダクトがModule Systemに移行可能だと思い込んで作業を終了してしまうのは危険、ということです。 &lt;strong&gt;自分のプロジェクトがNamed Moduleとしてマイグレーション可能か(ここで言うStep 4)&lt;/strong&gt; まで手を動かして確認した方が良いでしょう。&lt;/p&gt;
+
+&lt;p&gt;実際問題、Named Moduleにマイグレーションする場合には、 &lt;strong&gt;modulepath上で同じjavaのパッケージを持った複数のライブラリが存在しない状態&lt;/strong&gt; にする必要があり、依存ライブラリが古かったり多かったりするとパッケージの重複エラーが発生します。下のイメージの場合ではmodulepathでのクラスロードはできないので、ライブラリ側に対応をお願いするか、classpathからロードする必要があります。&lt;/p&gt;
+
+&lt;p&gt;(例: &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat-embed-core&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat-juli&lt;/code&gt; で パッケージ重複が起きていてNG)
+&lt;img src=&quot;/assets/images/20180204/conflict_packages.png&quot; alt=&quot;conflict_packages&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;step-3-unnamed-moduleにマイグレーションする&quot;&gt;Step 3. Unnamed Moduleにマイグレーションする&lt;/h3&gt;
+&lt;p&gt;
+Unnamed Moduleはclasspathを用いてクラスをロードする方式であるため、そこまで大きな改修は不要です。Javaのバージョンが上がったことによってパッケージから分離されたクラスを利用可能にするためにコンパイル引数を追加する作業が主なタスクになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Gradle&lt;/code&gt; であれば、例えば以下のようにコンパイル引数を追加しました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;compileJava.options.compilerArgs += [
+    &quot;--add-modules&quot;, &quot;java.xml.ws.annotation&quot;,
+    &quot;--add-modules&quot;, &quot;java.xml.bind&quot;,
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;step-4-named-moduelにマイグレーションする&quot;&gt;Step 4. Named Moduelにマイグレーションする&lt;/h3&gt;
+
+&lt;p&gt;Named Moduleはメインモジュールの &lt;code class=&quot;highlighter-rouge&quot;&gt;module-info.java&lt;/code&gt; に定義されている情報を基にmodulepath上に配備されているモジュールをロードしていきます。&lt;/p&gt;
+
+&lt;p&gt;Unnamed Moduleの時とは異なり、ビルドスクリプト(私の場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; ) をそこそこ書き換える必要があるので、覚悟して臨みましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Gradle&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;Maven&lt;/code&gt; と違い、java9のサポートを謳ってはいません。しかし、 &lt;a href=&quot;https://guides.gradle.org/building-java-9-modules/&quot;&gt;Building Java 9 Modules&lt;/a&gt; にjava9に対応するためのヒントとサンプルリポジトリへのリンクがあるので、これを参考にすると良いです。&lt;/p&gt;
+
+&lt;p&gt;私も紹介されている通りに &lt;code class=&quot;highlighter-rouge&quot;&gt;java-library&lt;/code&gt; プラグインに差し替えてビルドするように修正しました。
+なお、 &lt;code class=&quot;highlighter-rouge&quot;&gt;experimental-jigsaw&lt;/code&gt; プラグインは使わずともいけました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://guides.gradle.org/building-java-9-modules/&quot;&gt;Building Java 9 Modules&lt;/a&gt; を参考にしつつと言ったのですが、こちらも注意点があります。ページでは以下のようサンプルコードが書かれているのですが、試しにやってみたところ、一発でコンパイルは通りませんでした。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;doFirst {
+    options.compilerArgs = [
+        '--module-path', classpath.asPath,
+    ]
+    classpath = files()  
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このコードサンプルではGradleがリポジトリから取得したclasspath上のライブラリを全てmodulepathで読み込むように修正しています。
+そのため、Step 2でも少し触れましたが &lt;strong&gt;modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合&lt;/strong&gt; は以下のようなエラーが出力されてしまいます。(例としてspringboot1.5.9が依存している &lt;code class=&quot;highlighter-rouge&quot;&gt;embed tomcate&lt;/code&gt;のライブラリでパッケージが競合している場合)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
+エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.criteriaを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.metamodelを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これを解決するためのワークアラウンドがそこそこ大変なのですが&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;モジュールのバージョンを合わせる(場合によっては片方のdependencyからexcludeする)&lt;/li&gt;
+  &lt;li&gt;代替可能な別クラスや別モジュールにコードを置き換えて、依存モジュールを減らす&lt;/li&gt;
+  &lt;li&gt;特定のモジュールのみclasspathから読み込むように &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; を修正する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;という風に逐一スタックトレースとにらめっこをしていました。&lt;/p&gt;
+
+&lt;h3 id=&quot;step-5-負荷試験とリソースモニタリングをする&quot;&gt;Step 5. 負荷試験とリソースモニタリングをする&lt;/h3&gt;
+&lt;p&gt;最後にアプリケーションが今まで通りの振る舞いをするかどうかを外部から確認します。
+自動化された単体テストや結合テストはもちろんですが、今までと同等のリクエスト負荷に耐えられるか、システムの健康状態を測定するメトリックが今まで通り取れているかを確認します。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;今回はプロダクションコードのリポジトリでModule Systemに移行するための手順を確認できました。
+従来の &lt;code class=&quot;highlighter-rouge&quot;&gt;classpath&lt;/code&gt; のクラスロードから &lt;code class=&quot;highlighter-rouge&quot;&gt;modulepath&lt;/code&gt; へのクラスロードに機構が変わったことに加え、ビルドツールが現段階ではよしなにやってくれないため、モジュール同士の依存関係やモジュール自体の設計を強く意識する必要が出てきました。ここは今後の課題かもしれません。&lt;/p&gt;
+
+&lt;p&gt;個人的には商用環境までデプロイできればかっこよかったのですが、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;springboot 2.xの安定版がまだないこと&lt;/li&gt;
+  &lt;li&gt;Java 9/10にはサポートがつかないこと&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; の可読性とメンテナンス性が落ちた&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ことを理由に商用デプロイは見送っています。
+Java 8もまだしばらくサポートされるようですし、今回の学習によってマイグレーションのアキレス腱がどこにありそうなのか理解できたことは収穫でした。
+皆さんも是非、自プロダクトで練習してみてはいかがでしょうか。&lt;/p&gt;
+
+&lt;p&gt;最後にポイントだけもう一度まとめておきます&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;マイグレ前にやること
+    &lt;ul&gt;
+      &lt;li&gt;依存ライブラリのサポート状況を確認しておく&lt;/li&gt;
+      &lt;li&gt;依存ライブラリのバージョンを上げておく&lt;/li&gt;
+      &lt;li&gt;依存ライブラリを減らしておく(可能なら)&lt;/li&gt;
+      &lt;li&gt;テストコードを準備しておく&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;マイグレ中
+    &lt;ul&gt;
+      &lt;li&gt;まずはUnnamed Moduleにマイグレする&lt;/li&gt;
+      &lt;li&gt;パッケージ重複が発生していないか注意する&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;マイグレ後
+    &lt;ul&gt;
+      &lt;li&gt;負荷試験とかしっかり&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nulab-inc.com/ja/blog/nulab/java9-migration/&quot;&gt;ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://guides.gradle.org/building-java-9-modules/&quot;&gt;Building Java 9 Modules&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="java9" /><category term="modular" /><category term="jigsaw" /><category term="gradle" /><category term="springboot" /><category term="modulepath" /><category term="classpath" /><category term="JPMS" /><summary type="html"></summary></entry><entry xml:lang="ja"><title type="html">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い</title><link href="http://localhost:4000/aws/validate-certification-manager" rel="alternate" type="text/html" title="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い" /><published>2018-01-31T00:00:00+09:00</published><updated>2018-01-31T00:00:00+09:00</updated><id>http://localhost:4000/aws/acm-route53-validate</id><content type="html" xml:base="http://localhost:4000/aws/validate-certification-manager">&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#route53でcertification-managerのドメイン検証ができるようになった&quot; id=&quot;markdown-toc-route53でcertification-managerのドメイン検証ができるようになった&quot;&gt;Route53でCertification Managerのドメイン検証ができるようになった&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ssl証明書発行の違い&quot; id=&quot;markdown-toc-ssl証明書発行の違い&quot;&gt;SSL証明書”発行”の違い&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#e-mail検証は手間がかかる&quot; id=&quot;markdown-toc-e-mail検証は手間がかかる&quot;&gt;E-mail検証は手間がかかる&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#dns検証によって検証ステップが格段に簡素になる&quot; id=&quot;markdown-toc-dns検証によって検証ステップが格段に簡素になる&quot;&gt;DNS検証によって検証ステップが格段に簡素になる&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ssl証明書更新の違い&quot; id=&quot;markdown-toc-ssl証明書更新の違い&quot;&gt;SSL証明書”更新”の違い&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#acmのssl証明書有効期限は13ヶ月&quot; id=&quot;markdown-toc-acmのssl証明書有効期限は13ヶ月&quot;&gt;ACMのSSL証明書有効期限は13ヶ月&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#acm更新のプロセス&quot; id=&quot;markdown-toc-acm更新のプロセス&quot;&gt;ACM更新のプロセス&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#aws側によるacmの自動検証と自動更新&quot; id=&quot;markdown-toc-aws側によるacmの自動検証と自動更新&quot;&gt;①AWS側によるACMの自動検証と自動更新&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ドメイン管理者に催促メールを通知&quot; id=&quot;markdown-toc-ドメイン管理者に催促メールを通知&quot;&gt;②ドメイン管理者に催促メールを通知&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#awsアカウントに催促メールを通知&quot; id=&quot;markdown-toc-awsアカウントに催促メールを通知&quot;&gt;③AWSアカウントに催促メールを通知&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#手動でのacm検証作業&quot; id=&quot;markdown-toc-手動でのacm検証作業&quot;&gt;④手動でのACM検証作業&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#e-mail検証の自動更新条件は複雑&quot; id=&quot;markdown-toc-e-mail検証の自動更新条件は複雑&quot;&gt;E-mail検証の自動更新条件は複雑&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#dns検証の自動更新条件は単純&quot; id=&quot;markdown-toc-dns検証の自動更新条件は単純&quot;&gt;DNS検証の自動更新条件は単純&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたページ&quot; id=&quot;markdown-toc-参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;route53でcertification-managerのドメイン検証ができるようになった&quot;&gt;Route53でCertification Managerのドメイン検証ができるようになった&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180131/acm_validate.png&quot; alt=&quot;acm_validate&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/&quot;&gt;DNS を使って AWS Certificate Manager の検証を簡単に&lt;/a&gt;
+の記事にも記載があるように、2017/11に &lt;code class=&quot;highlighter-rouge&quot;&gt;AWS Certification Manager(以下ACM)&lt;/code&gt; のSSL証明書取得の際の検証手順に &lt;em&gt;Route53のDNS検証&lt;/em&gt; が追加されました。実はこれは、ACMで取得したSSL証明書の &lt;em&gt;取得&lt;/em&gt; だけではなく &lt;em&gt;更新&lt;/em&gt; においてもとても大きな利点があるので、今回はそれを紹介します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ssl証明書発行の違い&quot;&gt;SSL証明書”発行”の違い&lt;/h2&gt;
+&lt;h3 id=&quot;e-mail検証は手間がかかる&quot;&gt;E-mail検証は手間がかかる&lt;/h3&gt;
+&lt;p&gt;従来、ACMにてSSL証明書を取得する際のドメイン検証の方法は、Certificatioin Managerで証明書発行依頼を出した後、受信したE-mailの本文に記載されている一時リンクを踏んで承認ボタンを押す、という手続きを踏んでいました。&lt;/p&gt;
+
+&lt;p&gt;その際の注意点は、&lt;em&gt;AWSからの検証確認メールを受信できるメール受信箱が必要になる&lt;/em&gt; ことでした。
+私の場合、会社が取得しているドメインのサブドメインを委譲してもらい新規プロダクトを実装することが多いため、
+身近にいないドメイン管理者(別部署や別会社)の受信箱にのみメールが届いてしまい、
+自分のタイミングで承認ボタンを押すことができませんでした。
+そのため、私の場合は自分のAWSアカウント内にE-mail検証のためのメール受信箱を作成していました。&lt;/p&gt;
+
+&lt;p&gt;自前のAWSアカウント内で検証を完結させるためには、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;受信ボックス代わりになるS3バケットを作成し&lt;/li&gt;
+  &lt;li&gt;Route53にTXTレコードやMXレコードを作成し&lt;/li&gt;
+  &lt;li&gt;SNSで受けたメールをS3に振り分け、&lt;/li&gt;
+  &lt;li&gt;S3バケットで受け取ったメール本文をダウンロードして、リンクを踏む&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;という手順を踏まなくてはいけません。&lt;/p&gt;
+
+&lt;p&gt;こちらの設定の手順はクラスメソッドさんのブログ「 &lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/&quot;&gt;[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた&lt;/a&gt; 」に掲載されておりますので、
+興味のある方はご参照ください。&lt;/p&gt;
+
+&lt;h3 id=&quot;dns検証によって検証ステップが格段に簡素になる&quot;&gt;DNS検証によって検証ステップが格段に簡素になる&lt;/h3&gt;
+&lt;p&gt;DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメインの有効性を確認します。
+そのため&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;「Create record in Route 53」 でCNAMEレコードを作成し&lt;/li&gt;
+  &lt;li&gt;少し待つ(10分くらい?)
+で検証が終了します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ね、簡単でしょう？&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180131/add_record.png&quot; alt=&quot;add_cname_records&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ssl証明書更新の違い&quot;&gt;SSL証明書”更新”の違い&lt;/h2&gt;
+&lt;h3 id=&quot;acmのssl証明書有効期限は13ヶ月&quot;&gt;ACMのSSL証明書有効期限は13ヶ月&lt;/h3&gt;
+&lt;p&gt;ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、1年程経過したらSSL証明書の更新作業が発生します。
+これはSSL証明書を運用されている人でしたら毎度のことなのですが、 &lt;em&gt;証明書の更新時期を忘れないよう&lt;/em&gt; に通知の仕組みを入れたり、
+引き継ぎをしたり様々な工夫をされていることかと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;acm更新のプロセス&quot;&gt;ACM更新のプロセス&lt;/h3&gt;
+&lt;p&gt;まず、ACMのSSL証明書更新の全体の流れを抑えましょう。&lt;/p&gt;
+
+&lt;h4 id=&quot;aws側によるacmの自動検証と自動更新&quot;&gt;①AWS側によるACMの自動検証と自動更新&lt;/h4&gt;
+&lt;p&gt;ACM期限切れの60日前に自動更新可能なものかAWS側で検証し、検証に成功した場合には自動更新を実施してくれます。(自動更新の条件は後述します)&lt;/p&gt;
+
+&lt;h4 id=&quot;ドメイン管理者に催促メールを通知&quot;&gt;②ドメイン管理者に催促メールを通知&lt;/h4&gt;
+&lt;p&gt;①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります)&lt;/p&gt;
+
+&lt;h4 id=&quot;awsアカウントに催促メールを通知&quot;&gt;③AWSアカウントに催促メールを通知&lt;/h4&gt;
+&lt;p&gt;②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。&lt;/p&gt;
+
+&lt;h4 id=&quot;手動でのacm検証作業&quot;&gt;④手動でのACM検証作業&lt;/h4&gt;
+&lt;p&gt;メールに記載されたURLにアクセスし、承認ボタンを押すことでACMの検証が完了します。
+ただし、実際にACMが更新されるまでに数時間程度のタイムラグが発生することをAWSでは謳っています。&lt;/p&gt;
+
+&lt;p&gt;①にも記載の通り、素晴らしいことにACMはSSL証明書を自動更新することができます。
+ただし、自動更新するためには条件がありますので、以下に説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;e-mail検証の自動更新条件は複雑&quot;&gt;E-mail検証の自動更新条件は複雑&lt;/h3&gt;
+&lt;p&gt;E-mailで検証したSSL証明書の自動更新の条件は以下になります。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;発行したSSL証明書がAWSリソースでを使用されていること&lt;/li&gt;
+  &lt;li&gt;インターネットからのHTTPSリクエストを許可すること&lt;/li&gt;
+  &lt;li&gt;証明書記載のFQDNが名前解決できること&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; に関して言えば、Public ELBでもSecurityGroupでアクセス制限を施しているケースや、
+Internal ELBを使っている場合には適用されません。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt; に関して言えば、ワイルドカードドメインの場合では、ゾーンAPEX、wwwドメインで名前解決できる必要があります。
+例えば、 「*.soudegesu.com」の場合には「soudegesu.com」と「www.soudegesu.com」での解決が必要です。&lt;/p&gt;
+
+&lt;p&gt;加えて、仮に3つの条件を満たしていても、複数のリージョンで同一ドメイン名を使用している場合には、正しく名前解決できずにNGとなってしまうそうです。&lt;/p&gt;
+
+&lt;p&gt;つまり、E-mail検証での証明書自動更新は仕様上、適用条件が限定的なのです。&lt;/p&gt;
+
+&lt;h3 id=&quot;dns検証の自動更新条件は単純&quot;&gt;DNS検証の自動更新条件は単純&lt;/h3&gt;
+
+&lt;p&gt;DNS検証で作成したSSL証明書の自動更新のルールはどうでしょうか。
+AWSのドキュメントをパッと漁れなかったので、サポートに問い合わせてみたところ、以下のような回答をいただきました。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;発行したSSL証明書がAWSリソースでを使用されていること&lt;/li&gt;
+  &lt;li&gt;証明書発行の際に設定された &lt;code class=&quot;highlighter-rouge&quot;&gt;CNAME&lt;/code&gt; レコードが残っていること&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;こちらの方が適用条件が単純明快です。
+インターネット経由の通信要件やプロトコル、ドメインの縛りがありません。
+証明書リクエスト時に追加するCNAMEレコードを消さないように死守するだけでよいのです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt; や &lt;a href=&quot;https://github.com/codenize-tools/roadworker&quot;&gt;roadworker&lt;/a&gt; といったコード化ツールを使っていればなおのこと敷居は下がりますね。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;今回は2種類の検証方法を比較しながらDNS検証の優位性を説明しました。&lt;/p&gt;
+
+&lt;p&gt;DNS検証は事前準備の手間を省略でき、発行時のステップも少ないです。&lt;/p&gt;
+
+&lt;p&gt;また、証明書の自動更新の適用条件も広いため、オススメです。&lt;/p&gt;
+
+&lt;p&gt;稼働中のサービスがいきなりSSL証明書の期限切れでエラーを吐き続けるといったリスクを緩和するためにも、DNS検証のSSL証明書に切り替えていく価値はあると思います。(一応Route53はSLA100%ですし)&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/&quot;&gt;DNS を使って AWS Certificate Manager の検証を簡単に&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/&quot;&gt;[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="AWS" /><category term="ACM" /><category term="route53" /><category term="ssl" /><category term="validate" /><summary type="html"></summary></entry><entry xml:lang="ja"><title type="html">ブログ(静的サイト)をHUGOを使って作成する</title><link href="http://localhost:4000/blog/hugo/" rel="alternate" type="text/html" title="ブログ(静的サイト)をHUGOを使って作成する" /><published>2017-05-05T21:58:00+09:00</published><updated>2017-05-05T21:58:00+09:00</updated><id>http://localhost:4000/blog/hugo</id><content type="html" xml:base="http://localhost:4000/blog/hugo/">&lt;p&gt;本サイトでは &lt;a href=&quot;https://jekyllrb-ja.github.io/&quot;&gt;jekyll&lt;/a&gt; を使用してブログを作成しているのですが、他にも &lt;a href=&quot;https://gohugo.io/&quot;&gt;HUGO&lt;/a&gt; や &lt;a href=&quot;https://hexo.io/&quot;&gt;hexo&lt;/a&gt; を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#ゴール&quot; id=&quot;markdown-toc-ゴール&quot;&gt;ゴール&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#事前準備&quot; id=&quot;markdown-toc-事前準備&quot;&gt;事前準備&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#hugoをインストールする前に&quot; id=&quot;markdown-toc-hugoをインストールする前に&quot;&gt;HUGOをインストールする前に…&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#hugoのインストールmacosの場合&quot; id=&quot;markdown-toc-hugoのインストールmacosの場合&quot;&gt;HUGOのインストール(MacOSの場合)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#hugoを使ってコンテンツを作成する&quot; id=&quot;markdown-toc-hugoを使ってコンテンツを作成する&quot;&gt;HUGOを使ってコンテンツを作成する&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#hugoテンプレートで生成する&quot; id=&quot;markdown-toc-hugoテンプレートで生成する&quot;&gt;HUGOテンプレートで生成する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サイトのデザインthemeを設定する&quot; id=&quot;markdown-toc-サイトのデザインthemeを設定する&quot;&gt;サイトのデザイン(theme)を設定する&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#themeを探す&quot; id=&quot;markdown-toc-themeを探す&quot;&gt;themeを探す&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#themeをインストールする&quot; id=&quot;markdown-toc-themeをインストールする&quot;&gt;themeをインストールする&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#themeを設定する&quot; id=&quot;markdown-toc-themeを設定する&quot;&gt;themeを設定する&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#記事を作成する&quot; id=&quot;markdown-toc-記事を作成する&quot;&gt;記事を作成する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#余談archetypesdefaultsmd-を利用して手間を減らす&quot; id=&quot;markdown-toc-余談archetypesdefaultsmd-を利用して手間を減らす&quot;&gt;(余談)archetypes/defaults.md を利用して手間を減らす&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#コンテンツの出来栄えをローカル環境で確認する&quot; id=&quot;markdown-toc-コンテンツの出来栄えをローカル環境で確認する&quot;&gt;コンテンツの出来栄えをローカル環境で確認する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#コンテンツをビルドする&quot; id=&quot;markdown-toc-コンテンツをビルドする&quot;&gt;コンテンツをビルドする&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ゴール&quot;&gt;ゴール&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;HUGOで静的サイトの作成ができるようになる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;事前準備&quot;&gt;事前準備&lt;/h2&gt;
+&lt;h3 id=&quot;hugoをインストールする前に&quot;&gt;HUGOをインストールする前に…&lt;/h3&gt;
+&lt;p&gt;以下がローカルマシン上にインストールされていると以降の手順が捗ります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Homebrew&lt;/li&gt;
+  &lt;li&gt;git&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;hugoのインストールmacosの場合&quot;&gt;HUGOのインストール(MacOSの場合)&lt;/h2&gt;
+&lt;p&gt;Homebrewを使用するとHUGOを簡単にインストールできます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#brew install hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;HUGOのバージョンを確認してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo version
+Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+09:00
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;v0.20.7(2017/05時点で最新)がインストールされていることがわかります。&lt;/p&gt;
+
+&lt;h2 id=&quot;hugoを使ってコンテンツを作成する&quot;&gt;HUGOを使ってコンテンツを作成する&lt;/h2&gt;
+&lt;h3 id=&quot;hugoテンプレートで生成する&quot;&gt;HUGOテンプレートで生成する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new site&lt;/code&gt;のサブコマンドを実行するだけで静的サイトのテンプレートをgenerateしてくれます。今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; というディレクトリ配下に作成します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo new site hoge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; 配下で &lt;code class=&quot;highlighter-rouge&quot;&gt;tree&lt;/code&gt; コマンドを実行すると以下のようなファイルレイアウトが生成されていることがわかります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cd hoge
+#tree -L 1                                                          .
+├── archetypes
+├── config.toml
+├── content
+├── data
+├── layouts
+├── static
+└── themes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;ディレクトリ or ファイル&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;用途&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;archetypes&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; コマンドを実行した場合に使用されるデフォルトの雛形の定義ファイルを配備しておくディレクトリ&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;config.toml&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;サイト全体の設定を記述する設定ファイル。&lt;code class=&quot;highlighter-rouge&quot;&gt;yaml&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; 形式もサポートしている&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;content&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;記事そのものを配備するディレクトリ&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;data&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;特定のデータファイルを置くディレクトリ。&lt;code class=&quot;highlighter-rouge&quot;&gt;yaml&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;toml&lt;/code&gt; をサポート。 layoutsディレクトリ内のテンプレートに依存する。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;layouts&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;サイトレイアウトを配備するディレクトリ。UIパーツ毎のHTMLテンプレートを置くようなイメージ&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;static&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;CSSやjavascript、画像ファイルといった静的ファイルを格納するディレクトリ&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;themes&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;サイトのテーマを配置するディレクトリ&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;サイトのデザインthemeを設定する&quot;&gt;サイトのデザイン(theme)を設定する&lt;/h3&gt;
+
+&lt;h4 id=&quot;themeを探す&quot;&gt;themeを探す&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://themes.gohugo.io/&quot;&gt;HUGOのthemeサイト&lt;/a&gt; から好みのサイトデザインを選びます。今回は &lt;a href=&quot;https://themes.gohugo.io/hugo-hello-programmer-theme/&quot;&gt;Hello Programerのテーマ&lt;/a&gt; にしてみましょう。HUGOの場合、Jekyllと比較してthemeの数が少ないように感じられますが、1つ1つが個性的なので、概ね自身の用途に応じたthemeが見つかるのではないでしょうか。本家サイトにて &lt;code class=&quot;highlighter-rouge&quot;&gt;layouts&lt;/code&gt; をどう作成すればよいか説明がありますので、気に入るものがない場合にはそちらを参照してください。&lt;/p&gt;
+
+&lt;h4 id=&quot;themeをインストールする&quot;&gt;themeをインストールする&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;themes&lt;/code&gt; ディレクトリに移動し、直接themeを &lt;code class=&quot;highlighter-rouge&quot;&gt;git clone&lt;/code&gt; します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cd themes
+#git clone https://github.com/lubang/hugo-hello-programmer-theme
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;themeを設定する&quot;&gt;themeを設定する&lt;/h4&gt;
+&lt;p&gt;設定ファイル(config.toml)を開いて、以下のように編集をします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#vi config.toml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;baseurl = &quot;https://www.soudegesu.com/diary&quot;
+title = &quot;そうでげす diary&quot;
+DefaultContentLanguage = &quot;ja&quot;
+languageCode = &quot;ja-JP&quot;
+
+contentDir = &quot;content/ja&quot;
+publishDir = &quot;public/ja&quot;
+
+theme = &quot;hugo-hello-programmer-theme&quot;
+
+paginate = 2
+
+disqusShortname = &quot;XXXX&quot;
+googleAnalytics = &quot;UA-XXXXXXXX-X&quot;
+
+[author]
+    name = &quot;soudegesu&quot;
+
+[permalinks]
+  post = &quot;/blog/:year/:month/:day/:slug/&quot;
+  page = &quot;/:slug/&quot;
+
+[taxonomies]
+  tag = &quot;tags&quot;
+  category = &quot;categories&quot;
+
+[indexes]
+    category = &quot;categories&quot;
+    tag = &quot;tags&quot;
+
+[params]
+    locale = &quot;ja-JP&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;theme&lt;/code&gt; の項目には &lt;code class=&quot;highlighter-rouge&quot;&gt;themes&lt;/code&gt; ディレクトリ配下にある適用したいthemeのディレクトリ名を指定する必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;記事を作成する&quot;&gt;記事を作成する&lt;/h3&gt;
+&lt;p&gt;プロジェクトルートにて &lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; のサブコマンドを実行すると記事のファイルを生成することができます。
+今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;sample.md&lt;/code&gt; を作成してみます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new (ファイル名)&lt;/code&gt; でファイルを生成する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo new post/sample.md                                            
+/絶対パス/post/sample.md created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ファイルが生成されたことを &lt;code class=&quot;highlighter-rouge&quot;&gt;tree&lt;/code&gt; コマンドにて確認&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#tree -a content                                                                       
+content
+└── ja
+    └── post
+        └── sample.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;date と title のみ記載がされているファイルが生成されたことを確認&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cat content/ja/post/sample.md
++++
+date = &quot;2017-05-06T11:11:46+09:00&quot;
+title = &quot;sample&quot;
+
++++
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;余談archetypesdefaultsmd-を利用して手間を減らす&quot;&gt;(余談)archetypes/defaults.md を利用して手間を減らす&lt;/h3&gt;
+&lt;p&gt;HUGOをインストールした直後に&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new (ファイル名)&lt;/code&gt; コマンドで記事ファイルを作成すると、&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt;しか埋め込まれていません。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;archetypes/defaults.md&lt;/code&gt; を以下のように予め作成しておくことで、&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; した際に、定義されている内容を雛形として、新規ファイルを作成してくれるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+++
+draft = true
+slug = &quot;&quot;
+tags = [&quot;&quot;, &quot;&quot;]
+categories = [&quot;&quot;, &quot;&quot;]
+
++++
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;最新バージョンでは &lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; を default.md に記載する必要はなくなりました。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;コンテンツの出来栄えをローカル環境で確認する&quot;&gt;コンテンツの出来栄えをローカル環境で確認する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo serve&lt;/code&gt; のサブコマンドを実行すると、ローカル環境で内容の確認ができます。
+ブラウザから &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:1313/&lt;/code&gt; を入力してビルドされたコンテンツにアクセスできるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo serve -D
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なお、&lt;code class=&quot;highlighter-rouge&quot;&gt;-D&lt;/code&gt; オプションを付けることで、下書き扱いのコンテンツもページ出力対象にすることができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;コンテンツをビルドする&quot;&gt;コンテンツをビルドする&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo&lt;/code&gt; コマンドを実行することで、コンテンツのビルドが行われます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;public&lt;/code&gt; ディレクトリが生成され、その中に静的ファイルが生成されていることを確認できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;HUGO&lt;/code&gt; を使って静的サイトの生成ができました。
+使ってみた感想として、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;導入までの敷居が低い(Jekyllが高すぎる)&lt;/li&gt;
+  &lt;li&gt;本家サイトの出来が良く、とりあえず読めば理解できる&lt;/li&gt;
+  &lt;li&gt;ローカルビルドの体感が早く感じる
+といった印象を持ちました。
+今後JekyllとHUGOを併用してみて、良し悪しを判断できればと思います。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="hugo" /><category term="blog" /><category term="site" /><summary type="html">本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。</summary></entry><entry xml:lang="ja"><title type="html">Anaconda環境にTensorflowをインストールする</title><link href="http://localhost:4000/tensorflow/tensorflow-anaconda/" rel="alternate" type="text/html" title="Anaconda環境にTensorflowをインストールする" /><published>2017-03-06T00:55:00+09:00</published><updated>2017-03-06T00:55:00+09:00</updated><id>http://localhost:4000/tensorflow/tensorflow-anaconda</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-anaconda/">&lt;p&gt;ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。&lt;/p&gt;
+
+&lt;p&gt;今回はanacondaの仮想環境に対して、tensorflowをインストールします。&lt;/p&gt;
+
+&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Anaconda 4.3.0&lt;/li&gt;
+  &lt;li&gt;python 3.5&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;発生した問題&quot;&gt;発生した問題&lt;/h2&gt;
+&lt;p&gt;tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip3 install tensorflow 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;解決策&quot;&gt;解決策&lt;/h2&gt;
+
+&lt;p&gt;そのため、以下のようにコマンドを変更します。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install &lt;span class=&quot;nt&quot;&gt;--ignore-installed&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--upgrade&lt;/span&gt; https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;備考&quot;&gt;備考&lt;/h2&gt;
+&lt;p&gt;anaconda の方でのパッケージ管理でインストール可能かを調べてみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pypi&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anaconda search &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; pypi tensorflow
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Using Anaconda API: https://api.anaconda.org
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Run &lt;span class=&quot;s1&quot;&gt;'anaconda show &amp;lt;USER/PACKAGE&amp;gt;'&lt;/span&gt; to get more details:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Packages:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     Name                      |  Version | Package Types   | Platforms
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;-------------------------&lt;/span&gt; |   &lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dustindorroh/tensorflow   |    0.6.0 | pypi            |
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;conda&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anaconda search &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; conda tensorflow
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Using Anaconda API: https://api.anaconda.org
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Run &lt;span class=&quot;s1&quot;&gt;'anaconda show &amp;lt;USER/PACKAGE&amp;gt;'&lt;/span&gt; to get more details:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Packages:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     Name                      |  Version | Package Types   | Platforms
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;-------------------------&lt;/span&gt; |   &lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow            |    1.0.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow-cpucompat  |    1.0.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow-fma        |    1.0.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     SentientPrime/tensorflow  |    0.6.0 | conda           | osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     acellera/tensorflow-cuda  |   0.12.1 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     anaconda-backup/tensorflow | 0.10.0rc0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     anaconda/tensorflow       | 0.10.0rc0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     conda-forge/tensorflow    |    1.0.0 | conda           | linux-64, win-64, osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     creditx/tensorflow        |    0.9.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     derickl/tensorflow        |   0.12.1 | conda           | osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dhirschfeld/tensorflow    | 0.12.0rc0 | conda           | win-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dseuss/tensorflow         | 0.11.0rc0 | conda           | osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ijstokes/tensorflow       | 2017.03.03.1349 | conda, ipynb    | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     kevin-keraudren/tensorflow |    0.9.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     lcls-rhel7/tensorflow     |   0.12.1 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     marta-sd/tensorflow       |   0.12.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     memex/tensorflow          |    0.5.0 | conda           | linux-64, osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mhworth/tensorflow        |    0.7.1 | conda           | osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     miovision/tensorflow      | 0.10.0.gpu | conda           | linux-64, osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     msarahan/tensorflow       | 1.0.0rc2 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mutirri/tensorflow        | 0.10.0rc0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mwojcikowski/tensorflow   |   0.11.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     rdonnelly/tensorflow      |    0.9.0 | conda           | linux-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     rdonnellyr/r-tensorflow   |    0.4.0 | conda           | osx-64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     test_org_002/tensorflow   | 0.10.0rc0 | conda           |
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは &lt;code class=&quot;highlighter-rouge&quot;&gt;storage.googleapis.com&lt;/code&gt; を参照する形でインストールを行いたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="tensorflow" /><summary type="html">ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。</summary></entry><entry xml:lang="ja"><title type="html">pyenvとpyenv-virtualenvでanacondaと共存する</title><link href="http://localhost:4000/python/pyenv/anaconda" rel="alternate" type="text/html" title="pyenvとpyenv-virtualenvでanacondaと共存する" /><published>2017-02-28T11:49:00+09:00</published><updated>2017-02-28T11:49:00+09:00</updated><id>http://localhost:4000/python/pyenv/pyenv-virtualenv</id><content type="html" xml:base="http://localhost:4000/python/pyenv/anaconda">&lt;h2 id=&quot;はじめに&quot;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
+anacondaを使用する機会も増えてきたので、&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv install&lt;/code&gt;からの&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv local&lt;/code&gt;コマンドでanaconda環境が構築するのですが、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;の部分をもう少しスマートに行いたいため、 &lt;em&gt;pyenv-virtualenv&lt;/em&gt; も用いる方法に変更します。&lt;/p&gt;
+
+&lt;h2 id=&quot;今回やりたいこと&quot;&gt;今回やりたいこと&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;1台のマシンの中で使用するpythonのバージョンを切り替えたい&lt;/li&gt;
+  &lt;li&gt;さらに言えば、ディストリビューションも切り替えたい(anaconda)&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;anaconda&lt;/em&gt;と&lt;em&gt;pyenv&lt;/em&gt;の &lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt; の競合を解決したい
+    &lt;ol&gt;
+      &lt;li&gt;&lt;em&gt;anaconda&lt;/em&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;する際にフルパスで指定するのを避けたい&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1と2は&lt;em&gt;pyenv&lt;/em&gt;で、3は&lt;em&gt;pyenv-virtualenv&lt;/em&gt;で解決できることになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;MacOSX Yosemite&lt;/li&gt;
+  &lt;li&gt;homebrew&lt;/li&gt;
+  &lt;li&gt;zsh&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;セットアップ手順&quot;&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id=&quot;仮想環境切り替え用のモジュールをインストール&quot;&gt;仮想環境切り替え用のモジュールをインストール&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# pyenvをインストールする&lt;/span&gt;
+brew install pyenv
+&lt;span class=&quot;c&quot;&gt;#pyenv-virtualenvをインストールする&lt;/span&gt;
+brew install pyenv-virtualenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;シェル起動時の設定ファイルを修正&quot;&gt;シェル起動時の設定ファイルを修正&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;.zshrcに以下を追記する
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# pyenvの設定&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/.pyenv&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/bin:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/shims:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;pyenv init -&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# pyenv-virtualenvの設定&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;which pyenv-virtualenv-init &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;pyenv virtualenv-init -&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ターミナルを再起動する(sourceコマンドでの再読込でも可)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;pythonの仮想環境を作成する&quot;&gt;Pythonの仮想環境を作成する&lt;/h2&gt;
+&lt;h3 id=&quot;テスト用のディレクトリを作成&quot;&gt;テスト用のディレクトリを作成&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;hoge&lt;/em&gt; ディレクトリ配下を任意のpythonバージョンで動作するようにしましょう。
+pythonのバージョンを確認しておきます。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir hoge
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;hoge
+python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Python 2.7.6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;pythonのバージョンを設定&quot;&gt;pythonのバージョンを設定&lt;/h3&gt;
+&lt;p&gt;pyenvで使用可能なpythonを指定します。
+今回は3.6.0をインストールした後、&lt;em&gt;hoge&lt;/em&gt;ディレクトリ配下を3.6.0にします。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv install 3.6.0
+pyenv &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;3.6.0
+python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Python 3.6.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;仮想環境の構築&quot;&gt;仮想環境の構築&lt;/h3&gt;
+&lt;p&gt;pythonのvenvモジュールを呼び出し、仮想環境を構築します。
+今回は便宜的にカレントディレクトリに仮想環境を展開します。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;を読み込むことで、仮想環境に切り替わります。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; venv &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;bin/activate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt;する場合には&lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt;コマンドを入力するだけです。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;pythonの仮想環境を作成するanacondaの場合&quot;&gt;Pythonの仮想環境を作成する(anacondaの場合)&lt;/h2&gt;
+&lt;h3 id=&quot;テスト用のディレクトリを作成-1&quot;&gt;テスト用のディレクトリを作成&lt;/h3&gt;
+&lt;p&gt;同様にして、anaconda環境を構築するために、&lt;em&gt;fuga&lt;/em&gt;ディレクトリを作成します。
+pythonのバージョンがデフォルトであることも確認しておきましょう。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir fuga
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;fuga
+python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
+Python 2.7.6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;anacondaのバージョンを設定&quot;&gt;anacondaのバージョンを設定&lt;/h3&gt;
+&lt;p&gt;こちらも手順としては同様です。
+pyenvではインストールするpythonのディストリビューションが選択できます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;anaconda&lt;/code&gt;以外にも&lt;code class=&quot;highlighter-rouge&quot;&gt;miniconda&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;pypy&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;jython&lt;/code&gt;等でも構築が可能です。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv install anaconda3-4.1.0
+pyenv local anaconda3-4.1.0
+python -V
+&amp;gt; Python 3.5.1 :: Anaconda 4.1.0 (x86_64)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;仮想環境の構築-1&quot;&gt;仮想環境の構築&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt;コマンドを使用して、存在している環境情報を確認することができます。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda info &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; root                  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;次に、anacondaの仮想環境を構築します。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; fuga &lt;span class=&quot;nv&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.5 anaconda
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt; オプションは構築する仮想環境の名前、&lt;code class=&quot;highlighter-rouge&quot;&gt;python=3.5&lt;/code&gt;は使用するpythonのバージョン、&lt;code class=&quot;highlighter-rouge&quot;&gt;anaconda&lt;/code&gt;は仮想環境上で使用するモジュールになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv activate&lt;/code&gt;コマンドを使用することで、anacondaの環境をactivateできます。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv activate anaconda3-4.1.0/envs/fuga
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;deactivateも同様ですね。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv-virtualenv&lt;/code&gt;を使用することで、pythonの仮想環境の切り替えができるようになりました。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;venv&lt;/code&gt;で作成した環境と&lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt;で作成した仮想環境も&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;を使用すれば競合することなく&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;することができます。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="python" /><category term="pyenv" /><category term="pyenv-virtualenv" /><category term="anaconda" /><summary type="html">はじめに 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。 anacondaを使用する機会も増えてきたので、pyenv installからのpyenv localコマンドでanaconda環境が構築するのですが、 activateの部分をもう少しスマートに行いたいため、 pyenv-virtualenv も用いる方法に変更します。</summary></entry><entry xml:lang="ja"><title type="html">TensorFlowのオンライン学習サイトを利用してみる</title><link href="http://localhost:4000/tensorflow/tensorflow-online-course/" rel="alternate" type="text/html" title="TensorFlowのオンライン学習サイトを利用してみる" /><published>2017-02-19T01:36:00+09:00</published><updated>2017-02-19T01:36:00+09:00</updated><id>http://localhost:4000/tensorflow/tensorflow-online-course</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-online-course/">&lt;h2 id=&quot;機械学習を身につけたい意欲&quot;&gt;機械学習を身につけたい意欲&lt;/h2&gt;
+&lt;p&gt;ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。
+NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。
+先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://tocana.jp/2017/02/post_12245_entry.html&quot;&gt;「ダボス会議」で世界のトップリーダーたちが懺悔 「AIの成長が早すぎて超ヤバい。認識が甘かった」&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これから加速度的に発展し、社会進出してくる機械学習を用いた製品やサービス。
+このムーブメントはIT業界に関わらず、他の業界にも浸透していくことでしょう。&lt;/p&gt;
+
+&lt;p&gt;私のような今まで機械学習を業務で利用していなかったエンジニアも、程度の差こそあれ、機械学習の理解に努めなければ
+完全なブラックボックス製品を使うだけの1エンドユーザーに終わってしまうのではないか、という焦りがあります。&lt;/p&gt;
+
+&lt;p&gt;アルゴリズムを見つけたり、最適化したり、というのはハードルが高いので、「ライブラリが使える」ようになることを直近の目標にしたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;筆者のレベル感&quot;&gt;筆者のレベル感&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;python はまぁ書ける&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.coursera.org/learn/machine-learning/home/welcome&quot;&gt;coureraの機械学習のコース&lt;/a&gt;は受講済&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.co.jp/%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E4%BD%9C%E3%82%8BDeep-Learning-Python%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%A3%E3%83%BC%E3%83%97%E3%83%A9%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0%E3%81%AE%E7%90%86%E8%AB%96%E3%81%A8%E5%AE%9F%E8%A3%85-%E6%96%8E%E8%97%A4-%E5%BA%B7%E6%AF%85/dp/4873117585/ref=sr_1_fkmr0_1?ie=UTF8&amp;amp;qid=1487429614&amp;amp;sr=8-1-fkmr0&amp;amp;keywords=%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89+%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92&quot;&gt;ゼロから作るDeepLearning&lt;/a&gt; は一通り読み切った&lt;/li&gt;
+  &lt;li&gt;TensorFlowの公式サイトのMNISTサンプルは実行して「お、おぅ。。」となって中断している&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tensorflowを学べるサイト&quot;&gt;TensorFlowを学べるサイト&lt;/h2&gt;
+&lt;p&gt;オンラインでTensorFlowを学べるサイトがあるのかを探してみたところ、kadenzeというサイト「Creative Applications of Deep Learning with TensorFlow」という学習コースがありました。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.kadenze.com/courses/creative-applications-of-deep-learning-with-tensorflow/info&quot;&gt;Creative Applications of Deep Learning with TensorFlow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;全体としては1h程度の動画 ✕ 5枠にて構成されていました。
+最初のコースは無料で受講できるようなので、早速登録してみることに。&lt;/p&gt;
+
+&lt;p&gt;会員登録作業が一通り終わると、「講義で利用するリソースがgithub上に上がっているのでcloneしてね」ということが判明。
+それが以下。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/pkmital/CADL&quot;&gt;pkmital/CADL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;リポジトリ内にjupyter notebook用のファイル(.ipynb)があるので、自分のマシンにjupyter notebookとtensorflowがインストールされていればすんなり起動&amp;amp;実行が可能です。(Dockerもあると良い)
+結構、notebookファイル内にmarkdown形式の説明文が記載されているので、もしかしたら動画を見なくても感じがつかめるかもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;動画を見てみた感想&quot;&gt;動画を見てみた感想&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;全編英語(当たり前ですが)&lt;/li&gt;
+  &lt;li&gt;英語字幕の設定が可能
+    &lt;ul&gt;
+      &lt;li&gt;ただし、動画毎に字幕設定が必要(設定が引き継げない)のが若干面倒&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;約1h時間の枠内で更に細かい動画に分割されていた。(introduction 2min、 about XXX 14minのように)&lt;/li&gt;
+  &lt;li&gt;いきなり文脈が飛ぶときがあって、置いていかれることがある
+    &lt;ul&gt;
+      &lt;li&gt;「なぜ」の部分の説明が割愛されているときがある&lt;/li&gt;
+      &lt;li&gt;そこはForum使って議論 &amp;amp; QA しなさい、といった感じなのでしょうか&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;.ipynbのソースに解答が既に打ち込まれてしまっているので、動画を追いかけながらタイプしたい方は別途環境を構築した方がよいかも。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;実はまだ5枠全部受けきれてないです。
+自身での内容の整理も含めて、これからまとめていきたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><summary type="html">機械学習を身につけたい意欲 ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。 NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。 先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。</summary></entry><entry xml:lang="ja"><title type="html">zsh から fish (shell) へお引っ越しを試みた話</title><link href="http://localhost:4000/sh/fish/" rel="alternate" type="text/html" title="zsh から fish (shell) へお引っ越しを試みた話" /><published>2017-02-18T16:36:00+09:00</published><updated>2017-02-18T16:36:00+09:00</updated><id>http://localhost:4000/sh/try-fish</id><content type="html" xml:base="http://localhost:4000/sh/fish/">&lt;h2 id=&quot;fish-との出会い&quot;&gt;fish との出会い&lt;/h2&gt;
+&lt;p&gt;これは本当に偶然の出会いで、
+「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;「fish プログラミング」&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;というキーワードで検索したところ、fish shell がヒットしたのであった。&lt;/p&gt;
+
+&lt;p&gt;仕事用もプレイベート用Macもzshを設定していて、個人的にはそれなりに満足していたのですが、色々zshにインストールしていたこともあって、起動やキー入力に若干もたつきを感じていたのもalternative factでしたので、ちょっと試してみようかなと思ったのが始まりです。&lt;/p&gt;
+
+&lt;h2 id=&quot;fishとは&quot;&gt;fishとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://fishshell.com/&quot;&gt;fish&lt;/a&gt; のfishは &lt;span style=&quot;color: #d32f2f&quot;&gt;F&lt;/span&gt;riendly &lt;span style=&quot;color: #d32f2f&quot;&gt;i&lt;/span&gt;nteractive &lt;span style=&quot;color: #d32f2f&quot;&gt;sh&lt;/span&gt;ell の略でユーザフレンドリーさを売りにしたUNIX shellとのことです。どのあたりがユーザーフレンドリーか、というとざっと以下のようです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;コマンドのautocompleteやシンタックスハイライト&lt;/li&gt;
+  &lt;li&gt;web上でカラーチョイスができるカラフルなターミナル&lt;/li&gt;
+  &lt;li&gt;健全でシンプルな文法(bash等とは若干違うらしい)&lt;/li&gt;
+  &lt;li&gt;manページの自動生成と親切なヘルプメッセージ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;もちろん、以前使用していたzshでも.zshrcに設定を入れたり、プラグインやテーマをインストールすることで自分好みの使いやすいターミナルに仕上げることができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;セットアップ手順&quot;&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id=&quot;fishのインストール&quot;&gt;fishのインストール&lt;/h3&gt;
+&lt;p&gt;Homebrewを使用してfishをインストールします。
+(これ以外にもMacportsやインストーラー、Windows版、tarboll等様々サポートしていますので公式サイトを確認してください)&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install fish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;デフォルトのシェル切り替え&quot;&gt;デフォルトのシェル切り替え&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/shells&lt;/code&gt; を確認すると、使用可能なshellを確認できます。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; cat /etc/shells
+# List of acceptable shells for chpass(1).
+# Ftpd will not allow users to connect who are not using
+# one of these shells.
+
+/bin/bash
+/bin/csh
+/bin/ksh
+/bin/sh
+/bin/tcsh
+/bin/zsh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;今のままでは &lt;code class=&quot;highlighter-rouge&quot;&gt;fish&lt;/code&gt; は使用できませんので末尾に1行fishのパスを追記しましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;which fish
+/usr/local/bin/fish  #これを/etc/shellsに追記
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以下のコマンドでターミナル起動時のログインシェルをfishに切り替えることができます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chsh -s /usr/local/bin/fish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ターミナルを再起動する&quot;&gt;ターミナルを再起動する&lt;/h3&gt;
+&lt;p&gt;ターミナルを再起動することでシェルが切り替わっていることを確認できます。
+個人的にはもう少しカラフルでかっこよくしたいのでプラグインを入れる方法を模索します。&lt;/p&gt;
+
+&lt;h2 id=&quot;fisherman-でpluginをインストールする&quot;&gt;fisherman でpluginをインストールする&lt;/h2&gt;
+
+&lt;p&gt;fishの場合、&lt;a href=&quot;https://fisherman.github.io/&quot;&gt;fisherman&lt;/a&gt; がplugin managerとして利用可能なようですので、こちらをインストールして拡張していきましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;fisherman-のインストール&quot;&gt;fisherman のインストール&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;プラグインのインストール&quot;&gt;プラグインのインストール&lt;/h3&gt;
+&lt;p&gt;まずはプロンプトのテーマをインストールします。今回はjokerのテーマをインストールしてみます。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fisher joker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;powerlineのインストール&quot;&gt;powerlineのインストール&lt;/h3&gt;
+&lt;p&gt;私のmacではjokerのテーマで使用しているpowerlineをまだインストールしていなかったため、jokerのREADMEに添付されている画像のようなデザインになりませんでした。そのため、別途&lt;a href=&quot;https://powerline.readthedocs.io/en/master/installation.html#pip-installation&quot;&gt;powerlineをインストール&lt;/a&gt;します。&lt;/p&gt;
+
+&lt;h3 id=&quot;fonts-のインストール&quot;&gt;fonts のインストール&lt;/h3&gt;
+&lt;p&gt;加えてfontsも別途インストールしなくてはいけないようです。(やること増えてきてしまった。。。)
+&lt;a href=&quot;https://powerline.readthedocs.io/en/latest/installation/linux.html#font-installation&quot;&gt;fontsのインストール手順&lt;/a&gt; を参考にインストールするとpip を使用する方法が紹介されていて微妙なので、&lt;a href=&quot;https://github.com/powerline/fonts&quot;&gt;gitリポジトリ&lt;/a&gt; からcloneしてきてシェルでフォントを一括でインストールします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/powerline/fonts
+sh ./install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;iterm2ターミナルの設定&quot;&gt;iTerm2(ターミナル)の設定&lt;/h3&gt;
+&lt;p&gt;iTerm2でインストールしたフォントが利用できるように設定をします。
+[Preference] &amp;gt; [Profile]メニュー &amp;gt; [Text]タブ &amp;gt; [Font]と[Non-ASCII Font] の双方で「Change Font」を選択します。
+[All Fonts ] &amp;gt; [Source Code Pro for Powerline] を選択します。&lt;/p&gt;
+
+&lt;p&gt;やっとpowerlineが出ました。。
+補間も効くみたいですね。&lt;/p&gt;
+
+&lt;p&gt;あとは.zshrcで記載しているPATHのexportやコマンドのailasを &lt;strong&gt;~/.config/fish/config.fish&lt;/strong&gt; に転記しましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;起動時のconfigファイルを書き換える&quot;&gt;起動時のconfigファイルを書き換える&lt;/h2&gt;
+&lt;p&gt;.zshrc にものすごいたくさん書いていた私の場合、このお引越が一番時間かかりました。。
+fish起動時にconfig.fishを読み込んで、変数のexportやaliasの登録をしたい場合には以下のような書き換えが必要です。&lt;/p&gt;
+
+&lt;h3 id=&quot;export&quot;&gt;export&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;zshの場合
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export ANT_HOME=/usr/bin/apache-ant-1.9.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fishの場合
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;set -x ANT_HOME /usr/bin/apache-ant-1.9.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;コマンドのalias&quot;&gt;コマンドのalias&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;zshの場合
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias la='ls -a'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fishの場合
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias la='ls -a'
+function la
+   ls -a $argv
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;aliasの登録がかなり面倒な感じになってしまっていますね。&lt;/p&gt;
+
+&lt;h2 id=&quot;おまけ-bashを使えるようにする&quot;&gt;おまけ: bashを使えるようにする&lt;/h2&gt;
+&lt;p&gt;fishの場合、bashとは文法が異なるため&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash hoge.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;のように実行する必要があるため、少々不便です。&lt;/p&gt;
+
+&lt;p&gt;そのため、fishでもbashのシェルが実行できるよう、プラグインを入れてあげる必要があります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fisher edc/bass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;fishはユーザーに優しいインターフェースを提供している(?)
+    &lt;ul&gt;
+      &lt;li&gt;実はzshでも同じプロンプトのデザインを提供しているケースもあるので見た目自体にはzshとの大きな差別化は図れていない。&lt;/li&gt;
+      &lt;li&gt;autocompleteはzshよりも少し便利かなという印象&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fishのconfigファイルは.zshrcや.bashrcと文法的な互換性がないので抵抗感がある
+    &lt;ul&gt;
+      &lt;li&gt;慣れなのかもしれないが、正直ここに時間をかけたくない&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fish の場合、コマンド履歴に対する操作がちょっと弱い
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;! ${履歴番号}&lt;/code&gt; でコマンド再実行ができないみたい。(個人的には重宝していたのに。。)&lt;/li&gt;
+      &lt;li&gt;history コマンドでそもそも履歴の番号表示されないですし。。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;しばらくはプライベートはfish、仕事はzshで行こうと思いました。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="sh" /><category term="fish" /><category term="zsh" /><summary type="html">fish との出会い これは本当に偶然の出会いで、 「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに</summary></entry><entry xml:lang="ja"><title type="html">docker-composeを使ってmysql dockerコンテナを起動する</title><link href="http://localhost:4000/docker/docker-compose/mysql" rel="alternate" type="text/html" title="docker-composeを使ってmysql dockerコンテナを起動する" /><published>2017-01-31T16:36:00+09:00</published><updated>2017-01-31T16:36:00+09:00</updated><id>http://localhost:4000/docker/docker-compose/docker-compose</id><content type="html" xml:base="http://localhost:4000/docker/docker-compose/mysql">&lt;p&gt;前回の記事で &lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt; からの &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; コマンドを使用することでmysqlのdockerコンテナの起動ができました。&lt;/p&gt;
+
+&lt;p&gt;個人的にはcliのオプション指定が長くなっていくのがあまり好きではないので、今回はdocker-composeを使用して、もう少しお手軽に起動にこぎつけたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;docker-compose-をインストールする&quot;&gt;docker-compose をインストールする&lt;/h2&gt;
+&lt;p&gt;以下のサイトからdocker-toolboxをインストールしましょう。
+その中にdocker-composeも含まれています。&lt;/p&gt;
+
+&lt;p&gt;[https://www.docker.com/products/docker-toolbox:embed:cite]&lt;/p&gt;
+
+&lt;p&gt;そもそもdocker-composeは複数のコンテナ管理を容易に行う機能を提供してくれるものです。今回はmysqlコンテナでしか利用しませんが、システムコンポーネントの設定や起動順序の制御をyamlファイルに記載するだけで良いので、可読性が高く、VCSでも管理がしやすいです。&lt;/p&gt;
+
+&lt;p&gt;例えば、以下のようなDockerfileがあったとします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM mysql:latest
+
+RUN { \
+   echo '[mysqld]'; \
+   echo 'character-set-server=utf8'; \
+   echo 'collation-server=utf8_general_ci'; \
+   echo '[client]'; \
+   echo 'default-character-set=utf8'; \
+} &amp;gt; /etc/mysql/conf.d/charset.cnf
+
+EXPOSE 3306
+CMD [&quot;mysqld&quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;それを呼び出すdocker-compose.ymlを作成します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql:
+  build: .
+  dockerfile: Dockerfile
+  ports:
+    - &quot;3306:3306&quot;
+  environment:
+    - MYSQL_ROOT_USER=root
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=soudegesu
+    - MYSQL_USER=soudegesu
+    - MYSQL_PASSWORD=soudegesu
+  volumes:
+    - ./init.d:/docker-entrypoint-initdb.d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;dockerfileの箇所に作成したDockerfileを指定しておくことで、起動時にimageをビルドし、そのイメージを使ってコンテナを起動します。&lt;/p&gt;
+
+&lt;p&gt;なお、mysqlの公式のコンテナの場合、コンテナ内のdocker-entrypoint-initdb.dをホスト上の任意のディレクトリを対象としてアタッチすることで、起動時にディレクトリ配下のsqlを流し込んで初期化してくれます。&lt;/p&gt;
+
+&lt;h2 id=&quot;docker-compose-で起動する&quot;&gt;docker-compose で起動する&lt;/h2&gt;
+&lt;p&gt;それでは起動してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker-compose up                                                                                                                                                
+Starting soudegesu_mysql_1
+Attaching to soudegesu_mysql_1
+mysql_1  | 2017-01-31T07:09:28.026908Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+mysql_1  | 2017-01-31T07:09:28.038354Z 0 [Note] mysqld (mysqld 5.7.17) starting as process 1 ...
+mysql_1  | 2017-01-31T07:09:28.053912Z 0 [Note] InnoDB: PUNCH HOLE support available
+mysql_1  | 2017-01-31T07:09:28.054031Z 0 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+mysql_1  | 2017-01-31T07:09:28.054043Z 0 [Note] InnoDB: Uses event mutexes
+mysql_1  | 2017-01-31T07:09:28.054055Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
+〜以下略〜
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;mysqlコマンドで接続してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql -h 127.0.0.1 -P 3306 -u root -proot
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.17 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;できました。
+起動時のsqlファイルの実行結果も確認しましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| soudegesu              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; use soudegesu;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql&amp;gt; show tables;
++-----------------+
+| Tables_in_soudegesu |
++-----------------+
+| aaaa            |
+| bbbb            |
++-----------------+
+2 rows in set (0.00 sec)
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ちなみに&quot;&gt;ちなみに&lt;/h2&gt;
+&lt;p&gt;既存のimageを使用して &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt; を実行することも可能です。場合に応じて設定を変更してください。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql:
+  image: mysql:latest ←これ
+  ports:
+    - &quot;3306:3306&quot;
+  environment:
+    - MYSQL_ROOT_USER=root
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=soudegesu
+    - MYSQL_USER=soudegesu
+    - MYSQL_PASSWORD=soudegesu
+  volumes:
+    - ./init.d:/docker-entrypoint-initdb.d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>soudegesu</name></author><summary type="html">前回の記事で docker build からの docker run コマンドを使用することでmysqlのdockerコンテナの起動ができました。</summary></entry><entry xml:lang="ja"><title type="html">Docker buildコマンドのimage作成〜コンテナ起動まで</title><link href="http://localhost:4000/docker/image/build" rel="alternate" type="text/html" title="Docker buildコマンドのimage作成〜コンテナ起動まで" /><published>2017-01-31T16:21:00+09:00</published><updated>2017-01-31T16:21:00+09:00</updated><id>http://localhost:4000/docker/image/docker-build-mysql</id><content type="html" xml:base="http://localhost:4000/docker/image/build">&lt;p&gt;自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。&lt;/p&gt;
+
+&lt;h2 id=&quot;dockerfile-を作成する&quot;&gt;Dockerfile を作成する&lt;/h2&gt;
+
+&lt;p&gt;まず、dockerのバージョンが古かったので、&lt;a href=&quot;https://www.docker.com/products/docker#/mac&quot;&gt;公式サイト&lt;/a&gt;からmac用のdockerを再度ダウンロードし、アップデートしておきます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# docker version
+Client:
+ Version:      1.13.0
+ API version:  1.25
+ Go version:   go1.7.3
+ Git commit:   49bf474
+ Built:        Wed Jan 18 16:20:26 2017
+ OS/Arch:      darwin/amd64
+
+Server:
+ Version:      1.13.0
+ API version:  1.25 (minimum version 1.12)
+ Go version:   go1.7.3
+ Git commit:   49bf474
+ Built:        Wed Jan 18 16:20:26 2017
+ OS/Arch:      linux/amd64
+ Experimental: true
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以下のような簡単なDockerfileを作成し、プロジェクトのルートにおいておきます。
+今回は&lt;a href=&quot;https://github.com/docker-library/docs/tree/master/mysql&quot;&gt;mysql公式のdocker image&lt;/a&gt;を使用することにしましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM mysql
+MAINTAINER soudegesu
+
+RUN echo &quot;finished setup !!&quot;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;dockerfile-をビルドしてイメージを作成する&quot;&gt;Dockerfile をビルドしてイメージを作成する&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt; コマンドを実行すると以下のようなエラーが出ました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker build -t soudegesu/mysql:0.0.1 . 
+Sending build context to Docker daemon 57.86 MB
+Error response from daemon: The Dockerfile (Dockerfile) cannot be empty
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Dockerfileが配置されているディレクトリでコマンドを実行したので、Dockerfileを勝手に認識してくれるはずだったような。。
+念のため、&lt;code class=&quot;highlighter-rouge&quot;&gt;-f&lt;/code&gt; オプションを指定して、直接ファイルを指定してみたところ上手くいきました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker build -f ./Dockerfile -t soudegesu/mysql:0.0.1 .
+Sending build context to Docker daemon 57.86 MB
+Step 1/3 : FROM mysql
+latest: Pulling from library/mysql
+5040bd298390: Pull complete
+(以下略)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;本当に先程のコマンドがNGだったのか怪しいので、docker imageを削除して、もう一度トライしてみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker rmi soudegesu/mysql:0.0.1
+Untagged: soudegesu/mysql:0.0.1
+Deleted: sha256:5cdbd0f32baa9bd25e39532ae9e660e35c0d9e57740406536b05bb7dbfbd4226
+Deleted: sha256:b60d4e0b4ad869c06c6e874095d813c5d91990f0266897163d714b201501b577
+
+#docker build -t soudegesu/mysql:0.0.1 .
+Sending build context to Docker daemon 57.86 MB
+Step 1/3 : FROM mysql
+ ---&amp;gt; 7666f75adb6b
+Step 2/3 : MAINTAINER soudegesu
+ ---&amp;gt; Using cache
+ ---&amp;gt; ebb2015c5850
+Step 3/3 : RUN echo &quot;finished setup !!&quot;
+(以下略)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;コンテナを起動して確認する&quot;&gt;コンテナを起動して確認する&lt;/h2&gt;
+
+&lt;p&gt;次に &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; コマンドでコンテナを起動しましょう。 コンテナ起動後にコンテナ内で操作を行う場合に以下のオプションは良く利用されます。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;-i：コンテナの標準入力を開きます&lt;/li&gt;
+  &lt;li&gt;-t：tty（端末デバイス）を確保します&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker run -it soudegesu/mysql:0.0.1 /bin/bash
+root@08671cc122c7:/#
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;OSを確認してみましょう。公式のmysqlのdocker imageはMoby Linuxを使っているようですね。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@0e512378b63d:/# cat /proc/version
+Linux version 4.9.4-moby (root@1d811a9194c4) (gcc version 5.3.0 (Alpine 5.3.0) ) #1 SMP Wed Jan 18 17:04:43 UTC 2017
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; コマンドが生きているか確認しましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@08671cc122c7:/# mysql
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このままだとコンテナを立ち上げただけなので、mysql自体起動していません。&lt;/p&gt;
+
+&lt;p&gt;実はdocker run する際に オプションを指定してあげる必要があるようです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name soudegesu -e MYSQL_ROOT_PASSWORD=soudegesu -d soudegesu/mysql:0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="docker" /><category term="image" /><category term="Dockerfile" /><summary type="html">自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。</summary></entry></feed>
