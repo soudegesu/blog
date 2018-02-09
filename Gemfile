@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 gem 'github-pages', group: :jekyll_plugins
 gem "minimal-mistakes-jekyll"
-gem 'ruby-oembed'
 
 group :jekyll_plugins, :test do
   gem "jekyll-archives"
@@ -12,4 +11,5 @@ group :jekyll_plugins, :test do
   gem "jekyll-polyglot"
   gem "jekyll_oembed"
   gem "jemoji"
+  gem 'ruby-oembed'
 end
