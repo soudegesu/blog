@@ -1,0 +1,669 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ | そうなんでげす</title>
+<meta property="og:title" content="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="ja" />
+<meta name="description" content="JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます" />
+<meta property="og:description" content="JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます" />
+<link rel="canonical" href="http://localhost:4000/java/java9-modularity/" />
+<meta property="og:url" content="http://localhost:4000/java/java9-modularity/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-04T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"http://localhost:4000/java/java9-modularity/","publisher":null,"image":null,"headline":"JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ","dateModified":"2018-02-04T00:00:00+09:00","datePublished":"2018-02-04T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/java/java9-modularity/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="http://localhost:4000/java" itemprop="item"><span itemprop="name">Java</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="http://localhost:4000/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 04, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <ul id="markdown-toc">
+  <li><a href="#はじめに" id="markdown-toc-はじめに">はじめに</a></li>
+  <li><a href="#注意点" id="markdown-toc-注意点">注意点</a></li>
+  <li><a href="#どうなるこれからのjava" id="markdown-toc-どうなるこれからのjava">どうなる？これからのJava</a>    <ul>
+      <li><a href="#半年に1度訪れるjava-seのリリース" id="markdown-toc-半年に1度訪れるjava-seのリリース">半年に1度訪れるJava SEのリリース</a></li>
+      <li><a href="#ウォッチすべき話題はjavaのサポート期限" id="markdown-toc-ウォッチすべき話題はjavaのサポート期限">ウォッチすべき話題はJavaのサポート期限</a></li>
+      <li><a href="#java8はいつまでサポートされるか" id="markdown-toc-java8はいつまでサポートされるか">Java8はいつまでサポートされるか</a></li>
+      <li><a href="#他にも気をつけておいた方が良いこと" id="markdown-toc-他にも気をつけておいた方が良いこと">他にも気をつけておいた方が良いこと</a></li>
+    </ul>
+  </li>
+  <li><a href="#module-systemへのマイグレーションに挑戦" id="markdown-toc-module-systemへのマイグレーションに挑戦">Module Systemへのマイグレーションに挑戦</a>    <ul>
+      <li><a href="#step-1-module-systemの基礎を勉強する" id="markdown-toc-step-1-module-systemの基礎を勉強する">Step 1. Module Systemの基礎を勉強する</a></li>
+      <li><a href="#step-2-依存ライブラリのバージョンアップを行う" id="markdown-toc-step-2-依存ライブラリのバージョンアップを行う">Step 2. 依存ライブラリのバージョンアップを行う</a>        <ul>
+          <li><a href="#ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険" id="markdown-toc-ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険">ライブラリのリリースノートを読んで「大丈夫だな」と早合点するのは危険</a></li>
+        </ul>
+      </li>
+      <li><a href="#step-3-unnamed-moduleにマイグレーションする" id="markdown-toc-step-3-unnamed-moduleにマイグレーションする">Step 3. Unnamed Moduleにマイグレーションする</a></li>
+      <li><a href="#step-4-named-moduelにマイグレーションする" id="markdown-toc-step-4-named-moduelにマイグレーションする">Step 4. Named Moduelにマイグレーションする</a></li>
+      <li><a href="#step-5-負荷試験とリソースモニタリングをする" id="markdown-toc-step-5-負荷試験とリソースモニタリングをする">Step 5. 負荷試験とリソースモニタリングをする</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたページ" id="markdown-toc-参考にさせていただいたページ">参考にさせていただいたページ</a></li>
+</ul>
+
+<h2 id="はじめに">はじめに</h2>
+<p>今回はJava 9で追加されたModule System移行に関して説明します。
+自身で手を動かすことで、JavaのプロダクションコードをJPMSに適用するための作業手順の一定の目処がたったのでまとめておきます。</p>
+
+<p>実は <a href="https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou">社内向けにも同様の発表</a> はしています。
+少しネガティブなニュアンスで資料を書いていますが、社内の(いろんな意味で)危機意識を煽るため、という背景もあったので、その点ご了承ください。</p>
+
+<div class="embed-container rich "><iframe allowfullscreen="true" allowtransparency="true" frameborder="0" height="596" id="talk_frame_426422" mozallowfullscreen="true" src="//speakerdeck.com/player/0891ffc8f49a450284c48eabf1e1ccbd" style="border:0; padding:0; margin:0; background:transparent;" webkitallowfullscreen="true" width="710"></iframe>
+</div>
+
+<h2 id="注意点">注意点</h2>
+<p>2018/1時点での情報を基に記載をしていますので、今後変更になる可能性があります。
+最新の情報と照らし合わせながら適宜情報の補填を行っていただければと思います。</p>
+
+<h2 id="どうなるこれからのjava">どうなる？これからのJava</h2>
+<p>ここではまず最初に、足元のJPMSの話ではなく、Javaエンジニアが把握しておくべき今後の全体的な流れについて触れておきます。</p>
+
+<h3 id="半年に1度訪れるjava-seのリリース">半年に1度訪れるJava SEのリリース</h3>
+<p>昨年のJava Oneにて Java9 以降のJavaのリリースロードマップが発表されました。
+要点だけまとめると以下になります。</p>
+
+<ul>
+  <li>リリース頻度は半年に1度(次は2018/3、その次は2018/9)</li>
+  <li>バージョニングは <code class="highlighter-rouge">9</code>, <code class="highlighter-rouge">10</code>, <code class="highlighter-rouge">11</code>
+    <ul>
+      <li>Oracle社のページでは <code class="highlighter-rouge">yy.MM</code> 形式で記載されているで注意</li>
+    </ul>
+  </li>
+  <li>時間軸でリリースがされていくため、期限までに実装終了したフィーチャーがリリース対象の機能として取り込まれる
+    <ul>
+      <li>early access buildはリリース3ヶ月前から提供される</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ウォッチすべき話題はjavaのサポート期限">ウォッチすべき話題はJavaのサポート期限</h3>
+<p>Javaのリリースロードマップの中で注目すべきは <strong>サポート期限</strong> です。
+リリースラインが1本化されたことで、<strong>複数のJavaのバージョンが並行サポートされることがなくなり</strong> ます。
+つまり、Javaの進化に合わせて、自分のプロダクトも追随していく必要がある、というわけです。
+例えば、Java 10が出たら、Java 9はその時点でサポート終了ということです。</p>
+
+<p>ルールとして一見わかりやすくはあるものの、以下のようなプロジェクトの場合はJavaのリリースサイクルに追従していくのは容易なことではありません。</p>
+<ul>
+  <li>リリースサイクルが長い</li>
+  <li>リリースタイミングが柔軟にコントロールできない</li>
+  <li>テストコード(非機能含む)が整備されていない</li>
+</ul>
+
+<p>そのようなプロジェクトの場合には、Oracle社からの長期サポートを受けるなどして適宜自分たちのペースでマイグレーション計画をしていくことになるでしょう。</p>
+
+<h3 id="java8はいつまでサポートされるか">Java8はいつまでサポートされるか</h3>
+<p>実は <strong>2018/01/31現在でOracle社がJava 8のサポートを2018/09→2019/01へ延長した</strong> こともあり、実際どうなるかはまだわかりません。 <strong>いつJava8から移行するか</strong>を決断するための材料としても、「Javaのサポート期限」の話題は今後も慎重にウォッチした方が良いでしょう。</p>
+
+<h3 id="他にも気をつけておいた方が良いこと">他にも気をつけておいた方が良いこと</h3>
+
+<p>Javaが先程のリリースサイクルになった場合に他に留意すべき点も補足しておきます。
+以下のようなポイントを中心に情報収集やearly access buildでの動作確認を早めにしておくと良いと感じました。</p>
+
+<ul>
+  <li>周辺のエコシステムが追従できているか
+    <ul>
+      <li>アプリケーションを構成する依存ライブラリ</li>
+      <li>実行環境として使用するパブリッククラウド</li>
+    </ul>
+  </li>
+  <li>重要な仕様変更が入っているか
+    <ul>
+      <li>JPMSのような大きな仕様変更</li>
+      <li>パッケージの移動や非推奨になったAPI</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="module-systemへのマイグレーションに挑戦">Module Systemへのマイグレーションに挑戦</h2>
+<p>Java9で導入された <code class="highlighter-rouge">Java Platform Module System(JPMS)</code> の仕様により、
+JDKを差し替えただけでは既存のJavaアプリケーションが動かない可能性が高いです。
+そのため、Module Systemに対応するためにはいくつか段階を経る必要があります。</p>
+
+<h3 id="step-1-module-systemの基礎を勉強する">Step 1. Module Systemの基礎を勉強する</h3>
+<p>まず、Module Systemに関する知識がなければModule Systemの勉強をしましょう。
+私の場合、ヌーラボさんが「<a href="https://nulab-inc.com/ja/blog/nulab/java9-migration/">ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法</a>」 にて紹介されている内容を参考に学習しました。</p>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=NKY2FYTCo7I&amp;t=1905s">Virtual Java User GroupのJava9マイグレーション動画</a> を見る
+    <ul>
+      <li>Githubにリポジトリも公開されているので、一緒に手を動かすのがオススメ</li>
+    </ul>
+  </li>
+  <li>書籍 <strong>Java9 Modularity</strong> を読む
+    <ul>
+      <li>マイグレーションよりも、modulepathの動きとクラス解決の話を中心に読んだほうが良い</li>
+      <li>英語弱者もKindleがあれば大丈夫</li>
+    </ul>
+  </li>
+</ul>
+
+<p>このステップでは</p>
+<ul>
+  <li>Moduleの種類(Unnamed/Automatic/Named)と違いを理解する</li>
+  <li>classpathとmodulepathでのクラスロードの違いを理解する</li>
+</ul>
+
+<p>が身につけばOKだと感じました。</p>
+
+<p>余裕があれば、Module SystemのBootstrapのコードを読んでおくと更に理解が捗ると思います。
+(System#initPhase2の処理あたりからブレークポイント貼って読むといいです)</p>
+
+<h3 id="step-2-依存ライブラリのバージョンアップを行う">Step 2. 依存ライブラリのバージョンアップを行う</h3>
+<p>Step 1で基本が理解できたら、<strong>Java8のうちに依存ライブラリのバージョンアップをやりましょう</strong> 。 
+リリースノートでJava9対応を謳っているライブラリはJava8でも動作可能なものが大半なので、今の内にJava9(Module System)対応版のバージョンまで依存ライブラリのバージョンを更新するのが良いです。
+理由は単純で、 <strong>Module Systemに対応させるのも多少時間がかかるのに、ライブラリ自体のマイナーアップグレードの対応も同時に行うのは苦行</strong> だからです。変更箇所が多いと、細かな変更を見落としがちになり、デグレードを引き起こす原因になります。また、ライブラリの更新と合わせて、細かく商用環境にデプロイすることで、リスクを減らしながらマイグレーションすることができます。</p>
+
+<p>なお、参考までに私のプロジェクトでは主にライブラリを使用していて(モジュールの正式名称での記載は省略)、これらを最新の安定版まで全てアップグレードしました。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ライブラリ</th>
+      <th>Java9対応状況</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>springboot(embed tomcat)</td>
+      <td>2.x 〜(2018/2リリース予定)</td>
+    </tr>
+    <tr>
+      <td>dropwizard-metric</td>
+      <td>不明</td>
+    </tr>
+    <tr>
+      <td>lombok</td>
+      <td>済</td>
+    </tr>
+    <tr>
+      <td>mariadb-java-client</td>
+      <td>済</td>
+    </tr>
+    <tr>
+      <td>jmockit</td>
+      <td>済</td>
+    </tr>
+    <tr>
+      <td>gradle</td>
+      <td>未</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>加えて、リポジトリがマルチモジュール構成になっているという点が特徴です。</p>
+
+<h4 id="ライブラリのリリースノートを読んで大丈夫だなと早合点するのは危険">ライブラリのリリースノートを読んで「大丈夫だな」と早合点するのは危険</h4>
+
+<p>このステップのポイントとして、リリースノートの情報だけで自プロダクトがModule Systemに移行可能だと思い込んで作業を終了してしまうのは危険、ということです。 <strong>自分のプロジェクトがNamed Moduleとしてマイグレーション可能か(ここで言うStep 4)</strong> まで手を動かして確認した方が良いでしょう。</p>
+
+<p>実際問題、Named Moduleにマイグレーションする場合には、 <strong>modulepath上で同じjavaのパッケージを持った複数のライブラリが存在しない状態</strong> にする必要があり、依存ライブラリが古かったり多かったりするとパッケージの重複エラーが発生します。下のイメージの場合ではmodulepathでのクラスロードはできないので、ライブラリ側に対応をお願いするか、classpathからロードする必要があります。</p>
+
+<p>(例: <code class="highlighter-rouge">tomcat-embed-core</code> と <code class="highlighter-rouge">tomcat-juli</code> で パッケージ重複が起きていてNG)
+<img src="/assets/images/20180204/conflict_packages.png" alt="conflict_packages" /></p>
+
+<h3 id="step-3-unnamed-moduleにマイグレーションする">Step 3. Unnamed Moduleにマイグレーションする</h3>
+<p>
+Unnamed Moduleはclasspathを用いてクラスをロードする方式であるため、そこまで大きな改修は不要です。Javaのバージョンが上がったことによってパッケージから分離されたクラスを利用可能にするためにコンパイル引数を追加する作業が主なタスクになります。</p>
+
+<p><code class="highlighter-rouge">Gradle</code> であれば、例えば以下のようにコンパイル引数を追加しました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compileJava.options.compilerArgs += [
+    "--add-modules", "java.xml.ws.annotation",
+    "--add-modules", "java.xml.bind",
+]
+</code></pre></div></div>
+
+<h3 id="step-4-named-moduelにマイグレーションする">Step 4. Named Moduelにマイグレーションする</h3>
+
+<p>Named Moduleはメインモジュールの <code class="highlighter-rouge">module-info.java</code> に定義されている情報を基にmodulepath上に配備されているモジュールをロードしていきます。</p>
+
+<p>Unnamed Moduleの時とは異なり、ビルドスクリプト(私の場合は <code class="highlighter-rouge">build.gradle</code> ) をそこそこ書き換える必要があるので、覚悟して臨みましょう。</p>
+
+<p><code class="highlighter-rouge">Gradle</code> は <code class="highlighter-rouge">Maven</code> と違い、java9のサポートを謳ってはいません。しかし、 <a href="https://guides.gradle.org/building-java-9-modules/">Building Java 9 Modules</a> にjava9に対応するためのヒントとサンプルリポジトリへのリンクがあるので、これを参考にすると良いです。</p>
+
+<p>私も紹介されている通りに <code class="highlighter-rouge">java-library</code> プラグインに差し替えてビルドするように修正しました。
+なお、 <code class="highlighter-rouge">experimental-jigsaw</code> プラグインは使わずともいけました。</p>
+
+<p><a href="https://guides.gradle.org/building-java-9-modules/">Building Java 9 Modules</a> を参考にしつつと言ったのですが、こちらも注意点があります。ページでは以下のようサンプルコードが書かれているのですが、試しにやってみたところ、一発でコンパイルは通りませんでした。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>doFirst {
+    options.compilerArgs = [
+        '--module-path', classpath.asPath,
+    ]
+    classpath = files()  
+}
+</code></pre></div></div>
+
+<p>このコードサンプルではGradleがリポジトリから取得したclasspath上のライブラリを全てmodulepathで読み込むように修正しています。
+そのため、Step 2でも少し触れましたが <strong>modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合</strong> は以下のようなエラーが出力されてしまいます。(例としてspringboot1.5.9が依存している <code class="highlighter-rouge">embed tomcate</code>のライブラリでパッケージが競合している場合)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
+エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.criteriaを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.metamodelを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
+エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります
+</code></pre></div></div>
+
+<p>これを解決するためのワークアラウンドがそこそこ大変なのですが</p>
+<ul>
+  <li>モジュールのバージョンを合わせる(場合によっては片方のdependencyからexcludeする)</li>
+  <li>代替可能な別クラスや別モジュールにコードを置き換えて、依存モジュールを減らす</li>
+  <li>特定のモジュールのみclasspathから読み込むように <code class="highlighter-rouge">build.gradle</code> を修正する</li>
+</ul>
+
+<p>という風に逐一スタックトレースとにらめっこをしていました。</p>
+
+<h3 id="step-5-負荷試験とリソースモニタリングをする">Step 5. 負荷試験とリソースモニタリングをする</h3>
+<p>最後にアプリケーションが今まで通りの振る舞いをするかどうかを外部から確認します。
+自動化された単体テストや結合テストはもちろんですが、今までと同等のリクエスト負荷に耐えられるか、システムの健康状態を測定するメトリックが今まで通り取れているかを確認します。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>今回はプロダクションコードのリポジトリでModule Systemに移行するための手順を確認できました。
+従来の <code class="highlighter-rouge">classpath</code> のクラスロードから <code class="highlighter-rouge">modulepath</code> へのクラスロードに機構が変わったことに加え、ビルドツールが現段階ではよしなにやってくれないため、モジュール同士の依存関係やモジュール自体の設計を強く意識する必要が出てきました。ここは今後の課題かもしれません。</p>
+
+<p>個人的には商用環境までデプロイできればかっこよかったのですが、</p>
+<ul>
+  <li>springboot 2.xの安定版がまだないこと</li>
+  <li>Java 9/10にはサポートがつかないこと</li>
+  <li><code class="highlighter-rouge">build.gradle</code> の可読性とメンテナンス性が落ちた</li>
+</ul>
+
+<p>ことを理由に商用デプロイは見送っています。
+Java 8もまだしばらくサポートされるようですし、今回の学習によってマイグレーションのアキレス腱がどこにありそうなのか理解できたことは収穫でした。
+皆さんも是非、自プロダクトで練習してみてはいかがでしょうか。</p>
+
+<p>最後にポイントだけもう一度まとめておきます</p>
+<ul>
+  <li>マイグレ前にやること
+    <ul>
+      <li>依存ライブラリのサポート状況を確認しておく</li>
+      <li>依存ライブラリのバージョンを上げておく</li>
+      <li>依存ライブラリを減らしておく(可能なら)</li>
+      <li>テストコードを準備しておく</li>
+    </ul>
+  </li>
+  <li>マイグレ中
+    <ul>
+      <li>まずはUnnamed Moduleにマイグレする</li>
+      <li>パッケージ重複が発生していないか注意する</li>
+    </ul>
+  </li>
+  <li>マイグレ後
+    <ul>
+      <li>負荷試験とかしっかり</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="参考にさせていただいたページ">参考にさせていただいたページ</h2>
+
+<ul>
+  <li><a href="https://nulab-inc.com/ja/blog/nulab/java9-migration/">ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法</a></li>
+  <li><a href="https://guides.gradle.org/building-java-9-modules/">Building Java 9 Modules</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-02-04T00:00:00+09:00">February 04, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ http://localhost:4000/java/java9-modularity/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/java/java9-modularity/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/java/java9-modularity/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/java/java9-modularity/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/aws/validate-certification-manager" class="pagination--pager" title="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu-dev';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
