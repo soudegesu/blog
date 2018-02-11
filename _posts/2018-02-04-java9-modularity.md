@@ -79,6 +79,10 @@ JDKを差し替えただけでは既存のJavaアプリケーションが動か�
     * マイグレーションよりも、modulepathの動きとクラス解決の話を中心に読んだほうが良い
     * 英語弱者もKindleがあれば大丈夫
 
+<div style="text-align: center">
+<a target="_blank"  href="https://www.amazon.co.jp/gp/product/B075FZK9DC/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B075FZK9DC&linkCode=as2&tag=soudegesu0a-22&linkId=57a893d3bc1e7e5418a0aff02cb01707"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B075FZK9DC&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu0a-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu0a-22&l=am2&o=9&a=B075FZK9DC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>
+
 このステップでは
 * Moduleの種類(Unnamed/Automatic/Named)と違いを理解する
 * classpathとmodulepathでのクラスロードの違いを理解する
