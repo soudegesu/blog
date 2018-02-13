@@ -16,7 +16,7 @@ Wikipediaなどを見てみると、**Q#** はどちらかといえば研究者�
 ## Q#の環境構築
 開発環境の構築に関しては大きく補足することは無さそうです。[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されています。
 
-ただし、私の普段使いのPCがMacであるためセットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
+ただし、私の普段使いのPCがMacであるためセットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
 仕方がないので、Azure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。
 
 ### Azure上でのWindowsインスタンスセットアップ
@@ -61,7 +61,20 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 
 ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。
 
+### [プロジェクト作成時の注意点]Reference to unknown namespace xxx
+サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
+以下のようなエラーが表示され、ビルドに失敗しました。
+
+```
+Reference to unknown namespace Microsoft.Quantum.Primitive
+```
+
+調査してみたところ `.NETのバージョンが古い` ことが原因でした。
+[Stackoverflow](https://stackoverflow.com/questions/47910347/q-environment-inconsistencies)を参考に `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。
+
 ## Q#の型
+
+
 
 ## まとめ
 
@@ -71,3 +84,5 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 * [2. 量子計算の基本原理[1-14]](https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf)
 * [量子コンピュータと量子ゲートと私](https://qiita.com/eccyan/items/180fb909a55a59bb4e1b)
 * [The Q# Programming Language](https://docs.microsoft.com/en-us/quantum/quantum-qr-intro?view=qsharp-preview)
+* [Q# environment inconsistencies(Stackoverflow)](https://stackoverflow.com/questions/47910347/q-environment-inconsistencies)
+
