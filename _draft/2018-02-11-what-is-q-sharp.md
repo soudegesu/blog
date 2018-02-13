@@ -61,7 +61,7 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 
 ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。
 
-### [プロジェクト作成時の注意点]Reference to unknown namespace xxx
+### [注意点]Reference to unknown namespace xxx が出る場合
 サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
 以下のようなエラーが表示され、ビルドに失敗しました。
 
