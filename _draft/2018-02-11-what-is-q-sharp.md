@@ -15,17 +15,29 @@ lang: ja
 Wikipediaなどを見てみると、**Q#**はどちらかといえば研究者向けの言語らしいので、普段の業務との絡みは少なそうであるけど、せっかくなので触ってみようと思います。
 
 ## Q#の環境構築
-開発環境の構築に関しては大きく補足することは無いのですが、ひとまず[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されていますし、特に詰まることなく構築できるはず、、、と思っていた矢先に、
-現時点でMacは Microsoft Quantum Development KitのExtensionをインストールできないことが判明。(Visual Studio for Mac が非対応)
-少し残念ではありますが、Azure上にWindowsのインスタンスを構築して、Remote Desktop接続にて作業をすることにしました。
+開発環境の構築に関しては大きく補足することは無さそうです。[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されています。
 
-1. [Visual Studio](https://www.visualstudio.com/ja/downloads/?rr=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fquantum%2Fquantum-installconfig%3Fview%3Dqsharp-preview) をインストールする(IDEの入手)
+ただし、私の普段使いのPCがMacであるためセットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明。手順の序盤にも記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
+仕方がないので、Azure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。
 
-2. [Microsoft Quantum Development Kit](https://www.microsoft.com/en-us/quantum/development-kit) のページへ行き、**Microsoft Quantum Development Kit** をダウンロードする(Visual StusioのQ#環境のためのExtension)
+### Azure上でのWindowsインスタンスセットアップ
 
-![download_quantum_tool_kit]({{site.baseurl}}/assets/images/20180211/download_quantum_tool_kit.png)
+なお、Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Outlookのアカウントがあれば簡単にセットアップできます。
+インスタンス構築時には `Visual Studio 2017` がバンドルされているイメージを使用すると簡単にできます。
 
-3. [サンプルコード](https://github.com/microsoft/quantum)を `clone` する 
+### Microsoft Quantum Development Kitのインストール
+[Microsoft Quantum Development Kit](https://www.microsoft.com/en-us/quantum/development-kit) をダウンロードすることで `Q#` のコードが動かせるようになります。公式サイトではwebサイトからの `.vsix` ファイル(Visual Studio)の手順を紹介していますが、
+今回はヘッダーメニューの [Tools] > [Extensions and Updates..] から検索してインストールしました。
+
+![extension_and_updates]({{site.baseurl}}/assets/images/20180211/extension_and_updates.png)
+
+### サンプルコードのインポート
+その後、[サンプルコード](https://github.com/microsoft/quantum)を `fork` したものを `clone` します。
+(私の場合、学んだことをissueに書き連ねていきたいので、こうしました) 
+
+Visual Studio上では `Team` というメニューでVCSにアクセスできるので、そこからインポートを行い、
+その後 `.sln` ファイルをダブルクリックしてプロジェクトを開きます。
+
 
 ## まとめ
 とりあえず、Mac OSがサポートされたら、この記事を更新しようかな、と思いました。
