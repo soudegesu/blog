@@ -51,13 +51,14 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 
 ### Qubit 量子コンピューティングの基本を抑える
 私の場合、そもそも量子コンピューティング自体への理解が皆無ですので、そこを補填する必要がありました。
-そのため、`N.H.Shimada` さんのブログの記事「[新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)」やIPAより公開されている「[2. 量子計算の基本原理[1-14]](https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf)」、加えて `@eccyan` さんの「[量子コンピュータと量子ゲートと私](https://qiita.com/eccyan/items/180fb909a55a59bb4e1b)」 を読みながら知識を増やしていきます。
+そのため、`N.H.Shimada` さんのブログの記事「[新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)」やIPAより公開されている「[2. 量子計算の基本原理[1-14]](https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf)」、`lyncs`さんの [量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ](http://lyncs.hateblo.jp/entry/2017/12/16/000103)、加えて `@eccyan` さんの「[量子コンピュータと量子ゲートと私](https://qiita.com/eccyan/items/180fb909a55a59bb4e1b)」 を読みながら知識を増やしていきます。
 
 ここでは主に以下の3点を学習しました。
 
 * Qubit(Quantum bit)
-    * 「確率的重ね合わせ」
-    * 「『観測』による収束」
+    * 重ね合わせ
+    * 量子もつれ
+    * 観測
 
 ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。
 
@@ -83,6 +84,7 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 * [新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)
 * [2. 量子計算の基本原理[1-14]](https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf)
 * [量子コンピュータと量子ゲートと私](https://qiita.com/eccyan/items/180fb909a55a59bb4e1b)
+* [量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ](http://lyncs.hateblo.jp/entry/2017/12/16/000103)
 * [The Q# Programming Language](https://docs.microsoft.com/en-us/quantum/quantum-qr-intro?view=qsharp-preview)
 * [Q# environment inconsistencies(Stackoverflow)](https://stackoverflow.com/questions/47910347/q-environment-inconsistencies)
 
