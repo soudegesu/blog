@@ -1,5 +1,5 @@
 ---
-title: "Q# 量子コンピューティングプログラミング言語の環境構築と動かし方"
+title: "Q# 量子コンピューティングプログラミング言語の環境構築と学びのステップ"
 description: ""
 date: 2018-02-11 00:00:00 +0900
 categories: q#
@@ -76,6 +76,10 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 ## Q#の型
 
 
+## 今後Q#はどのように組み込まれるのか
+
+今後のソフトウェアレイヤーにはどのように組み込まれるのか、に関するアイディアがMicrosoftの [The Software Stack](https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview) にて言及されていました。
+量子コンピュータは量子プロセッサ的なものと、従来の他のデバイスとハイブリッドで使うことになるのではなかろうか、とのこと
 
 ## まとめ
 
