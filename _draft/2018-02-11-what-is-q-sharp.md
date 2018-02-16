@@ -71,18 +71,25 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 ```
 
 調査してみたところ `.NETのバージョンが古い` ことが原因でした。
-[Stackoverflow](https://stackoverflow.com/questions/47910347/q-environment-inconsistencies)を参考に `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。
+ `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。
 
 ## Q#の型
 
 
-## 今後Q#はどのように組み込まれるのか
-
-今後のソフトウェアレイヤーにはどのように組み込まれるのか、に関するアイディアがMicrosoftの [The Software Stack](https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview) にて言及されていました。
-量子コンピュータは量子プロセッサ的なものと、従来の他のデバイスとハイブリッドで使うことになるのではなかろうか、とのこと
 
 ## まとめ
+### Q#の理解自体はそこまで難しくない
+今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、
+量子ゲート作成に必要な演算部分は `Q#` から提供されているため、あとは組み合わせるだけになります。
+なお、[IBM Q](https://www.research.ibm.com/ibm-q/) にはGUIもあるのですが、 
+`Q#` と同列に属するpythonのSDKである [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。 
+シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
 
+### 今後Q#はどのように活用されるのか
+
+ソフトウェアを動かすにはどのように組み込まれるのか、に関するアイディアはMicrosoftの [The Software Stack](https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview) にて言及されていました。
+量子コンピュータが得意とするアルゴリズムはQ#で組み、従来のコンピュータが得意とする計算はそちらに処理を委ねるハイブリッドな構成が提案されています。
+今回は量子コンピュータが活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。
 
 ## 参考にさせていただいたサイト
 * [新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)
