@@ -77,7 +77,7 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。
 
 ### 少し変わったプリミティブ型
-#### Qubit型
+#### Qubit
 量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。 
 
 #### Pauli

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-17T17:27:20+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-17T20:15:18+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
 Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -16,7 +16,7 @@ Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちら
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#qの標準ライブラリを見てみる&quot; id=&quot;markdown-toc-qの標準ライブラリを見てみる&quot;&gt;Q#の標準ライブラリを見てみる&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#少し変わったプリミティブ型&quot; id=&quot;markdown-toc-少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#qubit型&quot; id=&quot;markdown-toc-qubit型&quot;&gt;Qubit型&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#qubit&quot; id=&quot;markdown-toc-qubit&quot;&gt;Qubit&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#pauli&quot; id=&quot;markdown-toc-pauli&quot;&gt;Pauli&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#result&quot; id=&quot;markdown-toc-result&quot;&gt;Result&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
@@ -100,7 +100,7 @@ Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちら
 &lt;p&gt;普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。&lt;/p&gt;
 
 &lt;h3 id=&quot;少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/h3&gt;
-&lt;h4 id=&quot;qubit型&quot;&gt;Qubit型&lt;/h4&gt;
+&lt;h4 id=&quot;qubit&quot;&gt;Qubit&lt;/h4&gt;
 &lt;p&gt;量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。&lt;/p&gt;
 
 &lt;h4 id=&quot;pauli&quot;&gt;Pauli&lt;/h4&gt;
