@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-17T20:15:18+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-17T20:17:52+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
 Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -124,9 +124,8 @@ Microsoftのサンプルコードで使われている &lt;code class=&quot;high
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;h3 id=&quot;qの理解自体はそこまで難しくない&quot;&gt;Q#の理解自体はそこまで難しくない&lt;/h3&gt;
 &lt;p&gt;私はアルゴリズムや低レベルの機械計算を専門としてはいないため、応用するには学習時間が要しそうですが、
-今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、&lt;/p&gt;
-
-&lt;p&gt;量子ゲート作成に必要な演算部分は &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; から提供されているため、あとは組み合わせるだけになります。
+今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、
+量子ゲート作成に必要な演算部分は &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; から提供されているため、あとは組み合わせるだけになります。
 なお、&lt;a href=&quot;https://www.research.ibm.com/ibm-q/&quot;&gt;IBM Q&lt;/a&gt; にはGUIもあるのですが、 
 pythonのSDKとして &lt;a href=&quot;https://github.com/QISKit/qiskit-sdk-py&quot;&gt;qiskit-sdk-py&lt;/a&gt; も提供しています。 
 シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
