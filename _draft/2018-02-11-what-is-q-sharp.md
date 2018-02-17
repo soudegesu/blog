@@ -82,7 +82,7 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、
 量子ゲート作成に必要な演算部分は `Q#` から提供されているため、あとは組み合わせるだけになります。
 なお、[IBM Q](https://www.research.ibm.com/ibm-q/) にはGUIもあるのですが、 
-`Q#` と同列に属するpythonのSDKである [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。 
+pythonのSDKとして [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。 
 シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
 
 ### 今後Q#はどのように活用されるのか
