@@ -1,4 +1,152 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-11T10:05:45+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ</title><link href="https://www.soudegesu.com/java/java9-modularity/" rel="alternate" type="text/html" title="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ" /><published>2018-02-04T00:00:00+09:00</published><updated>2018-02-04T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/java9-modularity</id><content type="html" xml:base="https://www.soudegesu.com/java/java9-modularity/">&lt;ul id=&quot;markdown-toc&quot;&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-17T17:27:20+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
+Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#qの環境構築&quot; id=&quot;markdown-toc-qの環境構築&quot;&gt;Q#の環境構築&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#azure上でのwindowsインスタンスセットアップ&quot; id=&quot;markdown-toc-azure上でのwindowsインスタンスセットアップ&quot;&gt;Azure上でのWindowsインスタンスセットアップ&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#microsoft-quantum-development-kitのインストール&quot; id=&quot;markdown-toc-microsoft-quantum-development-kitのインストール&quot;&gt;Microsoft Quantum Development Kitのインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サンプルコードのインポート&quot; id=&quot;markdown-toc-サンプルコードのインポート&quot;&gt;サンプルコードのインポート&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サンプルコードの実行なるほどわからん&quot; id=&quot;markdown-toc-サンプルコードの実行なるほどわからん&quot;&gt;サンプルコードの実行(なるほど、わからん)&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#基本を抑える&quot; id=&quot;markdown-toc-基本を抑える&quot;&gt;基本を抑える&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#qubit-量子コンピューティングの基本を抑える&quot; id=&quot;markdown-toc-qubit-量子コンピューティングの基本を抑える&quot;&gt;Qubit 量子コンピューティングの基本を抑える&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#注意点reference-to-unknown-namespace-xxx-が出る場合&quot; id=&quot;markdown-toc-注意点reference-to-unknown-namespace-xxx-が出る場合&quot;&gt;[注意点]Reference to unknown namespace xxx が出る場合&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#qの標準ライブラリを見てみる&quot; id=&quot;markdown-toc-qの標準ライブラリを見てみる&quot;&gt;Q#の標準ライブラリを見てみる&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#少し変わったプリミティブ型&quot; id=&quot;markdown-toc-少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#qubit型&quot; id=&quot;markdown-toc-qubit型&quot;&gt;Qubit型&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#pauli&quot; id=&quot;markdown-toc-pauli&quot;&gt;Pauli&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#result&quot; id=&quot;markdown-toc-result&quot;&gt;Result&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#標準関数も少し見てみる&quot; id=&quot;markdown-toc-標準関数も少し見てみる&quot;&gt;標準関数も少し見てみる&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#qの理解自体はそこまで難しくない&quot; id=&quot;markdown-toc-qの理解自体はそこまで難しくない&quot;&gt;Q#の理解自体はそこまで難しくない&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#今後qはどのように活用されるのか&quot; id=&quot;markdown-toc-今後qはどのように活用されるのか&quot;&gt;今後Q#はどのように活用されるのか&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;qの環境構築&quot;&gt;Q#の環境構築&lt;/h2&gt;
+&lt;p&gt;開発環境の構築に関しては大きく補足することは無さそうです。&lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview&quot;&gt;公式サイト&lt;/a&gt;も手順が手厚めに記載されています。&lt;/p&gt;
+
+&lt;p&gt;ただし、セットアップの途中で気づいたのですが、 &lt;strong&gt;Macは Microsoft Quantum Development KitのExtensionをインストールできない&lt;/strong&gt; ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
+仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。&lt;/p&gt;
+
+&lt;h3 id=&quot;azure上でのwindowsインスタンスセットアップ&quot;&gt;Azure上でのWindowsインスタンスセットアップ&lt;/h3&gt;
+
+&lt;p&gt;Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual Studioのサンプルコードを実行する程度であればお金の心配はしなくても良いです。Outlookのアカウントがあれば簡単にセットアップできます(手元にクレカや携帯電話は必要です)。
+インスタンス構築時には &lt;code class=&quot;highlighter-rouge&quot;&gt;Visual Studio 2017&lt;/code&gt; がバンドルされているイメージを使用すると簡単に始められるため、私はそれを利用しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;microsoft-quantum-development-kitのインストール&quot;&gt;Microsoft Quantum Development Kitのインストール&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.microsoft.com/en-us/quantum/development-kit&quot;&gt;Microsoft Quantum Development Kit&lt;/a&gt; をダウンロードすることで &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; のコードが動かせるようになります。公式サイトではwebサイトからの &lt;code class=&quot;highlighter-rouge&quot;&gt;.vsix&lt;/code&gt; ファイル(Visual Studio)入手の手順を紹介していますが、
+今回はヘッダーメニューの [Tools] &amp;gt; [Extensions and Updates..] から検索してインストールしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180211/extension_and_updates.png&quot; alt=&quot;extension_and_updates&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;サンプルコードのインポート&quot;&gt;サンプルコードのインポート&lt;/h3&gt;
+&lt;p&gt;その後、&lt;a href=&quot;https://github.com/microsoft/quantum&quot;&gt;サンプルコード&lt;/a&gt;を &lt;code class=&quot;highlighter-rouge&quot;&gt;fork&lt;/code&gt; したものを &lt;code class=&quot;highlighter-rouge&quot;&gt;clone&lt;/code&gt; します。
+(私の場合、学んだことをissueに書き連ねていきたいので、こうしました)&lt;/p&gt;
+
+&lt;p&gt;Visual Studio上では &lt;code class=&quot;highlighter-rouge&quot;&gt;Team&lt;/code&gt; というメニューでVCSにアクセスできるので、そこからインポートを行い、
+その後 &lt;code class=&quot;highlighter-rouge&quot;&gt;.sln&lt;/code&gt; ファイルをダブルクリックしてプロジェクトを開きます。&lt;/p&gt;
+
+&lt;h3 id=&quot;サンプルコードの実行なるほどわからん&quot;&gt;サンプルコードの実行(なるほど、わからん)&lt;/h3&gt;
+&lt;p&gt;プロジェクト内にいくつかディレクトリがあり、いくつかのサンプルコードが配置されています。
+それを「Set as Startup Project」に設定した後、 &lt;code class=&quot;highlighter-rouge&quot;&gt;F5&lt;/code&gt; のショートカットキーでRunさせることができます。
+おもむろにプロンプトが立ち上がり、何かが実行されているのですが、なるほどどうしてよく分かりません。
+とりあえず、動作環境が構築できたことはわかりました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180211/prompt_success.png&quot; alt=&quot;prompt_success&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;基本を抑える&quot;&gt;基本を抑える&lt;/h2&gt;
+
+&lt;p&gt;やはり前知識無しで進めていくのは厳しいものがあるので、基本を抑えに行きましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;qubit-量子コンピューティングの基本を抑える&quot;&gt;Qubit 量子コンピューティングの基本を抑える&lt;/h3&gt;
+&lt;p&gt;私の場合、そもそも量子コンピューティング自体への理解が皆無ですので、そこを補填する必要がありました。
+そのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;N.H.Shimada&lt;/code&gt; さんのブログの記事「&lt;a href=&quot;http://ut25252.hatenablog.com/entry/2017/12/15/222821&quot;&gt;新プログラミング言語「Q#」で量子テレポーテーション&lt;/a&gt;」やIPAより公開されている「&lt;a href=&quot;https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf&quot;&gt;2. 量子計算の基本原理[1-14]&lt;/a&gt;」、&lt;code class=&quot;highlighter-rouge&quot;&gt;lyncs&lt;/code&gt;さんの &lt;a href=&quot;http://lyncs.hateblo.jp/entry/2017/12/16/000103&quot;&gt;量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ&lt;/a&gt;、加えて &lt;code class=&quot;highlighter-rouge&quot;&gt;@eccyan&lt;/code&gt; さんの「&lt;a href=&quot;https://qiita.com/eccyan/items/180fb909a55a59bb4e1b&quot;&gt;量子コンピュータと量子ゲートと私&lt;/a&gt;」 を読みながら知識を増やしていきます。&lt;/p&gt;
+
+&lt;p&gt;ここでは主に以下の3点を学習しました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Qubit(Quantum bit)
+    &lt;ul&gt;
+      &lt;li&gt;重ね合わせ&lt;/li&gt;
+      &lt;li&gt;量子もつれ&lt;/li&gt;
+      &lt;li&gt;観測&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意点reference-to-unknown-namespace-xxx-が出る場合&quot;&gt;[注意点]Reference to unknown namespace xxx が出る場合&lt;/h3&gt;
+&lt;p&gt;サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
+以下のようなエラーが表示され、ビルドに失敗しました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Reference to unknown namespace Microsoft.Quantum.Primitive
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;調査してみたところ &lt;code class=&quot;highlighter-rouge&quot;&gt;.NETのバージョンが古い&lt;/code&gt; ことが原因でした。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;.NET Framework&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;4.6.1&lt;/code&gt; に変更することで namespaceの解決ができるようになりました。&lt;/p&gt;
+
+&lt;h2 id=&quot;qの標準ライブラリを見てみる&quot;&gt;Q#の標準ライブラリを見てみる&lt;/h2&gt;
+&lt;p&gt;普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/h3&gt;
+&lt;h4 id=&quot;qubit型&quot;&gt;Qubit型&lt;/h4&gt;
+&lt;p&gt;量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。&lt;/p&gt;
+
+&lt;h4 id=&quot;pauli&quot;&gt;Pauli&lt;/h4&gt;
+&lt;p&gt;ブロッホ球での回転を考えるときに使用するパウリ行列を表す型。
+何軸で回転させるかによって &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliI&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliX&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliY&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliZ&lt;/code&gt; のいずれかを選択することになるのですが、
+それをまとめてPauliとして扱います。&lt;/p&gt;
+
+&lt;h4 id=&quot;result&quot;&gt;Result&lt;/h4&gt;
+&lt;p&gt;Qubitを観測(Measurement)した際の結果が格納される型。
+観測することで &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; に収束されるので、&lt;code class=&quot;highlighter-rouge&quot;&gt;Zero&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;One&lt;/code&gt; しかありません。&lt;/p&gt;
+
+&lt;h3 id=&quot;標準関数も少し見てみる&quot;&gt;標準関数も少し見てみる&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Microsoft.Quantum.Primitive&lt;/code&gt; パッケージには演算のための関数が予め準備されていました。
+Microsoftのサンプルコードで使われている &lt;code class=&quot;highlighter-rouge&quot;&gt;T&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;H&lt;/code&gt; 、 &lt;code class=&quot;highlighter-rouge&quot;&gt;CNOT&lt;/code&gt; といったゲートを構築するためのものがあり、
+別のパッケージには &lt;code class=&quot;highlighter-rouge&quot;&gt;Math&lt;/code&gt; 系のパッケージもありました。&lt;/p&gt;
+
+&lt;p&gt;関数が表す式は &lt;a href=&quot;https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview&quot;&gt;公式のライブラリリファレンス&lt;/a&gt;
+に記載されています。端的ですが、変に言葉で説明するよりも良いのでしょうね。理解が及んでいない式は別途調べました。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;h3 id=&quot;qの理解自体はそこまで難しくない&quot;&gt;Q#の理解自体はそこまで難しくない&lt;/h3&gt;
+&lt;p&gt;私はアルゴリズムや低レベルの機械計算を専門としてはいないため、応用するには学習時間が要しそうですが、
+今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、&lt;/p&gt;
+
+&lt;p&gt;量子ゲート作成に必要な演算部分は &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; から提供されているため、あとは組み合わせるだけになります。
+なお、&lt;a href=&quot;https://www.research.ibm.com/ibm-q/&quot;&gt;IBM Q&lt;/a&gt; にはGUIもあるのですが、 
+pythonのSDKとして &lt;a href=&quot;https://github.com/QISKit/qiskit-sdk-py&quot;&gt;qiskit-sdk-py&lt;/a&gt; も提供しています。 
+シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
+(すみません、こちらは動作確認していません)&lt;/p&gt;
+
+&lt;h3 id=&quot;今後qはどのように活用されるのか&quot;&gt;今後Q#はどのように活用されるのか&lt;/h3&gt;
+
+&lt;p&gt;ソフトウェアを動かすにはどのように組み込まれるのか、に関するアイディアはMicrosoftの &lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview&quot;&gt;The Software Stack&lt;/a&gt; にて言及されていました。
+量子コンピュータが得意とするアルゴリズムはQ#で組み、従来のコンピュータが得意とする計算はそちらに処理を委ねるハイブリッドな構成が提案されています。
+今回は量子コンピュータプログラミング言語が活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://ut25252.hatenablog.com/entry/2017/12/15/222821&quot;&gt;新プログラミング言語「Q#」で量子テレポーテーション&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf&quot;&gt;2. 量子計算の基本原理[1-14]&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qiita.com/eccyan/items/180fb909a55a59bb4e1b&quot;&gt;量子コンピュータと量子ゲートと私&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://lyncs.hateblo.jp/entry/2017/12/16/000103&quot;&gt;量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-qr-intro?view=qsharp-preview&quot;&gt;The Q# Programming Language&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/47910347/q-environment-inconsistencies&quot;&gt;Q# environment inconsistencies(Stackoverflow)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="q#" /><category term="q_sharp" /><category term="quantum" /><category term="computing" /><category term="量子コンピューティング" /><summary type="html">もともとは 仮想通貨 を調べていた時に、 量子耐性 という言葉を発見し、量子耐性から 量子耐性のあるアルゴリズム や量子プログラミング言語である Q# に行き着きました。 Wikipediaなどを見てみると、Q# はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。</summary></entry><entry xml:lang="ja"><title type="html">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ</title><link href="https://www.soudegesu.com/java/java9-modularity/" rel="alternate" type="text/html" title="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ" /><published>2018-02-04T00:00:00+09:00</published><updated>2018-02-04T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/java9-modularity</id><content type="html" xml:base="https://www.soudegesu.com/java/java9-modularity/">&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#注意点&quot; id=&quot;markdown-toc-注意点&quot;&gt;注意点&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#どうなるこれからのjava&quot; id=&quot;markdown-toc-どうなるこれからのjava&quot;&gt;どうなる？これからのJava&lt;/a&gt;    &lt;ul&gt;
