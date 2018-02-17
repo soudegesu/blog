@@ -1,0 +1,545 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Q# 量子コンピューティングプログラミング言語を試す | そうなんでげす</title>
+<meta property="og:title" content="Q# 量子コンピューティングプログラミング言語を試す" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="ja" />
+<meta name="description" content="量子コンピューティングプログラミング言語であるQ#を試してみました。環境構築で発生した問題と、量子コンピューティングの基礎を抑えるための参考リンクもいくつか" />
+<meta property="og:description" content="量子コンピューティングプログラミング言語であるQ#を試してみました。環境構築で発生した問題と、量子コンピューティングの基礎を抑えるための参考リンクもいくつか" />
+<link rel="canonical" href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" />
+<meta property="og:url" content="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-11T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"量子コンピューティングプログラミング言語であるQ#を試してみました。環境構築で発生した問題と、量子コンピューティングの基礎を抑えるための参考リンクもいくつか","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/q_sharp/what-is-q-sharp/","publisher":null,"image":null,"headline":"Q# 量子コンピューティングプログラミング言語を試す","dateModified":"2018-02-11T00:00:00+09:00","datePublished":"2018-02-11T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/q_sharp/what-is-q-sharp/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/q_sharp" itemprop="item"><span itemprop="name">Q_sharp</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Q# 量子コンピューティングプログラミング言語を試す</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Q# 量子コンピューティングプログラミング言語を試す">
+    <meta itemprop="description" content="もともとは 仮想通貨 を調べていた時に、 量子耐性 という言葉を発見し、量子耐性から 量子耐性のあるアルゴリズム や量子プログラミング言語である Q# に行き着きました。Wikipediaなどを見てみると、Q# はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。">
+    <meta itemprop="datePublished" content="February 11, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Q# 量子コンピューティングプログラミング言語を試す
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>もともとは <strong>仮想通貨</strong> を調べていた時に、 <strong>量子耐性</strong> という言葉を発見し、量子耐性から <strong>量子耐性のあるアルゴリズム</strong> や量子プログラミング言語である <strong>Q#</strong> に行き着きました。
+Wikipediaなどを見てみると、<strong>Q#</strong> はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#qの環境構築" id="markdown-toc-qの環境構築">Q#の環境構築</a>    <ul>
+      <li><a href="#azure上でのwindowsインスタンスセットアップ" id="markdown-toc-azure上でのwindowsインスタンスセットアップ">Azure上でのWindowsインスタンスセットアップ</a></li>
+      <li><a href="#microsoft-quantum-development-kitのインストール" id="markdown-toc-microsoft-quantum-development-kitのインストール">Microsoft Quantum Development Kitのインストール</a></li>
+      <li><a href="#サンプルコードのインポート" id="markdown-toc-サンプルコードのインポート">サンプルコードのインポート</a></li>
+      <li><a href="#サンプルコードの実行なるほどわからん" id="markdown-toc-サンプルコードの実行なるほどわからん">サンプルコードの実行(なるほど、わからん)</a></li>
+    </ul>
+  </li>
+  <li><a href="#基本を抑える" id="markdown-toc-基本を抑える">基本を抑える</a>    <ul>
+      <li><a href="#qubit-量子コンピューティングの基本を抑える" id="markdown-toc-qubit-量子コンピューティングの基本を抑える">Qubit 量子コンピューティングの基本を抑える</a></li>
+      <li><a href="#注意点reference-to-unknown-namespace-xxx-が出る場合" id="markdown-toc-注意点reference-to-unknown-namespace-xxx-が出る場合">[注意点]Reference to unknown namespace xxx が出る場合</a></li>
+    </ul>
+  </li>
+  <li><a href="#qの標準ライブラリを見てみる" id="markdown-toc-qの標準ライブラリを見てみる">Q#の標準ライブラリを見てみる</a>    <ul>
+      <li><a href="#少し変わったプリミティブ型" id="markdown-toc-少し変わったプリミティブ型">少し変わったプリミティブ型</a>        <ul>
+          <li><a href="#qubit型" id="markdown-toc-qubit型">Qubit型</a></li>
+          <li><a href="#pauli" id="markdown-toc-pauli">Pauli</a></li>
+          <li><a href="#result" id="markdown-toc-result">Result</a></li>
+        </ul>
+      </li>
+      <li><a href="#標準関数も少し見てみる" id="markdown-toc-標準関数も少し見てみる">標準関数も少し見てみる</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a>    <ul>
+      <li><a href="#qの理解自体はそこまで難しくない" id="markdown-toc-qの理解自体はそこまで難しくない">Q#の理解自体はそこまで難しくない</a></li>
+      <li><a href="#今後qはどのように活用されるのか" id="markdown-toc-今後qはどのように活用されるのか">今後Q#はどのように活用されるのか</a></li>
+    </ul>
+  </li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="qの環境構築">Q#の環境構築</h2>
+<p>開発環境の構築に関しては大きく補足することは無さそうです。<a href="https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview">公式サイト</a>も手順が手厚めに記載されています。</p>
+
+<p>ただし、セットアップの途中で気づいたのですが、 <strong>Macは Microsoft Quantum Development KitのExtensionをインストールできない</strong> ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
+仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。</p>
+
+<h3 id="azure上でのwindowsインスタンスセットアップ">Azure上でのWindowsインスタンスセットアップ</h3>
+
+<p>Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual Studioのサンプルコードを実行する程度であればお金の心配はしなくても良いです。Outlookのアカウントがあれば簡単にセットアップできます(手元にクレカや携帯電話は必要です)。
+インスタンス構築時には <code class="highlighter-rouge">Visual Studio 2017</code> がバンドルされているイメージを使用すると簡単に始められるため、私はそれを利用しました。</p>
+
+<h3 id="microsoft-quantum-development-kitのインストール">Microsoft Quantum Development Kitのインストール</h3>
+<p><a href="https://www.microsoft.com/en-us/quantum/development-kit">Microsoft Quantum Development Kit</a> をダウンロードすることで <code class="highlighter-rouge">Q#</code> のコードが動かせるようになります。公式サイトではwebサイトからの <code class="highlighter-rouge">.vsix</code> ファイル(Visual Studio)入手の手順を紹介していますが、
+今回はヘッダーメニューの [Tools] &gt; [Extensions and Updates..] から検索してインストールしました。</p>
+
+<p><img src="/assets/images/20180211/extension_and_updates.png" alt="extension_and_updates" /></p>
+
+<h3 id="サンプルコードのインポート">サンプルコードのインポート</h3>
+<p>その後、<a href="https://github.com/microsoft/quantum">サンプルコード</a>を <code class="highlighter-rouge">fork</code> したものを <code class="highlighter-rouge">clone</code> します。
+(私の場合、学んだことをissueに書き連ねていきたいので、こうしました)</p>
+
+<p>Visual Studio上では <code class="highlighter-rouge">Team</code> というメニューでVCSにアクセスできるので、そこからインポートを行い、
+その後 <code class="highlighter-rouge">.sln</code> ファイルをダブルクリックしてプロジェクトを開きます。</p>
+
+<h3 id="サンプルコードの実行なるほどわからん">サンプルコードの実行(なるほど、わからん)</h3>
+<p>プロジェクト内にいくつかディレクトリがあり、いくつかのサンプルコードが配置されています。
+それを「Set as Startup Project」に設定した後、 <code class="highlighter-rouge">F5</code> のショートカットキーでRunさせることができます。
+おもむろにプロンプトが立ち上がり、何かが実行されているのですが、なるほどどうしてよく分かりません。
+とりあえず、動作環境が構築できたことはわかりました。</p>
+
+<p><img src="/assets/images/20180211/prompt_success.png" alt="prompt_success" /></p>
+
+<h2 id="基本を抑える">基本を抑える</h2>
+
+<p>やはり前知識無しで進めていくのは厳しいものがあるので、基本を抑えに行きましょう。</p>
+
+<h3 id="qubit-量子コンピューティングの基本を抑える">Qubit 量子コンピューティングの基本を抑える</h3>
+<p>私の場合、そもそも量子コンピューティング自体への理解が皆無ですので、そこを補填する必要がありました。
+そのため、<code class="highlighter-rouge">N.H.Shimada</code> さんのブログの記事「<a href="http://ut25252.hatenablog.com/entry/2017/12/15/222821">新プログラミング言語「Q#」で量子テレポーテーション</a>」やIPAより公開されている「<a href="https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf">2. 量子計算の基本原理[1-14]</a>」、<code class="highlighter-rouge">lyncs</code>さんの <a href="http://lyncs.hateblo.jp/entry/2017/12/16/000103">量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ</a>、加えて <code class="highlighter-rouge">@eccyan</code> さんの「<a href="https://qiita.com/eccyan/items/180fb909a55a59bb4e1b">量子コンピュータと量子ゲートと私</a>」 を読みながら知識を増やしていきます。</p>
+
+<p>ここでは主に以下の3点を学習しました。</p>
+
+<ul>
+  <li>Qubit(Quantum bit)
+    <ul>
+      <li>重ね合わせ</li>
+      <li>量子もつれ</li>
+      <li>観測</li>
+    </ul>
+  </li>
+</ul>
+
+<p>ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。</p>
+
+<h3 id="注意点reference-to-unknown-namespace-xxx-が出る場合">[注意点]Reference to unknown namespace xxx が出る場合</h3>
+<p>サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
+以下のようなエラーが表示され、ビルドに失敗しました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reference to unknown namespace Microsoft.Quantum.Primitive
+</code></pre></div></div>
+
+<p>調査してみたところ <code class="highlighter-rouge">.NETのバージョンが古い</code> ことが原因でした。
+ <code class="highlighter-rouge">.NET Framework</code> を <code class="highlighter-rouge">4.6.1</code> に変更することで namespaceの解決ができるようになりました。</p>
+
+<h2 id="qの標準ライブラリを見てみる">Q#の標準ライブラリを見てみる</h2>
+<p>普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。</p>
+
+<h3 id="少し変わったプリミティブ型">少し変わったプリミティブ型</h3>
+<h4 id="qubit型">Qubit型</h4>
+<p>量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。</p>
+
+<h4 id="pauli">Pauli</h4>
+<p>ブロッホ球での回転を考えるときに使用するパウリ行列を表す型。
+何軸で回転させるかによって <code class="highlighter-rouge">PauliI</code>, <code class="highlighter-rouge">PauliX</code>, <code class="highlighter-rouge">PauliY</code>, <code class="highlighter-rouge">PauliZ</code> のいずれかを選択することになるのですが、
+それをまとめてPauliとして扱います。</p>
+
+<h4 id="result">Result</h4>
+<p>Qubitを観測(Measurement)した際の結果が格納される型。
+観測することで <code class="highlighter-rouge">0</code> か <code class="highlighter-rouge">1</code> に収束されるので、<code class="highlighter-rouge">Zero</code> か <code class="highlighter-rouge">One</code> しかありません。</p>
+
+<h3 id="標準関数も少し見てみる">標準関数も少し見てみる</h3>
+
+<p><code class="highlighter-rouge">Microsoft.Quantum.Primitive</code> パッケージには演算のための関数が予め準備されていました。
+Microsoftのサンプルコードで使われている <code class="highlighter-rouge">T</code> や <code class="highlighter-rouge">H</code> 、 <code class="highlighter-rouge">CNOT</code> といったゲートを構築するためのものがあり、
+別のパッケージには <code class="highlighter-rouge">Math</code> 系のパッケージもありました。</p>
+
+<p>関数が表す式は <a href="https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview">公式のライブラリリファレンス</a>
+に記載されています。端的ですが、変に言葉で説明するよりも良いのでしょうね。理解が及んでいない式は別途調べました。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<h3 id="qの理解自体はそこまで難しくない">Q#の理解自体はそこまで難しくない</h3>
+<p>私はアルゴリズムや低レベルの機械計算を専門としてはいないため、応用するには学習時間が要しそうですが、
+今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、</p>
+
+<p>量子ゲート作成に必要な演算部分は <code class="highlighter-rouge">Q#</code> から提供されているため、あとは組み合わせるだけになります。
+なお、<a href="https://www.research.ibm.com/ibm-q/">IBM Q</a> にはGUIもあるのですが、 
+pythonのSDKとして <a href="https://github.com/QISKit/qiskit-sdk-py">qiskit-sdk-py</a> も提供しています。 
+シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
+(すみません、こちらは動作確認していません)</p>
+
+<h3 id="今後qはどのように活用されるのか">今後Q#はどのように活用されるのか</h3>
+
+<p>ソフトウェアを動かすにはどのように組み込まれるのか、に関するアイディアはMicrosoftの <a href="https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview">The Software Stack</a> にて言及されていました。
+量子コンピュータが得意とするアルゴリズムはQ#で組み、従来のコンピュータが得意とする計算はそちらに処理を委ねるハイブリッドな構成が提案されています。
+今回は量子コンピュータプログラミング言語が活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+<ul>
+  <li><a href="http://ut25252.hatenablog.com/entry/2017/12/15/222821">新プログラミング言語「Q#」で量子テレポーテーション</a></li>
+  <li><a href="https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf">2. 量子計算の基本原理[1-14]</a></li>
+  <li><a href="https://qiita.com/eccyan/items/180fb909a55a59bb4e1b">量子コンピュータと量子ゲートと私</a></li>
+  <li><a href="http://lyncs.hateblo.jp/entry/2017/12/16/000103">量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ</a></li>
+  <li><a href="https://docs.microsoft.com/en-us/quantum/quantum-qr-intro?view=qsharp-preview">The Q# Programming Language</a></li>
+  <li><a href="https://stackoverflow.com/questions/47910347/q-environment-inconsistencies">Q# environment inconsistencies(Stackoverflow)</a></li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-02-11T00:00:00+09:00">February 11, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Q# 量子コンピューティングプログラミング言語を試す https://www.soudegesu.com/q_sharp/what-is-q-sharp/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.soudegesu.com/q_sharp/what-is-q-sharp/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/q_sharp/what-is-q-sharp/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/q_sharp/what-is-q-sharp/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/java/java9-modularity/" class="pagination--pager" title="JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
