@@ -16,12 +16,12 @@ Wikipediaなどを見てみると、**Q#** はどちらかといえば研究者�
 ## Q#の環境構築
 開発環境の構築に関しては大きく補足することは無さそうです。[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されています。
 
-ただし、私の普段使いのPCがMacであるためセットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
-仕方がないので、Azure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。
+ただし、セットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
+仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。
 
 ### Azure上でのWindowsインスタンスセットアップ
 
-Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual Studioのサンプルコードを実行する程度であればお金の心配はしなくても良いですし、Outlookのアカウントがあれば簡単にセットアップできます(手元にクレカや携帯電話は必要です)。
+Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual Studioのサンプルコードを実行する程度であればお金の心配はしなくても良いです。Outlookのアカウントがあれば簡単にセットアップできます(手元にクレカや携帯電話は必要です)。
 インスタンス構築時には `Visual Studio 2017` がバンドルされているイメージを使用すると簡単に始められるため、私はそれを利用しました。
 
 ### Microsoft Quantum Development Kitのインストール
@@ -74,31 +74,28 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
  `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。
 
 ## Q#の標準ライブラリを見てみる
-### プリミティブ型
 普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。
 
+### 少し変わったプリミティブ型
 #### Qubit型
 量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。 
-標準ライブラリに組み込まれている関数にて、この型に対する操作を頻繁に行います。
 
 #### Pauli
-ブロッホ球での回転を考えるときに使用するパウリ行列を表す型です。
+ブロッホ球での回転を考えるときに使用するパウリ行列を表す型。
 何軸で回転させるかによって `PauliI`, `PauliX`, `PauliY`, `PauliZ` のいずれかを選択することになるのですが、
 それをまとめてPauliとして扱います。
 
 #### Result
-Qubitを観測(Measurement)した際の結果が格納される型になります。
+Qubitを観測(Measurement)した際の結果が格納される型。
 観測することで `0` か `1` に収束されるので、`Zero` か `One` しかありません。
 
-なお、もちろん、`newtype` にて型宣言することでユーザ自身で型を定義することもできます。 
-
-### 標準関数
+### 標準関数も少し見てみる
 
 `Microsoft.Quantum.Primitive` パッケージには演算のための関数が予め準備されていました。
 Microsoftのサンプルコードで使われている `T` や `H` 、 `CNOT` といったゲートを構築するためのものがあり、
 別のパッケージには `Math` 系のパッケージもありました。
 
-関数が表す式は [公式のlibraliリファレンス](https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview)
+関数が表す式は [公式のライブラリリファレンス](https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview)
 に記載されています。端的ですが、変に言葉で説明するよりも良いのでしょうね。理解が及んでいない式は別途調べました。
 
 ## まとめ
@@ -110,12 +107,13 @@ Microsoftのサンプルコードで使われている `T` や `H` 、 `CNOT` �
 なお、[IBM Q](https://www.research.ibm.com/ibm-q/) にはGUIもあるのですが、 
 pythonのSDKとして [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。 
 シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
+(すみません、こちらは動作確認していません)
 
 ### 今後Q#はどのように活用されるのか
 
 ソフトウェアを動かすにはどのように組み込まれるのか、に関するアイディアはMicrosoftの [The Software Stack](https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview) にて言及されていました。
 量子コンピュータが得意とするアルゴリズムはQ#で組み、従来のコンピュータが得意とする計算はそちらに処理を委ねるハイブリッドな構成が提案されています。
-今回は量子コンピュータが活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。
+今回は量子コンピュータプログラミング言語が活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。
 
 ## 参考にさせていただいたサイト
 * [新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)
