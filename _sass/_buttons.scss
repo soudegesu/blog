@@ -121,7 +121,8 @@
   (facebook, $facebook-color),
   (twitter, $twitter-color),
   (google-plus, $google-plus-color),
-  (linkedin, $linkedin-color);
+  (linkedin, $linkedin-color),
+  (hatebu, $hatebu-color);
 
   @each $socialnetwork, $color in $social {
     &--#{$socialnetwork} {
