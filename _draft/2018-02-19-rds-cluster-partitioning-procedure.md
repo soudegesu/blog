@@ -7,6 +7,8 @@ tags: aws rds aurora SQL MySQL
 lang: ja
 ---
 
+今日は
+
 * Table Of Contents
 {:toc}
 
