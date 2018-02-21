@@ -1,6 +1,6 @@
 ---
-title: "AWS RDS Aurora Cluster(MySQL互換)で日付パーティションをプロシージャで作成する"
-description: "RDS Aurora Cluster(MySQL互換)で日付でのパーティションを作成する方法を紹介します。プロシージャとCREATE EVENTを組み合わせて定期的に作成する方法を中心に、ClusterのWriter/Readerの特性などにも触れます"
+title: "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加する"
+description: "RDS Aurora Cluster(MySQL互換)で日付でのパーティションを作成する方法を紹介します。プロシージャとCREATE EVENTを組み合わせて定期的にイベント実行する方法を中心に、ClusterのWriter/Readerの特性などにも触れます"
 date: 2018-02-19 00:00:00 +0900
 categories: aws
 tags: aws rds aurora SQL MySQL
@@ -113,7 +113,7 @@ DELIMITER ;
 
 ```
 
-### 1年ぶんのパーティションを作成する
+### 1年ぶんのパーティション(初期パーティション)を作成する
 登録したプロシージャ `add_hoge_partition` を使用して、現在日付から1年(365日)ぶんのパーティションを追加します。
 
 ```
@@ -122,15 +122,55 @@ CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
 
 なお、パーティションは **追加しかできない** ことに注意しましょう。 
 
-### パーティションの実行をEVENT登録する
+### 定期実行するためにプロシージャ実行をEVENT登録する
 
-MySQLには `CREATE EVENT` にてイベントをスケジュール実行する仕組みがあります。
+MySQLには `CREATE EVENT` にてイベントをスケジュール実行する仕組みがあるので今回はこれを利用しましょう。
 
+まず、 RDSのDBのパラメータグループにて `event_scheduler` を `ON` にします。
+なお、`event_scheduler`　パラメータグループの変更による再起動は不要です。
 
+その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
+少々見づらいですが、`INFORMATION_SCHEMA` から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。
 
-## Aurora Clusterでのプロシージャはどう動くのか
-* WriterとReaderと関係性
+```
+CREATE EVENT add_hoge_partition
+ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
+COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
+DO CALL 
+    add_hoge_partition(
+        (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge', DATE_ADD(
+            (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
+        );
 
+```
+
+これで、毎日0時にパーティションが追加のプロシージャが実行されるようになりました。
+
+## RDS Aurora Clusterの場合を考える
+ここで、Aurora Clusterの場合を考えます。
+Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Writer/Readerの構成になります。
+詳細は割愛しますが、Auroraに関しては以下のBalckBeltの資料を参照してください。
+
+{ oembed https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/29 }
+
+### EVENTはWriterのみで実行される
+先程、`CREATE EVENT` 構文にてプロシージャを日次で実行するように登録しました。
+Clusterを組んだ場合においては、「WriterとReaderの両方で実行されてしまうのでは？」と思い、以下のクエリを実行してみました。
+結論から言うと、**プロシージャはWriterで1回だけ呼ばれている** ようです。
+
+* WriterでEVENTを確認
+```
+select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
+> 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
+```
+
+* ReaderでEVENTを確認
+```
+select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
+> Empty set (0.01 sec)
+```
+
+### 実行時エラーの捕捉の仕方
 
 ## 動作確認
 * 出た
@@ -140,3 +180,4 @@ MySQLには `CREATE EVENT` にてイベントをスケジュール実行する�
 
 ## 参考にさせていただいたサイト
 * [MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文](https://dev.mysql.com/doc/refman/5.6/ja/create-event.html)
+* [AWS Black Belt Online Seminar Amazon Aurora](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/)
