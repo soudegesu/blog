@@ -181,3 +181,4 @@ select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limi
 ## 参考にさせていただいたサイト
 * [MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文](https://dev.mysql.com/doc/refman/5.6/ja/create-event.html)
 * [AWS Black Belt Online Seminar Amazon Aurora](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/)
+* [Amazon Aurora MySQL DB クラスターからの Lambda 関数の呼び出し](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/AuroraMySQL.Integrating.Lambda.html#AuroraMySQL.Integrating.ProcLambda)
