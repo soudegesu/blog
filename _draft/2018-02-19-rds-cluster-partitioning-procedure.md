@@ -1,6 +1,6 @@
 ---
-title: "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加する"
-description: "RDS Aurora Cluster(MySQL互換)で日付でのパーティションを作成する方法を紹介します。プロシージャとCREATE EVENTを組み合わせて定期的にイベント実行する方法を中心に、ClusterのWriter/Readerの特性などにも触れます"
+title: "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加する方法とエラーハンドリングの方法"
+description: "RDS Aurora Cluster(MySQL互換)で日付でのパーティションを作成する方法を紹介します。プロシージャとCREATE EVENTを組み合わせて定期的にイベント実行する方法を中心に、ClusterのWriter/Readerの特性や、エラーハンドリングに関しても触れます"
 date: 2018-02-19 00:00:00 +0900
 categories: aws
 tags: aws rds aurora SQL MySQL
@@ -181,28 +181,127 @@ Failoverさせた状態で、翌日にもパーティションが作成されて
 そのため、　**エラーが発生した場合に検知する機構** が必要になってきます。
 
 ### プロシージャ実行時のエラーはlambdaで検知する
-今回はRDSに標準で組み込まれたプロシージャ `mysql.lambda_async` を使用して問題発生を検知するようにします。
+今回はAurora(MySQL互換)に標準で組み込まれたプロシージャ `mysql.lambda_async` を使用して問題発生を検知するようにします。
 `mysql.lambda_async` は、RDSから直接AWS Lambdaを実行することができ、その際にメッセージを指定できるのです。
+以降ではその手順を説明します。
 
 #### Aurora ClusterにIAM Roleを追加する
+Auroraからlambdaを実行するために、RDSインスタンスにlambdaを実行するための権限を付与する必要があります。
+IAMのメニューから専用のIAM Roleを作成しましょう(今回は `rdsToLambdaRole` という名前にします)。
+`rdsToLambdaRole` には 
 
+```
+"Action": [
+  "lambda:InvokeFunction"
+]
+```
+
+が許可されていれば良いので、AWSから提供されている `AWSLambdaRole` ポリシーを適用すればOKです。
+
+作成した `rdsToLambdaRole` のARNを **クラスタのパラメータグループ** に対して適用します。
+パラメータ名は **aws_default_lambda_role** です。また、このパラメータは `dynamic` ですのでクラスタ再起動は不要です。
+
+![rds_to_lambda_role]({{site.baseurl}}/assets/images/20180219/rds_to_lambda_role.png)
 
 #### RDSインスタンスのあるsubnetのルーティング設定をする
+RDSからoutboundの通信を許可してあげる必要があるので、ルーティングの設定を行います。
+一般的にDBサーバはprivate subnetに置くケースが大半だと思いますので、private subnetから外に出られるように設定してあげましょう。
+
+#### プロシージャ側のエラーハンドリングを追加する
+プロシージャ内でエラーが発生した場合に、lambdaを実行する `HANDLER` を先程のプロシージャに追加しましょう。
+lambda関数 `rds_monitor` を `mysql.lambda_async` プロシージャで呼び出します。
+
+追記箇所は以下のようになります。
+
+```
+    -- 失敗したらlambdaで通知する
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
+        CALL mysql.lambda_async(
+          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
+          CONCAT('{"message":"', @p2, '",',
+                  '"state":"', @p1, '"}')
+        );
+      END;
+
+```
+
+先程のプロシージャに組み込んだ場合は以下のようになります。
+
+```
+--
+-- hogeテーブルにパーティションを追加するストアドプロシージャ
+-- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
+-- パーティションは from_date < to_date - 1日 分まで作成されます。
+-- 呼び出しサンプル
+-- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
+--
+DROP PROCEDURE IF EXISTS add_hoge_partition;
+DELIMITER $$
+CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
+  proc_label:BEGIN
+    DECLARE target_date DATE;
+    DECLARE partition_range DATE;
+    DECLARE p_count INT;
+    -- 失敗したらlambdaで通知する
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
+        CALL mysql.lambda_async(
+          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
+          CONCAT('{"message":"', @p2, '",',
+                  '"state":"', @p1, '"}')
+        );
+      END;
+
+    -- 日次パーティションの作成
+    SET target_date = from_date;
+    WHILE DATEDIFF(to_date, target_date) > 0 DO
+
+      -- パーティションはLESS THANになるので1日追加
+      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
+      -- パーティションの追加
+      SELECT CONCAT(
+        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
+        DATE_FORMAT(target_date, 'p%Y%m%d'),
+        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
+      ) INTO @ddl;
+
+      PREPARE ddl_stmt FROM @ddl;
+      EXECUTE ddl_stmt;
+      DEALLOCATE PREPARE ddl_stmt;
+
+      -- 次の日次のパーティションの設定
+      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
+    END WHILE;
+
+  END$$
+DELIMITER ;
+
+```
+
+注意点としては、 **lambdaのARN指定が必要** ということです。
+DBのマイグレーションツールを使用している方は、マイグレーションツールがテンプレート変数をサポートしているか確認すると良いでしょう。
 
 #### lambda関数を作成する
 
-#### プロシージャ側のエラーハンドリングを修正する
+前項まで到達できれば後は普通にlambda関数を実装します。 
+Auroraから渡されたメッセージを処理して、監視システムやチャットツールに通知すると良いでしょう。
+私の場合は監視用SaaSである [datadog](https://www.datadoghq.com/) に通知しています。
 
-```
-CALL mysql.lambda_async (
-    "LambdaのARN",
-    '{"hoge":"hogehoge"}'
-);
-```
+#### [備考]RDSのエラーログが出力されない
+コンソール上からRDSインスタンスのエラーログを参照しようと `error/mysql-error-running.log` を確認しようとしても、
+以下のように **END OF LOG** しか表示されない場合があります。
+コンソール上部には 38.2kB とログの容量が記載されているにも関わらずに、です。
 
+![rds error log is empty]({{site.baseurl}}/assets/images/20180219/rds_log_is_empty.png)
+
+実はこれは、**「AWS側で使用するログを上記のログファイルに出力しているらしく、我々AWSのユーザ側には表示されない」という仕様** によるものです。少しわかりにくいですが、このログファイルの容量はAWS用のログの容量が表示されている、ということですね。
 
 ## まとめ
-
+今回はAurora Clusterからプロシージャを定期実行することで、日付パーティションを定期追加する方法をまとめました。
+マネージドサービスであるRDSのプロシージャ内部の処理は隠蔽されて見通しが悪くなるため、エラーハンドリングをきちんと定義してあげることが肝要です。今回はRDSからlambdaを実行しましたが、`CloudwatchLogs` へ連携することもできるそうなので、機会があれば試してみたいと思います。
 
 ## 参考にさせていただいたサイト
 * [MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文](https://dev.mysql.com/doc/refman/5.6/ja/create-event.html)
