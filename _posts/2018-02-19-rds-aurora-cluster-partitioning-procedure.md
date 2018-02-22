@@ -1,15 +1,15 @@
 ---
 title: "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加する方法とエラーハンドリングの方法"
-description: "RDS Aurora Cluster(MySQL互換)で日付でのパーティションを作成する方法を紹介します。プロシージャとCREATE EVENTを組み合わせて定期的にイベント実行する方法を中心に、ClusterのWriter/Readerの特性や、エラーハンドリングに関しても触れます"
+description: "RDS Aurora Clusterで日付でのパーティションを作成する方法を紹介します。CREATE EVENTイベントからのプロシージャを定期実行をはじめ、Cluster時の振る舞いやエラーハンドリングについても触れます"
 date: 2018-02-19 00:00:00 +0900
 categories: aws
 tags: aws rds aurora SQL MySQL
 lang: ja
 ---
 
-AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるRDSマネージドサービスです。
+AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
-AuroraというよりはMySQLの仕様に関する説明も多いです。
+AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。
 
 * Table Of Contents
 {:toc}
@@ -25,11 +25,11 @@ AuroraというよりはMySQLの仕様に関する説明も多いです。
 
 そもそもDynamoDBでよくない？というツッコミがあるかもしれませんが、システムとは別の理由があるため採用していません。
 
-### hogeテーブル
+* hogeテーブル
 
 以下のような `hoge` テーブルを考えます。
 `hoge` テーブルには `id` を持つユーザが行なった操作を `info` カラムに格納します。
-`create_at` パーティションキーであり、 `id` と `create_at` が Primary Keyです。
+`create_at` パーティションキーであり、 `id` と `create_at` が PKです。
 (パーティションキーはPKに含める必要があります)
 
 |カラム名     |型           |備考                   |
