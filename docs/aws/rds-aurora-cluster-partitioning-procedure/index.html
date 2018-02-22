@@ -1,0 +1,747 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする | そうなんでげす</title>
+<meta property="og:title" content="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="ja" />
+<meta name="description" content="RDS Aurora Clusterで日付でのパーティションを作成する方法を紹介します。CREATE EVENTイベントからのプロシージャを定期実行をはじめ、Cluster時の振る舞いやエラーハンドリングについても触れます" />
+<meta property="og:description" content="RDS Aurora Clusterで日付でのパーティションを作成する方法を紹介します。CREATE EVENTイベントからのプロシージャを定期実行をはじめ、Cluster時の振る舞いやエラーハンドリングについても触れます" />
+<link rel="canonical" href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" />
+<meta property="og:url" content="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-19T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"RDS Aurora Clusterで日付でのパーティションを作成する方法を紹介します。CREATE EVENTイベントからのプロシージャを定期実行をはじめ、Cluster時の振る舞いやエラーハンドリングについても触れます","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/","publisher":null,"image":null,"headline":"AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする","dateModified":"2018-02-19T00:00:00+09:00","datePublished":"2018-02-19T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/aws" itemprop="item"><span itemprop="name">Aws</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする">
+    <meta itemprop="description" content="AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。">
+    <meta itemprop="datePublished" content="February 19, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
+今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
+AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#今回やりたかったこと" id="markdown-toc-今回やりたかったこと">今回やりたかったこと</a></li>
+  <li><a href="#パーティションを日次で追加する" id="markdown-toc-パーティションを日次で追加する">パーティションを日次で追加する</a>    <ul>
+      <li><a href="#テーブル作成とパーティションの指定" id="markdown-toc-テーブル作成とパーティションの指定">テーブル作成とパーティションの指定</a></li>
+      <li><a href="#パーティション追加用のプロシージャを作成" id="markdown-toc-パーティション追加用のプロシージャを作成">パーティション追加用のプロシージャを作成</a></li>
+      <li><a href="#初期パーティションを作成する" id="markdown-toc-初期パーティションを作成する">初期パーティションを作成する</a></li>
+      <li><a href="#プロシージャ実行をevent登録し定期実行する" id="markdown-toc-プロシージャ実行をevent登録し定期実行する">プロシージャ実行をEVENT登録し定期実行する</a></li>
+    </ul>
+  </li>
+  <li><a href="#rds-aurora-clusterの場合を考える" id="markdown-toc-rds-aurora-clusterの場合を考える">RDS Aurora Clusterの場合を考える</a>    <ul>
+      <li><a href="#eventはwriterのみで実行される" id="markdown-toc-eventはwriterのみで実行される">EVENTはWriterのみで実行される</a></li>
+    </ul>
+  </li>
+  <li><a href="#エラーが発生したらどうするか" id="markdown-toc-エラーが発生したらどうするか">エラーが発生したらどうするか</a>    <ul>
+      <li><a href="#プロシージャ実行時のエラーはlambdaで検知する" id="markdown-toc-プロシージャ実行時のエラーはlambdaで検知する">プロシージャ実行時のエラーはlambdaで検知する</a>        <ul>
+          <li><a href="#aurora-clusterにiam-roleを追加する" id="markdown-toc-aurora-clusterにiam-roleを追加する">Aurora ClusterにIAM Roleを追加する</a></li>
+          <li><a href="#rdsインスタンスのあるsubnetのルーティング設定をする" id="markdown-toc-rdsインスタンスのあるsubnetのルーティング設定をする">RDSインスタンスのあるsubnetのルーティング設定をする</a></li>
+          <li><a href="#プロシージャ側のエラーハンドリングを追加する" id="markdown-toc-プロシージャ側のエラーハンドリングを追加する">プロシージャ側のエラーハンドリングを追加する</a></li>
+          <li><a href="#lambda関数を作成する" id="markdown-toc-lambda関数を作成する">lambda関数を作成する</a></li>
+          <li><a href="#備考rdsのエラーログが出力されない" id="markdown-toc-備考rdsのエラーログが出力されない">[備考]RDSのエラーログが出力されない?</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="今回やりたかったこと">今回やりたかったこと</h2>
+<p>今回はRDS Aurora(MySQL互換)にてClusterを組み、テーブルは日でパーティショニングすることにしました。
+要件はざっくり以下です。</p>
+
+<ol>
+  <li>ユーザ操作の都度データが格納されていく(<strong>データは常にINSERT</strong>)</li>
+  <li><strong>一定期間が経過したデータには利用価値が薄い</strong> ため退避した後削除して良い</li>
+</ol>
+
+<p>そもそもDynamoDBでよくない？というツッコミがあるかもしれませんが、システムとは別の理由があるため採用していません。</p>
+
+<p>今回は以下のような <code class="highlighter-rouge">hoge</code> テーブルを考えます。
+<code class="highlighter-rouge">hoge</code> テーブルにはユーザ(<code class="highlighter-rouge">id</code>)が行なった操作を <code class="highlighter-rouge">info</code> カラムに格納します。
+<code class="highlighter-rouge">create_at</code> はパーティションキーであり、 <code class="highlighter-rouge">id</code> と <code class="highlighter-rouge">create_at</code> が PKです。</p>
+
+<p>なお、パーティションキーはPKに含める必要があります。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>カラム名</th>
+      <th>型</th>
+      <th>備考</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id</td>
+      <td>varchar(255)</td>
+      <td>ユーザのID</td>
+    </tr>
+    <tr>
+      <td>info</td>
+      <td>varchar(255)</td>
+      <td>ユーザが行なった操作の情報</td>
+    </tr>
+    <tr>
+      <td>create_at</td>
+      <td>timestamp</td>
+      <td>レコードが作成された日時</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="パーティションを日次で追加する">パーティションを日次で追加する</h2>
+
+<p>ここから具体的な手順を説明します。
+<code class="highlighter-rouge">hoge</code> テーブルには以下のような操作をすることにしました。</p>
+
+<ul>
+  <li>最初に一定量のパーティションを作成しておく</li>
+  <li>パーティションの<strong>追加</strong>はプロシージャで実施する</li>
+  <li>日次でパーティションの最後に+1日ぶんのパーティションを<strong>追加</strong>する</li>
+</ul>
+
+<p>一般的に <strong>「プロシージャの追加は一定量をまとめて実施した方が良い」</strong> と言われています。</p>
+
+<p>私の場合、システムの運用要件や、格納するデータの想定量を設計に加え、左記を踏まえた負荷試験も実施したところ、オンラインでの日次パーティション追加でもパフォーマンス上問題がなかったため、上記の対応方針にしました。</p>
+
+<h3 id="テーブル作成とパーティションの指定">テーブル作成とパーティションの指定</h3>
+<p>以下のようなクエリを発行し <code class="highlighter-rouge">hoge</code> テーブルを作成します。
+加えて、パーティション名のルールは <code class="highlighter-rouge">p</code> + <code class="highlighter-rouge">yyyyMMdd</code> として、<code class="highlighter-rouge">create_at</code> カラムでRANGEパーティション指定をします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- create hoge table
+DROP TABLE IF EXISTS hoge;
+CREATE TABLE hoge (
+  id varchar(255) NOT NULL,
+  info varchar(255) NOT NULL,
+  create_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id, create_at),
+  INDEX index_id (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE hoge PARTITION BY RANGE (UNIX_TIMESTAMP(create_at)) (
+  PARTITION p20180219 VALUES LESS THAN (UNIX_TIMESTAMP('2018-02-19 00:00:00'))
+);
+</code></pre></div></div>
+
+<h3 id="パーティション追加用のプロシージャを作成">パーティション追加用のプロシージャを作成</h3>
+<p>次にパーティションを追加するためのプロシージャを登録します。
+可視性の観点でバリデーション等は省略しています。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--
+-- hogeテーブルにパーティションを追加するストアドプロシージャ
+-- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
+-- パーティションは from_date &lt; to_date - 1日 分まで作成されます。
+-- 呼び出しサンプル
+-- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
+--
+DROP PROCEDURE IF EXISTS add_hoge_partition;
+DELIMITER $$
+CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
+  proc_label:BEGIN
+    DECLARE target_date DATE;
+    DECLARE partition_range DATE;
+    DECLARE p_count INT;
+
+    -- 日次パーティションの作成
+    SET target_date = from_date;
+    WHILE DATEDIFF(to_date, target_date) &gt; 0 DO
+
+      -- パーティションはLESS THANになるので1日追加
+      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
+      -- パーティションの追加
+      SELECT CONCAT(
+        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
+        DATE_FORMAT(target_date, 'p%Y%m%d'),
+        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
+      ) INTO @ddl;
+
+      PREPARE ddl_stmt FROM @ddl;
+      EXECUTE ddl_stmt;
+      DEALLOCATE PREPARE ddl_stmt;
+
+      -- 次の日次のパーティションの設定
+      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
+    END WHILE;
+
+  END$$
+DELIMITER ;
+
+</code></pre></div></div>
+
+<h3 id="初期パーティションを作成する">初期パーティションを作成する</h3>
+<p>登録したプロシージャ <code class="highlighter-rouge">add_hoge_partition</code> を使用して、初期パーティションを追加します。</p>
+
+<p>とりあえず、現在日付から365日ぶんのパーティションを追加しましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
+</code></pre></div></div>
+
+<p>なお、パーティションは <strong>追加しかできない</strong> ことに注意してください。</p>
+
+<h3 id="プロシージャ実行をevent登録し定期実行する">プロシージャ実行をEVENT登録し定期実行する</h3>
+
+<p>MySQLには <code class="highlighter-rouge">CREATE EVENT</code> 構文にてイベントをスケジュール実行する仕組みがあります。
+これを利用することにしましょう。</p>
+
+<p>まず、 RDSのDBのパラメータグループにて <code class="highlighter-rouge">event_scheduler</code> を <code class="highlighter-rouge">ON</code> に指定します。(デフォルトでは <code class="highlighter-rouge">OFF</code> )
+その際、<code class="highlighter-rouge">event_scheduler</code> パラメータグループの変更に伴うDBの再起動は不要です。</p>
+
+<p>その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
+少々見づらいですが、<code class="highlighter-rouge">INFORMATION_SCHEMA</code> から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE EVENT add_hoge_partition
+ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
+COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
+DO CALL 
+    add_hoge_partition(
+        (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge', DATE_ADD(
+            (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
+        );
+
+</code></pre></div></div>
+
+<p>これで、毎日0時にパーティション追加のプロシージャが実行されるようになりました。</p>
+
+<h2 id="rds-aurora-clusterの場合を考える">RDS Aurora Clusterの場合を考える</h2>
+<p>ここで、Aurora Clusterの場合を考えます。
+Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Writer/Readerの構成になります。
+詳細は割愛しますが、Auroraに関しては以下のBalckBeltの資料を参照してください。</p>
+
+<div class="embed-container rich "><iframe src="https://www.slideshare.net/slideshow/embed_code/key/f30UqyEiHKB11p" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen=""> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora" title="AWS Black Belt Online Seminar Amazon Aurora" target="_blank">AWS Black Belt Online Seminar Amazon Aurora</a> </strong> from <strong><a href="https://www.slideshare.net/AmazonWebServicesJapan" target="_blank">Amazon Web Services Japan</a></strong> </div>
+
+</div>
+
+<h3 id="eventはwriterのみで実行される">EVENTはWriterのみで実行される</h3>
+<p>先程、<code class="highlighter-rouge">CREATE EVENT</code> 構文にてプロシージャを日次で実行するように登録しました。
+Clusterを組んだ場合においては、「WriterとReaderの両方で実行されてしまうのでは？」と思い、以下のクエリを実行してみたところ、<strong>プロシージャはWriterで1回だけ呼ばれている</strong> ことが確認できました。</p>
+
+<ul>
+  <li>WriterでEVENTを確認
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
+&gt; 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
+</code></pre></div>    </div>
+  </li>
+  <li>ReaderでEVENTを確認
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
+&gt; Empty set (0.01 sec)
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Failoverさせた状態でも、翌日にもパーティションが作成されていることも確認できたため、Writerのみが実行できているといえます。</p>
+
+<h2 id="エラーが発生したらどうするか">エラーが発生したらどうするか</h2>
+<p>今回の「定期的にプロシージャを実行」という方法は <strong>Auroraインスタンスの中に閉じた処理</strong> になります。
+仮に実行時エラーやバリデーションエラー等が発生した場合に、開発者がそれを拾えなければサイレント障害になりかねません。
+そのため、<strong>エラーが発生した場合に検知する機構</strong> が必要になってきます。</p>
+
+<h3 id="プロシージャ実行時のエラーはlambdaで検知する">プロシージャ実行時のエラーはlambdaで検知する</h3>
+<p>今回はAurora(MySQL互換)に標準で組み込まれたプロシージャ <code class="highlighter-rouge">mysql.lambda_async</code> を使用して問題発生を検知するようにします。
+<code class="highlighter-rouge">mysql.lambda_async</code> は、RDSから直接AWS Lambdaを実行することができ、その際にメッセージを指定できるのです。
+以降ではその手順を説明します。</p>
+
+<h4 id="aurora-clusterにiam-roleを追加する">Aurora ClusterにIAM Roleを追加する</h4>
+<p>Auroraからlambdaを実行するために、別途権限を付与する必要があります。
+IAMのメニューから専用のIAM Roleを作成しましょう(今回は <code class="highlighter-rouge">rdsToLambdaRole</code> という名前にします)。
+<code class="highlighter-rouge">rdsToLambdaRole</code> には</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Action": [
+  "lambda:InvokeFunction"
+]
+</code></pre></div></div>
+
+<p>が許可されていれば良いので、AWSから提供されている <code class="highlighter-rouge">AWSLambdaRole</code> ポリシーを適用すればOKです。</p>
+
+<p>作成した <code class="highlighter-rouge">rdsToLambdaRole</code> のARNを <strong>クラスタのパラメータグループ</strong>の<strong>aws_default_lambda_role</strong>に指定しましょう。</p>
+
+<p>こちらのパラメータも <code class="highlighter-rouge">dynamic</code> のためクラスタ再起動は不要です。</p>
+
+<p><img src="/assets/images/20180219/rds_to_lambda_role.png" alt="rds_to_lambda_role" /></p>
+
+<h4 id="rdsインスタンスのあるsubnetのルーティング設定をする">RDSインスタンスのあるsubnetのルーティング設定をする</h4>
+<p>RDSからのoutbound通信を許可してあげる必要があるので、ルーティングの設定を行います。
+一般的にDBサーバはprivate subnetに置くケースが大半だと思いますので、private subnetから外に出られるように設定してあげましょう。</p>
+
+<h4 id="プロシージャ側のエラーハンドリングを追加する">プロシージャ側のエラーハンドリングを追加する</h4>
+<p>プロシージャ内でエラーが発生した場合に、lambdaを実行する <code class="highlighter-rouge">HANDLER</code> を先程のプロシージャに追加しましょう。
+lambda関数 <code class="highlighter-rouge">rds_monitor</code> を <code class="highlighter-rouge">mysql.lambda_async</code> プロシージャで呼び出します。</p>
+
+<p>追記箇所は以下のようになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    -- 失敗したらlambdaで通知する
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
+        CALL mysql.lambda_async(
+          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
+          CONCAT('{"message":"', @p2, '",',
+                  '"state":"', @p1, '"}')
+        );
+      END;
+
+</code></pre></div></div>
+
+<p>先程のプロシージャに組み込んだ場合は以下のようになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--
+-- hogeテーブルにパーティションを追加するストアドプロシージャ
+-- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
+-- パーティションは from_date &lt; to_date - 1日 分まで作成されます。
+-- 呼び出しサンプル
+-- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
+--
+DROP PROCEDURE IF EXISTS add_hoge_partition;
+DELIMITER $$
+CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
+  proc_label:BEGIN
+    DECLARE target_date DATE;
+    DECLARE partition_range DATE;
+    DECLARE p_count INT;
+    -- 失敗したらlambdaで通知する
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
+        CALL mysql.lambda_async(
+          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
+          CONCAT('{"message":"', @p2, '",',
+                  '"state":"', @p1, '"}')
+        );
+      END;
+
+    -- 日次パーティションの作成
+    SET target_date = from_date;
+    WHILE DATEDIFF(to_date, target_date) &gt; 0 DO
+
+      -- パーティションはLESS THANになるので1日追加
+      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
+      -- パーティションの追加
+      SELECT CONCAT(
+        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
+        DATE_FORMAT(target_date, 'p%Y%m%d'),
+        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
+      ) INTO @ddl;
+
+      PREPARE ddl_stmt FROM @ddl;
+      EXECUTE ddl_stmt;
+      DEALLOCATE PREPARE ddl_stmt;
+
+      -- 次の日次のパーティションの設定
+      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
+    END WHILE;
+
+  END$$
+DELIMITER ;
+
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">mysql.lambda_async</code>の引数には<strong>lambdaのARN指定が必要</strong>という点が注意ポイントです。</p>
+
+<p>DBのマイグレーションツールを使用して複数のAWSアカウントを運用されている方は、AWSのアカウント番号が異なるため、チェックサムが変わってしまいます。マイグレーションツールがテンプレート変数をサポートしているか確認すると良いでしょう。</p>
+
+<h4 id="lambda関数を作成する">lambda関数を作成する</h4>
+
+<p>Auroraから渡されたメッセージを処理して、監視システムやチャットツールに通知するためのlambda関数を実装します。
+私の場合は監視用SaaSである <a href="https://www.datadoghq.com/">datadog</a> に通知していました。</p>
+
+<h4 id="備考rdsのエラーログが出力されない">[備考]RDSのエラーログが出力されない?</h4>
+<p>コンソール上からRDSインスタンスのエラーログを参照しようと <code class="highlighter-rouge">error/mysql-error-running.log</code> を選択しても、
+以下のように <strong>END OF LOG</strong> しか表示されない場合があります。
+コンソール上部には 38.2kB とログの容量が記載されているにも関わらずに、です。</p>
+
+<p><img src="/assets/images/20180219/rds_log_is_empty.png" alt="rds error log is empty" /></p>
+
+<p>実はこれは、<strong>「AWS側で使用するログを上記のログファイルに出力しているらしく、我々AWSのユーザ側には表示されない」という仕様</strong> によるものです。少しわかりにくいですが、このログファイルの容量はAWS用のログの容量も含まれて表示されている、ということですね。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>今回はAurora Clusterからプロシージャを定期実行することで、日付パーティションを定期追加する方法をまとめました。
+マネージドサービスであるRDSのプロシージャ内部の処理は隠蔽されて見通しが悪くなるため、エラーハンドリングをきちんと定義してあげることが肝要です。今回はRDSからlambdaを実行しましたが、CloudwatchLogsへ連携することもできるそうなので、機会があれば試してみたいと思います。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+<ul>
+  <li><a href="https://dev.mysql.com/doc/refman/5.6/ja/create-event.html">MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文</a></li>
+  <li><a href="https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/">AWS Black Belt Online Seminar Amazon Aurora</a></li>
+  <li><a href="https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/AuroraMySQL.Integrating.Lambda.html#AuroraMySQL.Integrating.ProcLambda">Amazon Aurora MySQL DB クラスターからの Lambda 関数の呼び出し</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-02-19T00:00:00+09:00">February 19, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" class="pagination--pager" title="Q# 量子コンピューティングプログラミング言語を試す
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
