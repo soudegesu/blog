@@ -1,4 +1,157 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-22T22:10:15+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</title><link href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" rel="alternate" type="text/html" title="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする" /><published>2018-02-19T00:00:00+09:00</published><updated>2018-02-19T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure</id><content type="html" xml:base="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/">&lt;p&gt;AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-28T08:07:30+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した</title><link href="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/" rel="alternate" type="text/html" title="Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した" /><published>2018-02-26T00:00:00+09:00</published><updated>2018-02-26T00:00:00+09:00</updated><id>https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed</id><content type="html" xml:base="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/">&lt;p&gt;昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。
+かくいう私もその口で、今回は &lt;a href=&quot;https://www.udemy.com/&quot;&gt;Udemy&lt;/a&gt; というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#udemyとは何か&quot; id=&quot;markdown-toc-udemyとは何か&quot;&gt;Udemyとは何か&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#学習のため購入したコンテンツ&quot; id=&quot;markdown-toc-学習のため購入したコンテンツ&quot;&gt;学習のため購入したコンテンツ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#なぜこのコンテンツにしたのか&quot; id=&quot;markdown-toc-なぜこのコンテンツにしたのか&quot;&gt;なぜこのコンテンツにしたのか&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#レベル感が視聴者私に合ってそうだったから&quot; id=&quot;markdown-toc-レベル感が視聴者私に合ってそうだったから&quot;&gt;レベル感が視聴者(私)に合ってそうだったから&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#有料コンテンツのしかもトップヒットだから&quot; id=&quot;markdown-toc-有料コンテンツのしかもトップヒットだから&quot;&gt;有料コンテンツのしかも「トップヒット」だから&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#英語のコンテンツだから&quot; id=&quot;markdown-toc-英語のコンテンツだから&quot;&gt;英語のコンテンツだから&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#実際に受けてみた感想&quot; id=&quot;markdown-toc-実際に受けてみた感想&quot;&gt;実際に受けてみた感想&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#良かった点&quot; id=&quot;markdown-toc-良かった点&quot;&gt;良かった点&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#包括的かつ理解しやすいコンテンツだった&quot; id=&quot;markdown-toc-包括的かつ理解しやすいコンテンツだった&quot;&gt;包括的かつ理解しやすいコンテンツだった&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#サイバー犯罪スーパーハカーの仕業という幻想を壊せた&quot; id=&quot;markdown-toc-サイバー犯罪スーパーハカーの仕業という幻想を壊せた&quot;&gt;サイバー犯罪＝スーパーハカーの仕業という幻想を壊せた&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#未知の領域の学習は映像がオススメ&quot; id=&quot;markdown-toc-未知の領域の学習は映像がオススメ&quot;&gt;未知の領域の学習は映像がオススメ&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#反省点&quot; id=&quot;markdown-toc-反省点&quot;&gt;反省点&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#コースコンテンツをちゃんと読めば良かった&quot; id=&quot;markdown-toc-コースコンテンツをちゃんと読めば良かった&quot;&gt;コースコンテンツをちゃんと読めば良かった&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;udemyとは何か&quot;&gt;Udemyとは何か&lt;/h2&gt;
+&lt;p&gt;Udemyはオンライン学習プラットフォームです。自身の目的に合った学習コンテンツを購入し、オンラインで受講することができます。
+今回はサイバーセキュリティのコンテンツを購入したのですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;Robotics&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;機械学習&lt;/code&gt; のような別のIT分野の授業もありますし、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;投資信託&lt;/code&gt; のような経済系のコンテンツ等の幅広いジャンルの取り扱いがあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180226/about_udemy.png&quot; alt=&quot;about_udemy&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;学習のため購入したコンテンツ&quot;&gt;学習のため購入したコンテンツ&lt;/h2&gt;
+&lt;p&gt;今回はUdemyの中でもサイバーセキュリティのコンテンツのジャンルの中で人気のコンテンツ &lt;a href=&quot;https://www.udemy.com/the-complete-internet-security-privacy-course-volume-1/&quot;&gt;「The Complete Cyber Security Course : Hackers Exposed!」&lt;/a&gt; を購入しました。
+価格は &lt;code class=&quot;highlighter-rouge&quot;&gt;1,300円&lt;/code&gt; ほどで、クレジットカードでお支払いです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180226/cyber_security.png&quot; alt=&quot;cyber_security&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;この &lt;code class=&quot;highlighter-rouge&quot;&gt;The Complete Cyber Security Course&lt;/code&gt; シリーズは全部で以下4つのコースが提供されており、先に進む程応用的な内容になっているそうです。(全部まだ受けていないので、伝聞で書いています)&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The Complete Cyber Security Course : Hackers Exposed!&lt;/li&gt;
+  &lt;li&gt;The Complete Cyber Security Course : Network Security!&lt;/li&gt;
+  &lt;li&gt;The Complete Cyber Security Course : Anonymous Browsing!&lt;/li&gt;
+  &lt;li&gt;The Complete Cyber Security Course : End Point Protection!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;ちなみにPart.1は全編英語、約11時間のコースでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;なぜこのコンテンツにしたのか&quot;&gt;なぜこのコンテンツにしたのか&lt;/h2&gt;
+&lt;p&gt;類似のオンライン学習サービスとしては&lt;a href=&quot;https://www.coursera.org/&quot;&gt;coursera&lt;/a&gt; や &lt;a href=&quot;https://www.cybrary.it/&quot;&gt;cybrary&lt;/a&gt;などもあります。しかし、今回は以下の理由でUdemyのコンテンツ購入としました。&lt;/p&gt;
+
+&lt;h3 id=&quot;レベル感が視聴者私に合ってそうだったから&quot;&gt;レベル感が視聴者(私)に合ってそうだったから&lt;/h3&gt;
+
+&lt;p&gt;まず私のサイバーセキュリティに関連しそうなシステム開発に略歴をざっくり記載すると&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;webアプリケーション開発経験7年程度&lt;/li&gt;
+  &lt;li&gt;OSはCentOS/Amazon Linuxを中心に利用(Qubes OSやDebianはない)&lt;/li&gt;
+  &lt;li&gt;インフラはAWSを利用しており、IAM制御/SecurityGroup設定/ルーティング程度なら自力でできる&lt;/li&gt;
+  &lt;li&gt;ハードウェアや通信回線の知識は皆無&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;のような感じです。つまり、サイバーセキュリティはど素人です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cybrary.it/&quot;&gt;cybrary&lt;/a&gt;はセキュリティを中心にしたコンテンツが出揃っているのですが、
+いきなりピンポイントなテーマを学習する気はなく、まずは全体感がわかるものを探しました。
+なお、 &lt;a href=&quot;https://www.coursera.org/&quot;&gt;coursera&lt;/a&gt; にはサイバーセキュリティのジャンル自体がほとんど見当たらなかったので、
+その時点で落選です。&lt;/p&gt;
+
+&lt;h3 id=&quot;有料コンテンツのしかもトップヒットだから&quot;&gt;有料コンテンツのしかも「トップヒット」だから&lt;/h3&gt;
+
+&lt;p&gt;完全に私の偏見ですが、コンテンツのレベル感が自分にフィットしていれば、以下の方程式は概ね成立すると考えています。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;「外国人」+「有料」+「トップヒット」＝ 間違いない&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そもそもUdemyは有料のコンテンツがほとんどです(無料も極稀にある)。
+以前、外国人講師の方が開催されている研修で、同じテーマを題材とした無料版と有料版の両方を受けたことがあるのですが、
+有料版の方が得られるエッセンスが非常に多かったです。「良い知識や経験はお金を払ってでも取りに行くべき」というやつです。
+そのため、「可能であれば有料のコンテンツを受けた方が良い」と考えています。&lt;/p&gt;
+
+&lt;p&gt;加えて、講師の方のプロフィールがコンテンツ購入画面に記載されているのですが、
+サイバーセキュリティを生業にされている会社のCEOの方でしたので、専門性も疑う所はありませんでした。&lt;/p&gt;
+
+&lt;h3 id=&quot;英語のコンテンツだから&quot;&gt;英語のコンテンツだから&lt;/h3&gt;
+
+&lt;p&gt;いわゆる業界用語的なものをインプットしておきたかったのと、
+業界的に海外の方がサイバーセキュリティは進んでいるであろうと思ったからです。&lt;/p&gt;
+
+&lt;h2 id=&quot;実際に受けてみた感想&quot;&gt;実際に受けてみた感想&lt;/h2&gt;
+&lt;p&gt;ここからは実際に受講したみた感想を纏めます。&lt;/p&gt;
+
+&lt;h3 id=&quot;良かった点&quot;&gt;良かった点&lt;/h3&gt;
+&lt;h4 id=&quot;包括的かつ理解しやすいコンテンツだった&quot;&gt;包括的かつ理解しやすいコンテンツだった&lt;/h4&gt;
+&lt;p&gt;まず、コンテンツ全体の感想を先に書くと、内容は包括的でした。
+ざっくりと以下の内容が盛り込まれていました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;身の回りにあるサイバー攻撃の全体像&lt;/li&gt;
+  &lt;li&gt;情報盗聴に関する世界情勢&lt;/li&gt;
+  &lt;li&gt;サイバー犯罪に対処するための基本的な考え方(予防・検知・追跡)&lt;/li&gt;
+  &lt;li&gt;マルウェアなどに感染させるために取られる手段&lt;/li&gt;
+  &lt;li&gt;ハッカーが使っているツール&lt;/li&gt;
+  &lt;li&gt;暗号化通信&lt;/li&gt;
+  &lt;li&gt;ソーシャルハッキング&lt;/li&gt;
+  &lt;li&gt;OSやブラウザごとのセキュリティ対策の仕方&lt;/li&gt;
+  &lt;li&gt;ホストOSやゲストOSでハードのシリアル番号の見方と改ざん方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これらが全13章120項で構成されているのですが、1項が長くても20分程度のコンテンツであるため、隙間時間を学習に充てることができました。&lt;/p&gt;
+
+&lt;p&gt;また、講師の方の英語についても&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;話すスピードも丁度いい(聞き取れる)&lt;/li&gt;
+  &lt;li&gt;発音も聞き取り易い&lt;/li&gt;
+  &lt;li&gt;単語がゆらがない(表現がある程度一定)&lt;/li&gt;
+  &lt;li&gt;字幕もついてるのでググれる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;であり、英語はそこまで上手でない私でも十分ついて行けました。&lt;/p&gt;
+
+&lt;h4 id=&quot;サイバー犯罪スーパーハカーの仕業という幻想を壊せた&quot;&gt;サイバー犯罪＝スーパーハカーの仕業という幻想を壊せた&lt;/h4&gt;
+&lt;p&gt;サイバーセキュリティの勉強を始める前には「サイバー犯罪はウィザード級のスーパーハカーの仕業である」と考えていました。
+それこそ、シュタインズ・ゲートに出てくる橋田至や、ブラックラグーンに出てくるベニーのようなやばいヤツらのイメージです。&lt;/p&gt;
+
+&lt;p&gt;しかし、「そのような凄腕のハッカーによるサイバー犯罪は全体の1割にも満たない」という情報にバイアスは一蹴されました。
+サイバー犯罪の大多数は比較的フツーの人、それこそ、子供や主婦ですらやっていますよ、というのです。
+出回っている多くのツールを駆使したり、人を騙すためのちょっとしたトリックをうまく活用することで、ごくごく日常的に行われているそうです。&lt;/p&gt;
+
+&lt;p&gt;「世間の人がふつうにできるのであれば、私もできるだろう」という妙な自身が沸いてきました。&lt;/p&gt;
+
+&lt;h4 id=&quot;未知の領域の学習は映像がオススメ&quot;&gt;未知の領域の学習は映像がオススメ&lt;/h4&gt;
+&lt;p&gt;これは過去の経験も踏まえてなのですが、私の中で「未知の分野の学習に関しては、映像を通じての学習の方が学習効率がいい」という風に感じました。
+講師の方がちゃんと筋道を立ててくれているので(もちろん講師の方の手腕に寄るものですが)、情報の強弱がきちんと整理されているので、変な所に固執せずに進めることができますし、時系列に添って情報が展開されてくる(例えばライブコーディングのように順序立てて理解できる)ところが素人には有り難いです。
+書籍もいいのですが、動画よりも情報量が多くなり、案外有用な情報を読み飛ばしたり誤解しがちです。&lt;/p&gt;
+
+&lt;p&gt;拘束時間があるのは仕方がないかな、と割り切っています。&lt;/p&gt;
+
+&lt;h3 id=&quot;反省点&quot;&gt;反省点&lt;/h3&gt;
+&lt;h4 id=&quot;コースコンテンツをちゃんと読めば良かった&quot;&gt;コースコンテンツをちゃんと読めば良かった&lt;/h4&gt;
+&lt;p&gt;購入前にコースコンテンツをちゃんと読んでいませんでした。
+そのため、中盤にやってくる「OSごとのセキュリティ対策」の章はそこそこ長いこともあり、かなり中だるみしてしまいました。
+しばらく「IT部門向けの章だなー。つまらん。」と思っていたのですが、後々コースコンテンツの一覧を見ると、
+IT部門の人も受講対象にしている旨の記載があり、少し残念な気分になりました。&lt;/p&gt;
+
+&lt;p&gt;ただ、終盤にかけ、エンジニア向けっぽい内容に少しづつシフトしていったので、そこでモチベーションを盛り返すことができました。
+次以降のコースではよりエンジニア向けの内容になるため、少し楽しみです。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;今回はUdemyの講座を購入し、サイバーセキュリティの学習を始めました。全4編のうちの最初の1つを受けただけなので、
+まだまだ実践的な内容にまでは踏み込めてはいませんが、以降のコンテンツで教えていただけそうなので、早めに受講しようと思いました。
+一言で「セキュリティ」と言っても幅が広いので、自分の業務周辺のセキュリティは自身で守ってあげられる程度のスキルは継続的に研鑽していきたいです。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="cyber" /><category term="security" /><category term="udemy" /><category term="beginner" /><summary type="html">昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。 かくいう私もその口で、今回は Udemy というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。</summary></entry><entry xml:lang="ja"><title type="html">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</title><link href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" rel="alternate" type="text/html" title="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする" /><published>2018-02-19T00:00:00+09:00</published><updated>2018-02-19T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure</id><content type="html" xml:base="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/">&lt;p&gt;AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。&lt;/p&gt;
 
@@ -1599,134 +1752,4 @@ end
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;しばらくはプライベートはfish、仕事はzshで行こうと思いました。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="sh" /><category term="fish" /><category term="zsh" /><summary type="html">fish との出会い これは本当に偶然の出会いで、 「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに</summary></entry><entry xml:lang="ja"><title type="html">docker-composeを使ってmysql dockerコンテナを起動する</title><link href="https://www.soudegesu.com/docker/docker-compose/mysql" rel="alternate" type="text/html" title="docker-composeを使ってmysql dockerコンテナを起動する" /><published>2017-01-31T16:36:00+09:00</published><updated>2017-01-31T16:36:00+09:00</updated><id>https://www.soudegesu.com/docker/docker-compose/docker-compose</id><content type="html" xml:base="https://www.soudegesu.com/docker/docker-compose/mysql">&lt;p&gt;前回の記事で &lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt; からの &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; コマンドを使用することでmysqlのdockerコンテナの起動ができました。&lt;/p&gt;
-
-&lt;p&gt;個人的にはcliのオプション指定が長くなっていくのがあまり好きではないので、今回はdocker-composeを使用して、もう少しお手軽に起動にこぎつけたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;docker-compose-をインストールする&quot;&gt;docker-compose をインストールする&lt;/h2&gt;
-&lt;p&gt;以下のサイトからdocker-toolboxをインストールしましょう。
-その中にdocker-composeも含まれています。&lt;/p&gt;
-
-&lt;p&gt;[https://www.docker.com/products/docker-toolbox:embed:cite]&lt;/p&gt;
-
-&lt;p&gt;そもそもdocker-composeは複数のコンテナ管理を容易に行う機能を提供してくれるものです。今回はmysqlコンテナでしか利用しませんが、システムコンポーネントの設定や起動順序の制御をyamlファイルに記載するだけで良いので、可読性が高く、VCSでも管理がしやすいです。&lt;/p&gt;
-
-&lt;p&gt;例えば、以下のようなDockerfileがあったとします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM mysql:latest
-
-RUN { \
-   echo '[mysqld]'; \
-   echo 'character-set-server=utf8'; \
-   echo 'collation-server=utf8_general_ci'; \
-   echo '[client]'; \
-   echo 'default-character-set=utf8'; \
-} &amp;gt; /etc/mysql/conf.d/charset.cnf
-
-EXPOSE 3306
-CMD [&quot;mysqld&quot;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;それを呼び出すdocker-compose.ymlを作成します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql:
-  build: .
-  dockerfile: Dockerfile
-  ports:
-    - &quot;3306:3306&quot;
-  environment:
-    - MYSQL_ROOT_USER=root
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=soudegesu
-    - MYSQL_USER=soudegesu
-    - MYSQL_PASSWORD=soudegesu
-  volumes:
-    - ./init.d:/docker-entrypoint-initdb.d
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;dockerfileの箇所に作成したDockerfileを指定しておくことで、起動時にimageをビルドし、そのイメージを使ってコンテナを起動します。&lt;/p&gt;
-
-&lt;p&gt;なお、mysqlの公式のコンテナの場合、コンテナ内のdocker-entrypoint-initdb.dをホスト上の任意のディレクトリを対象としてアタッチすることで、起動時にディレクトリ配下のsqlを流し込んで初期化してくれます。&lt;/p&gt;
-
-&lt;h2 id=&quot;docker-compose-で起動する&quot;&gt;docker-compose で起動する&lt;/h2&gt;
-&lt;p&gt;それでは起動してみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#docker-compose up                                                                                                                                                
-Starting soudegesu_mysql_1
-Attaching to soudegesu_mysql_1
-mysql_1  | 2017-01-31T07:09:28.026908Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
-mysql_1  | 2017-01-31T07:09:28.038354Z 0 [Note] mysqld (mysqld 5.7.17) starting as process 1 ...
-mysql_1  | 2017-01-31T07:09:28.053912Z 0 [Note] InnoDB: PUNCH HOLE support available
-mysql_1  | 2017-01-31T07:09:28.054031Z 0 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
-mysql_1  | 2017-01-31T07:09:28.054043Z 0 [Note] InnoDB: Uses event mutexes
-mysql_1  | 2017-01-31T07:09:28.054055Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
-〜以下略〜
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;mysqlコマンドで接続してみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql -h 127.0.0.1 -P 3306 -u root -proot
-mysql: [Warning] Using a password on the command line interface can be insecure.
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 3
-Server version: 5.7.17 MySQL Community Server (GPL)
-
-Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;できました。
-起動時のsqlファイルの実行結果も確認しましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show databases;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| soudegesu              |
-| mysql              |
-| performance_schema |
-| sys                |
-+--------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; use soudegesu;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
-Database changed
-mysql&amp;gt; show tables;
-+-----------------+
-| Tables_in_soudegesu |
-+-----------------+
-| aaaa            |
-| bbbb            |
-+-----------------+
-2 rows in set (0.00 sec)
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ちなみに&quot;&gt;ちなみに&lt;/h2&gt;
-&lt;p&gt;既存のimageを使用して &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt; を実行することも可能です。場合に応じて設定を変更してください。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql:
-  image: mysql:latest ←これ
-  ports:
-    - &quot;3306:3306&quot;
-  environment:
-    - MYSQL_ROOT_USER=root
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=soudegesu
-    - MYSQL_USER=soudegesu
-    - MYSQL_PASSWORD=soudegesu
-  volumes:
-    - ./init.d:/docker-entrypoint-initdb.d
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>soudegesu</name></author><summary type="html">前回の記事で docker build からの docker run コマンドを使用することでmysqlのdockerコンテナの起動ができました。</summary></entry></feed>
+&lt;p&gt;しばらくはプライベートはfish、仕事はzshで行こうと思いました。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="sh" /><category term="fish" /><category term="zsh" /><summary type="html">fish との出会い これは本当に偶然の出会いで、 「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに</summary></entry></feed>
