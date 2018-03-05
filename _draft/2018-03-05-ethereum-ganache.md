@@ -1,6 +1,6 @@
 ---
 title: "Dapps開発のためにEthereumの開発環境を構築する"
-description: "DAppsを開発したくてEthereumの環境構築を行いました。今回はMetamaskでアドレスを参照するところまでやります。"
+description: "DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました"
 date: 2018-03-05 00:00:00 +0900
 categories: ethereum
 tags: ethereum dapps truffle ganache metamask
@@ -19,8 +19,6 @@ tags: ethereum dapps truffle ganache metamask
     * High Seria 10.13.2
 * Homebrew
     * 1.5.6
-* nodenv
-    * v9.6.1
 
 ## Etehreumのセットアップ
 今回は [Ethereum](https://www.ethereum.org/) を使用します。理由としては、Dapps開発のためのOSSとして開発が積極的に行われており、
@@ -283,12 +281,6 @@ geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private
 (もちろんテスト用なので、何の価値もないですが)
 
 ![mining]({{site.baseurl}}/assets/images/20180305/chained.png)
-
-
-## Ganacheのインストール
-
-
-## Metamaskのインストール
 
 
 ## まとめ
