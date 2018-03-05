@@ -23,6 +23,9 @@ tags: ethereum dapps truffle ganache metamask
     * v9.6.1
 
 ## Etehreumのセットアップ
+今回は [Ethereum](https://www.ethereum.org/) を使用します。理由としては、Dapps開発のためのOSSとして開発が積極的に行われており、
+様々なDappsにて使用されている(らしい)からです。
+
 ### Ethereumのインストール
 Homebrewがあれば簡単にインストールができます。
 
