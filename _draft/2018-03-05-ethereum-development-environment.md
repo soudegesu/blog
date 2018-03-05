@@ -230,13 +230,13 @@ Ethreum(wei) をやりとりするためのアカウントを作成します。
 geth --datadir . account new
 ```
 
-適当にパスワードを設定すると `Address` のところにハッシュ値が表示されます。
+適当にパスワードを設定すると `Address` のところにアカウントのアドレスが表示されます。
 
 ```
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Passphrase:
 Repeat passphrase:
-Address: {ハッシュ値}
+Address: {アカウントA}
 ```
 
 作成が完了すると `keystore` ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。
@@ -244,18 +244,18 @@ Address: {ハッシュ値}
 ```
 ls keystore
 
-UTC--2018-03-05T06-00-32.829542689Z--ハッシュ値
+UTC--2018-03-05T06-00-32.829542689Z--アカウントA
 ```
 
 作成されたアカウントを確認します。
 
 ```
 geth --datadir . account list
-Account #0: {ハッシュ値} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--ハッシュ値
+Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
 ```
 
 実際には複数ユーザ間でデータをやりとりする仕組みを構築すると思いますので、
- `geth --datadir . account new` コマンドを複数実行し、アカウントを複数作っておくと良いでしょう。
+ `geth --datadir . account new` コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)
 
 ### マイニングの動作確認をする
 次にマイニングの動作確認をします。
@@ -277,11 +277,76 @@ echo (account new したときのパスワード) > private/password.sec
 geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private_net/private" --nodiscover --rpc --rpcport "8545" --port "30303" --rpccorsdomain "*" --nat "any" --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath "~/Library/Ethereum/geth.ipc"
 ```
 
+その際に、標準出力に表示される `ChainID` が指定されたIDになっているかを確認しましょう。
+今回であれば **4224** が出ていればOKです。
+
 処理がもりもり走っていきます。ハンマーアイコンが出てくればマイニングできています。
 (もちろんテスト用なので、何の価値もないですが)
 
 ![mining]({{site.baseurl}}/assets/images/20180305/chained.png)
 
+### Ethを送ってみる
+先程複数アカウントを作成したので、実際にEthを送ってみましょう。
+マイニングの画面はそのままにして、ターミナルで別ウィンドウを立ち上げましょう。
+
+その後、以下を実行し、Javascriptコンソールを起動します。
+コンソールは対話形式で入力していくことが可能です。
+
+```
+geth attach
+
+instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
+coinbase: xxxxxxxxxxxxxxxxxxxxxxxxxx
+at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
+ datadir: /Users/xxxxxx/workspace/eth_private_net/private
+ modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
+```
+
+まず存在するアカウントを確認しておきます。
+
+```
+> eth.accounts
+["アカウントA", "アカウントB", "アカウントC"]
+```
+
+マイニング時のメインアカウントを確認します。
+
+```
+> eth.coinbase
+アカウントA
+```
+
+現時点での保有量を確認します。
+
+```
+> eth.getBalance(eth.accounts[0])
+285000000000000000000
+```
+
+単位が `wei` でわかりにくいので `ETH` にしましょう。
+
+```
+> web3.fromWei(eth.getBalance(eth.coinbase), "ether")
+288
+```
+
+アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。
+
+```
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, "ether")})
+> ハッシュ値
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, "ether")})
+> ハッシュ値
+```
+
+以下で確認することができました。
+
+```
+> web3.fromWei(eth.getBalance(eth.accounts[1]), "ether")
+10
+> web3.fromWei(eth.getBalance(eth.accounts[2]), "ether")
+6
+```
 
 ## まとめ
 
