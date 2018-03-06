@@ -1,4 +1,370 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-02-28T08:07:30+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry xml:lang="ja"><title type="html">Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した</title><link href="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/" rel="alternate" type="text/html" title="Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した" /><published>2018-02-26T00:00:00+09:00</published><updated>2018-02-26T00:00:00+09:00</updated><id>https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed</id><content type="html" xml:base="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/">&lt;p&gt;昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-06T21:06:26+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-environment/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)" /><published>2018-03-05T00:00:00+09:00</published><updated>2018-03-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-environment</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-environment/">&lt;p&gt;以前、&lt;code class=&quot;highlighter-rouge&quot;&gt;IPFS&lt;/code&gt; を調査したことがあり、そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の存在を知りました。
+昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
+今回はDApps開発のための下準備までを纏めます。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#etehreumのセットアップ&quot; id=&quot;markdown-toc-etehreumのセットアップ&quot;&gt;Etehreumのセットアップ&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ethereumのインストール&quot; id=&quot;markdown-toc-ethereumのインストール&quot;&gt;Ethereumのインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#設定ファイルの作成&quot; id=&quot;markdown-toc-設定ファイルの作成&quot;&gt;設定ファイルの作成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#プライベートネットワークの初期化&quot; id=&quot;markdown-toc-プライベートネットワークの初期化&quot;&gt;プライベートネットワークの初期化&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#アカウントの作成&quot; id=&quot;markdown-toc-アカウントの作成&quot;&gt;アカウントの作成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#マイニングの動作確認をする&quot; id=&quot;markdown-toc-マイニングの動作確認をする&quot;&gt;マイニングの動作確認をする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#別アカウントにethを送ってみる&quot; id=&quot;markdown-toc-別アカウントにethを送ってみる&quot;&gt;別アカウントにEthを送ってみる&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;環境情報&quot;&gt;環境情報&lt;/h2&gt;
+&lt;p&gt;今回、私は以下の環境にて構築を行いました&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Mac Book Pro
+    &lt;ul&gt;
+      &lt;li&gt;OS: High Seria 10.13.2&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Homebrew
+    &lt;ul&gt;
+      &lt;li&gt;1.5.6&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;etehreumのセットアップ&quot;&gt;Etehreumのセットアップ&lt;/h2&gt;
+&lt;p&gt;今回は &lt;a href=&quot;https://www.ethereum.org/&quot;&gt;Ethereum&lt;/a&gt; を使用します。理由としては、DApps開発のためのOSSとして開発が積極的に行われており、
+様々なDAppsにて使用されている(らしい)からです。&lt;/p&gt;
+
+&lt;h3 id=&quot;ethereumのインストール&quot;&gt;Ethereumのインストール&lt;/h3&gt;
+&lt;p&gt;Homebrewがあれば簡単にインストールができます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;リポジトリを追加&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew tap ethereum/ethereum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ethereum をインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install ethereum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;バージョンを確認&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth -h
+
+&amp;gt; NAME:
+&amp;gt;    geth - the go-ethereum command line interface
+&amp;gt;
+&amp;gt;    Copyright 2013-2017 The go-ethereum Authors
+&amp;gt;
+&amp;gt; USAGE:
+&amp;gt;    geth [options] command [command options] [arguments...]
+&amp;gt;
+&amp;gt; VERSION:
+&amp;gt;    1.8.1-stable
+(以下略)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;1.8.1&lt;/code&gt; がインストールされているようですね。&lt;/p&gt;
+
+&lt;p&gt;以降の作業は以下のディレクトリにて実施します。(誤解を招かないように念のため)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pwd
+&amp;gt; /Users/xxxxxx/workspace/eth_private_net
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;設定ファイルの作成&quot;&gt;設定ファイルの作成&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の 1.6から &lt;code class=&quot;highlighter-rouge&quot;&gt;puppeth&lt;/code&gt; コマンドが追加されました。
+これを使って初期化を行います。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;puppeth
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
+今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;soudegesu&lt;/code&gt; にしました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+-----------------------------------------------------------+
+| Welcome to puppeth, your Ethereum private network manager |
+|                                                           |
+| This tool lets you create a new Ethereum network down to  |
+| the genesis block, bootnodes, miners and ethstats servers |
+| without the hassle that it would normally entail.         |
+|                                                           |
+| Puppeth uses SSH to dial in to remote servers, and builds |
+| its network components out of Docker containers using the |
+| docker-compose toolset.                                   |
++-----------------------------------------------------------+
+
+Please specify a network name to administer (no spaces, please)
+&amp;gt; soudegesu
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以降も対話形式で入力していきます。まず、 &lt;code class=&quot;highlighter-rouge&quot;&gt;2. Configure new genesis&lt;/code&gt; を選択します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Sweet, you can set this via --network=soudegesu next time!
+
+INFO [03-05|14:24:17] Administering Ethereum network           name=soudegesu
+WARN [03-05|14:24:17] No previous configurations found         path=/Users/xxxxxxxxx/.puppeth/soudegesu
+
+What would you like to do? (default = stats)
+ 1. Show network stats
+ 2. Configure new genesis
+ 3. Track new remote server
+ 4. Deploy network components
+&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次にコンセンサスルールを決めます。今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethash&lt;/code&gt; にしましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Which consensus engine to use? (default = clique)
+ 1. Ethash - proof-of-work
+ 2. Clique - proof-of-authority
+&amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次はとりあえずデフォルトにしておきます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Which accounts are allowed to seal? (mandatory at least one)
+&amp;gt; 0x
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次に使用するネットワークIDを指定します。
+適当に &lt;code class=&quot;highlighter-rouge&quot;&gt;4224&lt;/code&gt; にします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Specify your chain/network ID if you want an explicit one (default = random)
+&amp;gt; 4224
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なお、代表的なnetwork idは以下のようになっています。
+今回はローカル環境で動かすだけですが、重複しないようにしておきましょう。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;: Mainnet&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;: Morden test net(obsolete)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt;: Ropsten test net&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;4&lt;/code&gt;: Rinkeby test net&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;42&lt;/code&gt;: Kovan test net&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;次にgenesisの設定管理を選択します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;What would you like to do? (default = stats)
+ 1. Show network stats
+ 2. Manage existing genesis
+ 3. Track new remote server
+ 4. Deploy network components
+&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;genesisの設定をエクスポートします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; 1. Modify existing fork rules
+ 2. Export genesis configuration
+ 3. Remove genesis configuration
+&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次はデフォルトでOK&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Which file to save the genesis into? (default = soudegesu.json)
+&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ココまで来ると &lt;code class=&quot;highlighter-rouge&quot;&gt;Exported existing genesis block&lt;/code&gt; と表示され、コンソール上の表示が最初に戻ります。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl + C&lt;/code&gt; にてexitしましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;soudegesu.json&lt;/code&gt; が作成されていることが確認できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat soudegesu.json
+
+{
+  &quot;config&quot;: {
+    &quot;chainId&quot;: 4224,
+    &quot;homesteadBlock&quot;: 1,
+    &quot;eip150Block&quot;: 2,
+    &quot;eip150Hash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
+    &quot;eip155Block&quot;: 3,
+    &quot;eip158Block&quot;: 3,
+    &quot;byzantiumBlock&quot;: 4,
+    &quot;ethash&quot;: {}
+  },
+  &quot;nonce&quot;: &quot;0x0&quot;,
+  &quot;timestamp&quot;: &quot;0x5a9cd72a&quot;,
+  &quot;extraData&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
+  &quot;gasLimit&quot;: &quot;0x47b760&quot;,
+  &quot;difficulty&quot;: &quot;0x80000&quot;,
+  &quot;mixHash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
+  &quot;coinbase&quot;: &quot;0x0000000000000000000000000000000000000000&quot;,
+  &quot;alloc&quot;: {
+    &quot;0000000000000000000000000000000000000000&quot;: {
+      &quot;balance&quot;: &quot;0x1&quot;
+    },
+    (以下略)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;プライベートネットワークの初期化&quot;&gt;プライベートネットワークの初期化&lt;/h3&gt;
+
+&lt;p&gt;次にネットワークの初期化を行います。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth --datadir ./private init ./soudegesu.json
+
+INFO [03-05|14:54:31] Maximum peer count                       ETH=25 LES=0 total=25
+INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/chaindata cache=16 handles=16
+INFO [03-05|14:54:31] Writing custom genesis block
+INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.10945ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
+INFO [03-05|14:54:31] Successfully wrote genesis state         database=chaindata                                                              hash=25e489…52b7d1
+INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/lightchaindata cache=16 handles=16
+INFO [03-05|14:54:31] Writing custom genesis block
+INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.327455ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
+INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightchaindata                                                              hash=25e489…52b7d1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;アカウントの作成&quot;&gt;アカウントの作成&lt;/h3&gt;
+
+&lt;p&gt;ether(wei) をやりとりするためのアカウントを作成します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth --datadir . account new
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;適当にパスワードを設定すると &lt;code class=&quot;highlighter-rouge&quot;&gt;Address&lt;/code&gt; のところにアカウントのアドレスが表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase:
+Repeat passphrase:
+Address: {アカウントA}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;作成が完了すると &lt;code class=&quot;highlighter-rouge&quot;&gt;keystore&lt;/code&gt; ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls keystore
+
+UTC--2018-03-05T06-00-32.829542689Z--アカウントA
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;作成されたアカウントを確認します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth --datadir . account list
+Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;後の行程で、複数ユーザ間でデータをやりとりする仕組みを試してみるため、
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;geth --datadir . account new&lt;/code&gt; コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)&lt;/p&gt;
+
+&lt;h3 id=&quot;マイニングの動作確認をする&quot;&gt;マイニングの動作確認をする&lt;/h3&gt;
+&lt;p&gt;次にマイニングの動作確認をします。&lt;/p&gt;
+
+&lt;p&gt;先程作成した &lt;code class=&quot;highlighter-rouge&quot;&gt;keystore&lt;/code&gt; の情報を移動します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;作成したユーザのパスワードファイルを作成します。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo (account new する時に指定したパスワード) &amp;gt; private/password.sec
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実行してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth --networkid 4224 --mine --minerthreads 1 --datadir &quot;~/workspace/eth_private_net/private&quot; --nodiscover --rpc --rpcport &quot;8545&quot; --port &quot;30303&quot; --rpccorsdomain &quot;*&quot; --nat &quot;any&quot; --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath &quot;~/Library/Ethereum/geth.ipc&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;その際に、標準出力に表示される &lt;code class=&quot;highlighter-rouge&quot;&gt;ChainID&lt;/code&gt; が指定されたIDになっているかを確認しましょう。
+今回であれば &lt;strong&gt;4224&lt;/strong&gt; が出ていればOKです。&lt;/p&gt;
+
+&lt;p&gt;処理がもりもり走っていきます。ハンマーアイコンが出てくればマイニングできています。
+(もちろんテスト用なので、何の価値もないですが)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180305/chained.png&quot; alt=&quot;mining&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;別アカウントにethを送ってみる&quot;&gt;別アカウントにEthを送ってみる&lt;/h3&gt;
+&lt;p&gt;先程複数アカウントを作成したので、実際にetherを送ってみましょう。
+ターミナル上のマイニングの画面はそのままにして、ターミナルの別ウィンドウを立ち上げましょう。&lt;/p&gt;
+
+&lt;p&gt;その後、以下を実行し、Javascriptコンソールを起動します。
+コンソールは対話形式で入力していくことが可能です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;geth attach
+
+instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
+coinbase: xxxxxxxxxxxxxxxxxxxxxxxxxx
+at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
+ datadir: /Users/xxxxxx/workspace/eth_private_net/private
+ modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;まず存在するアカウントを確認しておきます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.accounts
+[&quot;アカウントA&quot;, &quot;アカウントB&quot;, &quot;アカウントC&quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;マイニング時のメインアカウントを確認します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.coinbase
+アカウントA
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;現時点での保有量を確認します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.getBalance(eth.accounts[0])
+285000000000000000000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;単位が &lt;code class=&quot;highlighter-rouge&quot;&gt;wei&lt;/code&gt; でわかりにくいので &lt;code class=&quot;highlighter-rouge&quot;&gt;ether&lt;/code&gt; にしましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; web3.fromWei(eth.getBalance(eth.coinbase), &quot;ether&quot;)
+288
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# アカウントA -&amp;gt; アカウントB へ10 ether送る
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, &quot;ether&quot;)})
+&amp;gt; ハッシュ値
+# アカウントA -&amp;gt; アカウントC へ6 ether送る
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, &quot;ether&quot;)})
+&amp;gt; ハッシュ値
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以下で確認することができました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; web3.fromWei(eth.getBalance(eth.accounts[1]), &quot;ether&quot;)
+10
+&amp;gt; web3.fromWei(eth.getBalance(eth.accounts[2]), &quot;ether&quot;)
+6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;駆け足でしたが、今回はざっくり以下まで実施できました。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; のインストール&lt;/li&gt;
+  &lt;li&gt;開発用のConfigファイルの作成&lt;/li&gt;
+  &lt;li&gt;アカウントの作成&lt;/li&gt;
+  &lt;li&gt;マイニング&lt;/li&gt;
+  &lt;li&gt;複数アカウント間の送金&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;この後、&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;truffle&lt;/code&gt; 、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Metamask&lt;/code&gt; のセットアップ、 &lt;code class=&quot;highlighter-rouge&quot;&gt;web3&lt;/code&gt; での開発作業があるのですが、
+長くなりそうなので、今回はここで一旦切ろうと思います。&lt;/p&gt;
+
+&lt;p&gt;ローカルとはいえ、マイニングされていく様を見ると少しそわそわしますね。&lt;/p&gt;
+
+&lt;p&gt;genesisファイルやコマンドの細かい部分は完全にすっ飛ばしており、私もまだまだ理解が浅いので、
+様々なソースを見ながら引き続き学習したいと思います。&lt;/p&gt;
+
+&lt;p&gt;(いやぁ、しかし、早く &lt;a href=&quot;https://github.com/ethereumbook/ethereumbook&quot;&gt;Mastering Ethereum&lt;/a&gt; 発売されないかな)&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.ethereum.org/2017/04/14/geth-1-6-puppeth-master/&quot;&gt;Ethereum blog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="ethereum" /><category term="dapps" /><category term="truffle" /><category term="ganache" /><category term="metamask" /><summary type="html">以前、IPFS を調査したことがあり、そこから Ethereum の存在を知りました。 昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。 今回はDApps開発のための下準備までを纏めます。</summary></entry><entry xml:lang="ja"><title type="html">Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した</title><link href="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/" rel="alternate" type="text/html" title="Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した" /><published>2018-02-26T00:00:00+09:00</published><updated>2018-02-26T00:00:00+09:00</updated><id>https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed</id><content type="html" xml:base="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/">&lt;p&gt;昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。
 かくいう私もその口で、今回は &lt;a href=&quot;https://www.udemy.com/&quot;&gt;Udemy&lt;/a&gt; というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -1594,162 +1960,4 @@ NHKの朝のニュースでも頻繁に見るくらいですので、世間一�
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;実はまだ5枠全部受けきれてないです。
-自身での内容の整理も含めて、これからまとめていきたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><summary type="html">機械学習を身につけたい意欲 ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。 NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。 先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。</summary></entry><entry xml:lang="ja"><title type="html">zsh から fish (shell) へお引っ越しを試みた話</title><link href="https://www.soudegesu.com/sh/fish/" rel="alternate" type="text/html" title="zsh から fish (shell) へお引っ越しを試みた話" /><published>2017-02-18T16:36:00+09:00</published><updated>2017-02-18T16:36:00+09:00</updated><id>https://www.soudegesu.com/sh/try-fish</id><content type="html" xml:base="https://www.soudegesu.com/sh/fish/">&lt;h2 id=&quot;fish-との出会い&quot;&gt;fish との出会い&lt;/h2&gt;
-&lt;p&gt;これは本当に偶然の出会いで、
-「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「fish プログラミング」&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;というキーワードで検索したところ、fish shell がヒットしたのであった。&lt;/p&gt;
-
-&lt;p&gt;仕事用もプレイベート用Macもzshを設定していて、個人的にはそれなりに満足していたのですが、色々zshにインストールしていたこともあって、起動やキー入力に若干もたつきを感じていたのもalternative factでしたので、ちょっと試してみようかなと思ったのが始まりです。&lt;/p&gt;
-
-&lt;h2 id=&quot;fishとは&quot;&gt;fishとは&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://fishshell.com/&quot;&gt;fish&lt;/a&gt; のfishは &lt;span style=&quot;color: #d32f2f&quot;&gt;F&lt;/span&gt;riendly &lt;span style=&quot;color: #d32f2f&quot;&gt;i&lt;/span&gt;nteractive &lt;span style=&quot;color: #d32f2f&quot;&gt;sh&lt;/span&gt;ell の略でユーザフレンドリーさを売りにしたUNIX shellとのことです。どのあたりがユーザーフレンドリーか、というとざっと以下のようです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;コマンドのautocompleteやシンタックスハイライト&lt;/li&gt;
-  &lt;li&gt;web上でカラーチョイスができるカラフルなターミナル&lt;/li&gt;
-  &lt;li&gt;健全でシンプルな文法(bash等とは若干違うらしい)&lt;/li&gt;
-  &lt;li&gt;manページの自動生成と親切なヘルプメッセージ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;もちろん、以前使用していたzshでも.zshrcに設定を入れたり、プラグインやテーマをインストールすることで自分好みの使いやすいターミナルに仕上げることができます。&lt;/p&gt;
-
-&lt;h2 id=&quot;セットアップ手順&quot;&gt;セットアップ手順&lt;/h2&gt;
-&lt;h3 id=&quot;fishのインストール&quot;&gt;fishのインストール&lt;/h3&gt;
-&lt;p&gt;Homebrewを使用してfishをインストールします。
-(これ以外にもMacportsやインストーラー、Windows版、tarboll等様々サポートしていますので公式サイトを確認してください)&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install fish
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;デフォルトのシェル切り替え&quot;&gt;デフォルトのシェル切り替え&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/shells&lt;/code&gt; を確認すると、使用可能なshellを確認できます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; cat /etc/shells
-# List of acceptable shells for chpass(1).
-# Ftpd will not allow users to connect who are not using
-# one of these shells.
-
-/bin/bash
-/bin/csh
-/bin/ksh
-/bin/sh
-/bin/tcsh
-/bin/zsh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;今のままでは &lt;code class=&quot;highlighter-rouge&quot;&gt;fish&lt;/code&gt; は使用できませんので末尾に1行fishのパスを追記しましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;which fish
-/usr/local/bin/fish  #これを/etc/shellsに追記
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;以下のコマンドでターミナル起動時のログインシェルをfishに切り替えることができます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chsh -s /usr/local/bin/fish
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ターミナルを再起動する&quot;&gt;ターミナルを再起動する&lt;/h3&gt;
-&lt;p&gt;ターミナルを再起動することでシェルが切り替わっていることを確認できます。
-個人的にはもう少しカラフルでかっこよくしたいのでプラグインを入れる方法を模索します。&lt;/p&gt;
-
-&lt;h2 id=&quot;fisherman-でpluginをインストールする&quot;&gt;fisherman でpluginをインストールする&lt;/h2&gt;
-
-&lt;p&gt;fishの場合、&lt;a href=&quot;https://fisherman.github.io/&quot;&gt;fisherman&lt;/a&gt; がplugin managerとして利用可能なようですので、こちらをインストールして拡張していきましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;fisherman-のインストール&quot;&gt;fisherman のインストール&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;プラグインのインストール&quot;&gt;プラグインのインストール&lt;/h3&gt;
-&lt;p&gt;まずはプロンプトのテーマをインストールします。今回はjokerのテーマをインストールしてみます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fisher joker
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;powerlineのインストール&quot;&gt;powerlineのインストール&lt;/h3&gt;
-&lt;p&gt;私のmacではjokerのテーマで使用しているpowerlineをまだインストールしていなかったため、jokerのREADMEに添付されている画像のようなデザインになりませんでした。そのため、別途&lt;a href=&quot;https://powerline.readthedocs.io/en/master/installation.html#pip-installation&quot;&gt;powerlineをインストール&lt;/a&gt;します。&lt;/p&gt;
-
-&lt;h3 id=&quot;fonts-のインストール&quot;&gt;fonts のインストール&lt;/h3&gt;
-&lt;p&gt;加えてfontsも別途インストールしなくてはいけないようです。(やること増えてきてしまった。。。)
-&lt;a href=&quot;https://powerline.readthedocs.io/en/latest/installation/linux.html#font-installation&quot;&gt;fontsのインストール手順&lt;/a&gt; を参考にインストールするとpip を使用する方法が紹介されていて微妙なので、&lt;a href=&quot;https://github.com/powerline/fonts&quot;&gt;gitリポジトリ&lt;/a&gt; からcloneしてきてシェルでフォントを一括でインストールします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/powerline/fonts
-sh ./install.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;iterm2ターミナルの設定&quot;&gt;iTerm2(ターミナル)の設定&lt;/h3&gt;
-&lt;p&gt;iTerm2でインストールしたフォントが利用できるように設定をします。
-[Preference] &amp;gt; [Profile]メニュー &amp;gt; [Text]タブ &amp;gt; [Font]と[Non-ASCII Font] の双方で「Change Font」を選択します。
-[All Fonts ] &amp;gt; [Source Code Pro for Powerline] を選択します。&lt;/p&gt;
-
-&lt;p&gt;やっとpowerlineが出ました。。
-補間も効くみたいですね。&lt;/p&gt;
-
-&lt;p&gt;あとは.zshrcで記載しているPATHのexportやコマンドのailasを &lt;strong&gt;~/.config/fish/config.fish&lt;/strong&gt; に転記しましょう。&lt;/p&gt;
-
-&lt;h2 id=&quot;起動時のconfigファイルを書き換える&quot;&gt;起動時のconfigファイルを書き換える&lt;/h2&gt;
-&lt;p&gt;.zshrc にものすごいたくさん書いていた私の場合、このお引越が一番時間かかりました。。
-fish起動時にconfig.fishを読み込んで、変数のexportやaliasの登録をしたい場合には以下のような書き換えが必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;export&quot;&gt;export&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;zshの場合
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export ANT_HOME=/usr/bin/apache-ant-1.9.4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fishの場合
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;set -x ANT_HOME /usr/bin/apache-ant-1.9.4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;コマンドのalias&quot;&gt;コマンドのalias&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;zshの場合
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias la='ls -a'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fishの場合
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias la='ls -a'
-function la
-   ls -a $argv
-end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;aliasの登録がかなり面倒な感じになってしまっていますね。&lt;/p&gt;
-
-&lt;h2 id=&quot;おまけ-bashを使えるようにする&quot;&gt;おまけ: bashを使えるようにする&lt;/h2&gt;
-&lt;p&gt;fishの場合、bashとは文法が異なるため&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash hoge.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように実行する必要があるため、少々不便です。&lt;/p&gt;
-
-&lt;p&gt;そのため、fishでもbashのシェルが実行できるよう、プラグインを入れてあげる必要があります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fisher edc/bass
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;fishはユーザーに優しいインターフェースを提供している(?)
-    &lt;ul&gt;
-      &lt;li&gt;実はzshでも同じプロンプトのデザインを提供しているケースもあるので見た目自体にはzshとの大きな差別化は図れていない。&lt;/li&gt;
-      &lt;li&gt;autocompleteはzshよりも少し便利かなという印象&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fishのconfigファイルは.zshrcや.bashrcと文法的な互換性がないので抵抗感がある
-    &lt;ul&gt;
-      &lt;li&gt;慣れなのかもしれないが、正直ここに時間をかけたくない&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fish の場合、コマンド履歴に対する操作がちょっと弱い
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;! ${履歴番号}&lt;/code&gt; でコマンド再実行ができないみたい。(個人的には重宝していたのに。。)&lt;/li&gt;
-      &lt;li&gt;history コマンドでそもそも履歴の番号表示されないですし。。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;しばらくはプライベートはfish、仕事はzshで行こうと思いました。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="sh" /><category term="fish" /><category term="zsh" /><summary type="html">fish との出会い これは本当に偶然の出会いで、 「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が”fish”みたいな音じゃなかったかな？」と音を頼りに</summary></entry></feed>
+自身での内容の整理も含めて、これからまとめていきたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><summary type="html">機械学習を身につけたい意欲 ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。 NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。 先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。</summary></entry></feed>
