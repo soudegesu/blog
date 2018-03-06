@@ -1,5 +1,5 @@
 ---
-title: "Dapps開発のためにEthereumの開発環境を構築する"
+title: "EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)"
 description: "DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました"
 date: 2018-03-05 00:00:00 +0900
 categories: ethereum
@@ -8,21 +8,21 @@ tags: ethereum dapps truffle ganache metamask
 
 以前、`IPFS` を調査したことがあり、そこから `Ethereum` の存在を知りました。
 昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
-今回はDapps開発のための下準備までを纏めます。
+今回はDApps開発のための下準備までを纏めます。
 
 * Table Of Contents
 {:toc}
 
 ## 環境情報
 今回、私は以下の環境にて構築を行いました
-* Mac
-    * High Seria 10.13.2
+* Mac Book Pro
+  * OS: High Seria 10.13.2
 * Homebrew
-    * 1.5.6
+  * 1.5.6
 
 ## Etehreumのセットアップ
-今回は [Ethereum](https://www.ethereum.org/) を使用します。理由としては、Dapps開発のためのOSSとして開発が積極的に行われており、
-様々なDappsにて使用されている(らしい)からです。
+今回は [Ethereum](https://www.ethereum.org/) を使用します。理由としては、DApps開発のためのOSSとして開発が積極的に行われており、
+様々なDAppsにて使用されている(らしい)からです。
 
 ### Ethereumのインストール
 Homebrewがあれば簡単にインストールができます。
@@ -76,7 +76,8 @@ pwd
 puppeth
 ```
 
-すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を `soudegesu` にします。
+すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
+今回は `soudegesu` にしました。
 
 ```
 +-----------------------------------------------------------+
@@ -95,7 +96,7 @@ Please specify a network name to administer (no spaces, please)
 > soudegesu
 ```
 
-ここから対話形式で入力していきます。まず、 `2. Configure new genesis` を選択します。
+以降も対話形式で入力していきます。まず、 `2. Configure new genesis` を選択します。
 
 ```
 Sweet, you can set this via --network=soudegesu next time!
@@ -136,12 +137,13 @@ Specify your chain/network ID if you want an explicit one (default = random)
 ```
 
 なお、代表的なnetwork idは以下のようになっています。
+今回はローカル環境で動かすだけですが、重複しないようにしておきましょう。
 
-1: Mainnet
-2: Morden test net(obsolete)
-3: Ropsten test net
-4: Rinkeby test net
-42: Kovan test net
+* `1`: Mainnet
+* `2`: Morden test net(obsolete)
+* `3`: Ropsten test net
+* `4`: Rinkeby test net
+* `42`: Kovan test net
 
 次にgenesisの設定管理を選択します。
 
@@ -224,7 +226,7 @@ INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightcha
 
 ### アカウントの作成
 
-Ethreum(wei) をやりとりするためのアカウントを作成します。
+ether(wei) をやりとりするためのアカウントを作成します。
 
 ```
 geth --datadir . account new
@@ -254,7 +256,7 @@ geth --datadir . account list
 Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
 ```
 
-実際には複数ユーザ間でデータをやりとりする仕組みを構築すると思いますので、
+後の行程で、複数ユーザ間でデータをやりとりする仕組みを試してみるため、
  `geth --datadir . account new` コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)
 
 ### マイニングの動作確認をする
@@ -268,7 +270,7 @@ cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/ke
 
 作成したユーザのパスワードファイルを作成します。
 ```
-echo (account new したときのパスワード) > private/password.sec
+echo (account new する時に指定したパスワード) > private/password.sec
 ```
 
 実行してみましょう。
@@ -285,9 +287,9 @@ geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private
 
 ![mining]({{site.baseurl}}/assets/images/20180305/chained.png)
 
-### Ethを送ってみる
-先程複数アカウントを作成したので、実際にEthを送ってみましょう。
-マイニングの画面はそのままにして、ターミナルで別ウィンドウを立ち上げましょう。
+### 別アカウントにEthを送ってみる
+先程複数アカウントを作成したので、実際にetherを送ってみましょう。
+ターミナル上のマイニングの画面はそのままにして、ターミナルの別ウィンドウを立ち上げましょう。
 
 その後、以下を実行し、Javascriptコンソールを起動します。
 コンソールは対話形式で入力していくことが可能です。
@@ -323,7 +325,7 @@ at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
 285000000000000000000
 ```
 
-単位が `wei` でわかりにくいので `ETH` にしましょう。
+単位が `wei` でわかりにくいので `ether` にしましょう。
 
 ```
 > web3.fromWei(eth.getBalance(eth.coinbase), "ether")
@@ -333,8 +335,10 @@ at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
 アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。
 
 ```
+# アカウントA -> アカウントB へ10 ether送る
 eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, "ether")})
 > ハッシュ値
+# アカウントA -> アカウントC へ6 ether送る
 eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, "ether")})
 > ハッシュ値
 ```
@@ -349,7 +353,22 @@ eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(
 ```
 
 ## まとめ
+駆け足でしたが、今回はざっくり以下まで実施できました。
+* `Ethereum` のインストール
+* 開発用のConfigファイルの作成
+* アカウントの作成
+* マイニング
+* 複数アカウント間の送金
 
+この後、`Ganache` や `truffle` 、 `Metamask` のセットアップ、 `web3` での開発作業があるのですが、
+長くなりそうなので、今回はここで一旦切ろうと思います。
+
+ローカルとはいえ、マイニングされていく様を見ると少しそわそわしますね。
+
+genesisファイルやコマンドの細かい部分は完全にすっ飛ばしており、私もまだまだ理解が浅いので、
+様々なソースを見ながら引き続き学習したいと思います。
+
+(いやぁ、しかし、早く [Mastering Ethereum](https://github.com/ethereumbook/ethereumbook) 発売されないかな)
 
 ## 参考にさせていただいたサイト
-* [Ethereum blog]([)https://blog.ethereum.org/2017/04/14/geth-1-6-puppeth-master/)
+* [Ethereum blog](https://blog.ethereum.org/2017/04/14/geth-1-6-puppeth-master/)
