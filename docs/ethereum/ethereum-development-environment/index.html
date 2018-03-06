@@ -1,0 +1,765 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) | そうなんでげす</title>
+<meta property="og:title" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました" />
+<meta property="og:description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました" />
+<link rel="canonical" href="https://www.soudegesu.com/ethereum/ethereum-development-environment/" />
+<meta property="og:url" content="https://www.soudegesu.com/ethereum/ethereum-development-environment/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-05T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/ethereum/ethereum-development-environment/","publisher":null,"image":null,"headline":"EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)","dateModified":"2018-03-05T00:00:00+09:00","datePublished":"2018-03-05T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/ethereum/ethereum-development-environment/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/ethereum" itemprop="item"><span itemprop="name">Ethereum</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)">
+    <meta itemprop="description" content="以前、IPFS を調査したことがあり、そこから Ethereum の存在を知りました。昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。今回はDApps開発のための下準備までを纏めます。">
+    <meta itemprop="datePublished" content="March 05, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>以前、<code class="highlighter-rouge">IPFS</code> を調査したことがあり、そこから <code class="highlighter-rouge">Ethereum</code> の存在を知りました。
+昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
+今回はDApps開発のための下準備までを纏めます。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#環境情報" id="markdown-toc-環境情報">環境情報</a></li>
+  <li><a href="#etehreumのセットアップ" id="markdown-toc-etehreumのセットアップ">Etehreumのセットアップ</a>    <ul>
+      <li><a href="#ethereumのインストール" id="markdown-toc-ethereumのインストール">Ethereumのインストール</a></li>
+      <li><a href="#設定ファイルの作成" id="markdown-toc-設定ファイルの作成">設定ファイルの作成</a></li>
+      <li><a href="#プライベートネットワークの初期化" id="markdown-toc-プライベートネットワークの初期化">プライベートネットワークの初期化</a></li>
+      <li><a href="#アカウントの作成" id="markdown-toc-アカウントの作成">アカウントの作成</a></li>
+      <li><a href="#マイニングの動作確認をする" id="markdown-toc-マイニングの動作確認をする">マイニングの動作確認をする</a></li>
+      <li><a href="#別アカウントにethを送ってみる" id="markdown-toc-別アカウントにethを送ってみる">別アカウントにEthを送ってみる</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="環境情報">環境情報</h2>
+<p>今回、私は以下の環境にて構築を行いました</p>
+<ul>
+  <li>Mac Book Pro
+    <ul>
+      <li>OS: High Seria 10.13.2</li>
+    </ul>
+  </li>
+  <li>Homebrew
+    <ul>
+      <li>1.5.6</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="etehreumのセットアップ">Etehreumのセットアップ</h2>
+<p>今回は <a href="https://www.ethereum.org/">Ethereum</a> を使用します。理由としては、DApps開発のためのOSSとして開発が積極的に行われており、
+様々なDAppsにて使用されている(らしい)からです。</p>
+
+<h3 id="ethereumのインストール">Ethereumのインストール</h3>
+<p>Homebrewがあれば簡単にインストールができます。</p>
+
+<ul>
+  <li>リポジトリを追加</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap ethereum/ethereum
+</code></pre></div></div>
+
+<ul>
+  <li>Ethereum をインストール</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install ethereum
+</code></pre></div></div>
+
+<ul>
+  <li>バージョンを確認</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth -h
+
+&gt; NAME:
+&gt;    geth - the go-ethereum command line interface
+&gt;
+&gt;    Copyright 2013-2017 The go-ethereum Authors
+&gt;
+&gt; USAGE:
+&gt;    geth [options] command [command options] [arguments...]
+&gt;
+&gt; VERSION:
+&gt;    1.8.1-stable
+(以下略)
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">1.8.1</code> がインストールされているようですね。</p>
+
+<p>以降の作業は以下のディレクトリにて実施します。(誤解を招かないように念のため)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwd
+&gt; /Users/xxxxxx/workspace/eth_private_net
+</code></pre></div></div>
+
+<h3 id="設定ファイルの作成">設定ファイルの作成</h3>
+
+<p><code class="highlighter-rouge">Ethereum</code> の 1.6から <code class="highlighter-rouge">puppeth</code> コマンドが追加されました。
+これを使って初期化を行います。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>puppeth
+</code></pre></div></div>
+
+<p>すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
+今回は <code class="highlighter-rouge">soudegesu</code> にしました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-----------------------------------------------------------+
+| Welcome to puppeth, your Ethereum private network manager |
+|                                                           |
+| This tool lets you create a new Ethereum network down to  |
+| the genesis block, bootnodes, miners and ethstats servers |
+| without the hassle that it would normally entail.         |
+|                                                           |
+| Puppeth uses SSH to dial in to remote servers, and builds |
+| its network components out of Docker containers using the |
+| docker-compose toolset.                                   |
++-----------------------------------------------------------+
+
+Please specify a network name to administer (no spaces, please)
+&gt; soudegesu
+</code></pre></div></div>
+
+<p>以降も対話形式で入力していきます。まず、 <code class="highlighter-rouge">2. Configure new genesis</code> を選択します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sweet, you can set this via --network=soudegesu next time!
+
+INFO [03-05|14:24:17] Administering Ethereum network           name=soudegesu
+WARN [03-05|14:24:17] No previous configurations found         path=/Users/xxxxxxxxx/.puppeth/soudegesu
+
+What would you like to do? (default = stats)
+ 1. Show network stats
+ 2. Configure new genesis
+ 3. Track new remote server
+ 4. Deploy network components
+&gt; 2
+</code></pre></div></div>
+
+<p>次にコンセンサスルールを決めます。今回は <code class="highlighter-rouge">Ethash</code> にしましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Which consensus engine to use? (default = clique)
+ 1. Ethash - proof-of-work
+ 2. Clique - proof-of-authority
+&gt; 1
+</code></pre></div></div>
+
+<p>次はとりあえずデフォルトにしておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Which accounts are allowed to seal? (mandatory at least one)
+&gt; 0x
+</code></pre></div></div>
+
+<p>次に使用するネットワークIDを指定します。
+適当に <code class="highlighter-rouge">4224</code> にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Specify your chain/network ID if you want an explicit one (default = random)
+&gt; 4224
+</code></pre></div></div>
+
+<p>なお、代表的なnetwork idは以下のようになっています。
+今回はローカル環境で動かすだけですが、重複しないようにしておきましょう。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">1</code>: Mainnet</li>
+  <li><code class="highlighter-rouge">2</code>: Morden test net(obsolete)</li>
+  <li><code class="highlighter-rouge">3</code>: Ropsten test net</li>
+  <li><code class="highlighter-rouge">4</code>: Rinkeby test net</li>
+  <li><code class="highlighter-rouge">42</code>: Kovan test net</li>
+</ul>
+
+<p>次にgenesisの設定管理を選択します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>What would you like to do? (default = stats)
+ 1. Show network stats
+ 2. Manage existing genesis
+ 3. Track new remote server
+ 4. Deploy network components
+&gt; 2
+</code></pre></div></div>
+
+<p>genesisの設定をエクスポートします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. Modify existing fork rules
+ 2. Export genesis configuration
+ 3. Remove genesis configuration
+&gt; 2
+</code></pre></div></div>
+
+<p>次はデフォルトでOK</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Which file to save the genesis into? (default = soudegesu.json)
+&gt;
+</code></pre></div></div>
+
+<p>ココまで来ると <code class="highlighter-rouge">Exported existing genesis block</code> と表示され、コンソール上の表示が最初に戻ります。
+<code class="highlighter-rouge">Ctrl + C</code> にてexitしましょう。</p>
+
+<p><code class="highlighter-rouge">soudegesu.json</code> が作成されていることが確認できます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat soudegesu.json
+
+{
+  "config": {
+    "chainId": 4224,
+    "homesteadBlock": 1,
+    "eip150Block": 2,
+    "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "eip155Block": 3,
+    "eip158Block": 3,
+    "byzantiumBlock": 4,
+    "ethash": {}
+  },
+  "nonce": "0x0",
+  "timestamp": "0x5a9cd72a",
+  "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "gasLimit": "0x47b760",
+  "difficulty": "0x80000",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "alloc": {
+    "0000000000000000000000000000000000000000": {
+      "balance": "0x1"
+    },
+    (以下略)
+</code></pre></div></div>
+
+<h3 id="プライベートネットワークの初期化">プライベートネットワークの初期化</h3>
+
+<p>次にネットワークの初期化を行います。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth --datadir ./private init ./soudegesu.json
+
+INFO [03-05|14:54:31] Maximum peer count                       ETH=25 LES=0 total=25
+INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/chaindata cache=16 handles=16
+INFO [03-05|14:54:31] Writing custom genesis block
+INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.10945ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
+INFO [03-05|14:54:31] Successfully wrote genesis state         database=chaindata                                                              hash=25e489…52b7d1
+INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/lightchaindata cache=16 handles=16
+INFO [03-05|14:54:31] Writing custom genesis block
+INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.327455ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
+INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightchaindata                                                              hash=25e489…52b7d1
+</code></pre></div></div>
+
+<h3 id="アカウントの作成">アカウントの作成</h3>
+
+<p>ether(wei) をやりとりするためのアカウントを作成します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth --datadir . account new
+</code></pre></div></div>
+
+<p>適当にパスワードを設定すると <code class="highlighter-rouge">Address</code> のところにアカウントのアドレスが表示されます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase:
+Repeat passphrase:
+Address: {アカウントA}
+</code></pre></div></div>
+
+<p>作成が完了すると <code class="highlighter-rouge">keystore</code> ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls keystore
+
+UTC--2018-03-05T06-00-32.829542689Z--アカウントA
+</code></pre></div></div>
+
+<p>作成されたアカウントを確認します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth --datadir . account list
+Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
+</code></pre></div></div>
+
+<p>後の行程で、複数ユーザ間でデータをやりとりする仕組みを試してみるため、
+ <code class="highlighter-rouge">geth --datadir . account new</code> コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)</p>
+
+<h3 id="マイニングの動作確認をする">マイニングの動作確認をする</h3>
+<p>次にマイニングの動作確認をします。</p>
+
+<p>先程作成した <code class="highlighter-rouge">keystore</code> の情報を移動します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.
+</code></pre></div></div>
+
+<p>作成したユーザのパスワードファイルを作成します。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo (account new する時に指定したパスワード) &gt; private/password.sec
+</code></pre></div></div>
+
+<p>実行してみましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private_net/private" --nodiscover --rpc --rpcport "8545" --port "30303" --rpccorsdomain "*" --nat "any" --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath "~/Library/Ethereum/geth.ipc"
+</code></pre></div></div>
+
+<p>その際に、標準出力に表示される <code class="highlighter-rouge">ChainID</code> が指定されたIDになっているかを確認しましょう。
+今回であれば <strong>4224</strong> が出ていればOKです。</p>
+
+<p>処理がもりもり走っていきます。ハンマーアイコンが出てくればマイニングできています。
+(もちろんテスト用なので、何の価値もないですが)</p>
+
+<p><img src="/assets/images/20180305/chained.png" alt="mining" /></p>
+
+<h3 id="別アカウントにethを送ってみる">別アカウントにEthを送ってみる</h3>
+<p>先程複数アカウントを作成したので、実際にetherを送ってみましょう。
+ターミナル上のマイニングの画面はそのままにして、ターミナルの別ウィンドウを立ち上げましょう。</p>
+
+<p>その後、以下を実行し、Javascriptコンソールを起動します。
+コンソールは対話形式で入力していくことが可能です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth attach
+
+instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
+coinbase: xxxxxxxxxxxxxxxxxxxxxxxxxx
+at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
+ datadir: /Users/xxxxxx/workspace/eth_private_net/private
+ modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
+</code></pre></div></div>
+
+<p>まず存在するアカウントを確認しておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.accounts
+["アカウントA", "アカウントB", "アカウントC"]
+</code></pre></div></div>
+
+<p>マイニング時のメインアカウントを確認します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.coinbase
+アカウントA
+</code></pre></div></div>
+
+<p>現時点での保有量を確認します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBalance(eth.accounts[0])
+285000000000000000000
+</code></pre></div></div>
+
+<p>単位が <code class="highlighter-rouge">wei</code> でわかりにくいので <code class="highlighter-rouge">ether</code> にしましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; web3.fromWei(eth.getBalance(eth.coinbase), "ether")
+288
+</code></pre></div></div>
+
+<p>アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># アカウントA -&gt; アカウントB へ10 ether送る
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, "ether")})
+&gt; ハッシュ値
+# アカウントA -&gt; アカウントC へ6 ether送る
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, "ether")})
+&gt; ハッシュ値
+</code></pre></div></div>
+
+<p>以下で確認することができました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; web3.fromWei(eth.getBalance(eth.accounts[1]), "ether")
+10
+&gt; web3.fromWei(eth.getBalance(eth.accounts[2]), "ether")
+6
+</code></pre></div></div>
+
+<h2 id="まとめ">まとめ</h2>
+<p>駆け足でしたが、今回はざっくり以下まで実施できました。</p>
+<ul>
+  <li><code class="highlighter-rouge">Ethereum</code> のインストール</li>
+  <li>開発用のConfigファイルの作成</li>
+  <li>アカウントの作成</li>
+  <li>マイニング</li>
+  <li>複数アカウント間の送金</li>
+</ul>
+
+<p>この後、<code class="highlighter-rouge">Ganache</code> や <code class="highlighter-rouge">truffle</code> 、 <code class="highlighter-rouge">Metamask</code> のセットアップ、 <code class="highlighter-rouge">web3</code> での開発作業があるのですが、
+長くなりそうなので、今回はここで一旦切ろうと思います。</p>
+
+<p>ローカルとはいえ、マイニングされていく様を見ると少しそわそわしますね。</p>
+
+<p>genesisファイルやコマンドの細かい部分は完全にすっ飛ばしており、私もまだまだ理解が浅いので、
+様々なソースを見ながら引き続き学習したいと思います。</p>
+
+<p>(いやぁ、しかし、早く <a href="https://github.com/ethereumbook/ethereumbook">Mastering Ethereum</a> 発売されないかな)</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+<ul>
+  <li><a href="https://blog.ethereum.org/2017/04/14/geth-1-6-puppeth-master/">Ethereum blog</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-03-05T00:00:00+09:00">March 05, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) https://www.soudegesu.com/ethereum/ethereum-development-environment/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/ethereum/ethereum-development-environment/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/ethereum/ethereum-development-environment/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/ethereum/ethereum-development-environment/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/ethereum/ethereum-development-environment/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/security/take-udemy-cyber-security-hacker-exposed/" class="pagination--pager" title="Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
