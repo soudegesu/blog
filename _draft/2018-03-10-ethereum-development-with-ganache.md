@@ -171,6 +171,8 @@ Ganacheの画面を見てみると1番上のアドレスの `balance` (所有し
 
 ![transaction Ganache]({{site.baseurl}}/assets/images/20180310/transaction_ganache.png)
 
-##
-
 ## まとめ
+
+今回は `Truffle` でローカル環境構築をした後、 `Ganache` のネットワークに接続設定をして、マイグレーションまでを行いました。
+ここまでできれば次は `Solidity` によるコントラクトの開発と、テストコードによる動作確認ですね！！
+
