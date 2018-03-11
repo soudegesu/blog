@@ -1,4 +1,224 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-06T21:06:26+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-environment/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)" /><published>2018-03-05T00:00:00+09:00</published><updated>2018-03-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-environment</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-environment/">&lt;p&gt;以前、&lt;code class=&quot;highlighter-rouge&quot;&gt;IPFS&lt;/code&gt; を調査したことがあり、そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の存在を知りました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-11T15:50:54+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Truffle&amp;amp;Ganache接続まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Truffle&amp;Ganache接続まで)" /><published>2018-03-10T00:00:00+09:00</published><updated>2018-03-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-with-ganache</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/">&lt;p&gt;&lt;a href=&quot;/ethereum/ethereum-development-environment/&quot;&gt;前回の記事&lt;/a&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の開発環境の構築を行いました。
+今回はさらに &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; 用のフレームワークである &lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を使ってローカルでの開発環境を整えようと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#truffleとは&quot; id=&quot;markdown-toc-truffleとは&quot;&gt;Truffleとは&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ganacheとは&quot; id=&quot;markdown-toc-ganacheとは&quot;&gt;Ganacheとは&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#セットアップ&quot; id=&quot;markdown-toc-セットアップ&quot;&gt;セットアップ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#設定&quot; id=&quot;markdown-toc-設定&quot;&gt;設定&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#packagejson-の修正&quot; id=&quot;markdown-toc-packagejson-の修正&quot;&gt;package.json の修正&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#truffleを初期化する&quot; id=&quot;markdown-toc-truffleを初期化する&quot;&gt;truffleを初期化する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ganacheと接続する&quot; id=&quot;markdown-toc-ganacheと接続する&quot;&gt;Ganacheと接続する&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;truffleとは&quot;&gt;Truffleとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/&quot;&gt;Truffle&lt;/a&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; アプリケーションの開発効率を上げるためのフレームワークです。
+ボイラープレート的な仕事をしてくれるところから始まり、 ネットワーク接続の設定管理や、ネットワークのマイグレーション実行や初期化、テストフレームワークをバンドルしていたりなど、一通り開発できるように準備を整えてくれます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/truffle.png&quot; alt=&quot;Truffle top&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ganacheとは&quot;&gt;Ganacheとは&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/ganache/&quot;&gt;Ganache&lt;/a&gt; はDAppsを開発時のテストをする際に使用するローカル用のプライベートネットワークを構築してくれます。自動マイニングしてくれるので、別でターミナルを立ち上げて、マイニング用のコマンドを実行する必要もありません。発生したトランザクションは順番にソートされて表示もされるので、動作確認も比較的容易にできると思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/ganache.png&quot; alt=&quot;Ganache top&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;セットアップ&quot;&gt;セットアップ&lt;/h2&gt;
+&lt;p&gt;以前同様の記事を書きましたが、簡単におさらいします。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Etehreum のインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew tap ethereum/ethereum
+brew install ethereum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;nodenvのインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;nodenv&lt;/code&gt; を使って切り替えています。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install nodenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nodenv起動のために、 &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.zshrc&lt;/code&gt; に以下を追記します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export PATH=&quot;$PATH:$HOME/.nodenv/bin:&quot;
+eval &quot;$(nodenv init --no-rehash -)&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node(9.6.1)のインストールと設定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nodenv install 9.6.1
+nodenv local 9.6.1
+node -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; の作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm init
+(面倒なので、以降はEnter)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle&lt;/code&gt; のインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install truffle@4.0.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;solidityのコンパイラ &lt;code class=&quot;highlighter-rouge&quot;&gt;solc&lt;/code&gt; のインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install solc@0.4.18
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; のインストール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/ganache/&quot;&gt;Ganache&lt;/a&gt; のページからインストーラを取得し実行する。&lt;/p&gt;
+
+&lt;h2 id=&quot;設定&quot;&gt;設定&lt;/h2&gt;
+&lt;h3 id=&quot;packagejson-の修正&quot;&gt;package.json の修正&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle&lt;/code&gt; をグローバルインストールしていないので、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run&lt;/code&gt; でキックできるように &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; を修正します。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;scripts&lt;/code&gt; ブロックを修正します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &quot;scripts&quot;: {
+    &quot;truffle&quot;: &quot;truffle&quot;,
+    &quot;develop&quot;: &quot;truffle develop&quot;,
+    &quot;truffle-ganache&quot;: &quot;truffle migrate --compile-all --reset --network ganache&quot;,
+    &quot;truffle-console&quot;: &quot;truffle console --network ganache&quot;
+  },
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;truffleを初期化する&quot;&gt;truffleを初期化する&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle init 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tree -L 1
+
+.
+├── contracts
+├── migrations
+├── node_modules
+├── package-lock.json
+├── package.json
+├── test
+├── truffle-config.js
+└── truffle.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contracts&lt;/code&gt; ディレクトリ
+    &lt;ul&gt;
+      &lt;li&gt;コントラクトプログラムを配置する場所。&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle init&lt;/code&gt; 時に &lt;code class=&quot;highlighter-rouge&quot;&gt;Migrations.sol&lt;/code&gt; が生成される&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;migrations&lt;/code&gt; ディレクトリ
+    &lt;ul&gt;
+      &lt;li&gt;マイグレーションスクリプトを配置する場所。 &lt;code class=&quot;highlighter-rouge&quot;&gt;truffle init&lt;/code&gt; 時に &lt;code class=&quot;highlighter-rouge&quot;&gt;1_initial_migrations.js&lt;/code&gt; が生成される。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt; ディレクトリ
+    &lt;ul&gt;
+      &lt;li&gt;作成したコントラクトプログラムのテストスクリプトを配置する場所。デフォルトで &lt;code class=&quot;highlighter-rouge&quot;&gt;mocha&lt;/code&gt; が使える。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle.js&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;truffleの設定ファイル&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-config.js&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;truffle.jsと同じ。&lt;code class=&quot;highlighter-rouge&quot;&gt;PowerShell&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;Git-bash&lt;/code&gt; 利用時にはこちらを編集する。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;私はMacユーザなので、&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-config.js&lt;/code&gt; は消してしまいます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rm truffle-config.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ganacheと接続する&quot;&gt;Ganacheと接続する&lt;/h3&gt;
+
+&lt;p&gt;次にインストール済みの &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を起動します。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; はデフォルトで10個のアカウントを作成してくれます。指定がなければ1番上に表示されているアカウントが &lt;code class=&quot;highlighter-rouge&quot;&gt;coinbase&lt;/code&gt; になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/boot_ganache.png&quot; alt=&quot;Boot Ganache&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ganacheが表示しているネットワークの情報を基に、&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle.js&lt;/code&gt; を以下のように編集します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module.exports = {
+  // See &amp;lt;http://truffleframework.com/docs/advanced/configuration&amp;gt;
+  // to customize your Truffle configuration!
+  networks: {
+    ganache: {
+      host: &quot;localhost&quot;,
+      port: 7545,
+      network_id: &quot;*&quot;
+    }
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; に記載した npm scriptsのコマンドから &lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-ganache&lt;/code&gt; を起動し、
+Ganacheのマイグレーションを行います。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle-ganache
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ganacheの画面を見てみると1番上のアドレスの &lt;code class=&quot;highlighter-rouge&quot;&gt;balance&lt;/code&gt; (所有しているether) が &lt;code class=&quot;highlighter-rouge&quot;&gt;100&lt;/code&gt; → &lt;code class=&quot;highlighter-rouge&quot;&gt;99.97&lt;/code&gt; に減っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/migration_ganache.png&quot; alt=&quot;migration Ganache&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;実はこれ、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run truffle-ganache&lt;/code&gt; 実行により、&lt;code class=&quot;highlighter-rouge&quot;&gt;migrations/1_initial_migrations.js&lt;/code&gt; が実行され、
+そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;contracts/Migrations.sol&lt;/code&gt; がデプロイされています。
+そのマイグレーションの処理自体もトランザクションが行われており、ganacheに &lt;code class=&quot;highlighter-rouge&quot;&gt;gas&lt;/code&gt; をお支払いしたため少しだけ減っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;TRANSACTIONS&lt;/code&gt; タブを押すと、トランザクションハッシュが生成されていることを確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/transaction_ganache.png&quot; alt=&quot;transaction Ganache&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle-console
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;試しに以下のようなコードを実行すると&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, &quot;ether&quot;)})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;トランザクションのアドレスが帰ってきます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/transaction_sample.png&quot; alt=&quot;transaction sample&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; でローカル環境構築をした後、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; のネットワークに接続設定をして、マイグレーションまでを行いました。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を使うことで、素の &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; 単体で開発するよりも、開発環境周辺の手間が軽減されるので、これから積極的に使っていきたいと思います。
+ここまでできれば、次は &lt;code class=&quot;highlighter-rouge&quot;&gt;Solidity&lt;/code&gt; によるコントラクトの開発と、テストコードによる動作確認です。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="ethereum" /><category term="truffle" /><category term="ganache" /><category term="dapps" /><summary type="html">前回の記事 で Ethereum の開発環境の構築を行いました。 今回はさらに Ethereum 用のフレームワークである Truffle と Ganache を使ってローカルでの開発環境を整えようと思います。</summary></entry><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-environment/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)" /><published>2018-03-05T00:00:00+09:00</published><updated>2018-03-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-environment</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-environment/">&lt;p&gt;以前、&lt;code class=&quot;highlighter-rouge&quot;&gt;IPFS&lt;/code&gt; を調査したことがあり、そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の存在を知りました。
 昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
 今回はDApps開発のための下準備までを纏めます。&lt;/p&gt;
 
@@ -1896,68 +2116,4 @@ python -V
 &lt;ul&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv-virtualenv&lt;/code&gt;を使用することで、pythonの仮想環境の切り替えができるようになりました。&lt;/li&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;venv&lt;/code&gt;で作成した環境と&lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt;で作成した仮想環境も&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;を使用すれば競合することなく&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;することができます。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="python" /><category term="pyenv" /><category term="pyenv-virtualenv" /><category term="anaconda" /><summary type="html">はじめに 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。 anacondaを使用する機会も増えてきたので、pyenv installからのpyenv localコマンドでanaconda環境が構築するのですが、 activateの部分をもう少しスマートに行いたいため、 pyenv-virtualenv も用いる方法に変更します。</summary></entry><entry xml:lang="ja"><title type="html">TensorFlowのオンライン学習サイトを利用してみる</title><link href="https://www.soudegesu.com/tensorflow/tensorflow-online-course/" rel="alternate" type="text/html" title="TensorFlowのオンライン学習サイトを利用してみる" /><published>2017-02-19T01:36:00+09:00</published><updated>2017-02-19T01:36:00+09:00</updated><id>https://www.soudegesu.com/tensorflow/tensorflow-online-course</id><content type="html" xml:base="https://www.soudegesu.com/tensorflow/tensorflow-online-course/">&lt;h2 id=&quot;機械学習を身につけたい意欲&quot;&gt;機械学習を身につけたい意欲&lt;/h2&gt;
-&lt;p&gt;ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。
-NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。
-先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://tocana.jp/2017/02/post_12245_entry.html&quot;&gt;「ダボス会議」で世界のトップリーダーたちが懺悔 「AIの成長が早すぎて超ヤバい。認識が甘かった」&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これから加速度的に発展し、社会進出してくる機械学習を用いた製品やサービス。
-このムーブメントはIT業界に関わらず、他の業界にも浸透していくことでしょう。&lt;/p&gt;
-
-&lt;p&gt;私のような今まで機械学習を業務で利用していなかったエンジニアも、程度の差こそあれ、機械学習の理解に努めなければ
-完全なブラックボックス製品を使うだけの1エンドユーザーに終わってしまうのではないか、という焦りがあります。&lt;/p&gt;
-
-&lt;p&gt;アルゴリズムを見つけたり、最適化したり、というのはハードルが高いので、「ライブラリが使える」ようになることを直近の目標にしたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;筆者のレベル感&quot;&gt;筆者のレベル感&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;python はまぁ書ける&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.coursera.org/learn/machine-learning/home/welcome&quot;&gt;coureraの機械学習のコース&lt;/a&gt;は受講済&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.amazon.co.jp/%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E4%BD%9C%E3%82%8BDeep-Learning-Python%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%A3%E3%83%BC%E3%83%97%E3%83%A9%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0%E3%81%AE%E7%90%86%E8%AB%96%E3%81%A8%E5%AE%9F%E8%A3%85-%E6%96%8E%E8%97%A4-%E5%BA%B7%E6%AF%85/dp/4873117585/ref=sr_1_fkmr0_1?ie=UTF8&amp;amp;qid=1487429614&amp;amp;sr=8-1-fkmr0&amp;amp;keywords=%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89+%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92&quot;&gt;ゼロから作るDeepLearning&lt;/a&gt; は一通り読み切った&lt;/li&gt;
-  &lt;li&gt;TensorFlowの公式サイトのMNISTサンプルは実行して「お、おぅ。。」となって中断している&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;tensorflowを学べるサイト&quot;&gt;TensorFlowを学べるサイト&lt;/h2&gt;
-&lt;p&gt;オンラインでTensorFlowを学べるサイトがあるのかを探してみたところ、kadenzeというサイト「Creative Applications of Deep Learning with TensorFlow」という学習コースがありました。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.kadenze.com/courses/creative-applications-of-deep-learning-with-tensorflow/info&quot;&gt;Creative Applications of Deep Learning with TensorFlow&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;全体としては1h程度の動画 ✕ 5枠にて構成されていました。
-最初のコースは無料で受講できるようなので、早速登録してみることに。&lt;/p&gt;
-
-&lt;p&gt;会員登録作業が一通り終わると、「講義で利用するリソースがgithub上に上がっているのでcloneしてね」ということが判明。
-それが以下。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/pkmital/CADL&quot;&gt;pkmital/CADL&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;リポジトリ内にjupyter notebook用のファイル(.ipynb)があるので、自分のマシンにjupyter notebookとtensorflowがインストールされていればすんなり起動&amp;amp;実行が可能です。(Dockerもあると良い)
-結構、notebookファイル内にmarkdown形式の説明文が記載されているので、もしかしたら動画を見なくても感じがつかめるかもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;動画を見てみた感想&quot;&gt;動画を見てみた感想&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;全編英語(当たり前ですが)&lt;/li&gt;
-  &lt;li&gt;英語字幕の設定が可能
-    &lt;ul&gt;
-      &lt;li&gt;ただし、動画毎に字幕設定が必要(設定が引き継げない)のが若干面倒&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;約1h時間の枠内で更に細かい動画に分割されていた。(introduction 2min、 about XXX 14minのように)&lt;/li&gt;
-  &lt;li&gt;いきなり文脈が飛ぶときがあって、置いていかれることがある
-    &lt;ul&gt;
-      &lt;li&gt;「なぜ」の部分の説明が割愛されているときがある&lt;/li&gt;
-      &lt;li&gt;そこはForum使って議論 &amp;amp; QA しなさい、といった感じなのでしょうか&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;.ipynbのソースに解答が既に打ち込まれてしまっているので、動画を追いかけながらタイプしたい方は別途環境を構築した方がよいかも。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;実はまだ5枠全部受けきれてないです。
-自身での内容の整理も含めて、これからまとめていきたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><summary type="html">機械学習を身につけたい意欲 ここ1年で”AI”や”人工知能”のワードを耳にする機会は大変増えました。 NHKの朝のニュースでも頻繁に見るくらいですので、世間一般の方でも「なんかすごい技術」として認知はされているのでしょう。 先日、ダボス会議が開催された際に、以下のような発言がなされたことがニュースとなったことも記憶に新しいことと思います。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="python" /><category term="pyenv" /><category term="pyenv-virtualenv" /><category term="anaconda" /><summary type="html">はじめに 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。 anacondaを使用する機会も増えてきたので、pyenv installからのpyenv localコマンドでanaconda環境が構築するのですが、 activateの部分をもう少しスマートに行いたいため、 pyenv-virtualenv も用いる方法に変更します。</summary></entry></feed>
