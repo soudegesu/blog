@@ -13,11 +13,14 @@ tags: ethereum truffle ganache dapps
 {:toc}
 
 ## Truffleとは
-[Truffle](http://truffleframework.com/) は
+[Truffle](http://truffleframework.com/) は `Ethereum` アプリケーションの開発効率を上げるためのフレームワークです。
+ボイラープレート的な仕事をしてくれるところから始まり、 ネットワーク接続の設定管理や、ネットワークのマイグレーション実行や初期化、テストフレームワークをバンドルしていたりなど、一通り開発できるように準備を整えてくれます。
+
+![Truffle top]({{site.baseurl}}/assets/images/20180310/truffle.png)
 
 ## Ganacheとは
 
-[Ganache](http://truffleframework.com/ganache/) はDAppsを開発時のテストをする際に便利なローカル用のプライベートネットワークを構築してくれます。
+[Ganache](http://truffleframework.com/ganache/) はDAppsを開発時のテストをする際に使用するローカル用のプライベートネットワークを構築してくれます。自動マイニングしてくれるので、別でターミナルを立ち上げて、マイニング用のコマンドを実行する必要もありません。発生したトランザクションは順番にソートされて表示もされるので、動作確認も比較的容易にできると思います。
 
 ![Ganache top]({{site.baseurl}}/assets/images/20180310/ganache.png)
 
@@ -32,13 +35,14 @@ brew install ethereum
 ```
 
 * nodenvのインストール
+
 私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 `nodenv` を使って切り替えています。
 
 ```
 brew install nodenv
 ```
 
-* nodenv起動のために、 `~/.zshrc` に以下を追記
+nodenv起動のために、 `~/.zshrc` に以下を追記します。
 
 ```
 export PATH="$PATH:$HOME/.nodenv/bin:"
@@ -53,7 +57,7 @@ nodenv local 9.6.1
 node -v
 ```
 
-* npmの初期化
+* `package.json` の作成
 
 ```
 npm init
@@ -73,6 +77,7 @@ npm install solc@0.4.18
 ```
 
 * `Ganache` のインストール
+
 [Ganache](http://truffleframework.com/ganache/) のページからインストーラを取得し実行する。
 
 
@@ -133,6 +138,7 @@ rm truffle-config.js
 ### Ganacheと接続する
 
 次にインストール済みの `Ganache` を起動します。
+`Ganache` はデフォルトで10個のアカウントを作成してくれます。指定がなければ1番上に表示されているアカウントが `coinbase` になります。
 
 ![Boot Ganache]({{site.baseurl}}/assets/images/20180310/boot_ganache.png)
 
@@ -171,8 +177,31 @@ Ganacheの画面を見てみると1番上のアドレスの `balance` (所有し
 
 ![transaction Ganache]({{site.baseurl}}/assets/images/20180310/transaction_ganache.png)
 
+また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、
+
+```
+npm run truffle-console
+```
+
+試しに以下のようなコードを実行すると
+
+```
+web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, "ether")})
+```
+
+トランザクションのアドレスが帰ってきます。
+
+```
+>  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
+```
+
+`Ganache` の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。
+
+![transaction sample]({{site.baseurl}}/assets/images/20180310/transaction_sample.png)
+
 ## まとめ
 
 今回は `Truffle` でローカル環境構築をした後、 `Ganache` のネットワークに接続設定をして、マイグレーションまでを行いました。
-ここまでできれば次は `Solidity` によるコントラクトの開発と、テストコードによる動作確認ですね！！
+`Truffle` と `Ganache` を使うことで、素の `Ethereum` 単体で開発するよりも、開発環境周辺の手間が軽減されるので、これから積極的に使っていきたいと思います。
+ここまでできれば、次は `Solidity` によるコントラクトの開発と、テストコードによる動作確認です。
 
