@@ -17,10 +17,11 @@ tags: java spring webflux reactor
 今回作成したリポジトリは [こちら](https://github.com/soudegesu/springboot-webflux-test) です。
 全てローカル環境で動かせるように `docker-compose` でコンポーネント化してあるものの、 ローカルマシンのリソースを食い合うため、負荷試験をするときはLinuxサーバ上に展開することをオススメします。
 
-## 
-
 ## RouterFunctionを登録する
-以下のような `RouterFunction` を作成し
+以下のような `RouterFunction` を作成し、 `@Bean` で登録しておきます。
+RouterFunctionのレスポンスを返す部分はもう少しいい実装がありそうですが、一旦こうしました。
+
+* `RouterFunction`
 
 ```
 @Component
@@ -63,20 +64,86 @@ public class HelloWebClientHandler {
 }
 ```
 
-## Webflux??
+* RouterFunctionを登録する側
+作成した `HelloWebClientHandler` を登録します。
 
-## パフォーマンスを策定してみた
-### 試してみた環境
+```
+@Configuration
+@EnableWebFlux
+public class WebConfig extends DelegatingWebFluxConfiguration {
+    // ~中略~
 
+    @Bean
+    RouterFunction<ServerResponse> route7(HelloWebClientHandler webClientHandler) {
+        return webClientHandler.routes();
+    }
+}
+```
 
-### バックプレッシャー
-![webflux-thread]({{site.baseurl}}/assets/images/20180305/chained.png)
+あとは `main` メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。
 
+## パフォーマンスを測定してみた
+springbootのjarファイルをEC2上に置いて実際にバックプレッシャーの効果を見てみましょう。
+
+### 環境情報
+私のローカルマシン上からgatlingを実行し、EC2上のspringbootアプリケーションに負荷がけをします。
+springbootアプリケーションは、バックエンドのmockサーバ(OpenRestyを使用)に対して `WebClient` を使ってAsyncなHTTP通信を行います。
+
+![architechture]({{site.baseurl}}/assets/images/20180316/architecture.png)
+
+なお、EC2インスタンスは `t2.small` を使用し、JVMへの割当メモリは `最大256M` に設定しています。
+また、バックプレッシャーを観測したいので、mockサーバではsleep処理を入れています。
+
+### バックプレッシャーを体験する
+#### springboot-webfluxは普通に生きている
+バックプレッシャーの効果を見てみましょう。
+gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です。
+
+|gatlingのリクエスト|mockのsleep時間|
+|---------|----------|
+|150req/s|1s         |
+
+![webflux-sleep-150]({{site.baseurl}}/assets/images/20180316/webflux-sleep-150.png)
+
+普通に全て200レスポンスが返却されていますね。すごい。
+
+次にsleep時間を `5s` にして見てみます。
+対照実験的な意味で `150req/s` がよかったのですが、今回は私のマシンのパワー不足により `130` までしか出ませんでした。
+
+|gatlingのリクエスト|mockのsleep時間|
+|---------|----------|
+|130req/s|5s         |
+
+![webflux-sleep-130-5s]({{site.baseurl}}/assets/images/20180316/webflux-sleep-130.png)
+
+バックエンドサーバが `5s` もsleepしていても普通に200応答できていますね。
+
+#### springboot-webmvcは
+比較として、従来の `springboot-webmvc` ではどうでしょう。
+サーブレットコンテナはデフォルトの `embed-tomcat` として、`application.yaml` の設定はデフォルトとします。
+また、mockへの通信部分はConnectionPoolingから取得するように実装した上で以下の条件でリクエストを流してみました。 
+
+|gatlingのリクエスト|mockのsleep時間|
+|---------|----------|
+|100req/s|1s         |
+
+![mvc-sleep-100]({{site.baseurl}}/assets/images/20180316/mvc-sleep-100.png)
+
+うむ。やはりだめでしたか。
+
+一応、同条件にて、HttpClientのPool数も増やしたりして調整しましたが、エラーレスポンス件数が0にはなりませんでした。
+
+![mvc-sleep-100-tuned]({{site.baseurl}}/assets/images/20180316/mvc-sleep-100-tuned.png)
 
 ### スレッド増加の傾向を見てみる
-![tomcat-thread]({{site.baseurl}}/assets/images/20180316/tomcat-thread.png)
+スレッドの増加傾向も見てみましょう。この観点は単純に `netty4` vs `tomcat` に依存する部分が大きいのですが、見てみましょう。
+
 
 ![webflux-thread]({{site.baseurl}}/assets/images/20180316/webflux-thread.png)
+
+![tomcat-thread]({{site.baseurl}}/assets/images/20180316/tomcat-thread.png)
+
+
 
 ## まとめ
 
