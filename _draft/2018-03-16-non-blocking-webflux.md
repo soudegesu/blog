@@ -136,9 +136,9 @@ gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です�
 ![mvc-sleep-100-tuned]({{site.baseurl}}/assets/images/20180316/mvc-sleep-100-tuned.png)
 
 ### スレッド増加の傾向を見てみる
-スレッドの増加傾向も見てみましょう。この観点は単純に `netty4` vs `tomcat` に依存する部分が大きいのですが、見てみましょう。
+負荷試験中のスレッドの増加傾向も見てみましょう。この観点は単純に `netty4` vs `tomcat` に依存する部分が大きいのですが、見てみましょう。
 
-
+webflux(Netty4)の場合は
 ![webflux-thread]({{site.baseurl}}/assets/images/20180316/webflux-thread.png)
 
 ![tomcat-thread]({{site.baseurl}}/assets/images/20180316/tomcat-thread.png)
