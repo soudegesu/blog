@@ -57,6 +57,10 @@
 <lastmod>2018-03-10T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/java/non-blocking-webflux/</loc>
+<lastmod>2018-03-16T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/</loc>
 </url>
 <url>
@@ -199,6 +203,15 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/metamask/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/spring/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/webflux/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/reactor/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>

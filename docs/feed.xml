@@ -1,4 +1,208 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-11T15:50:54+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Truffle&amp;amp;Ganache接続まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Truffle&amp;Ganache接続まで)" /><published>2018-03-10T00:00:00+09:00</published><updated>2018-03-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-with-ganache</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/">&lt;p&gt;&lt;a href=&quot;/ethereum/ethereum-development-environment/&quot;&gt;前回の記事&lt;/a&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の開発環境の構築を行いました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-19T14:14:25+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">springboot-webfluxのバックプレッシャーを体験してたらいい感じだった</title><link href="https://www.soudegesu.com/java/non-blocking-webflux/" rel="alternate" type="text/html" title="springboot-webfluxのバックプレッシャーを体験してたらいい感じだった" /><published>2018-03-16T00:00:00+09:00</published><updated>2018-03-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/non-blocking-webflux</id><content type="html" xml:base="https://www.soudegesu.com/java/non-blocking-webflux/">&lt;p&gt;2018/3にリリースされた &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot2&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;spring5&lt;/code&gt; がバンドルされるようになりました。
+リリースの中でも注目機能と言われている &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; 、とりわけ &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; が内包しているリアクティブプログラミングライブラリである &lt;code class=&quot;highlighter-rouge&quot;&gt;Reactor&lt;/code&gt; はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#今回作成したリポジトリ&quot; id=&quot;markdown-toc-今回作成したリポジトリ&quot;&gt;今回作成したリポジトリ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#routerfunctionを登録する&quot; id=&quot;markdown-toc-routerfunctionを登録する&quot;&gt;RouterFunctionを登録する&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#パフォーマンスを測定してみた&quot; id=&quot;markdown-toc-パフォーマンスを測定してみた&quot;&gt;パフォーマンスを測定してみた&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#バックプレッシャーを体験する&quot; id=&quot;markdown-toc-バックプレッシャーを体験する&quot;&gt;バックプレッシャーを体験する&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#springboot-webfluxは普通に生きている&quot; id=&quot;markdown-toc-springboot-webfluxは普通に生きている&quot;&gt;springboot-webfluxは普通に生きている&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#springboot-webmvcはやっぱり死んだ&quot; id=&quot;markdown-toc-springboot-webmvcはやっぱり死んだ&quot;&gt;springboot-webmvcはやっぱり死んだ&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#スレッド増加の傾向を見てみる&quot; id=&quot;markdown-toc-スレッド増加の傾向を見てみる&quot;&gt;スレッド増加の傾向を見てみる&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;今回作成したリポジトリ&quot;&gt;今回作成したリポジトリ&lt;/h2&gt;
+&lt;p&gt;今回作成したリポジトリは &lt;a href=&quot;https://github.com/soudegesu/springboot-webflux-test&quot;&gt;こちら&lt;/a&gt; です。
+全てローカル環境で動かせるように &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; でコンポーネント化してあるものの、 ローカルマシンのリソースを食い合うため、負荷試験をするときはLinuxサーバ上に展開することをオススメします。&lt;/p&gt;
+
+&lt;h2 id=&quot;routerfunctionを登録する&quot;&gt;RouterFunctionを登録する&lt;/h2&gt;
+&lt;p&gt;以下のような &lt;code class=&quot;highlighter-rouge&quot;&gt;RouterFunction&lt;/code&gt; を作成し、 &lt;code class=&quot;highlighter-rouge&quot;&gt;@Bean&lt;/code&gt; で登録しておきます。
+RouterFunctionのレスポンスを返す部分はもう少しいい実装がありそうですが、一旦こうしました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RouterFunction&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Component
+public class HelloWebClientHandler {
+
+    @Value(&quot;${app.backend.uri}&quot;)
+    private String baseUri;
+
+    private static final String PATH = &quot;/test&quot;;
+
+    public RouterFunction&amp;lt;ServerResponse&amp;gt; routes() {
+        return RouterFunctions.route(
+                RequestPredicates.GET(&quot;/hello&quot;)
+                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON))
+                , this::webclient);
+    }
+
+    private Mono&amp;lt;ServerResponse&amp;gt; webclient(ServerRequest req) {
+        return WebClient.builder()
+                .baseUrl(baseUri)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+                .build()
+                .get()
+                .uri(uriBuilder -&amp;gt; {
+                    uriBuilder.path(PATH);
+                    if (req.queryParam(&quot;time&quot;).isPresent()) {
+                        uriBuilder.queryParam(&quot;time&quot;, req.queryParam(&quot;time&quot;).get());
+                    }
+                    return uriBuilder.build();
+                })
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .flatMap(response -&amp;gt;
+                    ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(response.bodyToMono(User.class), User.class)
+                            .switchIfEmpty(ServerResponse.notFound().build())
+                );
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RouterFunctionを登録する側&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;作成した &lt;code class=&quot;highlighter-rouge&quot;&gt;HelloWebClientHandler&lt;/code&gt; を登録します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Configuration
+@EnableWebFlux
+public class WebConfig extends DelegatingWebFluxConfiguration {
+    // ~中略~
+
+    @Bean
+    RouterFunction&amp;lt;ServerResponse&amp;gt; route7(HelloWebClientHandler webClientHandler) {
+        return webClientHandler.routes();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;あとは &lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt; メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。&lt;/p&gt;
+
+&lt;h2 id=&quot;パフォーマンスを測定してみた&quot;&gt;パフォーマンスを測定してみた&lt;/h2&gt;
+&lt;p&gt;springbootのjarファイルをEC2上に置いて実際にバックプレッシャーの効果を見てみましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境情報&quot;&gt;環境情報&lt;/h3&gt;
+&lt;p&gt;私のローカルマシン上からgatlingを実行し、EC2上のspringbootアプリケーションに負荷がけをします。
+springbootアプリケーションは、バックエンドのmockサーバ(OpenRestyを使用)に対して &lt;code class=&quot;highlighter-rouge&quot;&gt;WebClient&lt;/code&gt; を使ってAsyncなHTTP通信を行います。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/architecture.png&quot; alt=&quot;architechture&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;なお、EC2インスタンスは &lt;code class=&quot;highlighter-rouge&quot;&gt;t2.small&lt;/code&gt; を使用し、JVMへの割当メモリは &lt;code class=&quot;highlighter-rouge&quot;&gt;最大256M&lt;/code&gt; に設定しています。
+また、バックプレッシャーを観測したいので、mockサーバではsleep処理を入れています。&lt;/p&gt;
+
+&lt;h3 id=&quot;バックプレッシャーを体験する&quot;&gt;バックプレッシャーを体験する&lt;/h3&gt;
+&lt;h4 id=&quot;springboot-webfluxは普通に生きている&quot;&gt;springboot-webfluxは普通に生きている&lt;/h4&gt;
+&lt;p&gt;バックプレッシャーの効果を見てみましょう。
+gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
+      &lt;th&gt;mockのsleep時間&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;150req/s&lt;/td&gt;
+      &lt;td&gt;1s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-sleep-150.png&quot; alt=&quot;webflux-sleep-150&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;普通に全て200レスポンスが返却されていますね。すごい。&lt;/p&gt;
+
+&lt;p&gt;次にsleep時間を &lt;code class=&quot;highlighter-rouge&quot;&gt;5s&lt;/code&gt; にして見てみます。
+対照実験的な意味で &lt;code class=&quot;highlighter-rouge&quot;&gt;150req/s&lt;/code&gt; がよかったのですが、今回は私のマシンのパワー不足により &lt;code class=&quot;highlighter-rouge&quot;&gt;130&lt;/code&gt; までしか出ませんでした。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
+      &lt;th&gt;mockのsleep時間&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;130req/s&lt;/td&gt;
+      &lt;td&gt;5s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-sleep-130-5s.png&quot; alt=&quot;webflux-sleep-130-5s&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;バックエンドサーバが5秒も応答待ちでも普通に200応答できていますね。&lt;/p&gt;
+
+&lt;h4 id=&quot;springboot-webmvcはやっぱり死んだ&quot;&gt;springboot-webmvcはやっぱり死んだ&lt;/h4&gt;
+&lt;p&gt;比較として、従来の &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-webmvc&lt;/code&gt; ではどうでしょう。
+サーブレットコンテナはデフォルトの &lt;code class=&quot;highlighter-rouge&quot;&gt;embed-tomcat&lt;/code&gt; として、&lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; の設定もデフォルトとします。
+また、mockへの通信を行う &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; はConnectionPoolingから取得するように実装した上で以下の条件でリクエストを流してみました。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
+      &lt;th&gt;mockのsleep時間&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;100req/s&lt;/td&gt;
+      &lt;td&gt;1s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/mvc-sleep-100.png&quot; alt=&quot;mvc-sleep-100&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;うむ。やはりだめでしたか。&lt;/p&gt;
+
+&lt;p&gt;一応、同条件にて、HttpClientのPool数も増やしたりして調整しましたが、エラーレスポンス件数が0にはなりませんでした。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/mvc-sleep-100-tuned.png&quot; alt=&quot;mvc-sleep-100-tuned&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;スレッド増加の傾向を見てみる&quot;&gt;スレッド増加の傾向を見てみる&lt;/h3&gt;
+&lt;p&gt;負荷試験中のスレッドの増加傾向も見てみましょう。この観点は単純に &lt;code class=&quot;highlighter-rouge&quot;&gt;netty4&lt;/code&gt; vs &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat&lt;/code&gt; に依存する部分が大きいのですが、見てみましょう。&lt;/p&gt;
+
+&lt;p&gt;webflux(Netty4)の場合は起動時からスレッド数が一定ですね。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-thread.png&quot; alt=&quot;webflux-thread&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;tomcatはやはりリクエストをさばくためにスレッドが必要になってしまうため、増加傾向にあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/tomcat-thread.png&quot; alt=&quot;tomcat-thread&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-webflux&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;springboo-webmvc&lt;/code&gt; を比較して、バックプレッシャーがどんな感じかを確認しました。
+梱包されている &lt;code class=&quot;highlighter-rouge&quot;&gt;netty4&lt;/code&gt; が持つnon-blockingな仕組みのおかげで、バックエンドサーバの遅延に引きずられることなくレスポンスを返却できていることがわかります。&lt;/p&gt;
+
+&lt;p&gt;しかしながら、もちろん銀の弾丸ではなくて、実装する上でのデメリットや考慮ポイントが他のサイトを見ると情報が色々出てきます。
+例えば、自身が書こうとしている処理がblockingな処理なのか、non-blockingな処理なのかを実装する側が気をつけないといけない、という点があります。
+そのためには、ライブラリがどのように動いているかをきちんと把握しないといけないでしょう。
+加えて、スレッドを共有する形でアプリケーションが動作するので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ThreadLocal&lt;/code&gt; をむやみに使わない方が良い気もしています。&lt;/p&gt;
+
+&lt;p&gt;ただ、 tomcatでサポートしているServlet 3.1の非同期IOよりは良さそうなので、用法を見定めた上で使っていきたいですね。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://acro-engineer.hatenablog.com/entry/2013/10/17/113216&quot;&gt;How to Migrate Netty 3 to 4 (Netty 番外編)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="spring" /><category term="webflux" /><category term="reactor" /><summary type="html">2018/3にリリースされた springboot2 から spring5 がバンドルされるようになりました。 リリースの中でも注目機能と言われている webflux 、とりわけ webflux が内包しているリアクティブプログラミングライブラリである Reactor はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。</summary></entry><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Truffle&amp;amp;Ganache接続まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Truffle&amp;Ganache接続まで)" /><published>2018-03-10T00:00:00+09:00</published><updated>2018-03-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-with-ganache</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/">&lt;p&gt;&lt;a href=&quot;/ethereum/ethereum-development-environment/&quot;&gt;前回の記事&lt;/a&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の開発環境の構築を行いました。
 今回はさらに &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; 用のフレームワークである &lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を使ってローカルでの開発環境を整えようと思います。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -1996,124 +2200,4 @@ categories = [&quot;&quot;, &quot;&quot;]
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは &lt;code class=&quot;highlighter-rouge&quot;&gt;storage.googleapis.com&lt;/code&gt; を参照する形でインストールを行いたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="tensorflow" /><summary type="html">ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。</summary></entry><entry xml:lang="ja"><title type="html">pyenvとpyenv-virtualenvでanacondaと共存する</title><link href="https://www.soudegesu.com/python/pyenv/anaconda" rel="alternate" type="text/html" title="pyenvとpyenv-virtualenvでanacondaと共存する" /><published>2017-02-28T11:49:00+09:00</published><updated>2017-02-28T11:49:00+09:00</updated><id>https://www.soudegesu.com/python/pyenv/pyenv-virtualenv</id><content type="html" xml:base="https://www.soudegesu.com/python/pyenv/anaconda">&lt;h2 id=&quot;はじめに&quot;&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
-anacondaを使用する機会も増えてきたので、&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv install&lt;/code&gt;からの&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv local&lt;/code&gt;コマンドでanaconda環境が構築するのですが、
-&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;の部分をもう少しスマートに行いたいため、 &lt;em&gt;pyenv-virtualenv&lt;/em&gt; も用いる方法に変更します。&lt;/p&gt;
-
-&lt;h2 id=&quot;今回やりたいこと&quot;&gt;今回やりたいこと&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;1台のマシンの中で使用するpythonのバージョンを切り替えたい&lt;/li&gt;
-  &lt;li&gt;さらに言えば、ディストリビューションも切り替えたい(anaconda)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;anaconda&lt;/em&gt;と&lt;em&gt;pyenv&lt;/em&gt;の &lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt; の競合を解決したい
-    &lt;ol&gt;
-      &lt;li&gt;&lt;em&gt;anaconda&lt;/em&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;する際にフルパスで指定するのを避けたい&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;1と2は&lt;em&gt;pyenv&lt;/em&gt;で、3は&lt;em&gt;pyenv-virtualenv&lt;/em&gt;で解決できることになります。&lt;/p&gt;
-
-&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;MacOSX Yosemite&lt;/li&gt;
-  &lt;li&gt;homebrew&lt;/li&gt;
-  &lt;li&gt;zsh&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;セットアップ手順&quot;&gt;セットアップ手順&lt;/h2&gt;
-&lt;h3 id=&quot;仮想環境切り替え用のモジュールをインストール&quot;&gt;仮想環境切り替え用のモジュールをインストール&lt;/h3&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# pyenvをインストールする&lt;/span&gt;
-brew install pyenv
-&lt;span class=&quot;c&quot;&gt;#pyenv-virtualenvをインストールする&lt;/span&gt;
-brew install pyenv-virtualenv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;シェル起動時の設定ファイルを修正&quot;&gt;シェル起動時の設定ファイルを修正&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;.zshrcに以下を追記する
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# pyenvの設定&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/.pyenv&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/bin:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYENV_ROOT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/shims:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;pyenv init -&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# pyenv-virtualenvの設定&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;which pyenv-virtualenv-init &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;pyenv virtualenv-init -&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ターミナルを再起動する(sourceコマンドでの再読込でも可)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;pythonの仮想環境を作成する&quot;&gt;Pythonの仮想環境を作成する&lt;/h2&gt;
-&lt;h3 id=&quot;テスト用のディレクトリを作成&quot;&gt;テスト用のディレクトリを作成&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;hoge&lt;/em&gt; ディレクトリ配下を任意のpythonバージョンで動作するようにしましょう。
-pythonのバージョンを確認しておきます。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir hoge
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;hoge
-python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Python 2.7.6
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;pythonのバージョンを設定&quot;&gt;pythonのバージョンを設定&lt;/h3&gt;
-&lt;p&gt;pyenvで使用可能なpythonを指定します。
-今回は3.6.0をインストールした後、&lt;em&gt;hoge&lt;/em&gt;ディレクトリ配下を3.6.0にします。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv install 3.6.0
-pyenv &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;3.6.0
-python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Python 3.6.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;仮想環境の構築&quot;&gt;仮想環境の構築&lt;/h3&gt;
-&lt;p&gt;pythonのvenvモジュールを呼び出し、仮想環境を構築します。
-今回は便宜的にカレントディレクトリに仮想環境を展開します。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;を読み込むことで、仮想環境に切り替わります。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; venv &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;bin/activate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt;する場合には&lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt;コマンドを入力するだけです。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deactivate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;pythonの仮想環境を作成するanacondaの場合&quot;&gt;Pythonの仮想環境を作成する(anacondaの場合)&lt;/h2&gt;
-&lt;h3 id=&quot;テスト用のディレクトリを作成-1&quot;&gt;テスト用のディレクトリを作成&lt;/h3&gt;
-&lt;p&gt;同様にして、anaconda環境を構築するために、&lt;em&gt;fuga&lt;/em&gt;ディレクトリを作成します。
-pythonのバージョンがデフォルトであることも確認しておきましょう。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir fuga
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;fuga
-python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
-Python 2.7.6
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;anacondaのバージョンを設定&quot;&gt;anacondaのバージョンを設定&lt;/h3&gt;
-&lt;p&gt;こちらも手順としては同様です。
-pyenvではインストールするpythonのディストリビューションが選択できます。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;anaconda&lt;/code&gt;以外にも&lt;code class=&quot;highlighter-rouge&quot;&gt;miniconda&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;pypy&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;jython&lt;/code&gt;等でも構築が可能です。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv install anaconda3-4.1.0
-pyenv local anaconda3-4.1.0
-python -V
-&amp;gt; Python 3.5.1 :: Anaconda 4.1.0 (x86_64)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;仮想環境の構築-1&quot;&gt;仮想環境の構築&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt;コマンドを使用して、存在している環境情報を確認することができます。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda info &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; root                  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;次に、anacondaの仮想環境を構築します。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; fuga &lt;span class=&quot;nv&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.5 anaconda
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt; オプションは構築する仮想環境の名前、&lt;code class=&quot;highlighter-rouge&quot;&gt;python=3.5&lt;/code&gt;は使用するpythonのバージョン、&lt;code class=&quot;highlighter-rouge&quot;&gt;anaconda&lt;/code&gt;は仮想環境上で使用するモジュールになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv activate&lt;/code&gt;コマンドを使用することで、anacondaの環境をactivateできます。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv activate anaconda3-4.1.0/envs/fuga
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;deactivateも同様ですね。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv deactivate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv-virtualenv&lt;/code&gt;を使用することで、pythonの仮想環境の切り替えができるようになりました。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;venv&lt;/code&gt;で作成した環境と&lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt;で作成した仮想環境も&lt;code class=&quot;highlighter-rouge&quot;&gt;pyenv&lt;/code&gt;を使用すれば競合することなく&lt;code class=&quot;highlighter-rouge&quot;&gt;activate&lt;/code&gt;することができます。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="python" /><category term="pyenv" /><category term="pyenv-virtualenv" /><category term="anaconda" /><summary type="html">はじめに 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。 anacondaを使用する機会も増えてきたので、pyenv installからのpyenv localコマンドでanaconda環境が構築するのですが、 activateの部分をもう少しスマートに行いたいため、 pyenv-virtualenv も用いる方法に変更します。</summary></entry></feed>
+&lt;p&gt;配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは &lt;code class=&quot;highlighter-rouge&quot;&gt;storage.googleapis.com&lt;/code&gt; を参照する形でインストールを行いたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="tensorflow" /><summary type="html">ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。</summary></entry></feed>
