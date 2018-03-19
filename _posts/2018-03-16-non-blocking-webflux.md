@@ -65,6 +65,7 @@ public class HelloWebClientHandler {
 ```
 
 * RouterFunctionを登録する側
+
 作成した `HelloWebClientHandler` を登録します。
 
 ```
@@ -114,14 +115,14 @@ gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です�
 |---------|----------|
 |130req/s|5s         |
 
-![webflux-sleep-130-5s]({{site.baseurl}}/assets/images/20180316/webflux-sleep-130.png)
+![webflux-sleep-130-5s]({{site.baseurl}}/assets/images/20180316/webflux-sleep-130-5s.png)
 
-バックエンドサーバが `5s` もsleepしていても普通に200応答できていますね。
+バックエンドサーバが5秒も応答待ちでも普通に200応答できていますね。
 
-#### springboot-webmvcは
+#### springboot-webmvcはやっぱり死んだ
 比較として、従来の `springboot-webmvc` ではどうでしょう。
-サーブレットコンテナはデフォルトの `embed-tomcat` として、`application.yaml` の設定はデフォルトとします。
-また、mockへの通信部分はConnectionPoolingから取得するように実装した上で以下の条件でリクエストを流してみました。 
+サーブレットコンテナはデフォルトの `embed-tomcat` として、`application.yaml` の設定もデフォルトとします。
+また、mockへの通信を行う `HttpClient` はConnectionPoolingから取得するように実装した上で以下の条件でリクエストを流してみました。
 
 |gatlingのリクエスト|mockのsleep時間|
 |---------|----------|
@@ -138,15 +139,25 @@ gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です�
 ### スレッド増加の傾向を見てみる
 負荷試験中のスレッドの増加傾向も見てみましょう。この観点は単純に `netty4` vs `tomcat` に依存する部分が大きいのですが、見てみましょう。
 
-webflux(Netty4)の場合は
+webflux(Netty4)の場合は起動時からスレッド数が一定ですね。
+
 ![webflux-thread]({{site.baseurl}}/assets/images/20180316/webflux-thread.png)
+
+tomcatはやはりリクエストをさばくためにスレッドが必要になってしまうため、増加傾向にあります。
 
 ![tomcat-thread]({{site.baseurl}}/assets/images/20180316/tomcat-thread.png)
 
-
-
 ## まとめ
 
+今回は `springboot-webflux` と `springboo-webmvc` を比較して、バックプレッシャーがどんな感じかを確認しました。
+梱包されている `netty4` が持つnon-blockingな仕組みのおかげで、バックエンドサーバの遅延に引きずられることなくレスポンスを返却できていることがわかります。
+
+しかしながら、もちろん銀の弾丸ではなくて、実装する上でのデメリットや考慮ポイントが他のサイトを見ると情報が色々出てきます。
+例えば、自身が書こうとしている処理がblockingな処理なのか、non-blockingな処理なのかを実装する側が気をつけないといけない、という点があります。
+そのためには、ライブラリがどのように動いているかをきちんと把握しないといけないでしょう。
+加えて、スレッドを共有する形でアプリケーションが動作するので、 `ThreadLocal` をむやみに使わない方が良い気もしています。
+
+ただ、 tomcatでサポートしているServlet 3.1の非同期IOよりは良さそうなので、用法を見定めた上で使っていきたいですね。
 
 ## 参考にさせていただいたサイト
 * [How to Migrate Netty 3 to 4 (Netty 番外編)](http://acro-engineer.hatenablog.com/entry/2013/10/17/113216)
