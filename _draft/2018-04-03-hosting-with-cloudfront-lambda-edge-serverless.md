@@ -68,15 +68,58 @@ Google Adsense等を使った広告収入で小遣い稼ぎをしたいと思っ
 
 
 ## AWSで構築してみる
+以降は案1での構築方法を記載していきます。
+
 ### IAM Roleの作成
 
-### Route53でサブドメインを移譲してもらう
+Lambdaに付与するAMI Roleを作成します。
+まず、以下のようなAssume Role Policy を作成します。
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "edgelambda.amazonaws.com",
+          "lambda.amazonaws.com"
+        ]
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+
+作成したPolicyとCloudWatchLogsFullAccessのポリシーをアタッチしたRoleを作成します。
+名前はとりあえず **EdgeLambdaForCloudfrontRole** としましょう。
+
+### ドメインを設定する
+Cloudfrontのディストリビューションのドメインをそのまま使うわけには行かないので、ドメインを設定します。
+個人的にはドメインの取得に関してはお金を払って `.com` や `.net` のような信頼できるドメインの取得をオススメします。
+ドメイン料金も抑えたい方は **「ドメイン 無料」** で検索すればいくらでも無料ドメインサービスが出てくるので、それを活用してください。
+
+私が取得しているドメインは [Cloudflare](https://www.cloudflare.com/) で管理しているので、
+Route53で取得しているドメインのサブドメインのHosted Zoneを作成し、NSレコードをcloudflare上に登録してあげます。
 
 ### Certification ManagerでSSL証明書を取得する
+
+サブドメインの委譲が正しくできていれば(= Route53上の設定値でDNSが引けるようになれば) Certification Manager を用いてSSL証明書を取得しましょう。
+SSL証明書の取得に関してはDNS Validationの方をオススメします。 詳しくは以前のポスト [AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い]({% post_url 2018-01-31-acm-route53-validate %}) を見てみてください。
+注意点として、**Certification Managerは us-east-1(Virginia)リージョンで取得する必要があります** 。
+これはCloudfrontに適用可能なSSL証明書はVirginiaリージョンで発行されたもののみ、という仕様があるからです。
+
 
 ### Lambdaの作成とpublish
 
 ### Cloudfrontで配信する
 
 ## まとめ
+
+## 参考にさせていただいたサイト
+* [Amazon Cloudfront 開発者ガイド](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html)
+
 
