@@ -6,7 +6,7 @@ categories: aws
 tags: aws lambda cloudfront serverless
 ---
 
-このブログ自体は `github-pages` と `cloudflare` を使って無料でホスティングをしているのですが、稀に **「動的なwebコンテンツを提供したい」** と思うことがあるでしょう。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。
+このブログ自体は `github-pages` と `cloudflare` を使って無料でホスティングをしているのですが、稀に **「動的なwebコンテンツを提供したい」** と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。
 
 
 * Table Of Contents
