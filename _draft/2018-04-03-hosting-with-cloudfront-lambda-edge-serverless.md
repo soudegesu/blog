@@ -262,14 +262,14 @@ resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
 
 #### キャシュクリアをする(2回目以降のデプロイ時)
 
-CloudfonrtはCDNサービスなので、デプロイ後にキャッシュをクリアして上げた方がよいです。
-ちなみにGCPのCDNだと、キャッシュクリアリクエストに初回から料金が発生します。
-
+CloudfrontはCDNサービスなので、デプロイ後にキャッシュをクリアして上げた方がよいです。
+ちなみに、GCPのCDNを利用した場合はキャッシュクリアのリクエストに初回から料金が発生します。
 
 ## まとめ
 
-
-
+今回、Cloudfront + Lambda@Edgeを用いてサーバレスでの動的なwebコンテンツを作成する機構を設けました。
+この方法によって実際にサンプルコンテンツを作成してみたのが [こちら](http://www.tools.soudegesu.com/) になります。
+ブラウザの言語設定の情報を基に `ja` か `en` かにリダイレクトする機能(俗に言うi18n対応っぽいもの)を実現しています。
 
 ## 参考にさせていただいたサイト
 * [Amazon Cloudfront 開発者ガイド](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html)
