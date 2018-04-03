@@ -1,0 +1,767 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック] | そうなんでげす</title>
+<meta property="og:title" content="Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="CloudfrontとLambda@Edgeを用いたWEBコンテンツの作成方法を紹介します。パスパラメータ一で動的なURL構成に対応可能で、ロングテールSEOも狙えるようになります。また、サーバレスによってランニングコストを抑えることもできるのでオススメです。" />
+<meta property="og:description" content="CloudfrontとLambda@Edgeを用いたWEBコンテンツの作成方法を紹介します。パスパラメータ一で動的なURL構成に対応可能で、ロングテールSEOも狙えるようになります。また、サーバレスによってランニングコストを抑えることもできるのでオススメです。" />
+<link rel="canonical" href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" />
+<meta property="og:url" content="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-04-03T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"name":null,"description":"CloudfrontとLambda@Edgeを用いたWEBコンテンツの作成方法を紹介します。パスパラメータ一で動的なURL構成に対応可能で、ロングテールSEOも狙えるようになります。また、サーバレスによってランニングコストを抑えることもできるのでオススメです。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/","publisher":null,"image":null,"headline":"Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]","dateModified":"2018-04-03T00:00:00+09:00","datePublished":"2018-04-03T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://www.soudegesu.com/aws" itemprop="item"><span itemprop="name">Aws</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]</li>
+      
+    
+  </ol>
+</nav>
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]">
+    <meta itemprop="description" content="このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。">
+    <meta itemprop="datePublished" content="April 03, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>このブログ自体は <code class="highlighter-rouge">github-pages</code> と <code class="highlighter-rouge">cloudflare</code> を使って無料でホスティングをしているのですが、稀に <strong>「動的なwebコンテンツを提供したい」</strong> と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#モチベーション" id="markdown-toc-モチベーション">モチベーション</a>    <ul>
+      <li><a href="#動的なwebコンテンツを作りたい" id="markdown-toc-動的なwebコンテンツを作りたい">動的なwebコンテンツを作りたい！</a></li>
+      <li><a href="#問題点アクセスが少ない時期はランニングコストが高くつく" id="markdown-toc-問題点アクセスが少ない時期はランニングコストが高くつく">問題点：アクセスが少ない時期はランニングコストが高くつく</a></li>
+      <li><a href="#サーバレスで費用を抑えよう" id="markdown-toc-サーバレスで費用を抑えよう">サーバレスで費用を抑えよう</a>        <ul>
+          <li><a href="#案1-cloudfront--lambdaedge" id="markdown-toc-案1-cloudfront--lambdaedge">案1 Cloudfront + Lambda@Edge</a></li>
+          <li><a href="#案2-api-gateway--lambda" id="markdown-toc-案2-api-gateway--lambda">案2 API Gateway + Lambda</a></li>
+          <li><a href="#案3-gcpのgce-f1-micro-インスタンス" id="markdown-toc-案3-gcpのgce-f1-micro-インスタンス">案3 GCPのGCE f1-micro インスタンス</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#awsで構築してみる" id="markdown-toc-awsで構築してみる">AWSで構築してみる</a>    <ul>
+      <li><a href="#iam-roleの作成" id="markdown-toc-iam-roleの作成">IAM Roleの作成</a></li>
+      <li><a href="#ドメインを設定する" id="markdown-toc-ドメインを設定する">ドメインを設定する</a></li>
+      <li><a href="#certification-managerでssl証明書を取得する" id="markdown-toc-certification-managerでssl証明書を取得する">Certification ManagerでSSL証明書を取得する</a></li>
+      <li><a href="#lambda関数の作成とpublish" id="markdown-toc-lambda関数の作成とpublish">Lambda関数の作成とpublish</a>        <ul>
+          <li><a href="#lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる" id="markdown-toc-lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる">Lambda@EdgeはCloudfrontのオリジンリクエスト時に実行させる</a></li>
+          <li><a href="#lambdaedgeからcloudfrontへのレスポンス形式に注意する" id="markdown-toc-lambdaedgeからcloudfrontへのレスポンス形式に注意する">Lambda@EdgeからCloudfrontへのレスポンス形式に注意する</a></li>
+        </ul>
+      </li>
+      <li><a href="#cloudfrontで配信する" id="markdown-toc-cloudfrontで配信する">Cloudfrontで配信する</a>        <ul>
+          <li><a href="#lambda関数はpublishして使う" id="markdown-toc-lambda関数はpublishして使う">Lambda関数はpublishして使う</a></li>
+          <li><a href="#キャシュクリアをする2回目以降のデプロイ時" id="markdown-toc-キャシュクリアをする2回目以降のデプロイ時">キャシュクリアをする(2回目以降のデプロイ時)</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="モチベーション">モチベーション</h2>
+<h3 id="動的なwebコンテンツを作りたい">動的なwebコンテンツを作りたい！</h3>
+<p>Google Adsense等を使った広告収入で小遣い稼ぎをしたいと思った場合に、
+<code class="highlighter-rouge">はてなブログ</code> のような無料ブログサービスや <code class="highlighter-rouge">Github Pages</code> を利用すると、主に静的ファイルでのコンテンツ配信が中心になります。
+1ページあたり1記事を作成する必要があり、1ページあたりの作成コストが高くなるデメリットがあるため、
+リクエストパラメータないしはパスパラメータを使ってサーバ側で動的なページ生成を行う機構があれば、
+ロングテールでのページのクローリングを狙うことができます。
+ちなみに、ロングテールをざっくり説明すると、 <strong>単体の検索ボリュームでは少ないけど、複数カテゴリの検索クエリの組み合わせのバリエーションに対応することで、検索ボリュームの総和に対してリーチする</strong> 方法です。</p>
+
+<h3 id="問題点アクセスが少ない時期はランニングコストが高くつく">問題点：アクセスが少ない時期はランニングコストが高くつく</h3>
+<p>従来、動的なwebコンテンツを作成しようとする場合、<strong>ページ生成プログラムを動かすためのサーバが必要</strong> でした。
+環境調達の方法としては「レンタルサーバを借りる」のが一般的ですが、バンドルされている <a href="https://ja.wordpress.org/">WordPress</a> で要件が充足されないケースがある場合には、<code class="highlighter-rouge">VPS</code> サービスを契約しなければいけません。
+VPSサービスは通常のレンタルサーバよりもランニングコストが少しお高めになってしまいます。</p>
+
+<p>参考までに2種類のサービス料金を記載しますが、コンテンツ配信のための月額料金がボディブローのようにじわじわ効いてくることが容易に想像できます。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>サービス名</td>
+      <td>月額料金(最低スペック)</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><a href="https://vps.sakura.ad.jp/">さくらのVPS</a></td>
+      <td>685JPY/month 〜</td>
+    </tr>
+    <tr>
+      <td><a href="https://vps.gmocloud.com/">GMOクラウド</a></td>
+      <td>780JPY/month 〜</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 id="サーバレスで費用を抑えよう">サーバレスで費用を抑えよう</h3>
+<p>前提として、<strong>プログラミングに関する知識が必要にはなります</strong> が、パブリッククラウドを使用することでサーバのランニングコストを抑えることができます。
+ざっくりですがパブリッククラウドを用いた構成案と勘案要素を以下にまとめました。いずれの案においても、<strong>最低利用料金 + リクエスト量に応じた従量課金</strong> というコスト構造になるので、VPSよりも割安なのですが、今回は利便性と最低利用料金のバランスが良い <strong>案1 Cloudfront + Lambda@Edge</strong> を今回採用しました。</p>
+
+<h4 id="案1-cloudfront--lambdaedge">案1 Cloudfront + Lambda@Edge</h4>
+
+<ul>
+  <li>メリット
+    <ul>
+      <li>サーバレス</li>
+      <li>CDNキャッシュが効く</li>
+    </ul>
+  </li>
+  <li>デメリット
+    <ul>
+      <li>Lambda@Edgeは無料利用枠がない</li>
+      <li>Node 6.10 しか利用できない</li>
+      <li>その他、通常のLambdaよりも<a href="https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-lambda-at-edge">制限事項が多い</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="案2-api-gateway--lambda">案2 API Gateway + Lambda</h4>
+
+<ul>
+  <li>メリット
+    <ul>
+      <li>サーバレス</li>
+      <li>Lambdaがサポートしている複数言語での開発が可能</li>
+      <li>CDNキャッシュが効く</li>
+    </ul>
+  </li>
+  <li>デメリット
+    <ul>
+      <li>API Gatewayの最低利用料金がCloudfrontと比べて高い</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="案3-gcpのgce-f1-micro-インスタンス">案3 GCPのGCE f1-micro インスタンス</h4>
+
+<ul>
+  <li>メリット
+    <ul>
+      <li>おそらく利用料金が最も安く抑えられる</li>
+    </ul>
+  </li>
+  <li>デメリット
+    <ul>
+      <li>ロケーションが遠いので、レイテンシが気になる</li>
+      <li>Cloud CDN と組み合わせるとf1-microインスタンス料金無料の旨味が消える</li>
+      <li>インスタンスの設定(ランタイムとかSSL証明書のインストールとか)が必要</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="awsで構築してみる">AWSで構築してみる</h2>
+<p>以降は案1での構築方法を記載していきます。</p>
+
+<h3 id="iam-roleの作成">IAM Roleの作成</h3>
+
+<p>Lambdaに付与するIAM Roleを作成します。
+まず、以下のようなAssume Role Policy を作成します。
+ <code class="highlighter-rouge">Lambda</code> と <code class="highlighter-rouge">Lambda@Edge</code> は別ものとして扱われているため、 <code class="highlighter-rouge">edgelambda.amazonaws.com</code> の記載が必要です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "edgelambda.amazonaws.com",
+          "lambda.amazonaws.com"
+        ]
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+</code></pre></div></div>
+
+<p>作成したPolicyと <code class="highlighter-rouge">CloudWatchLogsFullAccess</code> のポリシーをアタッチしたRoleを作成します。
+名前はとりあえず <strong>EdgeLambdaForCloudfrontRole</strong> としましょう。</p>
+
+<h3 id="ドメインを設定する">ドメインを設定する</h3>
+<p>Cloudfrontのディストリビューションのドメインをそのまま使うわけには行かないので、ドメインを設定します。
+個人的にはお金を払い、 <code class="highlighter-rouge">.com</code> や <code class="highlighter-rouge">.net</code> のような信頼のあるドメインを確保することをオススメします。
+ドメイン料金も抑えたい方は <strong>「ドメイン 無料」</strong> で検索すればいくらでも無料ドメインサービスが出てくるので、それを活用してください。</p>
+
+<p>私が取得しているドメインは <a href="https://www.cloudflare.com/">Cloudflare</a> で管理しているので、
+Route53で取得しているドメインのサブドメインのHosted Zoneを作成し、NSレコードをCloudflare上に登録してあげます。</p>
+
+<h3 id="certification-managerでssl証明書を取得する">Certification ManagerでSSL証明書を取得する</h3>
+
+<p>サブドメインの委譲が正しくできていれば(= Route53上の設定値でDNSが引けるようになれば) Certification Manager を用いてSSL証明書を取得しましょう。
+SSL証明書の取得に関してはDNS Validationでやり方をオススメします。 詳しくは以前のポスト <a href="/aws/validate-certification-manager">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い</a> を見てみてください。
+注意点として、<strong>SSL証明書は us-east-1(Virginia)リージョンで取得する必要があります</strong> 。
+これは「Cloudfrontに適用可能なSSL証明書はVirginiaリージョンで発行されたもののみ」という仕様のためです。</p>
+
+<h3 id="lambda関数の作成とpublish">Lambda関数の作成とpublish</h3>
+
+<p>次にLambda関数の実装を行います。 <strong>Lambda@EdgeはNode 6.10のみをサポートしているため、Nodeでの実装が必要です</strong> 。
+軽量なwebアプリケーションを作成する手段として、手っ取り早いのは <a href="https://www.npmjs.com/package/express">express</a> を使う方法です。
+expressの使い方の説明は割愛しますが、実装時に注意すべき点だけ記載します。</p>
+
+<h4 id="lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる">Lambda@EdgeはCloudfrontのオリジンリクエスト時に実行させる</h4>
+
+<p>Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイミングを4つのうちから選択することができます。
+詳細は<a href="https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-cloudfront-trigger-events.html">開発者ガイド</a> に記載されています。</p>
+
+<ul>
+  <li>CloudFront ビューワーリクエスト
+    <ul>
+      <li>リクエストをCloudfrontが受ける前にLambda@Edgeが処理をする(Lambda@Edge -&gt; Cloudfront -&gt; Origin)</li>
+    </ul>
+  </li>
+  <li>CloudFront オリジンリクエスト
+    <ul>
+      <li>リクエストをCloudfrontが受けた後にLambda@Edgeが処理をする(Cloudfront -&gt; Lambda@Edge -&gt; Origin)</li>
+    </ul>
+  </li>
+  <li>CloudFront オリジンレスポンス
+    <ul>
+      <li>オリジンからのレスポンスをCloudfrontに返却する前にLambda@Edgeが処理をする(Cloudfront &lt;- Lambda@Edge &lt;- Origin)</li>
+    </ul>
+  </li>
+  <li>CloudFront ビューワーのレスポンス
+    <ul>
+      <li>Cloudfrontがクライアントにレスポンスを返却する前にLambda@Edgeが処理をする(Lambda@Edge &lt;- Cloudfront &lt;- Origin)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>CloudFront オリジンリクエスト</strong> で実行することを選択しましょう。これにより、Originの代わりにLambda@Edgeがレスポンスを返せるようになります。
+<code class="highlighter-rouge">ビューワーリクエスト</code> にしてしまうと、CDNのキャッシュが活用できなくなりますし、 <code class="highlighter-rouge">オリジンレスポンス</code> にすると一度リクエストを受けるためのオリジンをS3などで作成しないといけなくなります。</p>
+
+<h4 id="lambdaedgeからcloudfrontへのレスポンス形式に注意する">Lambda@EdgeからCloudfrontへのレスポンス形式に注意する</h4>
+<p><code class="highlighter-rouge">オリジンリクエスト</code> の場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    body: 'content',
+    bodyEncoding: 'text' | 'base64',
+    headers: {
+        'header name in lowercase': [{
+            key: 'header name in standard case',
+            value: 'header value'
+         }],
+         ...
+    },
+    status: 'HTTP status code',
+    statusDescription: 'status description'
+}
+</code></pre></div></div>
+
+<p>これを愚直に実装するのは少々手間がかかるので、 <a href="https://github.com/jgautheron/aws-serverless-express-edge">aws-serverless-express-edge</a> というnpmモジュールを使ってしまうのが早いです。</p>
+
+<h3 id="cloudfrontで配信する">Cloudfrontで配信する</h3>
+
+<p>最後にCloudfrontの配信設定を行います。Cloudfront自体の使い方は公式のドキュメントを読んでいただければ問題ないので、ここでも注意点にだけ触れておきます。</p>
+
+<h4 id="lambda関数はpublishして使う">Lambda関数はpublishして使う</h4>
+
+<p>Lambda@EdgeをCloudfrontと連携させる場合、<strong>Lambda関数はpublishしておく必要があります</strong> 。
+Cloudfrontでは実行するLambda@EdgeのARNをバージョン番号込みで指定する必要があり、<code class="highlighter-rouge">$LATEST</code> による指定はサポート外であるため、
+Lambda関数の更新の都度バージョンを上げていくスタイルになります。
+一番良い方法としてオススメなのは、<a href="https://www.terraform.io/">Terraform</a> を使ってCloudfrontとLambdaのコード化をしてしまうことです。</p>
+
+<p>Cloudfrontは設定項目が多いためTerraformに書き起こすのに時間がかかりますが、後々の更新コストを加味して早めに対応しておきましょう。</p>
+
+<ul>
+  <li>LambdaのTerraformサンプル</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_lambda_function" "hogehoge" {
+    filename = "../hogehoge.zip"
+    function_name = "hoeghoge"
+    publish = true
+    role = "${EdgeLambdaForCloudfrontRoleのARN}"
+    handler = "index.handler"
+    source_code_hash = "${data.archive_file.hogehoge.output_base64sha256}"
+    runtime = "nodejs6.10"
+    timeout = 30
+}
+
+data "archive_file" "hogehoge" {
+    type = "zip"
+    source_dir  = "../workspace"
+    output_path = "../hogehoge.zip"
+}
+
+</code></pre></div></div>
+
+<ul>
+  <li>CloudfrontのTerraformサンプル</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
+    origin {
+        domain_name = "xxxx.soudegesu.com"
+        origin_id   = "Custom-your-xxxx.soudegesu.com"
+        custom_origin_config {
+            http_port = 80
+            https_port = 443
+            origin_protocol_policy = "http-only"
+            origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        }
+    }
+    aliases = ["xxxx.soudegesu.com"]
+    enabled = true
+    is_ipv6_enabled = true
+    comment = "tools distribution"
+
+    default_cache_behavior {
+        allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+        cached_methods   = ["GET", "HEAD"]
+        target_origin_id = "Custom-xxxx.soudegesu.com"
+
+        forwarded_values {
+            query_string = false
+
+            cookies {
+                forward = "none"
+            }
+        }
+
+        viewer_protocol_policy = "redirect-to-https"
+        min_ttl = 86400
+        default_ttl = 604800
+        max_ttl = 2592000
+        compress = true
+        lambda_function_association {
+            event_type = "origin-request"
+            lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
+        }
+    }
+
+    viewer_certificate {
+        acm_certificate_arn = "${ACMのARN}"
+        minimum_protocol_version = "TLSv1.1_2016"
+        ssl_support_method = "sni-only"
+    }
+
+    restrictions {
+        geo_restriction {
+            restriction_type = "none"
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>ポイントなのは Cloudfront側の以下の部分で、</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    lambda_function_association {
+        event_type = "origin-request"
+        lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
+    }
+
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">qualified_arn</code> を指定すると、バージョン込のフルのARNにて変数展開がされます。
+これにより、terraformを実行するだけで、LambdaのデプロイとCloudfrontの更新の両方ができるようになります。</p>
+
+<h4 id="キャシュクリアをする2回目以降のデプロイ時">キャシュクリアをする(2回目以降のデプロイ時)</h4>
+
+<p>CloudfrontはCDNサービスなので、デプロイ後にキャッシュをクリアして上げた方がよいです。</p>
+
+<p>AWSコンソールからCloudfrontのInvalidationsのタブを押します。</p>
+
+<p><img src="/assets/images/20180403/invalidations.png" alt="invalidations" /></p>
+
+<p>全てのURLのキャッシュをクリアしたいので、「*」を指定すればOKです。</p>
+
+<p><img src="/assets/images/20180403/invalidation_target.png" alt="invalidation_target" /></p>
+
+<p>なお、このキャッシュクリアに関してCloudfrontの料金ページでは、</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>月間で無効をリクエストしたパスの最初の 1,000 パスまでは追加料金なし。それ以降は、無効をリクエストしたパスごとに 0.005 USD かかります。
+</code></pre></div></div>
+
+<p>と記載されているので、URLのパターンが増えてきたら、削除対象の指定パターンはもう少し工夫した方がいいかもしれません。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回、Cloudfront + Lambda@Edgeを用いてサーバレスでのwebコンテンツを配信する仕組みを構築しました。
+実際にサンプルコンテンツを作成してみたのが <a href="http://www.tools.soudegesu.com/">こちら</a> になります。
+ブラウザの言語設定の情報を基に <code class="highlighter-rouge">ja</code> か <code class="highlighter-rouge">en</code> かにリダイレクトする機能(俗に言うi18n対応っぽいもの)を実現しています。</p>
+
+<p>1週間程寝かせてみた後のAWS Billing Dashboardは以下のようになりました。$1到達していないですね。素晴らしい。</p>
+
+<p><img src="/assets/images/20180403/billing_dashborad.png" alt="billing dashboard" /></p>
+
+<p>立ち上げ期のアクセスが少ないコンテンツでは、ランニングコストが大きくならないようにサーバレスで節約していきたいですね！</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+<ul>
+  <li><a href="https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html">Amazon Cloudfront 開発者ガイド</a></li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-04-03T00:00:00+09:00">April 03, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック] https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/java/non-blocking-webflux/" class="pagination--pager" title="springboot-webfluxのバックプレッシャーを体験してたらいい感じだった
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>

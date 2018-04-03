@@ -1,4 +1,371 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-03-19T14:14:25+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">springboot-webfluxのバックプレッシャーを体験してたらいい感じだった</title><link href="https://www.soudegesu.com/java/non-blocking-webflux/" rel="alternate" type="text/html" title="springboot-webfluxのバックプレッシャーを体験してたらいい感じだった" /><published>2018-03-16T00:00:00+09:00</published><updated>2018-03-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/non-blocking-webflux</id><content type="html" xml:base="https://www.soudegesu.com/java/non-blocking-webflux/">&lt;p&gt;2018/3にリリースされた &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot2&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;spring5&lt;/code&gt; がバンドルされるようになりました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-04T08:36:47+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]</title><link href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" rel="alternate" type="text/html" title="Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]" /><published>2018-04-03T00:00:00+09:00</published><updated>2018-04-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless</id><content type="html" xml:base="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/">&lt;p&gt;このブログ自体は &lt;code class=&quot;highlighter-rouge&quot;&gt;github-pages&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;cloudflare&lt;/code&gt; を使って無料でホスティングをしているのですが、稀に &lt;strong&gt;「動的なwebコンテンツを提供したい」&lt;/strong&gt; と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#動的なwebコンテンツを作りたい&quot; id=&quot;markdown-toc-動的なwebコンテンツを作りたい&quot;&gt;動的なwebコンテンツを作りたい！&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#問題点アクセスが少ない時期はランニングコストが高くつく&quot; id=&quot;markdown-toc-問題点アクセスが少ない時期はランニングコストが高くつく&quot;&gt;問題点：アクセスが少ない時期はランニングコストが高くつく&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サーバレスで費用を抑えよう&quot; id=&quot;markdown-toc-サーバレスで費用を抑えよう&quot;&gt;サーバレスで費用を抑えよう&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#案1-cloudfront--lambdaedge&quot; id=&quot;markdown-toc-案1-cloudfront--lambdaedge&quot;&gt;案1 Cloudfront + Lambda@Edge&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#案2-api-gateway--lambda&quot; id=&quot;markdown-toc-案2-api-gateway--lambda&quot;&gt;案2 API Gateway + Lambda&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#案3-gcpのgce-f1-micro-インスタンス&quot; id=&quot;markdown-toc-案3-gcpのgce-f1-micro-インスタンス&quot;&gt;案3 GCPのGCE f1-micro インスタンス&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#awsで構築してみる&quot; id=&quot;markdown-toc-awsで構築してみる&quot;&gt;AWSで構築してみる&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#iam-roleの作成&quot; id=&quot;markdown-toc-iam-roleの作成&quot;&gt;IAM Roleの作成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ドメインを設定する&quot; id=&quot;markdown-toc-ドメインを設定する&quot;&gt;ドメインを設定する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#certification-managerでssl証明書を取得する&quot; id=&quot;markdown-toc-certification-managerでssl証明書を取得する&quot;&gt;Certification ManagerでSSL証明書を取得する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#lambda関数の作成とpublish&quot; id=&quot;markdown-toc-lambda関数の作成とpublish&quot;&gt;Lambda関数の作成とpublish&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる&quot; id=&quot;markdown-toc-lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる&quot;&gt;Lambda@EdgeはCloudfrontのオリジンリクエスト時に実行させる&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#lambdaedgeからcloudfrontへのレスポンス形式に注意する&quot; id=&quot;markdown-toc-lambdaedgeからcloudfrontへのレスポンス形式に注意する&quot;&gt;Lambda@EdgeからCloudfrontへのレスポンス形式に注意する&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#cloudfrontで配信する&quot; id=&quot;markdown-toc-cloudfrontで配信する&quot;&gt;Cloudfrontで配信する&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#lambda関数はpublishして使う&quot; id=&quot;markdown-toc-lambda関数はpublishして使う&quot;&gt;Lambda関数はpublishして使う&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#キャシュクリアをする2回目以降のデプロイ時&quot; id=&quot;markdown-toc-キャシュクリアをする2回目以降のデプロイ時&quot;&gt;キャシュクリアをする(2回目以降のデプロイ時)&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+&lt;h3 id=&quot;動的なwebコンテンツを作りたい&quot;&gt;動的なwebコンテンツを作りたい！&lt;/h3&gt;
+&lt;p&gt;Google Adsense等を使った広告収入で小遣い稼ぎをしたいと思った場合に、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt; のような無料ブログサービスや &lt;code class=&quot;highlighter-rouge&quot;&gt;Github Pages&lt;/code&gt; を利用すると、主に静的ファイルでのコンテンツ配信が中心になります。
+1ページあたり1記事を作成する必要があり、1ページあたりの作成コストが高くなるデメリットがあるため、
+リクエストパラメータないしはパスパラメータを使ってサーバ側で動的なページ生成を行う機構があれば、
+ロングテールでのページのクローリングを狙うことができます。
+ちなみに、ロングテールをざっくり説明すると、 &lt;strong&gt;単体の検索ボリュームでは少ないけど、複数カテゴリの検索クエリの組み合わせのバリエーションに対応することで、検索ボリュームの総和に対してリーチする&lt;/strong&gt; 方法です。&lt;/p&gt;
+
+&lt;h3 id=&quot;問題点アクセスが少ない時期はランニングコストが高くつく&quot;&gt;問題点：アクセスが少ない時期はランニングコストが高くつく&lt;/h3&gt;
+&lt;p&gt;従来、動的なwebコンテンツを作成しようとする場合、&lt;strong&gt;ページ生成プログラムを動かすためのサーバが必要&lt;/strong&gt; でした。
+環境調達の方法としては「レンタルサーバを借りる」のが一般的ですが、バンドルされている &lt;a href=&quot;https://ja.wordpress.org/&quot;&gt;WordPress&lt;/a&gt; で要件が充足されないケースがある場合には、&lt;code class=&quot;highlighter-rouge&quot;&gt;VPS&lt;/code&gt; サービスを契約しなければいけません。
+VPSサービスは通常のレンタルサーバよりもランニングコストが少しお高めになってしまいます。&lt;/p&gt;
+
+&lt;p&gt;参考までに2種類のサービス料金を記載しますが、コンテンツ配信のための月額料金がボディブローのようにじわじわ効いてくることが容易に想像できます。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;サービス名&lt;/td&gt;
+      &lt;td&gt;月額料金(最低スペック)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://vps.sakura.ad.jp/&quot;&gt;さくらのVPS&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;685JPY/month 〜&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://vps.gmocloud.com/&quot;&gt;GMOクラウド&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;780JPY/month 〜&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;サーバレスで費用を抑えよう&quot;&gt;サーバレスで費用を抑えよう&lt;/h3&gt;
+&lt;p&gt;前提として、&lt;strong&gt;プログラミングに関する知識が必要にはなります&lt;/strong&gt; が、パブリッククラウドを使用することでサーバのランニングコストを抑えることができます。
+ざっくりですがパブリッククラウドを用いた構成案と勘案要素を以下にまとめました。いずれの案においても、&lt;strong&gt;最低利用料金 + リクエスト量に応じた従量課金&lt;/strong&gt; というコスト構造になるので、VPSよりも割安なのですが、今回は利便性と最低利用料金のバランスが良い &lt;strong&gt;案1 Cloudfront + Lambda@Edge&lt;/strong&gt; を今回採用しました。&lt;/p&gt;
+
+&lt;h4 id=&quot;案1-cloudfront--lambdaedge&quot;&gt;案1 Cloudfront + Lambda@Edge&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;メリット
+    &lt;ul&gt;
+      &lt;li&gt;サーバレス&lt;/li&gt;
+      &lt;li&gt;CDNキャッシュが効く&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;デメリット
+    &lt;ul&gt;
+      &lt;li&gt;Lambda@Edgeは無料利用枠がない&lt;/li&gt;
+      &lt;li&gt;Node 6.10 しか利用できない&lt;/li&gt;
+      &lt;li&gt;その他、通常のLambdaよりも&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-lambda-at-edge&quot;&gt;制限事項が多い&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;案2-api-gateway--lambda&quot;&gt;案2 API Gateway + Lambda&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;メリット
+    &lt;ul&gt;
+      &lt;li&gt;サーバレス&lt;/li&gt;
+      &lt;li&gt;Lambdaがサポートしている複数言語での開発が可能&lt;/li&gt;
+      &lt;li&gt;CDNキャッシュが効く&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;デメリット
+    &lt;ul&gt;
+      &lt;li&gt;API Gatewayの最低利用料金がCloudfrontと比べて高い&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;案3-gcpのgce-f1-micro-インスタンス&quot;&gt;案3 GCPのGCE f1-micro インスタンス&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;メリット
+    &lt;ul&gt;
+      &lt;li&gt;おそらく利用料金が最も安く抑えられる&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;デメリット
+    &lt;ul&gt;
+      &lt;li&gt;ロケーションが遠いので、レイテンシが気になる&lt;/li&gt;
+      &lt;li&gt;Cloud CDN と組み合わせるとf1-microインスタンス料金無料の旨味が消える&lt;/li&gt;
+      &lt;li&gt;インスタンスの設定(ランタイムとかSSL証明書のインストールとか)が必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;awsで構築してみる&quot;&gt;AWSで構築してみる&lt;/h2&gt;
+&lt;p&gt;以降は案1での構築方法を記載していきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;iam-roleの作成&quot;&gt;IAM Roleの作成&lt;/h3&gt;
+
+&lt;p&gt;Lambdaに付与するIAM Roleを作成します。
+まず、以下のようなAssume Role Policy を作成します。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;Lambda&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Lambda@Edge&lt;/code&gt; は別ものとして扱われているため、 &lt;code class=&quot;highlighter-rouge&quot;&gt;edgelambda.amazonaws.com&lt;/code&gt; の記載が必要です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: {
+        &quot;Service&quot;: [
+          &quot;edgelambda.amazonaws.com&quot;,
+          &quot;lambda.amazonaws.com&quot;
+        ]
+      },
+      &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;作成したPolicyと &lt;code class=&quot;highlighter-rouge&quot;&gt;CloudWatchLogsFullAccess&lt;/code&gt; のポリシーをアタッチしたRoleを作成します。
+名前はとりあえず &lt;strong&gt;EdgeLambdaForCloudfrontRole&lt;/strong&gt; としましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;ドメインを設定する&quot;&gt;ドメインを設定する&lt;/h3&gt;
+&lt;p&gt;Cloudfrontのディストリビューションのドメインをそのまま使うわけには行かないので、ドメインを設定します。
+個人的にはお金を払い、 &lt;code class=&quot;highlighter-rouge&quot;&gt;.com&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;.net&lt;/code&gt; のような信頼のあるドメインを確保することをオススメします。
+ドメイン料金も抑えたい方は &lt;strong&gt;「ドメイン 無料」&lt;/strong&gt; で検索すればいくらでも無料ドメインサービスが出てくるので、それを活用してください。&lt;/p&gt;
+
+&lt;p&gt;私が取得しているドメインは &lt;a href=&quot;https://www.cloudflare.com/&quot;&gt;Cloudflare&lt;/a&gt; で管理しているので、
+Route53で取得しているドメインのサブドメインのHosted Zoneを作成し、NSレコードをCloudflare上に登録してあげます。&lt;/p&gt;
+
+&lt;h3 id=&quot;certification-managerでssl証明書を取得する&quot;&gt;Certification ManagerでSSL証明書を取得する&lt;/h3&gt;
+
+&lt;p&gt;サブドメインの委譲が正しくできていれば(= Route53上の設定値でDNSが引けるようになれば) Certification Manager を用いてSSL証明書を取得しましょう。
+SSL証明書の取得に関してはDNS Validationでやり方をオススメします。 詳しくは以前のポスト &lt;a href=&quot;/aws/validate-certification-manager&quot;&gt;AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い&lt;/a&gt; を見てみてください。
+注意点として、&lt;strong&gt;SSL証明書は us-east-1(Virginia)リージョンで取得する必要があります&lt;/strong&gt; 。
+これは「Cloudfrontに適用可能なSSL証明書はVirginiaリージョンで発行されたもののみ」という仕様のためです。&lt;/p&gt;
+
+&lt;h3 id=&quot;lambda関数の作成とpublish&quot;&gt;Lambda関数の作成とpublish&lt;/h3&gt;
+
+&lt;p&gt;次にLambda関数の実装を行います。 &lt;strong&gt;Lambda@EdgeはNode 6.10のみをサポートしているため、Nodeでの実装が必要です&lt;/strong&gt; 。
+軽量なwebアプリケーションを作成する手段として、手っ取り早いのは &lt;a href=&quot;https://www.npmjs.com/package/express&quot;&gt;express&lt;/a&gt; を使う方法です。
+expressの使い方の説明は割愛しますが、実装時に注意すべき点だけ記載します。&lt;/p&gt;
+
+&lt;h4 id=&quot;lambdaedgeはcloudfrontのオリジンリクエスト時に実行させる&quot;&gt;Lambda@EdgeはCloudfrontのオリジンリクエスト時に実行させる&lt;/h4&gt;
+
+&lt;p&gt;Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイミングを4つのうちから選択することができます。
+詳細は&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-cloudfront-trigger-events.html&quot;&gt;開発者ガイド&lt;/a&gt; に記載されています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CloudFront ビューワーリクエスト
+    &lt;ul&gt;
+      &lt;li&gt;リクエストをCloudfrontが受ける前にLambda@Edgeが処理をする(Lambda@Edge -&amp;gt; Cloudfront -&amp;gt; Origin)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudFront オリジンリクエスト
+    &lt;ul&gt;
+      &lt;li&gt;リクエストをCloudfrontが受けた後にLambda@Edgeが処理をする(Cloudfront -&amp;gt; Lambda@Edge -&amp;gt; Origin)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudFront オリジンレスポンス
+    &lt;ul&gt;
+      &lt;li&gt;オリジンからのレスポンスをCloudfrontに返却する前にLambda@Edgeが処理をする(Cloudfront &amp;lt;- Lambda@Edge &amp;lt;- Origin)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudFront ビューワーのレスポンス
+    &lt;ul&gt;
+      &lt;li&gt;Cloudfrontがクライアントにレスポンスを返却する前にLambda@Edgeが処理をする(Lambda@Edge &amp;lt;- Cloudfront &amp;lt;- Origin)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;CloudFront オリジンリクエスト&lt;/strong&gt; で実行することを選択しましょう。これにより、Originの代わりにLambda@Edgeがレスポンスを返せるようになります。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ビューワーリクエスト&lt;/code&gt; にしてしまうと、CDNのキャッシュが活用できなくなりますし、 &lt;code class=&quot;highlighter-rouge&quot;&gt;オリジンレスポンス&lt;/code&gt; にすると一度リクエストを受けるためのオリジンをS3などで作成しないといけなくなります。&lt;/p&gt;
+
+&lt;h4 id=&quot;lambdaedgeからcloudfrontへのレスポンス形式に注意する&quot;&gt;Lambda@EdgeからCloudfrontへのレスポンス形式に注意する&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;オリジンリクエスト&lt;/code&gt; の場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+    body: 'content',
+    bodyEncoding: 'text' | 'base64',
+    headers: {
+        'header name in lowercase': [{
+            key: 'header name in standard case',
+            value: 'header value'
+         }],
+         ...
+    },
+    status: 'HTTP status code',
+    statusDescription: 'status description'
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これを愚直に実装するのは少々手間がかかるので、 &lt;a href=&quot;https://github.com/jgautheron/aws-serverless-express-edge&quot;&gt;aws-serverless-express-edge&lt;/a&gt; というnpmモジュールを使ってしまうのが早いです。&lt;/p&gt;
+
+&lt;h3 id=&quot;cloudfrontで配信する&quot;&gt;Cloudfrontで配信する&lt;/h3&gt;
+
+&lt;p&gt;最後にCloudfrontの配信設定を行います。Cloudfront自体の使い方は公式のドキュメントを読んでいただければ問題ないので、ここでも注意点にだけ触れておきます。&lt;/p&gt;
+
+&lt;h4 id=&quot;lambda関数はpublishして使う&quot;&gt;Lambda関数はpublishして使う&lt;/h4&gt;
+
+&lt;p&gt;Lambda@EdgeをCloudfrontと連携させる場合、&lt;strong&gt;Lambda関数はpublishしておく必要があります&lt;/strong&gt; 。
+Cloudfrontでは実行するLambda@EdgeのARNをバージョン番号込みで指定する必要があり、&lt;code class=&quot;highlighter-rouge&quot;&gt;$LATEST&lt;/code&gt; による指定はサポート外であるため、
+Lambda関数の更新の都度バージョンを上げていくスタイルになります。
+一番良い方法としてオススメなのは、&lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt; を使ってCloudfrontとLambdaのコード化をしてしまうことです。&lt;/p&gt;
+
+&lt;p&gt;Cloudfrontは設定項目が多いためTerraformに書き起こすのに時間がかかりますが、後々の更新コストを加味して早めに対応しておきましょう。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;LambdaのTerraformサンプル&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_lambda_function&quot; &quot;hogehoge&quot; {
+    filename = &quot;../hogehoge.zip&quot;
+    function_name = &quot;hoeghoge&quot;
+    publish = true
+    role = &quot;${EdgeLambdaForCloudfrontRoleのARN}&quot;
+    handler = &quot;index.handler&quot;
+    source_code_hash = &quot;${data.archive_file.hogehoge.output_base64sha256}&quot;
+    runtime = &quot;nodejs6.10&quot;
+    timeout = 30
+}
+
+data &quot;archive_file&quot; &quot;hogehoge&quot; {
+    type = &quot;zip&quot;
+    source_dir  = &quot;../workspace&quot;
+    output_path = &quot;../hogehoge.zip&quot;
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CloudfrontのTerraformサンプル&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_cloudfront_distribution&quot; &quot;hogehogefront_cloudfront&quot; {
+    origin {
+        domain_name = &quot;xxxx.soudegesu.com&quot;
+        origin_id   = &quot;Custom-your-xxxx.soudegesu.com&quot;
+        custom_origin_config {
+            http_port = 80
+            https_port = 443
+            origin_protocol_policy = &quot;http-only&quot;
+            origin_ssl_protocols = [&quot;TLSv1&quot;, &quot;TLSv1.1&quot;, &quot;TLSv1.2&quot;]
+        }
+    }
+    aliases = [&quot;xxxx.soudegesu.com&quot;]
+    enabled = true
+    is_ipv6_enabled = true
+    comment = &quot;tools distribution&quot;
+
+    default_cache_behavior {
+        allowed_methods  = [&quot;GET&quot;, &quot;HEAD&quot;, &quot;OPTIONS&quot;]
+        cached_methods   = [&quot;GET&quot;, &quot;HEAD&quot;]
+        target_origin_id = &quot;Custom-xxxx.soudegesu.com&quot;
+
+        forwarded_values {
+            query_string = false
+
+            cookies {
+                forward = &quot;none&quot;
+            }
+        }
+
+        viewer_protocol_policy = &quot;redirect-to-https&quot;
+        min_ttl = 86400
+        default_ttl = 604800
+        max_ttl = 2592000
+        compress = true
+        lambda_function_association {
+            event_type = &quot;origin-request&quot;
+            lambda_arn = &quot;${aws_lambda_function.hogehoge.qualified_arn}&quot;
+        }
+    }
+
+    viewer_certificate {
+        acm_certificate_arn = &quot;${ACMのARN}&quot;
+        minimum_protocol_version = &quot;TLSv1.1_2016&quot;
+        ssl_support_method = &quot;sni-only&quot;
+    }
+
+    restrictions {
+        geo_restriction {
+            restriction_type = &quot;none&quot;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ポイントなのは Cloudfront側の以下の部分で、&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    lambda_function_association {
+        event_type = &quot;origin-request&quot;
+        lambda_arn = &quot;${aws_lambda_function.hogehoge.qualified_arn}&quot;
+    }
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;qualified_arn&lt;/code&gt; を指定すると、バージョン込のフルのARNにて変数展開がされます。
+これにより、terraformを実行するだけで、LambdaのデプロイとCloudfrontの更新の両方ができるようになります。&lt;/p&gt;
+
+&lt;h4 id=&quot;キャシュクリアをする2回目以降のデプロイ時&quot;&gt;キャシュクリアをする(2回目以降のデプロイ時)&lt;/h4&gt;
+
+&lt;p&gt;CloudfrontはCDNサービスなので、デプロイ後にキャッシュをクリアして上げた方がよいです。&lt;/p&gt;
+
+&lt;p&gt;AWSコンソールからCloudfrontのInvalidationsのタブを押します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180403/invalidations.png&quot; alt=&quot;invalidations&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;全てのURLのキャッシュをクリアしたいので、「*」を指定すればOKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180403/invalidation_target.png&quot; alt=&quot;invalidation_target&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;なお、このキャッシュクリアに関してCloudfrontの料金ページでは、&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;月間で無効をリクエストしたパスの最初の 1,000 パスまでは追加料金なし。それ以降は、無効をリクエストしたパスごとに 0.005 USD かかります。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と記載されているので、URLのパターンが増えてきたら、削除対象の指定パターンはもう少し工夫した方がいいかもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回、Cloudfront + Lambda@Edgeを用いてサーバレスでのwebコンテンツを配信する仕組みを構築しました。
+実際にサンプルコンテンツを作成してみたのが &lt;a href=&quot;http://www.tools.soudegesu.com/&quot;&gt;こちら&lt;/a&gt; になります。
+ブラウザの言語設定の情報を基に &lt;code class=&quot;highlighter-rouge&quot;&gt;ja&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;en&lt;/code&gt; かにリダイレクトする機能(俗に言うi18n対応っぽいもの)を実現しています。&lt;/p&gt;
+
+&lt;p&gt;1週間程寝かせてみた後のAWS Billing Dashboardは以下のようになりました。$1到達していないですね。素晴らしい。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180403/billing_dashborad.png&quot; alt=&quot;billing dashboard&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;立ち上げ期のアクセスが少ないコンテンツでは、ランニングコストが大きくならないようにサーバレスで節約していきたいですね！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html&quot;&gt;Amazon Cloudfront 開発者ガイド&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="cloudfront" /><category term="serverless" /><summary type="html">このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。</summary></entry><entry><title type="html">springboot-webfluxのバックプレッシャーを体験してたらいい感じだった</title><link href="https://www.soudegesu.com/java/non-blocking-webflux/" rel="alternate" type="text/html" title="springboot-webfluxのバックプレッシャーを体験してたらいい感じだった" /><published>2018-03-16T00:00:00+09:00</published><updated>2018-03-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/non-blocking-webflux</id><content type="html" xml:base="https://www.soudegesu.com/java/non-blocking-webflux/">&lt;p&gt;2018/3にリリースされた &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot2&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;spring5&lt;/code&gt; がバンドルされるようになりました。
 リリースの中でも注目機能と言われている &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; 、とりわけ &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; が内包しているリアクティブプログラミングライブラリである &lt;code class=&quot;highlighter-rouge&quot;&gt;Reactor&lt;/code&gt; はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -2111,93 +2478,4 @@ categories = [&quot;&quot;, &quot;&quot;]
   &lt;li&gt;ローカルビルドの体感が早く感じる
 といった印象を持ちました。
 今後JekyllとHUGOを併用してみて、良し悪しを判断できればと思います。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="hugo" /><category term="blog" /><category term="site" /><summary type="html">本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。</summary></entry><entry xml:lang="ja"><title type="html">Anaconda環境にTensorflowをインストールする</title><link href="https://www.soudegesu.com/tensorflow/tensorflow-anaconda/" rel="alternate" type="text/html" title="Anaconda環境にTensorflowをインストールする" /><published>2017-03-06T00:55:00+09:00</published><updated>2017-03-06T00:55:00+09:00</updated><id>https://www.soudegesu.com/tensorflow/tensorflow-anaconda</id><content type="html" xml:base="https://www.soudegesu.com/tensorflow/tensorflow-anaconda/">&lt;p&gt;ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。&lt;/p&gt;
-
-&lt;p&gt;今回はanacondaの仮想環境に対して、tensorflowをインストールします。&lt;/p&gt;
-
-&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Anaconda 4.3.0&lt;/li&gt;
-  &lt;li&gt;python 3.5&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;発生した問題&quot;&gt;発生した問題&lt;/h2&gt;
-&lt;p&gt;tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip3 install tensorflow 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;解決策&quot;&gt;解決策&lt;/h2&gt;
-
-&lt;p&gt;そのため、以下のようにコマンドを変更します。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install &lt;span class=&quot;nt&quot;&gt;--ignore-installed&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--upgrade&lt;/span&gt; https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;備考&quot;&gt;備考&lt;/h2&gt;
-&lt;p&gt;anaconda の方でのパッケージ管理でインストール可能かを調べてみました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;pypi&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anaconda search &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; pypi tensorflow
-
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Using Anaconda API: https://api.anaconda.org
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Run &lt;span class=&quot;s1&quot;&gt;'anaconda show &amp;lt;USER/PACKAGE&amp;gt;'&lt;/span&gt; to get more details:
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Packages:
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     Name                      |  Version | Package Types   | Platforms
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;-------------------------&lt;/span&gt; |   &lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dustindorroh/tensorflow   |    0.6.0 | pypi            |
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;conda&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anaconda search &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; conda tensorflow
-
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Using Anaconda API: https://api.anaconda.org
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Run &lt;span class=&quot;s1&quot;&gt;'anaconda show &amp;lt;USER/PACKAGE&amp;gt;'&lt;/span&gt; to get more details:
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Packages:
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     Name                      |  Version | Package Types   | Platforms
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;-------------------------&lt;/span&gt; |   &lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt; | &lt;span class=&quot;nt&quot;&gt;---------------&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow            |    1.0.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow-cpucompat  |    1.0.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     HCC/tensorflow-fma        |    1.0.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     SentientPrime/tensorflow  |    0.6.0 | conda           | osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     acellera/tensorflow-cuda  |   0.12.1 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     anaconda-backup/tensorflow | 0.10.0rc0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     anaconda/tensorflow       | 0.10.0rc0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     conda-forge/tensorflow    |    1.0.0 | conda           | linux-64, win-64, osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     creditx/tensorflow        |    0.9.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     derickl/tensorflow        |   0.12.1 | conda           | osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dhirschfeld/tensorflow    | 0.12.0rc0 | conda           | win-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     dseuss/tensorflow         | 0.11.0rc0 | conda           | osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ijstokes/tensorflow       | 2017.03.03.1349 | conda, ipynb    | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     kevin-keraudren/tensorflow |    0.9.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     lcls-rhel7/tensorflow     |   0.12.1 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     marta-sd/tensorflow       |   0.12.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     memex/tensorflow          |    0.5.0 | conda           | linux-64, osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mhworth/tensorflow        |    0.7.1 | conda           | osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;                                          : TensorFlow helps the tensors flow
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     miovision/tensorflow      | 0.10.0.gpu | conda           | linux-64, osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     msarahan/tensorflow       | 1.0.0rc2 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mutirri/tensorflow        | 0.10.0rc0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     mwojcikowski/tensorflow   |   0.11.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     rdonnelly/tensorflow      |    0.9.0 | conda           | linux-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     rdonnellyr/r-tensorflow   |    0.4.0 | conda           | osx-64
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     test_org_002/tensorflow   | 0.10.0rc0 | conda           |
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは &lt;code class=&quot;highlighter-rouge&quot;&gt;storage.googleapis.com&lt;/code&gt; を参照する形でインストールを行いたいと思います。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="tensorflow" /><summary type="html">ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="hugo" /><category term="blog" /><category term="site" /><summary type="html">本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。</summary></entry></feed>
