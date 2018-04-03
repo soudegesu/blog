@@ -47,6 +47,7 @@ Google Adsense等を使った広告収入で小遣い稼ぎをしたいと思っ
 * デメリット
     * Lambda@Edgeは無料利用枠がない
     * Node 6.10 しか利用できない
+    * その他、通常のLambdaよりも[制限事項が多い](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-lambda-at-edge)
 
 #### 案2 API Gateway + Lambda
 
@@ -94,7 +95,7 @@ Lambdaに付与するAMI Roleを作成します。
 }
 ```
 
-作成したPolicyとCloudWatchLogsFullAccessのポリシーをアタッチしたRoleを作成します。
+作成したPolicyと `CloudWatchLogsFullAccess` のポリシーをアタッチしたRoleを作成します。
 名前はとりあえず **EdgeLambdaForCloudfrontRole** としましょう。
 
 ### ドメインを設定する
@@ -108,14 +109,51 @@ Route53で取得しているドメインのサブドメインのHosted Zoneを�
 ### Certification ManagerでSSL証明書を取得する
 
 サブドメインの委譲が正しくできていれば(= Route53上の設定値でDNSが引けるようになれば) Certification Manager を用いてSSL証明書を取得しましょう。
-SSL証明書の取得に関してはDNS Validationの方をオススメします。 詳しくは以前のポスト [AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い]({% post_url 2018-01-31-acm-route53-validate %}) を見てみてください。
+SSL証明書の取得に関してはDNS Validationでやり方をオススメします。 詳しくは以前のポスト [AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い]({% post_url 2018-01-31-acm-route53-validate %}) を見てみてください。
 注意点として、**Certification Managerは us-east-1(Virginia)リージョンで取得する必要があります** 。
 これは「Cloudfrontに適用可能なSSL証明書はVirginiaリージョンで発行されたもののみ」という仕様があるからです。
 
 ### Lambda関数の作成とpublish
 
-次にLambda関数の実装を行います。 **Lambda@EdgeはNode 6.10のみをサポートしているため、Nodeでの実装が必要です。**
+次にLambda関数の実装を行います。 **Lambda@EdgeはNode 6.10のみをサポートしているため、Nodeでの実装が必要です** 。
+軽量なwebアプリケーションを作成する手段として、手っ取り早いのは [express](https://www.npmjs.com/package/express) を使う方法です。
+expressの使い方の説明は割愛しますが、実装時に注意すべき点だけ記載します。
 
+#### Lambda@EdgeはCloudfrontのオリジンリクエスト時に実行させる
+
+Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイミングを4つのうちから選択することができます。
+詳細は[開発者ガイド](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-cloudfront-trigger-events.html) に記載されています。
+
+* CloudFront ビューワーリクエスト
+    * リクエスト時にCloudfrontが受ける前にLambda@Edgeが処理をする(Lambda@Edge -> Cloudfront -> Origin)
+* CloudFront オリジンリクエスト
+    * リクエスト時にCloudfrontが受けた後にLambda@Edgeが処理をする(Cloudfront -> Lambda@Edge -> Origin)
+* CloudFront オリジンレスポンス
+    * レスポンス時にオリジンからのレスポンスをCloudfrontに返却する前にLambda@Edgeが処理をする(Cloudfront <- Lambda@Edge <- Origin)
+* CloudFront ビューワーのレスポンス
+    * レスポンス時にCloudfrontがクライアントにレスポンスを返却する前にLambda@Edgeが処理をする(Lambda@Edge <- Cloudfront <- Origin)
+
+ここでは **CloudFront オリジンリクエスト** で実行することを選択しましょう。これにより、Originの代わりにEdge@Lambdaがレスポンスを返せるようになります。
+`ビューワーリクエスト` にしてしまうと、CDNのキャッシュが活用できなくなりますし、 `オリジンレスポンス` にするとS3などでオリジンを作成しないといけなくなります。
+
+#### Lambda@EdgeからCloudfrontへのレスポンス形式に注意する
+オリジンリクエストを選択した場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。
+
+```
+{
+    body: 'content',
+    bodyEncoding: 'text' | 'base64',
+    headers: {
+        'header name in lowercase': [{
+            key: 'header name in standard case',
+            value: 'header value'
+         }],
+         ...
+    },
+    status: 'HTTP status code',
+    statusDescription: 'status description'
+}
+```
 
 ### Cloudfrontで配信する
 
