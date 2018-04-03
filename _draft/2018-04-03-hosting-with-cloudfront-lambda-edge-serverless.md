@@ -155,9 +155,121 @@ Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイ
 }
 ```
 
+これを愚直に実装するのは少々手間がかかるので、 [aws-serverless-express-edge](https://github.com/jgautheron/aws-serverless-express-edge) というnpmモジュールを使ってしまうのが早いです。
+
 ### Cloudfrontで配信する
 
+最後にCloudfrontの配信設定を行います。Cloudfront自体の使い方は公式のドキュメントを読んでいただければ問題ないので、ここでも注意点にだけ触れておきます。
+
+#### Lambda関数はpublishして使う
+
+Lambda@EdgeをCloudfrontと連携させる場合、**Lambda関数はpublishしておく必要があります** 。
+Cloudfrontでは実行するLambda@EdgeのARNをバージョン番号込みで指定する必要があり、`$LATEST` による指定はサポート外であるため、
+Lambda関数の更新の都度バージョンを上げていくスタイルになります。
+一番良い方法としてオススメなのは、[Terraform](https://www.terraform.io/) を使ってCloudfrontとLambdaのコード化をしてしまうことです。
+
+* LambdaのTerraformサンプル
+
+```
+resource "aws_lambda_function" "hogehoge" {
+    filename = "../hogehoge.zip"
+    function_name = "hoeghoge"
+    publish = true
+    role = "${EdgeLambdaForCloudfrontRoleのARN}"
+    handler = "index.handler"
+    source_code_hash = "${data.archive_file.tools.output_base64sha256}"
+    runtime = "nodejs6.10"
+    timeout = 30
+}
+
+data "archive_file" "tools" {
+    type = "zip"
+    source_dir  = "../workspace"
+    output_path = "../hogehoge.zip"
+}
+
+```
+
+* CloudfrontのTerraformサンプル
+
+```
+resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
+    origin {
+        domain_name = "xxxx.soudegesu.com"
+        origin_id   = "Custom-your-xxxx.soudegesu.com"
+        custom_origin_config {
+            http_port = 80
+            https_port = 443
+            origin_protocol_policy = "http-only"
+            origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        }
+    }
+    aliases = ["xxxx.soudegesu.com"]
+    enabled = true
+    is_ipv6_enabled = true
+    comment = "tools distribution"
+
+    default_cache_behavior {
+        allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+        cached_methods   = ["GET", "HEAD"]
+        target_origin_id = "Custom-xxxx.soudegesu.com"
+
+        forwarded_values {
+            query_string = false
+
+            cookies {
+                forward = "none"
+            }
+        }
+
+        viewer_protocol_policy = "redirect-to-https"
+        min_ttl = 86400
+        default_ttl = 604800
+        max_ttl = 2592000
+        compress = true
+        lambda_function_association {
+            event_type = "origin-request"
+            lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
+        }
+    }
+
+    viewer_certificate {
+        acm_certificate_arn = "${ACMのARN}"
+        minimum_protocol_version = "TLSv1.1_2016"
+        ssl_support_method = "sni-only"
+    }
+
+    restrictions {
+        geo_restriction {
+            restriction_type = "none"
+        }
+    }
+}
+```
+
+ポイントなのは Cloudfront側の以下の部分で、
+
+```
+    lambda_function_association {
+        event_type = "origin-request"
+        lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
+    }
+
+```
+
+`qualified_arn` を指定すると、バージョン込のフルのARNにて変数展開がされます。
+これにより、terraformを実行するだけで、LambdaのデプロイとCloudfrontの更新の両方ができるようになります。
+
+#### キャシュクリアをする(2回目以降のデプロイ時)
+
+CloudfonrtはCDNサービスなので、デプロイ後にキャッシュをクリアして上げた方がよいです。
+ちなみにGCPのCDNだと、キャッシュクリアリクエストに初回から料金が発生します。
+
+
 ## まとめ
+
+
+
 
 ## 参考にさせていただいたサイト
 * [Amazon Cloudfront 開発者ガイド](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html)
