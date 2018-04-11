@@ -1,6 +1,6 @@
 ---
 title: "AWS LambdaのコードをTerraformでデプロイする"
-description: "TerraformでAWS Lambdaのコードをデプロイします。最近ではCloud9がLambdaのコンソールに統合されて、より開発が容易になりました、それでもやはり手元に元ソースを置いておきたいというケースがあります。主にNodeやPythonをランタイムに指定する場合に周辺のエコシステムをコミコミでZIPでデプロイする必要があるので、今回はそれを説明しようと思います。"
+description: "TerraformでAWS Lambdaのコードをデプロイします。最近ではCloud9がLambdaのコンソールに統合されて、より開発が容易になりました、それでもやはり手元に元ソースを置いておきたいというケースがあります。主にNodeやPythonをランタイムに指定する場合に周辺のエコシステムをコミコミでzipでデプロイする必要があるので、今回はそれを説明しようと思います。"
 date: 2018-04-11 00:00:00 +0900
 categories: aws
 tags: aws lambda terraform
@@ -11,16 +11,24 @@ AWS Lambdaは [Cloud9](https://aws.amazon.com/jp/cloud9/) がコンソール上�
 ブラウザエディタは **そのままwebにつながる** というのが最大の強みですが、まだまだ手元のリポジトリでコードを管理している手前、AWSのサービスだけで完結できていないのが現状です。
 今回はAWS LambdaのコードをTerraformを使ってデプロイする方法を説明しようと思います。
 
+↓ちなみに下が組み込まれたCloud9
+
 ![cloud9_lambda]({{site.baseurl}}/assets/images/20180411/cloud9_lambda.png)
+
 
 * Table Of Contents
 {:toc}
+
 
 ## TerraformでAWS Lambdaをデプロイしたい
 `Infrastructure as Code` はクラウド界隈でバズってだいぶ時間も立っていますので、あまりここでは触れません。
 必要に応じて界隈の方のブログや以下の書籍を読んでください。
 
+<br/>
+<div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4873117968/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4873117968&linkCode=am2&tag=soudegesu-22&linkId=e5283797d3bbc22eb4a74f9cee8af948"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4873117968&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4873117968" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>
+<br/>
 
 AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な仕組みとしての用途が多く、作り捨てなコードが多かったです。
 その後、連携可能な他のAWSサービスも増えて、VPC内に立ち上げることも可能になり(起動時間はかなり遅いですけど)、用途の幅に広がりが出てきました。
@@ -64,7 +72,7 @@ AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な�
 
 以降は実装する上でのポイントだけ記載していきます。
 
-### コードのエントリータイプはZIPにしよう
+### コードのエントリータイプはzipにしよう
 
 Lambdaにソースコードを適用する方法は3種類存在します。
 
@@ -73,17 +81,17 @@ Lambdaにソースコードを適用する方法は3種類存在します。
 * Edit Code Inline
     * ブラウザ上のエディタに直接書く方法。デプロイ後のコードを突貫で修正したりする時によく使う。
 * Upload a .ZIP file
-    * ZIPファイルでアップロードする方法。今回はこれを採用する。
+    * zipファイルでアップロードする方法。今回はこれを採用する。
 * Uplaod a file from Amazon S3
     * S3からファイルを読み込む方法。
 
-個人的には2番目の **ZIPファイルでアップロードする方法** をオススメします。
+個人的には2番目の **zipファイルでアップロードする方法** をオススメします。
 
 理由としては以下
 1. 依存モジュールを含めてアップロードできる
 2. わざわざS3を積極的に経由するケースが思いつかない。(Lambdaに対して直接操作できない時とか？)
 
-### シェルでZIP圧縮したいソース一式を作成する
+### シェルでzip圧縮したいソース一式を作成する
 
 シェルを使えば何でもできてしまうので、Terraformで完結させたい方には興ざめかもしれませんが、低コストだったのでこれにしました。
 `build.sh` の処理を見ていただければわかるのですが、 zip圧縮させたいファイル郡を管理する必要があるので、
@@ -108,9 +116,9 @@ pip3 install -r ${SCRIPT_DIR}/requirements.txt -t ${WORKSPACE}
 cp -rf ${SRC_DIR}/* ${WORKSPACE}
 ```
 
-### TerraformでZip圧縮&デプロイ
+### Terraformでzip圧縮&デプロイ
 
-`workspace` ディレクトリのZIP圧縮とデプロイを定義します。
+`workspace` ディレクトリのzip圧縮とデプロイを定義します。
 terraformで `archive_file` というデータリソースを使用することで、指定されたディレクトリをzip圧縮して出力することができます。
 加えて、Lambda関数の作成の際に `aws_lambda_function` リソースの `source_code_hash` プロパティに、zipアーカイブしたデータリソースのbase64エンコードを指定することができるので、これでzipのデプロイコードの完成です。
 
@@ -150,16 +158,20 @@ deploy:
         -var-file=${VARS}
 ```
 
-あとは `make deploy` を打てば実行できます。(リポジトリ的にはterraformのリモートバケットのイニシャライズを先に行う必要はあります。)
+あとは `make deploy` を打てば実行できます。(リポジトリ的にはterraformのリモートバケットの初期化を先に行う必要はあります。)
 
 ## まとめ
 Terraformを使用して、AWS Lambdaのソースコードのデプロイができるようになりました。
 実際にはシェルを間にかませてビルドを行なっていますが、シェル内での処理自体はシンプルなので、横展開もしやすくなっています。
-1点欠点としては、**ランタイムはpythonの場合にはterraform実行時に毎回ハッシュにdiffが出てしまう** という点。つまり、毎度デプロイしてしまうという所です。
+1点欠点としては、**ランタイムがpythonの場合にはterraform実行時に毎回ハッシュにdiffが出てしまう** という点。つまり、毎度デプロイしてしまうという所です。
 しかし、今あるコードを正としてデプロイし続けることに問題がなければ、目をつむっても良い欠点なので、今の所気にしていません。
 ちなみにランタイムがNodeだとこれはおきませんでした。
 
 ## 参考にさせていただいたサイト
 * [Terraform:aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html)
 
+<br/>
+<br/>
+<div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/B06XKHGJHP/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B06XKHGJHP&linkCode=am2&tag=soudegesu-22&linkId=c8ab2870b7378967fbf5fd25ce31da6c"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B06XKHGJHP&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=B06XKHGJHP" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>

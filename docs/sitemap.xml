@@ -65,6 +65,10 @@
 <lastmod>2018-04-03T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/aws/deploy-lambda-with-terraform/</loc>
+<lastmod>2018-04-11T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/</loc>
 </url>
 <url>
@@ -225,6 +229,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/serverless/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/terraform/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>

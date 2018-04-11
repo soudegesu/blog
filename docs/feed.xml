@@ -1,4 +1,196 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-04T08:36:47+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]</title><link href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" rel="alternate" type="text/html" title="Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]" /><published>2018-04-03T00:00:00+09:00</published><updated>2018-04-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless</id><content type="html" xml:base="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/">&lt;p&gt;このブログ自体は &lt;code class=&quot;highlighter-rouge&quot;&gt;github-pages&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;cloudflare&lt;/code&gt; を使って無料でホスティングをしているのですが、稀に &lt;strong&gt;「動的なwebコンテンツを提供したい」&lt;/strong&gt; と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-11T18:14:54+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います</subtitle><author><name>soudegesu</name></author><entry><title type="html">AWS LambdaのコードをTerraformでデプロイする</title><link href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="alternate" type="text/html" title="AWS LambdaのコードをTerraformでデプロイする" /><published>2018-04-11T00:00:00+09:00</published><updated>2018-04-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/deploy-lambda-with-terraform</id><content type="html" xml:base="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/">&lt;p&gt;今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
+AWS Lambdaは &lt;a href=&quot;https://aws.amazon.com/jp/cloud9/&quot;&gt;Cloud9&lt;/a&gt; がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。
+ブラウザエディタは &lt;strong&gt;そのままwebにつながる&lt;/strong&gt; というのが最大の強みですが、まだまだ手元のリポジトリでコードを管理している手前、AWSのサービスだけで完結できていないのが現状です。
+今回はAWS LambdaのコードをTerraformを使ってデプロイする方法を説明しようと思います。&lt;/p&gt;
+
+&lt;p&gt;↓ちなみに下が組み込まれたCloud9&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180411/cloud9_lambda.png&quot; alt=&quot;cloud9_lambda&quot; /&gt;&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#terraformでaws-lambdaをデプロイしたい&quot; id=&quot;markdown-toc-terraformでaws-lambdaをデプロイしたい&quot;&gt;TerraformでAWS Lambdaをデプロイしたい&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#やってみる&quot; id=&quot;markdown-toc-やってみる&quot;&gt;やってみる&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#コードのエントリータイプはzipにしよう&quot; id=&quot;markdown-toc-コードのエントリータイプはzipにしよう&quot;&gt;コードのエントリータイプはzipにしよう&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#シェルでzip圧縮したいソース一式を作成する&quot; id=&quot;markdown-toc-シェルでzip圧縮したいソース一式を作成する&quot;&gt;シェルでzip圧縮したいソース一式を作成する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#terraformでzip圧縮デプロイ&quot; id=&quot;markdown-toc-terraformでzip圧縮デプロイ&quot;&gt;Terraformでzip圧縮&amp;amp;デプロイ&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ビルドデプロイをつなげる&quot; id=&quot;markdown-toc-ビルドデプロイをつなげる&quot;&gt;ビルド&amp;amp;デプロイをつなげる&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;terraformでaws-lambdaをデプロイしたい&quot;&gt;TerraformでAWS Lambdaをデプロイしたい&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Infrastructure as Code&lt;/code&gt; はクラウド界隈でバズってだいぶ時間も立っていますので、あまりここでは触れません。
+必要に応じて界隈の方のブログや以下の書籍を読んでください。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4873117968/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873117968&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=e5283797d3bbc22eb4a74f9cee8af948&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873117968&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873117968&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な仕組みとしての用途が多く、作り捨てなコードが多かったです。
+その後、連携可能な他のAWSサービスも増えて、VPC内に立ち上げることも可能になり(起動時間はかなり遅いですけど)、用途の幅に広がりが出てきました。
+そんな &lt;strong&gt;「まぁ、Lambdaでいっか」&lt;/strong&gt; ケースが増えると同時に、一度デプロイしたLambdaのコードを修正して再デプロイするというケースも増えてきました。&lt;/p&gt;
+
+&lt;p&gt;業務上 &lt;code class=&quot;highlighter-rouge&quot;&gt;Terraform&lt;/code&gt; を使ってAWSリソースをコード化しているので、Lambdaもその管理の対象にしようと思ったのが契機です。&lt;/p&gt;
+
+&lt;h2 id=&quot;やってみる&quot;&gt;やってみる&lt;/h2&gt;
+
+&lt;p&gt;実際にLambdaをTerraformでデプロイするコード化してみました。
+コードサンプルは &lt;a href=&quot;https://github.com/soudegesu/terraform-lambda-practice&quot;&gt;こちら&lt;/a&gt; にあります。&lt;/p&gt;
+
+&lt;p&gt;簡単にリポジトリの説明をしておきます。&lt;/p&gt;
+
+&lt;p&gt;デプロイ用のマシンに必要なライブラリ等は以下になります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Terraform&lt;/li&gt;
+  &lt;li&gt;Python 3.6&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;またディレクトリ構成はこんな感じです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.
+├── Makefile
+├── README.md
+├── build.sh
+├── lambda-src
+│   ├── __init__.py
+│   └── main.py
+├── requirements.txt
+└── terraform
+    ├── backend.tf
+    ├── dev.tfvars
+    ├── lambda.tf
+    ├── provider.tf
+    └── variables.tf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lambda-src&lt;/code&gt; ディレクトリにはLambdaで実行するPythonコード、 &lt;code class=&quot;highlighter-rouge&quot;&gt;terraform&lt;/code&gt; ディレクトリにはLmabdaのデプロイに使用するterraformの設定が格納されています。
+めんどい前処理の類はシェル(&lt;code class=&quot;highlighter-rouge&quot;&gt;build.sh&lt;/code&gt;)でラップしてあって、開発者は &lt;code class=&quot;highlighter-rouge&quot;&gt;make&lt;/code&gt; のサブコマンドだけ意識しておけば良い、という作りにしています。
+この方法自体は我流なので、よりスマートな方法はあると思います。&lt;/p&gt;
+
+&lt;p&gt;以降は実装する上でのポイントだけ記載していきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;コードのエントリータイプはzipにしよう&quot;&gt;コードのエントリータイプはzipにしよう&lt;/h3&gt;
+
+&lt;p&gt;Lambdaにソースコードを適用する方法は3種類存在します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180411/type_of_code_entry.png&quot; alt=&quot;code_entry_type&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Edit Code Inline
+    &lt;ul&gt;
+      &lt;li&gt;ブラウザ上のエディタに直接書く方法。デプロイ後のコードを突貫で修正したりする時によく使う。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Upload a .ZIP file
+    &lt;ul&gt;
+      &lt;li&gt;zipファイルでアップロードする方法。今回はこれを採用する。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Uplaod a file from Amazon S3
+    &lt;ul&gt;
+      &lt;li&gt;S3からファイルを読み込む方法。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;個人的には2番目の &lt;strong&gt;zipファイルでアップロードする方法&lt;/strong&gt; をオススメします。&lt;/p&gt;
+
+&lt;p&gt;理由としては以下&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;依存モジュールを含めてアップロードできる&lt;/li&gt;
+  &lt;li&gt;わざわざS3を積極的に経由するケースが思いつかない。(Lambdaに対して直接操作できない時とか？)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;シェルでzip圧縮したいソース一式を作成する&quot;&gt;シェルでzip圧縮したいソース一式を作成する&lt;/h3&gt;
+
+&lt;p&gt;シェルを使えば何でもできてしまうので、Terraformで完結させたい方には興ざめかもしれませんが、低コストだったのでこれにしました。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;build.sh&lt;/code&gt; の処理を見ていただければわかるのですが、 zip圧縮させたいファイル郡を管理する必要があるので、
+専用の &lt;code class=&quot;highlighter-rouge&quot;&gt;workspace&lt;/code&gt; ディレクリを作成し、そこに依存モジュールとソースコードをまるごと放り込みます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.sh&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;SCRIPT_DIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;dirname &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SCRIPT_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/workspace
+&lt;span class=&quot;nv&quot;&gt;SRC_DIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SCRIPT_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/lambda-src
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;rm &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi
+&lt;/span&gt;mkdir &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+
+pip3 install &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SCRIPT_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/requirements.txt &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+cp &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SRC_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;WORKSPACE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;terraformでzip圧縮デプロイ&quot;&gt;Terraformでzip圧縮&amp;amp;デプロイ&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;workspace&lt;/code&gt; ディレクトリのzip圧縮とデプロイを定義します。
+terraformで &lt;code class=&quot;highlighter-rouge&quot;&gt;archive_file&lt;/code&gt; というデータリソースを使用することで、指定されたディレクトリをzip圧縮して出力することができます。
+加えて、Lambda関数の作成の際に &lt;code class=&quot;highlighter-rouge&quot;&gt;aws_lambda_function&lt;/code&gt; リソースの &lt;code class=&quot;highlighter-rouge&quot;&gt;source_code_hash&lt;/code&gt; プロパティに、zipアーカイブしたデータリソースのbase64エンコードを指定することができるので、これでzipのデプロイコードの完成です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#####################################
+#Lambda
+#####################################
+resource &quot;aws_lambda_function&quot; &quot;auth_log_monitoring&quot; {
+    filename = &quot;../lambda.zip&quot;
+    function_name = &quot;do_something&quot;
+    role = &quot;arn:aws:iam::${var.account_id}:role/XXXXXXRole&quot;
+    handler = &quot;main.lambda_handler&quot;
+    source_code_hash = &quot;${data.archive_file.lambda_zip.output_base64sha256}&quot;
+    runtime = &quot;python3.6&quot;
+    timeout = 150
+}
+
+data &quot;archive_file&quot; &quot;lambda_zip&quot; {
+    type = &quot;zip&quot;
+    source_dir  = &quot;../workspace&quot;
+    output_path = &quot;../lambda.zip&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ビルドデプロイをつなげる&quot;&gt;ビルド&amp;amp;デプロイをつなげる&lt;/h3&gt;
+&lt;p&gt;あとは &lt;code class=&quot;highlighter-rouge&quot;&gt;build.sh&lt;/code&gt; でのビルド処理とterraformでのデプロイをつなげてあげればOKです。
+今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;Makefile&lt;/code&gt; に以下のような定義をして、コマンド一発で処理ができるようにラップしています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Makefile&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deploy:
+	@${CD} &amp;amp;&amp;amp; \
+		sh ../build.sh &amp;amp;&amp;amp; \
+		terraform workspace select ${ENV} &amp;amp;&amp;amp; \
+		terraform apply \
+        -var-file=${VARS}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;あとは &lt;code class=&quot;highlighter-rouge&quot;&gt;make deploy&lt;/code&gt; を打てば実行できます。(リポジトリ的にはterraformのリモートバケットの初期化を先に行う必要はあります。)&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;Terraformを使用して、AWS Lambdaのソースコードのデプロイができるようになりました。
+実際にはシェルを間にかませてビルドを行なっていますが、シェル内での処理自体はシンプルなので、横展開もしやすくなっています。
+1点欠点としては、&lt;strong&gt;ランタイムがpythonの場合にはterraform実行時に毎回ハッシュにdiffが出てしまう&lt;/strong&gt; という点。つまり、毎度デプロイしてしまうという所です。
+しかし、今あるコードを正としてデプロイし続けることに問題がなければ、目をつむっても良い欠点なので、今の所気にしていません。
+ちなみにランタイムがNodeだとこれはおきませんでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.terraform.io/docs/providers/aws/r/lambda_function.html&quot;&gt;Terraform:aws_lambda_function&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/B06XKHGJHP/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B06XKHGJHP&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=c8ab2870b7378967fbf5fd25ce31da6c&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=B06XKHGJHP&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=B06XKHGJHP&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="terraform" /><summary type="html">今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。 AWS Lambdaは Cloud9 がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。 ブラウザエディタは そのままwebにつながる というのが最大の強みですが、まだまだ手元のリポジトリでコードを管理している手前、AWSのサービスだけで完結できていないのが現状です。 今回はAWS LambdaのコードをTerraformを使ってデプロイする方法を説明しようと思います。</summary></entry><entry><title type="html">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]</title><link href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" rel="alternate" type="text/html" title="Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]" /><published>2018-04-03T00:00:00+09:00</published><updated>2018-04-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless</id><content type="html" xml:base="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/">&lt;p&gt;このブログ自体は &lt;code class=&quot;highlighter-rouge&quot;&gt;github-pages&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;cloudflare&lt;/code&gt; を使って無料でホスティングをしているのですが、稀に &lt;strong&gt;「動的なwebコンテンツを提供したい」&lt;/strong&gt; と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
@@ -2233,249 +2425,4 @@ Internal ELBを使っている場合には適用されません。&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/&quot;&gt;DNS を使って AWS Certificate Manager の検証を簡単に&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/&quot;&gt;[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="AWS" /><category term="ACM" /><category term="route53" /><category term="ssl" /><category term="validate" /><summary type="html"></summary></entry><entry xml:lang="ja"><title type="html">ブログ(静的サイト)をHUGOを使って作成する</title><link href="https://www.soudegesu.com/blog/hugo/" rel="alternate" type="text/html" title="ブログ(静的サイト)をHUGOを使って作成する" /><published>2017-05-05T21:58:00+09:00</published><updated>2017-05-05T21:58:00+09:00</updated><id>https://www.soudegesu.com/blog/hugo</id><content type="html" xml:base="https://www.soudegesu.com/blog/hugo/">&lt;p&gt;本サイトでは &lt;a href=&quot;https://jekyllrb-ja.github.io/&quot;&gt;jekyll&lt;/a&gt; を使用してブログを作成しているのですが、他にも &lt;a href=&quot;https://gohugo.io/&quot;&gt;HUGO&lt;/a&gt; や &lt;a href=&quot;https://hexo.io/&quot;&gt;hexo&lt;/a&gt; を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#ゴール&quot; id=&quot;markdown-toc-ゴール&quot;&gt;ゴール&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#事前準備&quot; id=&quot;markdown-toc-事前準備&quot;&gt;事前準備&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#hugoをインストールする前に&quot; id=&quot;markdown-toc-hugoをインストールする前に&quot;&gt;HUGOをインストールする前に…&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#hugoのインストールmacosの場合&quot; id=&quot;markdown-toc-hugoのインストールmacosの場合&quot;&gt;HUGOのインストール(MacOSの場合)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#hugoを使ってコンテンツを作成する&quot; id=&quot;markdown-toc-hugoを使ってコンテンツを作成する&quot;&gt;HUGOを使ってコンテンツを作成する&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#hugoテンプレートで生成する&quot; id=&quot;markdown-toc-hugoテンプレートで生成する&quot;&gt;HUGOテンプレートで生成する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#サイトのデザインthemeを設定する&quot; id=&quot;markdown-toc-サイトのデザインthemeを設定する&quot;&gt;サイトのデザイン(theme)を設定する&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#themeを探す&quot; id=&quot;markdown-toc-themeを探す&quot;&gt;themeを探す&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#themeをインストールする&quot; id=&quot;markdown-toc-themeをインストールする&quot;&gt;themeをインストールする&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#themeを設定する&quot; id=&quot;markdown-toc-themeを設定する&quot;&gt;themeを設定する&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#記事を作成する&quot; id=&quot;markdown-toc-記事を作成する&quot;&gt;記事を作成する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#余談archetypesdefaultsmd-を利用して手間を減らす&quot; id=&quot;markdown-toc-余談archetypesdefaultsmd-を利用して手間を減らす&quot;&gt;(余談)archetypes/defaults.md を利用して手間を減らす&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#コンテンツの出来栄えをローカル環境で確認する&quot; id=&quot;markdown-toc-コンテンツの出来栄えをローカル環境で確認する&quot;&gt;コンテンツの出来栄えをローカル環境で確認する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#コンテンツをビルドする&quot; id=&quot;markdown-toc-コンテンツをビルドする&quot;&gt;コンテンツをビルドする&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;ゴール&quot;&gt;ゴール&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;HUGOで静的サイトの作成ができるようになる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;事前準備&quot;&gt;事前準備&lt;/h2&gt;
-&lt;h3 id=&quot;hugoをインストールする前に&quot;&gt;HUGOをインストールする前に…&lt;/h3&gt;
-&lt;p&gt;以下がローカルマシン上にインストールされていると以降の手順が捗ります。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Homebrew&lt;/li&gt;
-  &lt;li&gt;git&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;hugoのインストールmacosの場合&quot;&gt;HUGOのインストール(MacOSの場合)&lt;/h2&gt;
-&lt;p&gt;Homebrewを使用するとHUGOを簡単にインストールできます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#brew install hugo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;HUGOのバージョンを確認してみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo version
-Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+09:00
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;v0.20.7(2017/05時点で最新)がインストールされていることがわかります。&lt;/p&gt;
-
-&lt;h2 id=&quot;hugoを使ってコンテンツを作成する&quot;&gt;HUGOを使ってコンテンツを作成する&lt;/h2&gt;
-&lt;h3 id=&quot;hugoテンプレートで生成する&quot;&gt;HUGOテンプレートで生成する&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new site&lt;/code&gt;のサブコマンドを実行するだけで静的サイトのテンプレートをgenerateしてくれます。今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; というディレクトリ配下に作成します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo new site hoge
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; 配下で &lt;code class=&quot;highlighter-rouge&quot;&gt;tree&lt;/code&gt; コマンドを実行すると以下のようなファイルレイアウトが生成されていることがわかります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cd hoge
-#tree -L 1                                                          .
-├── archetypes
-├── config.toml
-├── content
-├── data
-├── layouts
-├── static
-└── themes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;ディレクトリ or ファイル&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;用途&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;archetypes&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; コマンドを実行した場合に使用されるデフォルトの雛形の定義ファイルを配備しておくディレクトリ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;config.toml&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;サイト全体の設定を記述する設定ファイル。&lt;code class=&quot;highlighter-rouge&quot;&gt;yaml&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; 形式もサポートしている&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;content&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;記事そのものを配備するディレクトリ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;data&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;特定のデータファイルを置くディレクトリ。&lt;code class=&quot;highlighter-rouge&quot;&gt;yaml&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;toml&lt;/code&gt; をサポート。 layoutsディレクトリ内のテンプレートに依存する。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;layouts&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;サイトレイアウトを配備するディレクトリ。UIパーツ毎のHTMLテンプレートを置くようなイメージ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;static&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;CSSやjavascript、画像ファイルといった静的ファイルを格納するディレクトリ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;themes&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;サイトのテーマを配置するディレクトリ&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;サイトのデザインthemeを設定する&quot;&gt;サイトのデザイン(theme)を設定する&lt;/h3&gt;
-
-&lt;h4 id=&quot;themeを探す&quot;&gt;themeを探す&lt;/h4&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://themes.gohugo.io/&quot;&gt;HUGOのthemeサイト&lt;/a&gt; から好みのサイトデザインを選びます。今回は &lt;a href=&quot;https://themes.gohugo.io/hugo-hello-programmer-theme/&quot;&gt;Hello Programerのテーマ&lt;/a&gt; にしてみましょう。HUGOの場合、Jekyllと比較してthemeの数が少ないように感じられますが、1つ1つが個性的なので、概ね自身の用途に応じたthemeが見つかるのではないでしょうか。本家サイトにて &lt;code class=&quot;highlighter-rouge&quot;&gt;layouts&lt;/code&gt; をどう作成すればよいか説明がありますので、気に入るものがない場合にはそちらを参照してください。&lt;/p&gt;
-
-&lt;h4 id=&quot;themeをインストールする&quot;&gt;themeをインストールする&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;themes&lt;/code&gt; ディレクトリに移動し、直接themeを &lt;code class=&quot;highlighter-rouge&quot;&gt;git clone&lt;/code&gt; します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cd themes
-#git clone https://github.com/lubang/hugo-hello-programmer-theme
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;themeを設定する&quot;&gt;themeを設定する&lt;/h4&gt;
-&lt;p&gt;設定ファイル(config.toml)を開いて、以下のように編集をします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#vi config.toml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;baseurl = &quot;https://www.soudegesu.com/diary&quot;
-title = &quot;そうでげす diary&quot;
-DefaultContentLanguage = &quot;ja&quot;
-languageCode = &quot;ja-JP&quot;
-
-contentDir = &quot;content/ja&quot;
-publishDir = &quot;public/ja&quot;
-
-theme = &quot;hugo-hello-programmer-theme&quot;
-
-paginate = 2
-
-disqusShortname = &quot;XXXX&quot;
-googleAnalytics = &quot;UA-XXXXXXXX-X&quot;
-
-[author]
-    name = &quot;soudegesu&quot;
-
-[permalinks]
-  post = &quot;/blog/:year/:month/:day/:slug/&quot;
-  page = &quot;/:slug/&quot;
-
-[taxonomies]
-  tag = &quot;tags&quot;
-  category = &quot;categories&quot;
-
-[indexes]
-    category = &quot;categories&quot;
-    tag = &quot;tags&quot;
-
-[params]
-    locale = &quot;ja-JP&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;theme&lt;/code&gt; の項目には &lt;code class=&quot;highlighter-rouge&quot;&gt;themes&lt;/code&gt; ディレクトリ配下にある適用したいthemeのディレクトリ名を指定する必要があります。&lt;/p&gt;
-
-&lt;h3 id=&quot;記事を作成する&quot;&gt;記事を作成する&lt;/h3&gt;
-&lt;p&gt;プロジェクトルートにて &lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; のサブコマンドを実行すると記事のファイルを生成することができます。
-今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;sample.md&lt;/code&gt; を作成してみます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new (ファイル名)&lt;/code&gt; でファイルを生成する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo new post/sample.md                                            
-/絶対パス/post/sample.md created
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ファイルが生成されたことを &lt;code class=&quot;highlighter-rouge&quot;&gt;tree&lt;/code&gt; コマンドにて確認&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#tree -a content                                                                       
-content
-└── ja
-    └── post
-        └── sample.md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;date と title のみ記載がされているファイルが生成されたことを確認&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#cat content/ja/post/sample.md
-+++
-date = &quot;2017-05-06T11:11:46+09:00&quot;
-title = &quot;sample&quot;
-
-+++
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;余談archetypesdefaultsmd-を利用して手間を減らす&quot;&gt;(余談)archetypes/defaults.md を利用して手間を減らす&lt;/h3&gt;
-&lt;p&gt;HUGOをインストールした直後に&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new (ファイル名)&lt;/code&gt; コマンドで記事ファイルを作成すると、&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt;しか埋め込まれていません。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;archetypes/defaults.md&lt;/code&gt; を以下のように予め作成しておくことで、&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo new&lt;/code&gt; した際に、定義されている内容を雛形として、新規ファイルを作成してくれるようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+++
-draft = true
-slug = &quot;&quot;
-tags = [&quot;&quot;, &quot;&quot;]
-categories = [&quot;&quot;, &quot;&quot;]
-
-+++
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;最新バージョンでは &lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; を default.md に記載する必要はなくなりました。&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;コンテンツの出来栄えをローカル環境で確認する&quot;&gt;コンテンツの出来栄えをローカル環境で確認する&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo serve&lt;/code&gt; のサブコマンドを実行すると、ローカル環境で内容の確認ができます。
-ブラウザから &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:1313/&lt;/code&gt; を入力してビルドされたコンテンツにアクセスできるようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo serve -D
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;なお、&lt;code class=&quot;highlighter-rouge&quot;&gt;-D&lt;/code&gt; オプションを付けることで、下書き扱いのコンテンツもページ出力対象にすることができます。&lt;/p&gt;
-
-&lt;h3 id=&quot;コンテンツをビルドする&quot;&gt;コンテンツをビルドする&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hugo&lt;/code&gt; コマンドを実行することで、コンテンツのビルドが行われます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#hugo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;public&lt;/code&gt; ディレクトリが生成され、その中に静的ファイルが生成されていることを確認できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;HUGO&lt;/code&gt; を使って静的サイトの生成ができました。
-使ってみた感想として、&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;導入までの敷居が低い(Jekyllが高すぎる)&lt;/li&gt;
-  &lt;li&gt;本家サイトの出来が良く、とりあえず読めば理解できる&lt;/li&gt;
-  &lt;li&gt;ローカルビルドの体感が早く感じる
-といった印象を持ちました。
-今後JekyllとHUGOを併用してみて、良し悪しを判断できればと思います。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="hugo" /><category term="blog" /><category term="site" /><summary type="html">本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="AWS" /><category term="ACM" /><category term="route53" /><category term="ssl" /><category term="validate" /><summary type="html"></summary></entry></feed>
