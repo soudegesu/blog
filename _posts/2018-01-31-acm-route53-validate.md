@@ -3,7 +3,7 @@ title: "AWS Certification ManagerのSSL証明書の検証にはDNS検証を使�
 description: "AWS Certification Managerで発行されるSSL証明書には自動更新されるための条件があるのです。"
 date: 2018-01-31 00:00:00 +0900
 categories: aws
-tags: AWS ACM route53 ssl validate
+tags: aws acm route53 ssl
 permalink: /aws/validate-certification-manager
 lang: ja
 ---

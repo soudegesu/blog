@@ -3,7 +3,7 @@ title: "JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイ�
 description: "JavaアプリケーションをJava9で導入されたProject Jigsaw(JPMS/Modular System)にマイグレーションするための5ステップを紹介。またこれからのJavaでエンジニアが抑えておきたいポイント(ロードマップ)も少し触れます"
 date: 2018-02-04 00:00:00 +0900
 categories: java
-tags: java java9 modular jigsaw gradle springboot modulepath classpath JPMS
+tags: java gradle springboot JPMS
 lang: ja
 ---
 

@@ -3,7 +3,7 @@ title: "EthereumでDApps開発のための開発環境を構築する(Ethereum�
 description: "DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました"
 date: 2018-03-05 00:00:00 +0900
 categories: ethereum
-tags: ethereum dapps truffle ganache metamask
+tags: ethereum dapps truffle ganache
 ---
 
 以前、`IPFS` を調査したことがあり、そこから `Ethereum` の存在を知りました。
