@@ -1,7 +1,7 @@
 var store = [{
         "title": "Docker buildコマンドのimage作成〜コンテナ起動まで",
         "excerpt":"自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。Dockerfile を作成するまず、dockerのバージョンが古かったので、公式サイトからmac用のdockerを再度ダウンロードし、アップデートしておきます。# docker versionClient: Version: 1.13.0 API version: 1.25 Go version: go1.7.3 Git commit: 49bf474 Built: Wed Jan 18 16:20:26 2017 OS/Arch: darwin/amd64Server: Version: 1.13.0 API version: 1.25 (minimum version 1.12) Go version: go1.7.3 Git commit: 49bf474 Built: Wed Jan 18 16:20:26 2017 OS/Arch: linux/amd64 Experimental: true以下のような簡単なDockerfileを作成し、プロジェクトのルートにおいておきます。今回はmysql公式のdocker imageを使用することにしましょう。FROM mysqlMAINTAINER soudegesuRUN...","categories": ["docker"],
-        "tags": ["docker","image","Dockerfile"],
+        "tags": ["docker"],
         "url": "https://www.soudegesu.com/docker/image/build",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "docker-composeを使ってmysql dockerコンテナを起動する",
@@ -31,22 +31,22 @@ var store = [{
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "ブログ(静的サイト)をHUGOを使って作成する",
         "excerpt":"本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブログコンテンツを作成する方法を紹介したいと思います。 ゴール 事前準備 HUGOをインストールする前に… HUGOのインストール(MacOSの場合) HUGOを使ってコンテンツを作成する HUGOテンプレートで生成する サイトのデザイン(theme)を設定する themeを探す themeをインストールする themeを設定する 記事を作成する (余談)archetypes/defaults.md を利用して手間を減らす コンテンツの出来栄えをローカル環境で確認する コンテンツをビルドする まとめゴール HUGOで静的サイトの作成ができるようになる事前準備HUGOをインストールする前に…以下がローカルマシン上にインストールされていると以降の手順が捗ります。 Homebrew gitHUGOのインストール(MacOSの場合)Homebrewを使用するとHUGOを簡単にインストールできます。#brew install hugoHUGOのバージョンを確認してみましょう。#hugo versionHugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+09:00v0.20.7(2017/05時点で最新)がインストールされていることがわかります。HUGOを使ってコンテンツを作成するHUGOテンプレートで生成するhugo new siteのサブコマンドを実行するだけで静的サイトのテンプレートをgenerateしてくれます。今回は hoge というディレクトリ配下に作成します。#hugo new site hogehoge 配下で tree コマンドを実行すると以下のようなファイルレイアウトが生成されていることがわかります。#cd hoge#tree -L 1 .├──...","categories": ["blog"],
-        "tags": ["hugo","blog","site"],
+        "tags": ["hugo","blog"],
         "url": "https://www.soudegesu.com/blog/hugo/",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い",
         "excerpt":"Route53でCertification Managerのドメイン検証ができるようになった SSL証明書”発行”の違い E-mail検証は手間がかかる DNS検証によって検証ステップが格段に簡素になる SSL証明書”更新”の違い ACMのSSL証明書有効期限は13ヶ月 ACM更新のプロセス ①AWS側によるACMの自動検証と自動更新 ②ドメイン管理者に催促メールを通知 ③AWSアカウントに催促メールを通知 ④手動でのACM検証作業 E-mail検証の自動更新条件は複雑 DNS検証の自動更新条件は単純 まとめ 参考にさせていただいたページRoute53でCertification Managerのドメイン検証ができるようになったDNS を使って AWS Certificate Manager の検証を簡単にの記事にも記載があるように、2017/11に AWS Certification Manager(以下ACM) のSSL証明書取得の際の検証手順に Route53のDNS検証 が追加されました。実はこれは、ACMで取得したSSL証明書の 取得 だけではなく 更新 においてもとても大きな利点があるので、今回はそれを紹介します。SSL証明書”発行”の違いE-mail検証は手間がかかる従来、ACMにてSSL証明書を取得する際のドメイン検証の方法は、Certificatioin Managerで証明書発行依頼を出した後、受信したE-mailの本文に記載されている一時リンクを踏んで承認ボタンを押す、という手続きを踏んでいました。その際の注意点は、AWSからの検証確認メールを受信できるメール受信箱が必要になる ことでした。私の場合、会社が取得しているドメインのサブドメインを委譲してもらい新規プロダクトを実装することが多いため、身近にいないドメイン管理者(別部署や別会社)の受信箱にのみメールが届いてしまい、自分のタイミングで承認ボタンを押すことができませんでした。そのため、私の場合は自分のAWSアカウント内にE-mail検証のためのメール受信箱を作成していました。自前のAWSアカウント内で検証を完結させるためには、 受信ボックス代わりになるS3バケットを作成し Route53にTXTレコードやMXレコードを作成し SNSで受けたメールをS3に振り分け、 S3バケットで受け取ったメール本文をダウンロードして、リンクを踏むという手順を踏まなくてはいけません。こちらの設定の手順はクラスメソッドさんのブログ「 [ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた 」に掲載されておりますので、興味のある方はご参照ください。DNS検証によって検証ステップが格段に簡素になるDNS検証ではRoute53に追加されたCNAMEレコードを用いてドメインの有効性を確認します。そのため 「Create record in Route 53」 でCNAMEレコードを作成\bし 少し待つ(10分くらい?)で検証が終了\bします。ね、簡単でしょう？SSL証明書”更新”の違いACMのSSL証明書有効期限は13ヶ月ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、1年程経過したらSSL証明書の更新作業が発生します。これはSSL証明書を運用されている人でしたら毎度のことなのですが、 証明書の更新時期を忘れないよう に通知の仕組みを入れたり、引き継ぎをしたり様々な工夫をされていることかと思います。ACM更新のプロセスまず、ACM\bのSSL証明書更新の全体の流れを\b抑えましょう。①AWS側によるACMの自動検証と自動更新ACM期限切れの60日前に自動更新可能なものかAWS側で検証し、検証に成功した場合には自動更新を実施してくれます。(自動更新の条件は後述します)②ドメイン管理者に催促メールを通知①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります)③AWSアカウントに催促メールを通知②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。④手動でのACM検証作業メールに記載されたURLにアクセスし、承認ボタンを押すことでACMの検証が完了します。ただし、実際にACMが更新されるまでに数時間程度のタイムラグが発生することをAWSでは謳っています。①にも記載の通り、素晴らしいことにACMはSSL証明書を自動更新することができます。ただし、自動更新するためには条件がありますので、以下に説明します。E-mail検証の自動更新条件は複雑E-mailで検証したSSL証明書の自動更新の条件は以下になります。...","categories": ["aws"],
-        "tags": ["AWS","ACM","route53","ssl","validate"],
+        "tags": ["aws","acm","route53","ssl"],
         "url": "https://www.soudegesu.com/aws/validate-certification-manager",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ",
         "excerpt":"はじめに 注意点 どうなる？これからのJava 半年に1度訪れるJava SEのリリース ウォッチすべき話題はJavaのサポート期限 Java8はいつまでサポートされるか 他にも気をつけておいた方が良いこと Module Systemへのマイグレーションに挑戦 Step 1. Module Systemの基礎を勉強する Step 2. 依存ライブラリのバージョンアップを行う ライブラリのリリース\bノートを読んで「大丈夫だな」と\b早合点するのは危険 Step 3. Unnamed Moduleにマイグレーションする Step 4. Named Moduelにマイグレーションする Step 5. 負荷試験とリソースモニタリングをする まとめ 参考にさせていただいたページはじめに今回はJava 9\bで追加されたModule System移行に関して説明します。自身で手を動かすことで、\b\bJavaのプロダクションコードをJPMSに適用するための作業手順の\b一定の目処がたったのでまとめておきます。実は 社内向けにも同様の発表 はしています。少し\b\bネガティブなニュアンスで資料を書いていますが、社内の(いろんな意味で)危機意識を煽るため、という背景もあったので、その点ご了承ください。\u001c注意点2018/1時点での情報を基に記載をしていますので、今後変更になる可能性があります。最新の情報と照らし合わせながら適宜情報の補填を行っていただければと思います。どうなる？これからのJavaここではまず最初に、足元のJPMSの話ではなく、Javaエンジニアが把握しておくべき今後の全体的な流れについて触れておきます。半年に1度訪れるJava SEのリリース昨年のJava Oneにて Java9 以降のJavaのリリースロードマップが発表\bされました。要点だけまとめると以下\bになります。 リリース頻度は半年に1度(次は2018/3、その次は2018/9) バージョニングは 9, 10, 11 Oracle社の\bページでは yy.MM 形式で記載されているで注意 \b\b\b時間軸でリリースがされていくため、\b\b期限までに実装終了したフィーチャーがリリース対象\bの機能として取り込まれる early access...","categories": ["java"],
-        "tags": ["java","java9","modular","jigsaw","gradle","springboot","modulepath","classpath","JPMS"],
+        "tags": ["java","gradle","springboot","JPMS"],
         "url": "https://www.soudegesu.com/java/java9-modularity/",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "Q# 量子コンピューティングプログラミング言語を試す",
         "excerpt":"もともとは 仮想通貨 を調べていた時に、 量子耐性 という言葉を発見し、量子耐性から 量子耐性のあるアルゴリズム や量子プログラミング言語である Q# に行き着きました。Wikipediaなどを見てみると、Q# はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。 Q#の環境構築 Azure上でのWindowsインスタンスセットアップ Microsoft Quantum Development Kitのインストール サンプルコードのインポート サンプルコードの実行(なるほど、わからん) 基本を抑える Qubit 量子コンピューティングの基本を抑える [注意点]Reference to unknown namespace xxx が出る場合 Q#の標準ライブラリを見てみる 少し変わったプリミティブ型 Qubit Pauli Result 標準関数も少し見てみる まとめ Q#の理解\b自体はそこまで難しくない 今後Q#はどのように活用されるのか 参考にさせていただいたサイトQ#の環境構築開発環境の構築に関しては大きく補足することは無さそうです。公式サイトも手順が手厚めに記載されています。ただし、セットアップの途中で気づいたのですが、 Macは Microsoft Quantum Development KitのExtensionをインストールできない ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。Azure上でのWindowsインスタンスセットアップMicrosoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual...","categories": ["q_sharp"],
-        "tags": ["q#","q_sharp","quantum","computing","量子コンピューティング"],
+        "tags": ["q#"],
         "url": "https://www.soudegesu.com/q_sharp/what-is-q-sharp/",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする",
@@ -61,7 +61,7 @@ var store = [{
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)",
         "excerpt":"以前、IPFS を調査したことがあり、そこから Ethereum の存在を知りました。昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。今回はDApps開発のための下準備までを纏めます。 環境情報 Etehreumのセットアップ Ethereumのインストール 設定ファイルの作成 プライベートネットワークの初期化 アカウントの作成 マイニングの動作確認をする 別アカウントにEthを送ってみる まとめ 参考にさせていただいたサイト環境情報今回、私は以下の環境にて構築を行いました Mac Book Pro OS: High Seria 10.13.2 Homebrew 1.5.6 Etehreumのセットアップ今回は Ethereum を使用します。理由としては、DApps開発のためのOSSとして開発が積極的に行われており、様々なDAppsにて使用されている(らしい)からです。EthereumのインストールHomebrewがあれば簡単にインストールができます。 リポジトリを追加brew tap ethereum/ethereum Ethereum をインストールbrew install ethereum バージョンを確認geth -h&gt; NAME:&gt; geth - the go-ethereum command line interface&gt;&gt; Copyright 2013-2017 The go-ethereum Authors&gt;&gt; USAGE:&gt; geth...","categories": ["ethereum"],
-        "tags": ["ethereum","dapps","truffle","ganache","metamask"],
+        "tags": ["ethereum","dapps","truffle","ganache"],
         "url": "https://www.soudegesu.com/ethereum/ethereum-development-environment/",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
         "title": "EthereumでDApps開発のための開発環境を構築する(Truffle&Ganache接続まで)",

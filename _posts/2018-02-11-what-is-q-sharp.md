@@ -3,7 +3,7 @@ title: "Q# 量子コンピューティングプログラミング言語を試す
 description: "量子コンピューティングプログラミング言語であるQ#を試してみました。環境構築で発生した問題と、量子コンピューティングの基礎を抑えるための参考リンクもいくつか"
 date: 2018-02-11 00:00:00 +0900
 categories: q_sharp
-tags: q# q_sharp quantum computing 量子コンピューティング
+tags: q#
 lang: ja
 ---
 

@@ -3,7 +3,7 @@ title: "Docker buildコマンドのimage作成〜コンテナ起動まで"
 description: "Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。"
 date: 2017-01-31 16:21:00 +0900
 categories: docker
-tags: docker image Dockerfile
+tags: docker
 permalink: /docker/image/build
 lang: ja
 ---
