@@ -10,13 +10,12 @@ locale: "jp"
 title: "そうなんでげす"
 title_separator: "-"
 name: "soudegsu"
-description: "soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思います"
+description: "soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"
 url: "https://www.soudegesu.com"
 baseurl: ""
 repository: "soudegesu/blog"
 teaser: "/assets/images/soudegesu.jpg"
 theme: minimal-mistakes-jekyll
-breadcrumbs: true
 words_per_minute: 200
 comments:
   provider: "disqus"
@@ -61,7 +60,7 @@ twitter:
 #   username               :
 #   app_id                 :
 #   publisher              :
-og_image: # Open Graph/Twitter default site image
+og_image: /assets/images/soudegesu.jpg
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -168,9 +167,10 @@ defaults:
       comments: true
       share: true
       related: true
+      search: true
   # _pages
   - scope:
-      path: ""
+      path: "_pages"
       type: pages
     values:
       layout: single
@@ -213,7 +213,6 @@ paginate: 10 # amount of posts to show
 paginate_path: /page:num/
 timezone: Asia/Tokyo
 
-
 # Plugins
 plugins:
   - jekyll-paginate
@@ -244,23 +243,27 @@ whitelist:
 #  - <base_path>/tags/my-awesome-tag/index.html ~> path: /tags/
 #  - <base_path/categories/my-awesome-category/index.html ~> path: /categories/
 #  - <base_path/my-awesome-category/index.html ~> path: /
-# category_archive:
-#   type: liquid
-#   path: /categories/
-# tag_archive:
-#   type: liquid
-#   path: /tags/
+category_archive:
+ type: jekyll-archives
+ path: /categories/
+tag_archive:
+ type: jekyll-archives
+ path: /tags/
 # https://github.com/jekyll/jekyll-archives
 jekyll-archives:
   enabled:
     - categories
     - tags
+    - year
+    - month
   layouts:
     category: archive-taxonomy
     tag: archive-taxonomy
   permalinks:
     category: /categories/:name/
     tag: /tags/:name/
+    year: '/archives/:year/'
+    month: '/archives/:year/:month/'
 
 
 # HTML Compression
@@ -269,18 +272,3 @@ compress_html:
   clippings: all
   ignore:
     envs: development
-
-
-# Defaults
-defaults:
-  # _posts
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      share: true
-      related: true
