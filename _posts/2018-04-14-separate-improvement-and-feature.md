@@ -10,39 +10,79 @@ tags: continuous-delivery agile
 継続的デリバリを実現するためには、継続的インテグレーションの仕組みと
 再現性のあるデプロイメントパイプライン基盤の整備が必要です。
 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。
-今回は頻繁にリリース可能な環境下において、1回のリリースに含まれる成果物の話をしたいと思います。
+今回は頻繁にリリース可能な環境下における、リリース成果物の話をしたいと思います。
 
 ---
 
 * Table Of Contents
 {:toc}
   
-## Decoupling deployment from release(デプロイとリリースは分離しよう)
+## デプロイは失敗  
+### Decoupling deployment from release(デプロイとリリースは分離しよう)
 
 かつて、Technology Readerのtechniquesに [Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) というものが紹介されていました。
 これは、ITの現場で「商用作業」または「本番リリース」と言われている作業を2つのプロセスに分割して行うことを提案しています。
   
 1. 商用環境へのシステムの展開(デプロイ)
 2. デプロイされたシステムをサービスインさせる(リリース)
-  
-これはビジネス上のリスクを軽減するための方法としてとても画期的な発想で、私もプロダクト開発に携わる時には可能な限り [Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) ができるシステム構成やCD基盤の構築を心がけています。
-チームのメンバーにも「デプロイ」と「リリース」という単語を明確に意味を分けて使うようにお願いしているし、彼らも納得してそうしてくれているので有り難い限りです。
 
-エンジニアが「自分の行っている行為そのものが与えるビジネスインパクト」を意識するのはとても良いことで、
+デプロイしてもエンドユーザに成果物は提供されません。リリースして初めて利用可能になります。
+つまり、リリースしない限りはビジネスに与える影響がないのです。デプロイ後に成果物の動作確認をし、問題があれば切り戻せば良いのです。
+  
+これはビジネス上のリスクを軽減するための方法としてとても画期的な発想で、私もプロダクト開発に携わる時には可能な限り [Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) ができるシステム構成やデプロイメント基盤の構築を心がけています。
+  
+チームのメンバーにも「デプロイ」と「リリース」という単語を明確に意味を分けて使うようにお願いしているし、彼らも納得してそうしてくれているので有り難い限りです。
+  
+エンジニアが「自分の行っている行為がビジネスラインに与える影響」を意識するのはとても良いことで、
 単にビジネスインパクトといっても、
-**「新しいfeatureを提供する」というポジティブなビジネスインパクト** もあれば、
-**「システム障害」「セキュリティインシデント」のようなネガティブなビジネスインパクト** もあるので、
+
+**「新しいfeatureを提供する」というポジティブなビジネスインパクト** もあれば、  
+**「システム障害」「セキュリティインシデント」のようなネガティブなビジネスインパクト** もありますから、  
+
 ポジティブなものは「どうやって最大化するか」を、ネガティブなものは「どうやって最小化するか」を
 考えながら仕事をするのはエンジニア冥利に尽きるわけです。
 
-[Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release)はどちらかと言えば後者向けのテクニックに分類できると私は理解しています。
+[Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) はどちらかと言えば後者向けのテクニックに分類できると私は理解しています。
 
-## 上手く
-* 
+### デプロイに失敗したらビジネスに与えるインパクトはないのか
+仮にデプロイ後の動作確認で何らか問題が見つかったとしましょう。  
+その場合、サービスされているシステムはそのままに、デプロイしたリソースを切り戻すことになるでしょう。  
+問題が発生したリソースは撤収され、ビジネスにネガティブなインパクトを与えることはありませんでした。
+  
+  
+  
+あー良かった良かった。
+  
+  
+...本当にそうなのでしょうか？
+  
+
+  
+もし、今回リリースする成果物のfeatureが
+* プレスリリースを打っていたら？
+* 法人のお客様に約束をしていたら？
+どうなるでしょうか。
+  
+そうですね。プロダクトにおける重要なマイルストーンを含む場合、「新しいfeatureを提供する」というポジティブなビジネスインパクトを妨げる**機会損失** というネガティブなビジネスインパクトを与えているはずです。
+
+優れたアジャイル開発チームであれば「[顧客が本当に必要だったもの](https://matome.naver.jp/odai/2133468389280396901)」
+を理解し、肌でも感じていますが、**取り組むべき価値のあるfeatureから順次提供している** はずです。
+  
+<div style="text-align: center">
+<a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4873117321/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4873117321&linkCode=am2&tag=soudegesu-22&linkId=ca20d76273c1a09d878e5bd16acf1f2e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4873117321&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4873117321" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>
+
+やっぱりデプロイは失敗できないじゃないか！ちくしょう！
+
+## 失敗したときのダメージを減らすには
+### 量を減らし、回数を増やす
+
+1度にリリースする成果物の量を減らし
+
+### Decoupling improvement from feature(改善とフィーチャーは分離しよう)
 
 
-## Decoupling improvement from feature(改善とフィーチャーは分離しよう)
+### エンドユーザにバグ取りに貢献してもらう
 
-## Github flowを採用している場合には
 
-##
+## まとめ
