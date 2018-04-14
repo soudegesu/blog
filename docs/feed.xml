@@ -1,4 +1,153 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-12T15:46:27+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">AWS LambdaのコードをTerraformでデプロイする</title><link href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="alternate" type="text/html" title="AWS LambdaのコードをTerraformでデプロイする" /><published>2018-04-11T00:00:00+09:00</published><updated>2018-04-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/deploy-lambda-with-terraform</id><content type="html" xml:base="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/">&lt;p&gt;今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-14T11:09:30+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか</title><link href="https://www.soudegesu.com/aws/s3-cross-account/" rel="alternate" type="text/html" title="クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか" /><published>2018-04-13T00:00:00+09:00</published><updated>2018-04-13T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/s3-cross-account</id><content type="html" xml:base="https://www.soudegesu.com/aws/s3-cross-account/">&lt;p&gt;AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
+設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
+しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
+共有された側ではS3バケットのコンソールにバケットが表示されません。
+今回はなんとかして閲覧する方法はないものかと試行錯誤してみました。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#やりたいこと&quot; id=&quot;markdown-toc-やりたいこと&quot;&gt;やりたいこと&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#s3をファイルストレージサービス的にファイル共有に使いたい&quot; id=&quot;markdown-toc-s3をファイルストレージサービス的にファイル共有に使いたい&quot;&gt;S3をファイルストレージサービス的にファイル共有に使いたい&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#でもバケットのあるawsアカウントにログインさせたくない&quot; id=&quot;markdown-toc-でもバケットのあるawsアカウントにログインさせたくない&quot;&gt;でもバケットのあるAWSアカウントにログインさせたくない&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#課題&quot; id=&quot;markdown-toc-課題&quot;&gt;課題&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ユーザはブラウザしか使えない&quot; id=&quot;markdown-toc-ユーザはブラウザしか使えない&quot;&gt;ユーザはブラウザしか使えない&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot; id=&quot;markdown-toc-コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot;&gt;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#案1-バケットのurlを直接叩かせる非公式&quot; id=&quot;markdown-toc-案1-バケットのurlを直接叩かせる非公式&quot;&gt;案1 バケットのURLを直接叩かせる[非公式]&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#案2-switch-roleを使う正攻法&quot; id=&quot;markdown-toc-案2-switch-roleを使う正攻法&quot;&gt;案2 Switch Roleを使う[正攻法]&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;やりたいこと&quot;&gt;やりたいこと&lt;/h2&gt;
+&lt;h3 id=&quot;s3をファイルストレージサービス的にファイル共有に使いたい&quot;&gt;S3をファイルストレージサービス的にファイル共有に使いたい&lt;/h3&gt;
+
+&lt;p&gt;今回やろうとしていたことを簡単に説明します。
+以下の図にまとめました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/share_bucket.png&quot; alt=&quot;share_bucket&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;既に本番環境で稼働しているサービスがあり(アカウントA)、
+アカウントA内にあるS3バケットにストアしているデータを他部門に提供する必要が出てきました。&lt;/p&gt;
+
+&lt;h3 id=&quot;でもバケットのあるawsアカウントにログインさせたくない&quot;&gt;でもバケットのあるAWSアカウントにログインさせたくない&lt;/h3&gt;
+&lt;p&gt;普通に考えれば、アカウントAで他部門向けのIAM GroupとIAM Userを作成する、というのが簡易な解になるのですが、少し事情があります。
+アカウントA自体が社内のセキュリティレベルが高めに規定されているため、他部門のIAM UserをアカウントAの中に作るのが難しいのです。
+そのため、 他部門向けの &lt;strong&gt;別のAWSアカウントBを作成し、アカウントBに対して対象のバケットのみを共有するようにすれば要求が充足されるのではないか&lt;/strong&gt;、という話になり、その方法を中心に検討をすることになりました。&lt;/p&gt;
+
+&lt;h2 id=&quot;課題&quot;&gt;課題&lt;/h2&gt;
+&lt;h3 id=&quot;ユーザはブラウザしか使えない&quot;&gt;ユーザはブラウザしか使えない&lt;/h3&gt;
+
+&lt;p&gt;今回のケースでは他部門の人間がエンジニアではないため、&lt;strong&gt;ブラウザでのファイルダウンロードしかできない&lt;/strong&gt; という制約がありました。 
+AWS CLIのインストールも嫌がられてしまったため、 &lt;strong&gt;「AWSのS3コンソールからファイルを見せる」&lt;/strong&gt; 必要がありました。&lt;/p&gt;
+
+&lt;h3 id=&quot;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot;&gt;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&lt;/h3&gt;
+
+&lt;p&gt;アカウントAで &lt;code class=&quot;highlighter-rouge&quot;&gt;soudegesu-bucket-foo&lt;/code&gt; というS3バケットを作成し、以下のようにバケットポリシーを作成することで
+アカウントBにバケット共有の設定をしました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Sid&quot;: &quot;GetObject&quot;,
+            &quot;Action&quot;: [
+                &quot;s3:GetObject&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: &quot;arn:aws:s3:::soudegesu-bucket-foo/*&quot;,
+            &quot;Principal&quot;: {
+                &quot;AWS&quot;: [
+                    &quot;アカウントBのAWSアカウントID&quot;
+                ]
+            }
+        },
+        {
+            &quot;Sid&quot;: &quot;ListBucket&quot;,
+            &quot;Action&quot;: [
+                &quot;s3:ListBucket&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: &quot;arn:aws:s3:::soudegesu-bucket-foo&quot;,
+            &quot;Principal&quot;: {
+                &quot;AWS&quot;: [
+                    &quot;アカウントBのAWSアカウントID&quot;
+                ]
+            }
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/account_a_bucket_list.png&quot; alt=&quot;account_a_bucket_list&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;アカウントBでのS3コンソールから共有されたバケットを確認できないのです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/account_b_bucket_list.png&quot; alt=&quot;account_b_bucket_list&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;実は &lt;strong&gt;S3のバケットリストはバケットを作成したオーナー側にしか表示されない&lt;/strong&gt; というAWSのS3の仕様があります。
+これは AWS CLIでも同様で、 &lt;code class=&quot;highlighter-rouge&quot;&gt;aws s3 ls&lt;/code&gt; コマンドを実行しても、自分のアカウントで作成されたバケットの一覧しか取得できません。&lt;/p&gt;
+
+&lt;p&gt;なんてこったい。&lt;/p&gt;
+
+&lt;h3 id=&quot;案1-バケットのurlを直接叩かせる非公式&quot;&gt;案1 バケットのURLを直接叩かせる[非公式]&lt;/h3&gt;
+
+&lt;p&gt;一瞬「やばい」と思いましたが、どうにかなりそうな方法が見つかりました。
+それは &lt;strong&gt;共有バケットのURLを直接をブラウザに入力する&lt;/strong&gt; という方法です。&lt;/p&gt;
+
+&lt;p&gt;AWSコンソール上のS3のURLのルールは以下のようになっていて、
+AWSコンソールにログインしたセッション上で直叩きするとブラウザ上で表示することができます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://s3.console.aws.amazon.com/s3/buckets/{バケット名}/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;今回の例で言えば、AWSアカウントBにログインした状態で下のURLを直叩きします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/find_bucket_b.png&quot; alt=&quot;find_bucket&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;見えました。やったぜ。&lt;/p&gt;
+
+&lt;p&gt;ただし、この方法は現時点(2018年4月現在)でのS3コンソールの仕様ということらしく、公式でサポートされている仕様ではありません。
+一応AWSのサポートにも聞いてみましたが、結果的に見えているけど、今後変わるかもしれない、ということでした。&lt;/p&gt;
+
+&lt;h3 id=&quot;案2-switch-roleを使う正攻法&quot;&gt;案2 Switch Roleを使う[正攻法]&lt;/h3&gt;
+
+&lt;p&gt;結局、マルチアカウント間でコンソール上でいい感じに見せたい場合の正攻法はSwitch Roleになりそうです。
+Switch Roleを使ったアカウントの切り替えは記事にされている方がいっぱいいらっしゃるのでそちらを参考にいただいた方が良いです。&lt;/p&gt;
+
+&lt;p&gt;参考までにいくつかリンクを貼っておきます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qiita.com/yoshidashingo/items/d13a9b17f111d5d91a2e&quot;&gt;Swith Roleで複数のAWSアカウント間を切替える&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_roles_use_switch-role-console.html&quot;&gt;ロールの切り替え（AWS マネジメントコンソール）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;「クロスアカウントで共有されたS3バケットはAWSコンソール上から閲覧可能なのか」&lt;/strong&gt; というタイトルで今回書きましたが、
+結論を言うと&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;可能&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;しかし、以下の条件を知っておく必要がありそうです。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;共有されたバケットがS3コンソールのバケット一覧で参照可能なのは&lt;strong&gt;バケットのオーナーアカウント&lt;/strong&gt;のみ&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;バケットのURLを直接入力する&lt;/strong&gt;ことで、共有先のアカウントでもブラウザ上で確認ができる&lt;/li&gt;
+  &lt;li&gt;ただし、URL直接入力の方法は公式サポートされていないので、真面目にやるならSwitch Roleで対応する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;今回はURLを直接入力する方法で大丈夫そうだったので、よかったよかった。&lt;/p&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4797392568/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797392568&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=2317c39300679077409ccb55e8076219&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4797392568&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4797392568&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="s3" /><summary type="html">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。 設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。 しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、 共有された側ではS3バケットのコンソールにバケットが表示されません。 今回はなんとかして閲覧する方法はないものかと試行錯誤してみました。</summary></entry><entry><title type="html">AWS LambdaのコードをTerraformでデプロイする</title><link href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="alternate" type="text/html" title="AWS LambdaのコードをTerraformでデプロイする" /><published>2018-04-11T00:00:00+09:00</published><updated>2018-04-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/deploy-lambda-with-terraform</id><content type="html" xml:base="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/">&lt;p&gt;今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
 AWS Lambdaは &lt;a href=&quot;https://aws.amazon.com/jp/cloud9/&quot;&gt;Cloud9&lt;/a&gt; がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。
 ブラウザエディタは &lt;strong&gt;そのままwebにつながる&lt;/strong&gt; というのが最大の強みですが、まだまだ手元のリポジトリでコードを管理している手前、AWSのサービスだけで完結できていないのが現状です。
 今回はAWS LambdaのコードをTerraformを使ってデプロイする方法を説明しようと思います。&lt;/p&gt;
@@ -2286,143 +2435,4 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://nulab-inc.com/ja/blog/nulab/java9-migration/&quot;&gt;ヌーラボのアカウント基盤を Java 9 にマイグレーションして起きた問題と解決法&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://guides.gradle.org/building-java-9-modules/&quot;&gt;Building Java 9 Modules&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="gradle" /><category term="springboot" /><category term="JPMS" /><summary type="html"></summary></entry><entry xml:lang="ja"><title type="html">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い</title><link href="https://www.soudegesu.com/aws/validate-certification-manager" rel="alternate" type="text/html" title="AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い" /><published>2018-01-31T00:00:00+09:00</published><updated>2018-01-31T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/acm-route53-validate</id><content type="html" xml:base="https://www.soudegesu.com/aws/validate-certification-manager">&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#route53でcertification-managerのドメイン検証ができるようになった&quot; id=&quot;markdown-toc-route53でcertification-managerのドメイン検証ができるようになった&quot;&gt;Route53でCertification Managerのドメイン検証ができるようになった&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ssl証明書発行の違い&quot; id=&quot;markdown-toc-ssl証明書発行の違い&quot;&gt;SSL証明書”発行”の違い&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#e-mail検証は手間がかかる&quot; id=&quot;markdown-toc-e-mail検証は手間がかかる&quot;&gt;E-mail検証は手間がかかる&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#dns検証によって検証ステップが格段に簡素になる&quot; id=&quot;markdown-toc-dns検証によって検証ステップが格段に簡素になる&quot;&gt;DNS検証によって検証ステップが格段に簡素になる&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ssl証明書更新の違い&quot; id=&quot;markdown-toc-ssl証明書更新の違い&quot;&gt;SSL証明書”更新”の違い&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#acmのssl証明書有効期限は13ヶ月&quot; id=&quot;markdown-toc-acmのssl証明書有効期限は13ヶ月&quot;&gt;ACMのSSL証明書有効期限は13ヶ月&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#acm更新のプロセス&quot; id=&quot;markdown-toc-acm更新のプロセス&quot;&gt;ACM更新のプロセス&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#aws側によるacmの自動検証と自動更新&quot; id=&quot;markdown-toc-aws側によるacmの自動検証と自動更新&quot;&gt;①AWS側によるACMの自動検証と自動更新&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ドメイン管理者に催促メールを通知&quot; id=&quot;markdown-toc-ドメイン管理者に催促メールを通知&quot;&gt;②ドメイン管理者に催促メールを通知&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#awsアカウントに催促メールを通知&quot; id=&quot;markdown-toc-awsアカウントに催促メールを通知&quot;&gt;③AWSアカウントに催促メールを通知&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#手動でのacm検証作業&quot; id=&quot;markdown-toc-手動でのacm検証作業&quot;&gt;④手動でのACM検証作業&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#e-mail検証の自動更新条件は複雑&quot; id=&quot;markdown-toc-e-mail検証の自動更新条件は複雑&quot;&gt;E-mail検証の自動更新条件は複雑&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#dns検証の自動更新条件は単純&quot; id=&quot;markdown-toc-dns検証の自動更新条件は単純&quot;&gt;DNS検証の自動更新条件は単純&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたページ&quot; id=&quot;markdown-toc-参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;route53でcertification-managerのドメイン検証ができるようになった&quot;&gt;Route53でCertification Managerのドメイン検証ができるようになった&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180131/acm_validate.png&quot; alt=&quot;acm_validate&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/&quot;&gt;DNS を使って AWS Certificate Manager の検証を簡単に&lt;/a&gt;
-の記事にも記載があるように、2017/11に &lt;code class=&quot;highlighter-rouge&quot;&gt;AWS Certification Manager(以下ACM)&lt;/code&gt; のSSL証明書取得の際の検証手順に &lt;em&gt;Route53のDNS検証&lt;/em&gt; が追加されました。実はこれは、ACMで取得したSSL証明書の &lt;em&gt;取得&lt;/em&gt; だけではなく &lt;em&gt;更新&lt;/em&gt; においてもとても大きな利点があるので、今回はそれを紹介します。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl証明書発行の違い&quot;&gt;SSL証明書”発行”の違い&lt;/h2&gt;
-&lt;h3 id=&quot;e-mail検証は手間がかかる&quot;&gt;E-mail検証は手間がかかる&lt;/h3&gt;
-&lt;p&gt;従来、ACMにてSSL証明書を取得する際のドメイン検証の方法は、Certificatioin Managerで証明書発行依頼を出した後、受信したE-mailの本文に記載されている一時リンクを踏んで承認ボタンを押す、という手続きを踏んでいました。&lt;/p&gt;
-
-&lt;p&gt;その際の注意点は、&lt;em&gt;AWSからの検証確認メールを受信できるメール受信箱が必要になる&lt;/em&gt; ことでした。
-私の場合、会社が取得しているドメインのサブドメインを委譲してもらい新規プロダクトを実装することが多いため、
-身近にいないドメイン管理者(別部署や別会社)の受信箱にのみメールが届いてしまい、
-自分のタイミングで承認ボタンを押すことができませんでした。
-そのため、私の場合は自分のAWSアカウント内にE-mail検証のためのメール受信箱を作成していました。&lt;/p&gt;
-
-&lt;p&gt;自前のAWSアカウント内で検証を完結させるためには、&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;受信ボックス代わりになるS3バケットを作成し&lt;/li&gt;
-  &lt;li&gt;Route53にTXTレコードやMXレコードを作成し&lt;/li&gt;
-  &lt;li&gt;SNSで受けたメールをS3に振り分け、&lt;/li&gt;
-  &lt;li&gt;S3バケットで受け取ったメール本文をダウンロードして、リンクを踏む&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;という手順を踏まなくてはいけません。&lt;/p&gt;
-
-&lt;p&gt;こちらの設定の手順はクラスメソッドさんのブログ「 &lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/&quot;&gt;[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた&lt;/a&gt; 」に掲載されておりますので、
-興味のある方はご参照ください。&lt;/p&gt;
-
-&lt;h3 id=&quot;dns検証によって検証ステップが格段に簡素になる&quot;&gt;DNS検証によって検証ステップが格段に簡素になる&lt;/h3&gt;
-&lt;p&gt;DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメインの有効性を確認します。
-そのため&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;「Create record in Route 53」 でCNAMEレコードを作成し&lt;/li&gt;
-  &lt;li&gt;少し待つ(10分くらい?)
-で検証が終了します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ね、簡単でしょう？&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180131/add_record.png&quot; alt=&quot;add_cname_records&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl証明書更新の違い&quot;&gt;SSL証明書”更新”の違い&lt;/h2&gt;
-&lt;h3 id=&quot;acmのssl証明書有効期限は13ヶ月&quot;&gt;ACMのSSL証明書有効期限は13ヶ月&lt;/h3&gt;
-&lt;p&gt;ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、1年程経過したらSSL証明書の更新作業が発生します。
-これはSSL証明書を運用されている人でしたら毎度のことなのですが、 &lt;em&gt;証明書の更新時期を忘れないよう&lt;/em&gt; に通知の仕組みを入れたり、
-引き継ぎをしたり様々な工夫をされていることかと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;acm更新のプロセス&quot;&gt;ACM更新のプロセス&lt;/h3&gt;
-&lt;p&gt;まず、ACMのSSL証明書更新の全体の流れを抑えましょう。&lt;/p&gt;
-
-&lt;h4 id=&quot;aws側によるacmの自動検証と自動更新&quot;&gt;①AWS側によるACMの自動検証と自動更新&lt;/h4&gt;
-&lt;p&gt;ACM期限切れの60日前に自動更新可能なものかAWS側で検証し、検証に成功した場合には自動更新を実施してくれます。(自動更新の条件は後述します)&lt;/p&gt;
-
-&lt;h4 id=&quot;ドメイン管理者に催促メールを通知&quot;&gt;②ドメイン管理者に催促メールを通知&lt;/h4&gt;
-&lt;p&gt;①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります)&lt;/p&gt;
-
-&lt;h4 id=&quot;awsアカウントに催促メールを通知&quot;&gt;③AWSアカウントに催促メールを通知&lt;/h4&gt;
-&lt;p&gt;②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。&lt;/p&gt;
-
-&lt;h4 id=&quot;手動でのacm検証作業&quot;&gt;④手動でのACM検証作業&lt;/h4&gt;
-&lt;p&gt;メールに記載されたURLにアクセスし、承認ボタンを押すことでACMの検証が完了します。
-ただし、実際にACMが更新されるまでに数時間程度のタイムラグが発生することをAWSでは謳っています。&lt;/p&gt;
-
-&lt;p&gt;①にも記載の通り、素晴らしいことにACMはSSL証明書を自動更新することができます。
-ただし、自動更新するためには条件がありますので、以下に説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;e-mail検証の自動更新条件は複雑&quot;&gt;E-mail検証の自動更新条件は複雑&lt;/h3&gt;
-&lt;p&gt;E-mailで検証したSSL証明書の自動更新の条件は以下になります。&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;発行したSSL証明書がAWSリソースでを使用されていること&lt;/li&gt;
-  &lt;li&gt;インターネットからのHTTPSリクエストを許可すること&lt;/li&gt;
-  &lt;li&gt;証明書記載のFQDNが名前解決できること&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; に関して言えば、Public ELBでもSecurityGroupでアクセス制限を施しているケースや、
-Internal ELBを使っている場合には適用されません。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt; に関して言えば、ワイルドカードドメインの場合では、ゾーンAPEX、wwwドメインで名前解決できる必要があります。
-例えば、 「*.soudegesu.com」の場合には「soudegesu.com」と「www.soudegesu.com」での解決が必要です。&lt;/p&gt;
-
-&lt;p&gt;加えて、仮に3つの条件を満たしていても、複数のリージョンで同一ドメイン名を使用している場合には、正しく名前解決できずにNGとなってしまうそうです。&lt;/p&gt;
-
-&lt;p&gt;つまり、E-mail検証での証明書自動更新は仕様上、適用条件が限定的なのです。&lt;/p&gt;
-
-&lt;h3 id=&quot;dns検証の自動更新条件は単純&quot;&gt;DNS検証の自動更新条件は単純&lt;/h3&gt;
-
-&lt;p&gt;DNS検証で作成したSSL証明書の自動更新のルールはどうでしょうか。
-AWSのドキュメントをパッと漁れなかったので、サポートに問い合わせてみたところ、以下のような回答をいただきました。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;発行したSSL証明書がAWSリソースでを使用されていること&lt;/li&gt;
-  &lt;li&gt;証明書発行の際に設定された &lt;code class=&quot;highlighter-rouge&quot;&gt;CNAME&lt;/code&gt; レコードが残っていること&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;こちらの方が適用条件が単純明快です。
-インターネット経由の通信要件やプロトコル、ドメインの縛りがありません。
-証明書リクエスト時に追加するCNAMEレコードを消さないように死守するだけでよいのです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt; や &lt;a href=&quot;https://github.com/codenize-tools/roadworker&quot;&gt;roadworker&lt;/a&gt; といったコード化ツールを使っていればなおのこと敷居は下がりますね。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;今回は2種類の検証方法を比較しながらDNS検証の優位性を説明しました。&lt;/p&gt;
-
-&lt;p&gt;DNS検証は事前準備の手間を省略でき、発行時のステップも少ないです。&lt;/p&gt;
-
-&lt;p&gt;また、証明書の自動更新の適用条件も広いため、オススメです。&lt;/p&gt;
-
-&lt;p&gt;稼働中のサービスがいきなりSSL証明書の期限切れでエラーを吐き続けるといったリスクを緩和するためにも、DNS検証のSSL証明書に切り替えていく価値はあると思います。(一応Route53はSLA100%ですし)&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたページ&quot;&gt;参考にさせていただいたページ&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/&quot;&gt;DNS を使って AWS Certificate Manager の検証を簡単に&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/acm-verifydomain-ses/&quot;&gt;[ACM] SSL証明書発行時のドメイン認証メールをSESで受け取ってみた&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="acm" /><category term="route53" /><category term="ssl" /><summary type="html"></summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="gradle" /><category term="springboot" /><category term="JPMS" /><summary type="html"></summary></entry></feed>
