@@ -17,7 +17,7 @@ tags: continuous-delivery agile
 * Table Of Contents
 {:toc}
   
-## デプロイは失敗  
+## デプロイの失敗を考える  
 ### Decoupling deployment from release(デプロイとリリースは分離しよう)
 
 かつて、Technology Readerのtechniquesに [Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) というものが紹介されていました。
@@ -79,6 +79,7 @@ tags: continuous-delivery agile
 やっぱりデプロイは失敗できないじゃないか！ちくしょう！
 
 ## 失敗したときのダメージを「軽減」すること
+
 ### 量を減らし、回数を増やす
 
 1度にリリースする成果物の量を減らし
