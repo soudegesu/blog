@@ -42,9 +42,9 @@ tags: continuous-delivery agile
 ポジティブなものは「どうやって最大化するか」を、ネガティブなものは「どうやって最小化するか」を
 考えながら仕事をするのはエンジニア冥利に尽きるわけです。
 
-[Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) はどちらかと言えば後者向けのテクニックに分類できると私は理解しています。
+[Decoupling deployment from release](https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release) はどちらかと言えば後者の、ネガティブなビジネスインパクトを軽減するためのテクニックに分類できると私は理解しています。
 
-### デプロイに失敗したらビジネスに与えるインパクトはないのか
+### 失敗した時のダメージは「軽減」しかできない
 仮にデプロイ後の動作確認で何らか問題が見つかったとしましょう。  
 その場合、サービスされているシステムはそのままに、デプロイしたリソースを切り戻すことになるでしょう。  
 問題が発生したリソースは撤収され、ビジネスにネガティブなインパクトを与えることはありませんでした。
@@ -71,10 +71,14 @@ tags: continuous-delivery agile
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4873117321/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4873117321&linkCode=am2&tag=soudegesu-22&linkId=ca20d76273c1a09d878e5bd16acf1f2e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4873117321&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4873117321" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
+  
+  
+更に突き詰めていくと、 **「デプロイ作業の工数が無駄になった」** とか、会社によっては **「障害報告の工数が無駄になった」** 
+みたいな人件費の話も出てきて、結局ダメージをゼロにはできません。軽減するしかできないのです。
 
 やっぱりデプロイは失敗できないじゃないか！ちくしょう！
 
-## 失敗したときのダメージを減らすには
+## 失敗したときのダメージを「軽減」すること
 ### 量を減らし、回数を増やす
 
 1度にリリースする成果物の量を減らし
