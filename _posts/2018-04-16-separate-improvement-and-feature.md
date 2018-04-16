@@ -76,7 +76,7 @@ tags: continuous-delivery agile
   
 
   
-## 失敗したときの被ダメージを「軽減」すること
+## 失敗したときの被ダメージを「軽減」する
 
 結局、エンジニアは自分の置かれた環境と判断材料を基にして **リスクの発生のしやすさ** と **顕在化した時の被ダメージ** を頭の片隅において仕事をしているのです。
 先程の例は更に突き詰めていくと、 **「デプロイ作業の工数が無駄になった」** とか、会社によっては **「障害報告の工数が発生した」** みたいな人件費の話も出てきて、**失敗による被ダメージは「軽減する」ことしかできない** ことが伺えます。
@@ -112,10 +112,10 @@ tags: continuous-delivery agile
 
 ![os_patch]({{site.baseurl}}/assets/images/20180416/os_patch.png)
 
-## 失敗リスクを細分化しておく
+## 失敗リスクを細分化する
 
-Decoupling improvement from feature のような考え方でリリース物に色分けをすると、リスクの細分化が理解しやすくなるという副産物があります。
-例えば、 **feature開発のために、ライブラリをこっそりバージョンアップしてしまう現象** は現場でよく見かけますし、それこそこのフレームを適用できるケースだと考えています。
+Decoupling improvement from feature のような考え方でリリース物に色分けをすると、リスクの分散構造が理解しやすくなるという副産物があります。
+例えば、 **feature開発のために、ライブラリをこっそりバージョンアップしてしまう現象** は現場でよく見かけます。
 
 ![feature_stone]({{site.baseurl}}/assets/images/20180416/feature_stone.png)
   
@@ -123,7 +123,22 @@ Decoupling improvement from feature のような考え方でリリース物に�
 ライブラリのバージョンアップ自体は改善アイテムに分類することができ、 **個別のタイミングでデプロイすべき** なのです。
 (時系列的にはfeatureの前にデプロイされているべきです)
 
-featureのリリースを行う時点で、既にライブラリのバージョンアップやDBマイグレーションは成功しているので、
-これらの失敗リスクを加味する必要がありません。
+デプロイを分割することによって、featureのリリースを行う時点では、既にライブラリのバージョンアップやDBマイグレーションは成功しているので、これらの失敗リスクを加味する必要がなくなります。
 
 ## まとめ
+継続的デリバリを安定して行うための考え方をまとめました。
+* デプロイとリリースのプロセスは分ける
+* 一回のリリース物のサイズを小さくする
+* 「直接的なビジネスインパクトがあるかどうか」という判断軸でリリース物を分割するのもアリ
+  
+  
+
+小さな変化を積み重ねることで、最終的には大きな変更を成し遂げることができると考えています。
+
+今後の個人的なタスクとしては `Springbootの1.5→2.x系へのバージョンアップ` や、`Amazon Linux → Amazon Linux2`への移行、`Java 11以降へのマイグレーション` といったイベントが目白押しなので、意識しながら作業していきたいです。
+  
+  
+  
+<div style="text-align: center">
+<a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4873118352/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4873118352&linkCode=am2&tag=soudegesu-22&linkId=e1b8ecca6e0185cd2701dc949c301805"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4873118352&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4873118352" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>
