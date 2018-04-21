@@ -1,7 +1,7 @@
 ---
 title: "Pythonのdatetimeとpytzで文字列と日時やタイムゾーンの変更などをいい加減覚えたい"
 description: "Pythonのdatetimeやpytzを使った文字列と日付の変換をまとめます。仕事がら別のミドルウェアやデータソースから取得したepochtimeや日付文字列をPythonのdatetimeやpytzを使って変換する処理を書くことがあるのですが、毎回ネットで調べているのでいい加減覚えよるためにまとめます"
-date: 2018-04-18 00:00:00 +0900
+date: 2018-04-22 00:00:00 +0900
 categories: python
 tags: python
 ---
