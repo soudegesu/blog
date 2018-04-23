@@ -1,4 +1,297 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-16T20:07:43+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう</title><link href="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/" rel="alternate" type="text/html" title="継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう" /><published>2018-04-16T00:00:00+09:00</published><updated>2018-04-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature</id><content type="html" xml:base="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/">&lt;p&gt;&lt;a href=&quot;http://www.ryuzee.com/contents/blog/4241&quot;&gt;継続的デリバリ(Continuous Delivery)&lt;/a&gt;はITの現場で一般的なものと浸透してきました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-23T10:40:33+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい</title><link href="https://www.soudegesu.com/python/python-datetime/" rel="alternate" type="text/html" title="Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい" /><published>2018-04-22T00:00:00+09:00</published><updated>2018-04-22T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/python-datetime</id><content type="html" xml:base="https://www.soudegesu.com/python/python-datetime/">&lt;p&gt;仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、&lt;strong&gt;pythonのdatetimeを使った文字列から日時への変換&lt;/strong&gt; や &lt;strong&gt;タイムゾーンの変更&lt;/strong&gt; を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。&lt;/p&gt;
+
+&lt;p&gt;今回は自分の備忘録的な意味も込めて書こうと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#頻繁に使う変換&quot; id=&quot;markdown-toc-頻繁に使う変換&quot;&gt;頻繁に使う変換&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#epochtimeからdatetime&quot; id=&quot;markdown-toc-epochtimeからdatetime&quot;&gt;epochtimeからdatetime&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#epochtimeからdatetime-1&quot; id=&quot;markdown-toc-epochtimeからdatetime-1&quot;&gt;epochtimeからdatetime&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ミリ秒を含むepochtimeからdatetime&quot; id=&quot;markdown-toc-ミリ秒を含むepochtimeからdatetime&quot;&gt;ミリ秒を含むepochtimeからdatetime&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#エポックミリ秒からdatetime&quot; id=&quot;markdown-toc-エポックミリ秒からdatetime&quot;&gt;エポックミリ秒からdatetime&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#文字列からdatetime&quot; id=&quot;markdown-toc-文字列からdatetime&quot;&gt;文字列からdatetime&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#タイムゾーンあり日付文字列からdatetime&quot; id=&quot;markdown-toc-タイムゾーンあり日付文字列からdatetime&quot;&gt;タイムゾーンあり日付文字列からdatetime&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#タイムゾーンなし日付文字列からdatetime&quot; id=&quot;markdown-toc-タイムゾーンなし日付文字列からdatetime&quot;&gt;タイムゾーンなし日付文字列からdatetime&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#日時データを扱う上で注意すべきこと&quot; id=&quot;markdown-toc-日時データを扱う上で注意すべきこと&quot;&gt;日時データを扱う上で注意すべきこと&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#naiveとaware&quot; id=&quot;markdown-toc-naiveとaware&quot;&gt;naiveとaware&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#マシン上のタイムゾーンで処理しないように注意する&quot; id=&quot;markdown-toc-マシン上のタイムゾーンで処理しないように注意する&quot;&gt;マシン上のタイムゾーンで処理しないように注意する&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;環境情報&quot;&gt;環境情報&lt;/h2&gt;
+
+&lt;p&gt;今回のPythonの実行環境は以下になります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;python 3.6&lt;/li&gt;
+  &lt;li&gt;pytz&lt;/li&gt;
+  &lt;li&gt;jupyter notebook&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;頻繁に使う変換&quot;&gt;頻繁に使う変換&lt;/h2&gt;
+
+&lt;p&gt;データのクレンジング作業などで時系列データを取り扱う場合には、特定のミドルウェアや他人のコンバータが出力するデータ仕様を調査した上で加工処理を施すことが多いです。&lt;/p&gt;
+
+&lt;p&gt;Pythonでは日付時刻の処理を行う場合に &lt;code class=&quot;highlighter-rouge&quot;&gt;datetime&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;、 &lt;code class=&quot;highlighter-rouge&quot;&gt;time&lt;/code&gt; などの型を使って処理をしますが、今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;datetime&lt;/code&gt; を使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;epochtimeからdatetime&quot;&gt;epochtimeからdatetime&lt;/h3&gt;
+&lt;p&gt;epochtimeを表す &lt;code class=&quot;highlighter-rouge&quot;&gt;数値型&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;datetime&lt;/code&gt; に変換します。&lt;/p&gt;
+
+&lt;p&gt;epochtimeはUnix時間とも言われますが、世界標準時の1970年1月1日午前0時0分0秒からの経過秒数を整数値で表したものです。
+詳細はwikipediaを見た方が早いと思いますので、 &lt;a href=&quot;https://ja.wikipedia.org/wiki/UNIX%E6%99%82%E9%96%93&quot;&gt;こちら&lt;/a&gt; をみてください。&lt;/p&gt;
+
+&lt;p&gt;UTCからの経過秒数を表現していることから、その数字からタイムゾーン付きのデータに変換することは容易です。&lt;/p&gt;
+
+&lt;p&gt;強いて言えば、epochtimeの数値データが &lt;strong&gt;エポック秒&lt;/strong&gt; なのか &lt;strong&gt;エポックミリ秒&lt;/strong&gt; なのかの確認をしておくと良いでしょう。
+桁数を見るか、関数に実データを放り込んで判別することが多いです。&lt;/p&gt;
+
+&lt;p&gt;datetime型の &lt;code class=&quot;highlighter-rouge&quot;&gt;fromtimestamp&lt;/code&gt; 関数を使えば記述もシンプルに済ませることができます。&lt;/p&gt;
+
+&lt;h4 id=&quot;epochtimeからdatetime-1&quot;&gt;epochtimeからdatetime&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;fromtimestamp&lt;/code&gt; 関数を使った変換のサンプルは以下になります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import datetime
+
+e = 1524349374
+dt = datetime.datetime.fromtimestamp(e)
+print(dt)
+
+# &amp;gt;&amp;gt; 2018-04-22 07:22:54
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;ミリ秒を含むepochtimeからdatetime&quot;&gt;ミリ秒を含むepochtimeからdatetime&lt;/h4&gt;
+
+&lt;p&gt;少数点以下にミリ秒を含んでいても問題なく変換できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# epochtimeからdatetime(ミリ秒含む)
+import datetime
+
+mills = 1524349374.099776
+dt2 = datetime.datetime.fromtimestamp(mills)
+print(dt2)
+
+# &amp;gt;&amp;gt; 2018-04-22 07:22:54.099776
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;エポックミリ秒からdatetime&quot;&gt;エポックミリ秒からdatetime&lt;/h4&gt;
+
+&lt;p&gt;整数部分でミリ秒部分が表現されている(エポックミリ秒表記)場合には、何桁までがミリ秒を表しているのか確認した後、割ってあげます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# epochmillitimeからdatetime
+import datetime
+
+mills = 1524349374099
+dt3 = datetime.datetime.fromtimestamp(mills / 1000)
+print(dt3)
+
+# &amp;gt;&amp;gt; 2018-04-22 07:22:54.099000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;文字列からdatetime&quot;&gt;文字列からdatetime&lt;/h3&gt;
+
+&lt;p&gt;次に文字列からdatetimeに変換します。&lt;/p&gt;
+
+&lt;h4 id=&quot;タイムゾーンあり日付文字列からdatetime&quot;&gt;タイムゾーンあり日付文字列からdatetime&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strptime&lt;/code&gt; 関数を使えば簡単に変換できます。
+ミリ秒は &lt;code class=&quot;highlighter-rouge&quot;&gt;%f&lt;/code&gt; 、 タイムゾーンは &lt;code class=&quot;highlighter-rouge&quot;&gt;%z&lt;/code&gt; を使えばパースしてくれます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# タイムゾーンあり
+import datetime
+
+utc_date_str = '2018-04-01 20:10:56.123+0900'
+dt = datetime.datetime.strptime(utc_date_str, '%Y-%m-%d %H:%M:%S.%f%z')
+
+print(dt)
+# &amp;gt;&amp;gt; 2018-04-01 20:10:56.123000+09:00
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;タイムゾーンなし日付文字列からdatetime&quot;&gt;タイムゾーンなし日付文字列からdatetime&lt;/h4&gt;
+
+&lt;p&gt;厄介なのが、 &lt;strong&gt;タイムゾーンのない日付文字列をdatetimeに変換する&lt;/strong&gt; 場合です。
+&lt;strong&gt;日付文字列がどのタイムゾーンのデータを表しているか&lt;/strong&gt; を調べる必要があります。
+少し邪道感ありますが、データ仕様（タイムゾーンが何か）を確認した後に文字列結合してしまうのが楽ちんです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# タイムゾーンなし日付文字列(文字列結合)
+import datetime
+
+utc_date_str = '2018-04-01 20:10:56'
+# JSTとして取扱う
+dt = datetime.datetime.strptime(utc_date_str + '+0900', '%Y-%m-%d %H:%M:%S%z')
+
+print(dt)
+print(dt.tzinfo)
+# &amp;gt;&amp;gt; 2018-04-01 20:10:56+09:00
+# &amp;gt;&amp;gt; UTC+09:00
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;別パターンは &lt;code class=&quot;highlighter-rouge&quot;&gt;dateutil&lt;/code&gt; を使うパターンも書いておきます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;dateutil&lt;/code&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;parse&lt;/code&gt; 関数を使用する際に &lt;code class=&quot;highlighter-rouge&quot;&gt;tzinfos&lt;/code&gt; を引数に与えることで指定のtimezoneで処理をしてくれる書き方です。
+先程の例と比べて、パッと見でどこのタイムゾーンかが識別しやすくなる、という利点があります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# タイムゾーンなし日付文字列(dateutilを使う)
+import datetime
+from dateutil.parser import parse
+from dateutil.tz import gettz
+
+tzinfos = {'JST' : gettz('Asia/Tokyo')}
+date_str = '2018-04-01 20:10:56'
+str_to_dt = parse(date_str + ' JST', tzinfos=tzinfos)
+print(str_to_dt)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;日時データを扱う上で注意すべきこと&quot;&gt;日時データを扱う上で注意すべきこと&lt;/h2&gt;
+&lt;h3 id=&quot;naiveとaware&quot;&gt;naiveとaware&lt;/h3&gt;
+
+&lt;p&gt;そもそもPythonで日時データを扱う場合には、&lt;strong&gt;naive&lt;/strong&gt; と &lt;strong&gt;aware&lt;/strong&gt; の2種類のオブジェクトがあることに注意が必要です。&lt;/p&gt;
+
+&lt;p&gt;以下、Pythonの公式ドキュメントから引用します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;aware オブジェクト&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;aware オブジェクトは他の aware オブジェクトとの相対関係を把握出来るように、
+タイムゾーンや夏時間の情報のような、アルゴリズム的で政治的な適用可能な時間調節に関する知識を持っています。
+aware オブジェクトは解釈の余地のない特定の実時刻を表現するのに利用されます。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;naive オブジェクト&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;naive オブジェクトには他の日付時刻オブジェクトとの相対関係を把握するのに足る情報が含まれません。
+あるプログラム内の数字がメートルを表わしているのか、マイルなのか、それとも質量なのかがプログラムによって異なるように、
+naive オブジェクトが協定世界時 (UTC) なのか、現地時間なのか、それとも他のタイムゾーンなのかはそのプログラムに依存します。
+Naive オブジェクトはいくつかの現実的な側面を無視してしまうというコストを無視すれば、簡単に理解でき、うまく利用することができます。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;つまり、タイムゾーンに依存したデータを扱いたい場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;aware&lt;/code&gt; オブジェクトが必要なことを意味します。&lt;/p&gt;
+
+&lt;p&gt;しかし厄介なのが、型とaware/naiveオブジェクトの関係です。型に対して利用するオブジェクトが一意に決まりません。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;型&lt;/td&gt;
+      &lt;td&gt;オブジェクト&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;date&lt;/td&gt;
+      &lt;td&gt;naive&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;time&lt;/td&gt;
+      &lt;td&gt;naive または aware&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;datetime&lt;/td&gt;
+      &lt;td&gt;naive または aware&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;time&lt;/code&gt; 型と &lt;code class=&quot;highlighter-rouge&quot;&gt;datetime&lt;/code&gt; 型がそれぞれ、 &lt;code class=&quot;highlighter-rouge&quot;&gt;aware&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;naive&lt;/code&gt; かは以下で確認できます。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;オブジェクト&lt;/td&gt;
+      &lt;td&gt;awareになる条件&lt;/td&gt;
+      &lt;td&gt;naiveになる条件&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;time&lt;/td&gt;
+      &lt;td&gt;オブジェクト tの &lt;code class=&quot;highlighter-rouge&quot;&gt;t.tzinfo&lt;/code&gt; が None でなく &lt;code class=&quot;highlighter-rouge&quot;&gt;t.tzinfo.utcoffset(None)&lt;/code&gt; が None を返さない場合&lt;/td&gt;
+      &lt;td&gt;aware以外の場合&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;datetime&lt;/td&gt;
+      &lt;td&gt;オブジェクト dの &lt;code class=&quot;highlighter-rouge&quot;&gt;d.tzinfo&lt;/code&gt; が None でなく &lt;code class=&quot;highlighter-rouge&quot;&gt;d.tzinfo.utcoffset(d)&lt;/code&gt; が None を返さない場合&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;d.tzinfo&lt;/code&gt; が None であるか &lt;code class=&quot;highlighter-rouge&quot;&gt;d.tzinfo&lt;/code&gt; が None でないが &lt;code class=&quot;highlighter-rouge&quot;&gt;d.tzinfo.utcoffset(d)&lt;/code&gt; が None を返す場合&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;マシン上のタイムゾーンで処理しないように注意する&quot;&gt;マシン上のタイムゾーンで処理しないように注意する&lt;/h3&gt;
+
+&lt;p&gt;awareとnaiveに留意せずにタイムゾーン変換の処理を書くと、動作環境によって得られる結果が変わってしまうため、注意が必要です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 文字列から日付(実行マシン上のタイムゾーンに引きずられる)
+import datetime
+from pytz import timezone
+import pytz
+
+# タイムゾーンなし文字列からdatetimeに変換する
+date_str = '2018-04-01 20:10:56'
+# この処理で得られるstr_to_dtはnaive
+str_to_dt = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+print(&quot;Str to dt&quot;)
+print(str_to_dt)                      # 2018-04-01 20:10:56
+print(str_to_dt.timestamp())          # 1522581056.0
+print(str_to_dt.tzname())             # None
+
+# 以下、naiveな時刻をベースに演算すると、ずれる
+utc = timezone('UTC')
+utc_dt = str_to_dt.astimezone(utc)
+print(&quot;UTC dt&quot;)
+print(utc_dt)                         # 2018-04-01 11:10:56+00:00
+print(utc_dt.timestamp())             # 1522581056.0
+print(utc_dt.tzname())                # UTC
+print(utc_dt.tzinfo.utcoffset(utc_dt))# 0:00:00
+
+jst = timezone('Asia/Tokyo');
+jst_dt = str_to_dt.astimezone(jst);
+print(&quot;JST dt&quot;)
+print(jst_dt)                         # 2018-04-01 20:10:56+09:00
+print(jst_dt.timestamp())             # 1522581056.0
+print(jst_dt.tzname())                # JST
+print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この例ではタイムゾーンなしの文字列からdatetime型の &lt;code class=&quot;highlighter-rouge&quot;&gt;str_to_dt&lt;/code&gt; を作成するのですが、
+そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;astimezone&lt;/code&gt; 関数を使って任意のタイムゾーンへ変換しようとする際に、
+実行環境上のタイムゾーンから、変換先のタイムゾーンへの相対的な計算が行われます。&lt;/p&gt;
+
+&lt;p&gt;そのため、パブリッククラウドで複数リージョンを使っている場合などには、
+プログラムの展開先によって振る舞いが異なる可能性があるため、注意が必要でしょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はPythonで日付文字列からdatetime型に変換するときの方法を書きました。&lt;/p&gt;
+
+&lt;p&gt;日付文字列を変換する場合には &lt;strong&gt;文字列の中にタイムゾーン情報が含まれているか&lt;/strong&gt; を気をつけて処理をすると良いです。&lt;/p&gt;
+
+&lt;p&gt;得られるオブジェクトが &lt;code class=&quot;highlighter-rouge&quot;&gt;aware&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;naive&lt;/code&gt; なのかを意識した上でタイムゾーン変換の処理を行わないと、うっかり手痛い変換ミスになってしまうので注意が必要だからです。&lt;/p&gt;
+
+&lt;p&gt;私の場合、基本的には「データ仕様を確認して、タイムゾーンあり文字列として変換してしまう」方で処理をしようと思いました。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.python.jp/3/library/datetime.html&quot;&gt;Python docs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/479738946X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479738946X&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=4d6041eaf55821514ce2f3c16f0b9a5c&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=479738946X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=479738946X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="python" /><summary type="html">仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、pythonのdatetimeを使った文字列から日時への変換 や タイムゾーンの変更 を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。</summary></entry><entry><title type="html">継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう</title><link href="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/" rel="alternate" type="text/html" title="継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう" /><published>2018-04-16T00:00:00+09:00</published><updated>2018-04-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature</id><content type="html" xml:base="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/">&lt;p&gt;&lt;a href=&quot;http://www.ryuzee.com/contents/blog/4241&quot;&gt;継続的デリバリ(Continuous Delivery)&lt;/a&gt;はITの現場で一般的なものと浸透してきました。
 継続的デリバリを実現するためには、継続的インテグレーションの仕組みと
 再現性のあるデプロイメントパイプライン基盤の整備が必要です。
 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。
@@ -2144,151 +2437,4 @@ DELIMITER ;
   &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/create-event.html&quot;&gt;MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/&quot;&gt;AWS Black Belt Online Seminar Amazon Aurora&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/AuroraMySQL.Integrating.Lambda.html#AuroraMySQL.Integrating.ProcLambda&quot;&gt;Amazon Aurora MySQL DB クラスターからの Lambda 関数の呼び出し&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="rds" /><category term="aurora" /><category term="SQL" /><category term="MySQL" /><summary type="html">AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。</summary></entry><entry xml:lang="ja"><title type="html">Q# 量子コンピューティングプログラミング言語を試す</title><link href="https://www.soudegesu.com/q_sharp/what-is-q-sharp/" rel="alternate" type="text/html" title="Q# 量子コンピューティングプログラミング言語を試す" /><published>2018-02-11T00:00:00+09:00</published><updated>2018-02-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/q_sharp/what-is-q-sharp</id><content type="html" xml:base="https://www.soudegesu.com/q_sharp/what-is-q-sharp/">&lt;p&gt;もともとは &lt;strong&gt;仮想通貨&lt;/strong&gt; を調べていた時に、 &lt;strong&gt;量子耐性&lt;/strong&gt; という言葉を発見し、量子耐性から &lt;strong&gt;量子耐性のあるアルゴリズム&lt;/strong&gt; や量子プログラミング言語である &lt;strong&gt;Q#&lt;/strong&gt; に行き着きました。
-Wikipediaなどを見てみると、&lt;strong&gt;Q#&lt;/strong&gt; はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#qの環境構築&quot; id=&quot;markdown-toc-qの環境構築&quot;&gt;Q#の環境構築&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#azure上でのwindowsインスタンスセットアップ&quot; id=&quot;markdown-toc-azure上でのwindowsインスタンスセットアップ&quot;&gt;Azure上でのWindowsインスタンスセットアップ&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#microsoft-quantum-development-kitのインストール&quot; id=&quot;markdown-toc-microsoft-quantum-development-kitのインストール&quot;&gt;Microsoft Quantum Development Kitのインストール&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#サンプルコードのインポート&quot; id=&quot;markdown-toc-サンプルコードのインポート&quot;&gt;サンプルコードのインポート&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#サンプルコードの実行なるほどわからん&quot; id=&quot;markdown-toc-サンプルコードの実行なるほどわからん&quot;&gt;サンプルコードの実行(なるほど、わからん)&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#基本を抑える&quot; id=&quot;markdown-toc-基本を抑える&quot;&gt;基本を抑える&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#qubit-量子コンピューティングの基本を抑える&quot; id=&quot;markdown-toc-qubit-量子コンピューティングの基本を抑える&quot;&gt;Qubit 量子コンピューティングの基本を抑える&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#注意点reference-to-unknown-namespace-xxx-が出る場合&quot; id=&quot;markdown-toc-注意点reference-to-unknown-namespace-xxx-が出る場合&quot;&gt;[注意点]Reference to unknown namespace xxx が出る場合&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#qの標準ライブラリを見てみる&quot; id=&quot;markdown-toc-qの標準ライブラリを見てみる&quot;&gt;Q#の標準ライブラリを見てみる&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#少し変わったプリミティブ型&quot; id=&quot;markdown-toc-少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#qubit&quot; id=&quot;markdown-toc-qubit&quot;&gt;Qubit&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#pauli&quot; id=&quot;markdown-toc-pauli&quot;&gt;Pauli&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#result&quot; id=&quot;markdown-toc-result&quot;&gt;Result&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#標準関数も少し見てみる&quot; id=&quot;markdown-toc-標準関数も少し見てみる&quot;&gt;標準関数も少し見てみる&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#qの理解自体はそこまで難しくない&quot; id=&quot;markdown-toc-qの理解自体はそこまで難しくない&quot;&gt;Q#の理解自体はそこまで難しくない&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#今後qはどのように活用されるのか&quot; id=&quot;markdown-toc-今後qはどのように活用されるのか&quot;&gt;今後Q#はどのように活用されるのか&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;qの環境構築&quot;&gt;Q#の環境構築&lt;/h2&gt;
-&lt;p&gt;開発環境の構築に関しては大きく補足することは無さそうです。&lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview&quot;&gt;公式サイト&lt;/a&gt;も手順が手厚めに記載されています。&lt;/p&gt;
-
-&lt;p&gt;ただし、セットアップの途中で気づいたのですが、 &lt;strong&gt;Macは Microsoft Quantum Development KitのExtensionをインストールできない&lt;/strong&gt; ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
-仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。&lt;/p&gt;
-
-&lt;h3 id=&quot;azure上でのwindowsインスタンスセットアップ&quot;&gt;Azure上でのWindowsインスタンスセットアップ&lt;/h3&gt;
-
-&lt;p&gt;Microsoft Azureは30日間フリーで使えるクレジットを準備してくれているので、Visual Studioのサンプルコードを実行する程度であればお金の心配はしなくても良いです。Outlookのアカウントがあれば簡単にセットアップできます(手元にクレカや携帯電話は必要です)。
-インスタンス構築時には &lt;code class=&quot;highlighter-rouge&quot;&gt;Visual Studio 2017&lt;/code&gt; がバンドルされているイメージを使用すると簡単に始められるため、私はそれを利用しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;microsoft-quantum-development-kitのインストール&quot;&gt;Microsoft Quantum Development Kitのインストール&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.microsoft.com/en-us/quantum/development-kit&quot;&gt;Microsoft Quantum Development Kit&lt;/a&gt; をダウンロードすることで &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; のコードが動かせるようになります。公式サイトではwebサイトからの &lt;code class=&quot;highlighter-rouge&quot;&gt;.vsix&lt;/code&gt; ファイル(Visual Studio)入手の手順を紹介していますが、
-今回はヘッダーメニューの [Tools] &amp;gt; [Extensions and Updates..] から検索してインストールしました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180211/extension_and_updates.png&quot; alt=&quot;extension_and_updates&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;サンプルコードのインポート&quot;&gt;サンプルコードのインポート&lt;/h3&gt;
-&lt;p&gt;その後、&lt;a href=&quot;https://github.com/microsoft/quantum&quot;&gt;サンプルコード&lt;/a&gt;を &lt;code class=&quot;highlighter-rouge&quot;&gt;fork&lt;/code&gt; したものを &lt;code class=&quot;highlighter-rouge&quot;&gt;clone&lt;/code&gt; します。
-(私の場合、学んだことをissueに書き連ねていきたいので、こうしました)&lt;/p&gt;
-
-&lt;p&gt;Visual Studio上では &lt;code class=&quot;highlighter-rouge&quot;&gt;Team&lt;/code&gt; というメニューでVCSにアクセスできるので、そこからインポートを行い、
-その後 &lt;code class=&quot;highlighter-rouge&quot;&gt;.sln&lt;/code&gt; ファイルをダブルクリックしてプロジェクトを開きます。&lt;/p&gt;
-
-&lt;h3 id=&quot;サンプルコードの実行なるほどわからん&quot;&gt;サンプルコードの実行(なるほど、わからん)&lt;/h3&gt;
-&lt;p&gt;プロジェクト内にいくつかディレクトリがあり、いくつかのサンプルコードが配置されています。
-それを「Set as Startup Project」に設定した後、 &lt;code class=&quot;highlighter-rouge&quot;&gt;F5&lt;/code&gt; のショートカットキーでRunさせることができます。
-おもむろにプロンプトが立ち上がり、何かが実行されているのですが、なるほどどうしてよく分かりません。
-とりあえず、動作環境が構築できたことはわかりました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180211/prompt_success.png&quot; alt=&quot;prompt_success&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;基本を抑える&quot;&gt;基本を抑える&lt;/h2&gt;
-
-&lt;p&gt;やはり前知識無しで進めていくのは厳しいものがあるので、基本を抑えに行きましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;qubit-量子コンピューティングの基本を抑える&quot;&gt;Qubit 量子コンピューティングの基本を抑える&lt;/h3&gt;
-&lt;p&gt;私の場合、そもそも量子コンピューティング自体への理解が皆無ですので、そこを補填する必要がありました。
-そのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;N.H.Shimada&lt;/code&gt; さんのブログの記事「&lt;a href=&quot;http://ut25252.hatenablog.com/entry/2017/12/15/222821&quot;&gt;新プログラミング言語「Q#」で量子テレポーテーション&lt;/a&gt;」やIPAより公開されている「&lt;a href=&quot;https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf&quot;&gt;2. 量子計算の基本原理[1-14]&lt;/a&gt;」、&lt;code class=&quot;highlighter-rouge&quot;&gt;lyncs&lt;/code&gt;さんの &lt;a href=&quot;http://lyncs.hateblo.jp/entry/2017/12/16/000103&quot;&gt;量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ&lt;/a&gt;、加えて &lt;code class=&quot;highlighter-rouge&quot;&gt;@eccyan&lt;/code&gt; さんの「&lt;a href=&quot;https://qiita.com/eccyan/items/180fb909a55a59bb4e1b&quot;&gt;量子コンピュータと量子ゲートと私&lt;/a&gt;」 を読みながら知識を増やしていきます。&lt;/p&gt;
-
-&lt;p&gt;ここでは主に以下の3点を学習しました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Qubit(Quantum bit)
-    &lt;ul&gt;
-      &lt;li&gt;重ね合わせ&lt;/li&gt;
-      &lt;li&gt;量子もつれ&lt;/li&gt;
-      &lt;li&gt;観測&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ここでQubitについてまとめると先駆者の方々の丸パクリになってしまいそうでしたので、各リンク先の内容をご参照ください。&lt;/p&gt;
-
-&lt;h3 id=&quot;注意点reference-to-unknown-namespace-xxx-が出る場合&quot;&gt;[注意点]Reference to unknown namespace xxx が出る場合&lt;/h3&gt;
-&lt;p&gt;サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
-以下のようなエラーが表示され、ビルドに失敗しました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Reference to unknown namespace Microsoft.Quantum.Primitive
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;調査してみたところ &lt;code class=&quot;highlighter-rouge&quot;&gt;.NETのバージョンが古い&lt;/code&gt; ことが原因でした。
- &lt;code class=&quot;highlighter-rouge&quot;&gt;.NET Framework&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;4.6.1&lt;/code&gt; に変更することで namespaceの解決ができるようになりました。&lt;/p&gt;
-
-&lt;h2 id=&quot;qの標準ライブラリを見てみる&quot;&gt;Q#の標準ライブラリを見てみる&lt;/h2&gt;
-&lt;p&gt;普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。&lt;/p&gt;
-
-&lt;h3 id=&quot;少し変わったプリミティブ型&quot;&gt;少し変わったプリミティブ型&lt;/h3&gt;
-&lt;h4 id=&quot;qubit&quot;&gt;Qubit&lt;/h4&gt;
-&lt;p&gt;量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。&lt;/p&gt;
-
-&lt;h4 id=&quot;pauli&quot;&gt;Pauli&lt;/h4&gt;
-&lt;p&gt;ブロッホ球での回転を考えるときに使用するパウリ行列を表す型。
-何軸で回転させるかによって &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliI&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliX&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliY&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PauliZ&lt;/code&gt; のいずれかを選択することになるのですが、
-それをまとめてPauliとして扱います。&lt;/p&gt;
-
-&lt;h4 id=&quot;result&quot;&gt;Result&lt;/h4&gt;
-&lt;p&gt;Qubitを観測(Measurement)した際の結果が格納される型。
-観測することで &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; に収束されるので、&lt;code class=&quot;highlighter-rouge&quot;&gt;Zero&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;One&lt;/code&gt; しかありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;標準関数も少し見てみる&quot;&gt;標準関数も少し見てみる&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Microsoft.Quantum.Primitive&lt;/code&gt; パッケージには演算のための関数が予め準備されていました。
-Microsoftのサンプルコードで使われている &lt;code class=&quot;highlighter-rouge&quot;&gt;T&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;H&lt;/code&gt; 、 &lt;code class=&quot;highlighter-rouge&quot;&gt;CNOT&lt;/code&gt; といったゲートを構築するためのものがあり、
-別のパッケージには &lt;code class=&quot;highlighter-rouge&quot;&gt;Math&lt;/code&gt; 系のパッケージもありました。&lt;/p&gt;
-
-&lt;p&gt;関数が表す式は &lt;a href=&quot;https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview&quot;&gt;公式のライブラリリファレンス&lt;/a&gt;
-に記載されています。端的ですが、変に言葉で説明するよりも良いのでしょうね。理解が及んでいない式は別途調べました。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;h3 id=&quot;qの理解自体はそこまで難しくない&quot;&gt;Q#の理解自体はそこまで難しくない&lt;/h3&gt;
-&lt;p&gt;私はアルゴリズムや低レベルの機械計算を専門としてはいないため、応用するには学習時間が要しそうですが、
-今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、
-量子ゲート作成に必要な演算部分は &lt;code class=&quot;highlighter-rouge&quot;&gt;Q#&lt;/code&gt; から提供されているため、あとは組み合わせるだけになります。
-なお、&lt;a href=&quot;https://www.research.ibm.com/ibm-q/&quot;&gt;IBM Q&lt;/a&gt; にはGUIもあるのですが、 
-pythonのSDKとして &lt;a href=&quot;https://github.com/QISKit/qiskit-sdk-py&quot;&gt;qiskit-sdk-py&lt;/a&gt; も提供しています。 
-シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
-(すみません、こちらは動作確認していません)&lt;/p&gt;
-
-&lt;h3 id=&quot;今後qはどのように活用されるのか&quot;&gt;今後Q#はどのように活用されるのか&lt;/h3&gt;
-
-&lt;p&gt;ソフトウェアを動かすにはどのように組み込まれるのか、に関するアイディアはMicrosoftの &lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-concepts-9-softwarestack?view=qsharp-preview&quot;&gt;The Software Stack&lt;/a&gt; にて言及されていました。
-量子コンピュータが得意とするアルゴリズムはQ#で組み、従来のコンピュータが得意とする計算はそちらに処理を委ねるハイブリッドな構成が提案されています。
-今回は量子コンピュータプログラミング言語が活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://ut25252.hatenablog.com/entry/2017/12/15/222821&quot;&gt;新プログラミング言語「Q#」で量子テレポーテーション&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf&quot;&gt;2. 量子計算の基本原理[1-14]&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://qiita.com/eccyan/items/180fb909a55a59bb4e1b&quot;&gt;量子コンピュータと量子ゲートと私&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://lyncs.hateblo.jp/entry/2017/12/16/000103&quot;&gt;量子情報科学序論 IBM Qを動かして学ぶ量子コンピュータ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/quantum/quantum-qr-intro?view=qsharp-preview&quot;&gt;The Q# Programming Language&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/47910347/q-environment-inconsistencies&quot;&gt;Q# environment inconsistencies(Stackoverflow)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="q#" /><summary type="html">もともとは 仮想通貨 を調べていた時に、 量子耐性 という言葉を発見し、量子耐性から 量子耐性のあるアルゴリズム や量子プログラミング言語である Q# に行き着きました。 Wikipediaなどを見てみると、Q# はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="rds" /><category term="aurora" /><category term="SQL" /><category term="MySQL" /><summary type="html">AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。</summary></entry></feed>
