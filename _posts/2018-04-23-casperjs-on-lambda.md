@@ -1,12 +1,12 @@
 ---
-title: "AWS LambdaでCasperJSを動かしてファイルアップロードを自動化する"
+title: "AWS LambdaでCasperJSを実行してファイルアップロードを自動化する"
 description: "AWS Lambda上でCasperJSを動かしてファイルアップロードの自動化を行いました。本来であればAPIでバイナリデータをPOSTできれば良かったのですが、アップロード先のシステムでAPIが存在しなかったため、CasperJSを使ってファイルをアップロードするという暴挙に出ました。AWS LambdaでCasperJSを実行する際の注意点などを書きます。"
 date: 2018-04-23 00:00:00 +0900
 categories: aws
-tags: aws lambda nodejs casperjs
+tags: aws lambda casperjs
 ---
 
-AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってブラウザの操作を自動化してファイルを配置する仕組みを作ってみました。
+AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
 APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
 
 * Table Of Contents
@@ -54,6 +54,7 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 
 * Node 6.10
 * CasperJS 1.1.4
+* PhantomJS 2.1.1
 
 また、処理の流れは以下になります。
 
@@ -65,14 +66,46 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 
 ## 実装時のポイント
 
-### Lambdaに割り当てるリソースは大きめにする
+### Lambdaに割り当てるリソースは大きめに、タイムアウトは長く設定する
+ヘッドレスとは言え、CasperJSを実行するために、Lambdaに割り当てるメモリは大きめにした方が良いです。
+
+加えて、Lambdaのタイムアウト値は最大値の5分に設定しておきましょう。もちろん、これらは実装する処理の重さに依存します。
 
 ### AWS LambdaにPhantomJSのパスを通す
 
-### S3を一度Lambdaのコンテナ上にダウンロードする
+`node_module` 内のPhantomJSはLambda上ではいい感じに見てくれなかったので、[PhantomJSのバイナリをダウンロード](http://phantomjs.org/download.html)して直接パスを通してあげました。
+
+余談ですが、AWS Lambdaの環境変数一覧は [ここ](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/current-supported-versions.html) に纏められています。はじめて知りました。
+
+### S3オブジェクトを一度Lambdaのコンテナ上にダウンロードする
+
+S3のPUTイベントをトリガーに処理が実行されるのですが、`event` オブジェクトにはバケットの情報やオブジェクトキーの情報しかないため、
+そこから一度、Lambdaコンテナの `/tmp/` 配下とかに一度ダウンロードします。
 
 ### Lambda実行の最後にS3バケットへ画面キャプチャをアップロードする
 
+CasperJSのデバッグはコンソールに情報を出力するよりも `caputure` 関数を呼び出して、その瞬間の画面キャプチャを取得する方が捗ります。
+ただ、Lambda上で実行している場合には、Lambdaの処理が終了するとコンテナも終了するため、処理の最後に任意のS3にアップロードしてあげます。
+
+なお、キャプチャファイルはカレントディレクトリ( `/var/task` 配下)に出力しようとすると、書き込み権限がないエラーになってしまいましたので、 `/tmp/` に吐き出しています。
+
+また、キャプチャーした画像ファイルは大抵複数できあがるので、`aws-sdk` でS3アップロードする処理は `Promisse` を使って書きました。
+
+### ブラウザの言語設定を英語にした
+
+CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
+**CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい** ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。
+
+```
+// Change browser lang
+casper.on('started', function () {
+    this.page.customHeaders = {
+        "Accept-Language": "en-US"
+    }
+});
+```
+
+**ランタイムに依存しない** という意味でも設定しておいた方が良いと思います。
 
 
 ## まとめ
