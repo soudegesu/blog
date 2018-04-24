@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-23T10:40:33+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい</title><link href="https://www.soudegesu.com/python/python-datetime/" rel="alternate" type="text/html" title="Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい" /><published>2018-04-22T00:00:00+09:00</published><updated>2018-04-22T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/python-datetime</id><content type="html" xml:base="https://www.soudegesu.com/python/python-datetime/">&lt;p&gt;仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、&lt;strong&gt;pythonのdatetimeを使った文字列から日時への変換&lt;/strong&gt; や &lt;strong&gt;タイムゾーンの変更&lt;/strong&gt; を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-24T09:25:22+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">AWS LambdaでCasperJSを実行してファイルアップロードを自動化する</title><link href="https://www.soudegesu.com/aws/casperjs-on-lambda/" rel="alternate" type="text/html" title="AWS LambdaでCasperJSを実行してファイルアップロードを自動化する" /><published>2018-04-23T00:00:00+09:00</published><updated>2018-04-23T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/casperjs-on-lambda</id><content type="html" xml:base="https://www.soudegesu.com/aws/casperjs-on-lambda/">&lt;p&gt;AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
+APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#日次でファイルをアップロードしたい&quot; id=&quot;markdown-toc-日次でファイルをアップロードしたい&quot;&gt;日次でファイルをアップロードしたい&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#casperjsとは&quot; id=&quot;markdown-toc-casperjsとは&quot;&gt;CasperJSとは&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#lambda--casperjs-で実現してみよう&quot; id=&quot;markdown-toc-lambda--casperjs-で実現してみよう&quot;&gt;Lambda + CasperJS で実現してみよう&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#実装時のポイント&quot; id=&quot;markdown-toc-実装時のポイント&quot;&gt;実装時のポイント&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot; id=&quot;markdown-toc-lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot;&gt;Lambdaに割り当てるリソースは大きめに、タイムアウトは長く設定する&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#aws-lambdaにphantomjsのパスを通す&quot; id=&quot;markdown-toc-aws-lambdaにphantomjsのパスを通す&quot;&gt;AWS LambdaにPhantomJSのパスを通す&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot; id=&quot;markdown-toc-s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot;&gt;S3オブジェクトを一度Lambdaのコンテナ上にダウンロードする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot; id=&quot;markdown-toc-lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot;&gt;Lambda実行の最後にS3バケットへ画面キャプチャをアップロードする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ブラウザの言語設定を英語にした&quot; id=&quot;markdown-toc-ブラウザの言語設定を英語にした&quot;&gt;ブラウザの言語設定を英語にした&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;日次でファイルをアップロードしたい&quot;&gt;日次でファイルをアップロードしたい&lt;/h2&gt;
+
+&lt;p&gt;ことの発端は以前書いた記事 「&lt;a href=&quot;/aws/s3-cross-account/&quot;&gt;クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか&lt;/a&gt;」 にて、
+&lt;strong&gt;S3のバケット共有の機能を使ってファイルの提供をしようと試みた&lt;/strong&gt; のですが、社内のセキュリティ統制的にNGを喰らってしまいましたので、
+指定のファイルストレージサービスを経由してファイルの授受を行う必要が出てきました。&lt;/p&gt;
+
+&lt;p&gt;そのファイルストレージサービスというのが若干レガシーなシステムで、APIを使ったファイルのアップロードができません。
+そのため、ヘッドレスブラウザでのGUI操作ができるライブラリを使用してファイルアップロードをしようと考えた次第です。&lt;/p&gt;
+
+&lt;p&gt;これを実装しないと、私が毎朝システムにログインしてファイルをアップロードするという苦行が発生するため、是が非でも作る必要がありました。&lt;/p&gt;
+
+&lt;p&gt;退屈なことはプログラムにやらせましょう。&lt;/p&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/487311778X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=487311778X&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=22f6b91a2296dc4b4344bbc4b08fc5dd&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=487311778X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL160_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=487311778X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;casperjsとは&quot;&gt;CasperJSとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;http://casperjs.org/&quot;&gt;CasperJS&lt;/a&gt; は &lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt; のラッパーライブラリです。
+PhantomJS 自体はwebkitをベースとしたヘッドレスブラウザです。
+実ブラウザを起動するSeleniumよりも高速に動作するので、GUIを持つ必要のない処理（例えばGUIの自動テストや、今回のような機械的な処理)に向いています。
+昨年頃に &lt;a href=&quot;https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja&quot;&gt;Chromeもヘッドレスで起動できる&lt;/a&gt; ようになっているため、
+PhantomJSでなくても良いのですが、過去にPhantomJSを使った経験があったため、再びこれを採用しています。&lt;/p&gt;
+
+&lt;p&gt;ラッパーであるCasperJSを使う利点は、ブラウザ操作のユーティリティが揃っていることです。
+セレクタに対するwaitや、イベントの発火、データ入力等のコードをシンプルに書くことができます。&lt;/p&gt;
+
+&lt;p&gt;というか、PhantomJS単体だと自前定義のfunctionが多くなるためオススメできません。&lt;/p&gt;
+
+&lt;h2 id=&quot;lambda--casperjs-で実現してみよう&quot;&gt;Lambda + CasperJS で実現してみよう&lt;/h2&gt;
+
+&lt;p&gt;早速実装してみましょう。今回作成したプログラムは &lt;a href=&quot;https://github.com/soudegesu/casper-lambda-test&quot;&gt;こちら&lt;/a&gt; です。
+なお、このプログラム自体は &lt;a href=&quot;https://github.com/narainsagar/node-casperjs-aws-lambda&quot;&gt;node-casperjs-aws-lambda&lt;/a&gt; を参考にしています。&lt;/p&gt;
+
+&lt;p&gt;今回実装したアーキテクチャはざっくり以下のようなイメージです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180423/casperjs.png&quot; alt=&quot;casper_architecture&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;実行環境やライブラリは以下になります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Node 6.10&lt;/li&gt;
+  &lt;li&gt;CasperJS 1.1.4&lt;/li&gt;
+  &lt;li&gt;PhantomJS 2.1.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;また、処理の流れは以下になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;LambdaがETL処理をする&lt;/li&gt;
+  &lt;li&gt;ETL処理終了後にS3にファイルをアップロード&lt;/li&gt;
+  &lt;li&gt;BucketのPUTイベントを基にファイルアップロード用のLambdaが実行される&lt;/li&gt;
+  &lt;li&gt;LambdaでCasperJSが動き、他サービスにファイルをアップロードする&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;実装時のポイント&quot;&gt;実装時のポイント&lt;/h2&gt;
+
+&lt;h3 id=&quot;lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot;&gt;Lambdaに割り当てるリソースは大きめに、タイムアウトは長く設定する&lt;/h3&gt;
+&lt;p&gt;ヘッドレスとは言え、CasperJSを実行するために、Lambdaに割り当てるメモリは大きめにした方が良いです。&lt;/p&gt;
+
+&lt;p&gt;加えて、Lambdaのタイムアウト値は最大値の5分に設定しておきましょう。もちろん、これらは実装する処理の重さに依存します。&lt;/p&gt;
+
+&lt;h3 id=&quot;aws-lambdaにphantomjsのパスを通す&quot;&gt;AWS LambdaにPhantomJSのパスを通す&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node_module&lt;/code&gt; 内のPhantomJSはLambda上ではいい感じに見てくれなかったので、&lt;a href=&quot;http://phantomjs.org/download.html&quot;&gt;PhantomJSのバイナリをダウンロード&lt;/a&gt;して直接パスを通してあげました。&lt;/p&gt;
+
+&lt;p&gt;余談ですが、AWS Lambdaの環境変数一覧は &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/current-supported-versions.html&quot;&gt;ここ&lt;/a&gt; に纏められています。はじめて知りました。&lt;/p&gt;
+
+&lt;h3 id=&quot;s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot;&gt;S3オブジェクトを一度Lambdaのコンテナ上にダウンロードする&lt;/h3&gt;
+
+&lt;p&gt;S3のPUTイベントをトリガーに処理が実行されるのですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;event&lt;/code&gt; オブジェクトにはバケットの情報やオブジェクトキーの情報しかないため、
+そこから一度、Lambdaコンテナの &lt;code class=&quot;highlighter-rouge&quot;&gt;/tmp/&lt;/code&gt; 配下とかに一度ダウンロードします。&lt;/p&gt;
+
+&lt;h3 id=&quot;lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot;&gt;Lambda実行の最後にS3バケットへ画面キャプチャをアップロードする&lt;/h3&gt;
+
+&lt;p&gt;CasperJSのデバッグはコンソールに情報を出力するよりも &lt;code class=&quot;highlighter-rouge&quot;&gt;caputure&lt;/code&gt; 関数を呼び出して、その瞬間の画面キャプチャを取得する方が捗ります。
+ただ、Lambda上で実行している場合には、Lambdaの処理が終了するとコンテナも終了するため、処理の最後に任意のS3にアップロードしてあげます。&lt;/p&gt;
+
+&lt;p&gt;なお、キャプチャファイルはカレントディレクトリ( &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/task&lt;/code&gt; 配下)に出力しようとすると、書き込み権限がないエラーになってしまいましたので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/tmp/&lt;/code&gt; に吐き出しています。&lt;/p&gt;
+
+&lt;p&gt;また、キャプチャーした画像ファイルは大抵複数できあがるので、&lt;code class=&quot;highlighter-rouge&quot;&gt;aws-sdk&lt;/code&gt; でS3アップロードする処理は &lt;code class=&quot;highlighter-rouge&quot;&gt;Promisse&lt;/code&gt; を使って書きました。&lt;/p&gt;
+
+&lt;h3 id=&quot;ブラウザの言語設定を英語にした&quot;&gt;ブラウザの言語設定を英語にした&lt;/h3&gt;
+
+&lt;p&gt;CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
+&lt;strong&gt;CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい&lt;/strong&gt; ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Change browser lang
+casper.on('started', function () {
+    this.page.customHeaders = {
+        &quot;Accept-Language&quot;: &quot;en-US&quot;
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;ランタイムに依存しない&lt;/strong&gt; という意味でも設定しておいた方が良いと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;今回はAWS Lambda上でCasperJSを実行することで、S3上のファイルを別のストレージサービスへアップロードすることができました。
+CasperJSからPhantomJSを呼び出せるようにPATHに追加したり、キャプチャ画像をアップロードするためのバケットを準備したり、
+下準備に若干時間がかかりますが、一度作れば動きが理解できると思います。&lt;/p&gt;
+
+&lt;p&gt;Lambdaのタイムアウト時間の最大値である5分以内に処理を終了させる必要があるため、最初はタイムアウトしないか心配でした。
+しかし、メモリも大きめに割り当てて上げると実行自体は数十秒くらいで終了したので、ヘッドレスブラウザ最強です。
+CasperJSのコードも短かったのが良かったのかもしれません。&lt;/p&gt;
+
+&lt;p&gt;と、これを書きながら、「CasperJSのコードを複数のLambdaで分担してGUIのテストできたらかっこいいな」と感じました。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://casperjs.org/&quot;&gt;CasperJS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/narainsagar/node-casperjs-aws-lambda&quot;&gt;node-casperjs-aws-lambda&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4883379930/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4883379930&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=ae79fa81d72604fbe4a1f4f71e97c369&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4883379930&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4883379930&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="casperjs" /><summary type="html">AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。 APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。</summary></entry><entry><title type="html">Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい</title><link href="https://www.soudegesu.com/python/python-datetime/" rel="alternate" type="text/html" title="Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい" /><published>2018-04-22T00:00:00+09:00</published><updated>2018-04-22T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/python-datetime</id><content type="html" xml:base="https://www.soudegesu.com/python/python-datetime/">&lt;p&gt;仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、&lt;strong&gt;pythonのdatetimeを使った文字列から日時への変換&lt;/strong&gt; や &lt;strong&gt;タイムゾーンの変更&lt;/strong&gt; を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。&lt;/p&gt;
 
 &lt;p&gt;今回は自分の備忘録的な意味も込めて書こうと思います。&lt;/p&gt;
 
@@ -2089,352 +2225,4 @@ IT部門の人も受講対象にしている旨の記載があり、少し残念
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;今回はUdemyの講座を購入し、サイバーセキュリティの学習を始めました。全4編のうちの最初の1つを受けただけなので、
 まだまだ実践的な内容にまでは踏み込めてはいませんが、以降のコンテンツで教えていただけそうなので、早めに受講しようと思いました。
-一言で「セキュリティ」と言っても幅が広いので、自分の業務周辺のセキュリティは自身で守ってあげられる程度のスキルは継続的に研鑽していきたいです。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="cyber" /><category term="security" /><category term="udemy" /><category term="beginner" /><summary type="html">昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。 かくいう私もその口で、今回は Udemy というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。</summary></entry><entry xml:lang="ja"><title type="html">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</title><link href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" rel="alternate" type="text/html" title="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする" /><published>2018-02-19T00:00:00+09:00</published><updated>2018-02-19T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure</id><content type="html" xml:base="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/">&lt;p&gt;AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
-今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
-AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#今回やりたかったこと&quot; id=&quot;markdown-toc-今回やりたかったこと&quot;&gt;今回やりたかったこと&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#パーティションを日次で追加する&quot; id=&quot;markdown-toc-パーティションを日次で追加する&quot;&gt;パーティションを日次で追加する&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#テーブル作成とパーティションの指定&quot; id=&quot;markdown-toc-テーブル作成とパーティションの指定&quot;&gt;テーブル作成とパーティションの指定&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#パーティション追加用のプロシージャを作成&quot; id=&quot;markdown-toc-パーティション追加用のプロシージャを作成&quot;&gt;パーティション追加用のプロシージャを作成&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#初期パーティションを作成する&quot; id=&quot;markdown-toc-初期パーティションを作成する&quot;&gt;初期パーティションを作成する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#プロシージャ実行をevent登録し定期実行する&quot; id=&quot;markdown-toc-プロシージャ実行をevent登録し定期実行する&quot;&gt;プロシージャ実行をEVENT登録し定期実行する&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#rds-aurora-clusterの場合を考える&quot; id=&quot;markdown-toc-rds-aurora-clusterの場合を考える&quot;&gt;RDS Aurora Clusterの場合を考える&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#eventはwriterのみで実行される&quot; id=&quot;markdown-toc-eventはwriterのみで実行される&quot;&gt;EVENTはWriterのみで実行される&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#エラーが発生したらどうするか&quot; id=&quot;markdown-toc-エラーが発生したらどうするか&quot;&gt;エラーが発生したらどうするか&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#プロシージャ実行時のエラーはlambdaで検知する&quot; id=&quot;markdown-toc-プロシージャ実行時のエラーはlambdaで検知する&quot;&gt;プロシージャ実行時のエラーはlambdaで検知する&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#aurora-clusterにiam-roleを追加する&quot; id=&quot;markdown-toc-aurora-clusterにiam-roleを追加する&quot;&gt;Aurora ClusterにIAM Roleを追加する&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#rdsインスタンスのあるsubnetのルーティング設定をする&quot; id=&quot;markdown-toc-rdsインスタンスのあるsubnetのルーティング設定をする&quot;&gt;RDSインスタンスのあるsubnetのルーティング設定をする&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#プロシージャ側のエラーハンドリングを追加する&quot; id=&quot;markdown-toc-プロシージャ側のエラーハンドリングを追加する&quot;&gt;プロシージャ側のエラーハンドリングを追加する&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#lambda関数を作成する&quot; id=&quot;markdown-toc-lambda関数を作成する&quot;&gt;lambda関数を作成する&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#備考rdsのエラーログが出力されない&quot; id=&quot;markdown-toc-備考rdsのエラーログが出力されない&quot;&gt;[備考]RDSのエラーログが出力されない?&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;今回やりたかったこと&quot;&gt;今回やりたかったこと&lt;/h2&gt;
-&lt;p&gt;今回はRDS Aurora(MySQL互換)にてClusterを組み、テーブルは日でパーティショニングすることにしました。
-要件はざっくり以下です。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ユーザ操作の都度データが格納されていく(&lt;strong&gt;データは常にINSERT&lt;/strong&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;一定期間が経過したデータには利用価値が薄い&lt;/strong&gt; ため退避した後削除して良い&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;そもそもDynamoDBでよくない？というツッコミがあるかもしれませんが、システムとは別の理由があるため採用していません。&lt;/p&gt;
-
-&lt;p&gt;今回は以下のような &lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; テーブルを考えます。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; テーブルにはユーザ(&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;)が行なった操作を &lt;code class=&quot;highlighter-rouge&quot;&gt;info&lt;/code&gt; カラムに格納します。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;create_at&lt;/code&gt; はパーティションキーであり、 &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;create_at&lt;/code&gt; が PKです。&lt;/p&gt;
-
-&lt;p&gt;なお、パーティションキーはPKに含める必要があります。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;カラム名&lt;/th&gt;
-      &lt;th&gt;型&lt;/th&gt;
-      &lt;th&gt;備考&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;id&lt;/td&gt;
-      &lt;td&gt;varchar(255)&lt;/td&gt;
-      &lt;td&gt;ユーザのID&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;info&lt;/td&gt;
-      &lt;td&gt;varchar(255)&lt;/td&gt;
-      &lt;td&gt;ユーザが行なった操作の情報&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;create_at&lt;/td&gt;
-      &lt;td&gt;timestamp&lt;/td&gt;
-      &lt;td&gt;レコードが作成された日時&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;パーティションを日次で追加する&quot;&gt;パーティションを日次で追加する&lt;/h2&gt;
-
-&lt;p&gt;ここから具体的な手順を説明します。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; テーブルには以下のような操作をすることにしました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;最初に一定量のパーティションを作成しておく&lt;/li&gt;
-  &lt;li&gt;パーティションの&lt;strong&gt;追加&lt;/strong&gt;はプロシージャで実施する&lt;/li&gt;
-  &lt;li&gt;日次でパーティションの最後に+1日ぶんのパーティションを&lt;strong&gt;追加&lt;/strong&gt;する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;一般的に &lt;strong&gt;「プロシージャの追加は一定量をまとめて実施した方が良い」&lt;/strong&gt; と言われています。&lt;/p&gt;
-
-&lt;p&gt;私の場合、システムの運用要件や、格納するデータの想定量を設計に加え、左記を踏まえた負荷試験も実施したところ、オンラインでの日次パーティション追加でもパフォーマンス上問題がなかったため、上記の対応方針にしました。&lt;/p&gt;
-
-&lt;h3 id=&quot;テーブル作成とパーティションの指定&quot;&gt;テーブル作成とパーティションの指定&lt;/h3&gt;
-&lt;p&gt;以下のようなクエリを発行し &lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; テーブルを作成します。
-加えて、パーティション名のルールは &lt;code class=&quot;highlighter-rouge&quot;&gt;p&lt;/code&gt; + &lt;code class=&quot;highlighter-rouge&quot;&gt;yyyyMMdd&lt;/code&gt; として、&lt;code class=&quot;highlighter-rouge&quot;&gt;create_at&lt;/code&gt; カラムでRANGEパーティション指定をします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- create hoge table
-DROP TABLE IF EXISTS hoge;
-CREATE TABLE hoge (
-  id varchar(255) NOT NULL,
-  info varchar(255) NOT NULL,
-  create_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id, create_at),
-  INDEX index_id (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE hoge PARTITION BY RANGE (UNIX_TIMESTAMP(create_at)) (
-  PARTITION p20180219 VALUES LESS THAN (UNIX_TIMESTAMP('2018-02-19 00:00:00'))
-);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;パーティション追加用のプロシージャを作成&quot;&gt;パーティション追加用のプロシージャを作成&lt;/h3&gt;
-&lt;p&gt;次にパーティションを追加するためのプロシージャを登録します。
-可視性の観点でバリデーション等は省略しています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;--
--- hogeテーブルにパーティションを追加するストアドプロシージャ
--- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
--- パーティションは from_date &amp;lt; to_date - 1日 分まで作成されます。
--- 呼び出しサンプル
--- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
---
-DROP PROCEDURE IF EXISTS add_hoge_partition;
-DELIMITER $$
-CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
-  proc_label:BEGIN
-    DECLARE target_date DATE;
-    DECLARE partition_range DATE;
-    DECLARE p_count INT;
-
-    -- 日次パーティションの作成
-    SET target_date = from_date;
-    WHILE DATEDIFF(to_date, target_date) &amp;gt; 0 DO
-
-      -- パーティションはLESS THANになるので1日追加
-      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
-      -- パーティションの追加
-      SELECT CONCAT(
-        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
-        DATE_FORMAT(target_date, 'p%Y%m%d'),
-        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
-      ) INTO @ddl;
-
-      PREPARE ddl_stmt FROM @ddl;
-      EXECUTE ddl_stmt;
-      DEALLOCATE PREPARE ddl_stmt;
-
-      -- 次の日次のパーティションの設定
-      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
-    END WHILE;
-
-  END$$
-DELIMITER ;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;初期パーティションを作成する&quot;&gt;初期パーティションを作成する&lt;/h3&gt;
-&lt;p&gt;登録したプロシージャ &lt;code class=&quot;highlighter-rouge&quot;&gt;add_hoge_partition&lt;/code&gt; を使用して、初期パーティションを追加します。&lt;/p&gt;
-
-&lt;p&gt;とりあえず、現在日付から365日ぶんのパーティションを追加しましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;なお、パーティションは &lt;strong&gt;追加しかできない&lt;/strong&gt; ことに注意してください。&lt;/p&gt;
-
-&lt;h3 id=&quot;プロシージャ実行をevent登録し定期実行する&quot;&gt;プロシージャ実行をEVENT登録し定期実行する&lt;/h3&gt;
-
-&lt;p&gt;MySQLには &lt;code class=&quot;highlighter-rouge&quot;&gt;CREATE EVENT&lt;/code&gt; 構文にてイベントをスケジュール実行する仕組みがあります。
-これを利用することにしましょう。&lt;/p&gt;
-
-&lt;p&gt;まず、 RDSのDBのパラメータグループにて &lt;code class=&quot;highlighter-rouge&quot;&gt;event_scheduler&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;ON&lt;/code&gt; に指定します。(デフォルトでは &lt;code class=&quot;highlighter-rouge&quot;&gt;OFF&lt;/code&gt; )
-その際、&lt;code class=&quot;highlighter-rouge&quot;&gt;event_scheduler&lt;/code&gt; パラメータグループの変更に伴うDBの再起動は不要です。&lt;/p&gt;
-
-&lt;p&gt;その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
-少々見づらいですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;INFORMATION_SCHEMA&lt;/code&gt; から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CREATE EVENT add_hoge_partition
-ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
-COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
-DO CALL 
-    add_hoge_partition(
-        (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge', DATE_ADD(
-            (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
-        );
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これで、毎日0時にパーティション追加のプロシージャが実行されるようになりました。&lt;/p&gt;
-
-&lt;h2 id=&quot;rds-aurora-clusterの場合を考える&quot;&gt;RDS Aurora Clusterの場合を考える&lt;/h2&gt;
-&lt;p&gt;ここで、Aurora Clusterの場合を考えます。
-Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Writer/Readerの構成になります。
-詳細は割愛しますが、Auroraに関しては以下のBalckBeltの資料を参照してください。&lt;/p&gt;
-
-&lt;div class=&quot;embed-container rich &quot;&gt;&lt;iframe src=&quot;https://www.slideshare.net/slideshow/embed_code/key/f30UqyEiHKB11p&quot; width=&quot;427&quot; height=&quot;356&quot; frameborder=&quot;0&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; style=&quot;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&quot; allowfullscreen=&quot;&quot;&gt; &lt;/iframe&gt; &lt;div style=&quot;margin-bottom:5px&quot;&gt; &lt;strong&gt; &lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora&quot; title=&quot;AWS Black Belt Online Seminar Amazon Aurora&quot; target=&quot;_blank&quot;&gt;AWS Black Belt Online Seminar Amazon Aurora&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan&quot; target=&quot;_blank&quot;&gt;Amazon Web Services Japan&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&quot;eventはwriterのみで実行される&quot;&gt;EVENTはWriterのみで実行される&lt;/h3&gt;
-&lt;p&gt;先程、&lt;code class=&quot;highlighter-rouge&quot;&gt;CREATE EVENT&lt;/code&gt; 構文にてプロシージャを日次で実行するように登録しました。
-Clusterを組んだ場合においては、「WriterとReaderの両方で実行されてしまうのでは？」と思い、以下のクエリを実行してみたところ、&lt;strong&gt;プロシージャはWriterで1回だけ呼ばれている&lt;/strong&gt; ことが確認できました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;WriterでEVENTを確認
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
-&amp;gt; 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ReaderでEVENTを確認
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
-&amp;gt; Empty set (0.01 sec)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Failoverさせた状態でも、翌日にもパーティションが作成されていることも確認できたため、Writerのみが実行できているといえます。&lt;/p&gt;
-
-&lt;h2 id=&quot;エラーが発生したらどうするか&quot;&gt;エラーが発生したらどうするか&lt;/h2&gt;
-&lt;p&gt;今回の「定期的にプロシージャを実行」という方法は &lt;strong&gt;Auroraインスタンスの中に閉じた処理&lt;/strong&gt; になります。
-仮に実行時エラーやバリデーションエラー等が発生した場合に、開発者がそれを拾えなければサイレント障害になりかねません。
-そのため、&lt;strong&gt;エラーが発生した場合に検知する機構&lt;/strong&gt; が必要になってきます。&lt;/p&gt;
-
-&lt;h3 id=&quot;プロシージャ実行時のエラーはlambdaで検知する&quot;&gt;プロシージャ実行時のエラーはlambdaで検知する&lt;/h3&gt;
-&lt;p&gt;今回はAurora(MySQL互換)に標準で組み込まれたプロシージャ &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql.lambda_async&lt;/code&gt; を使用して問題発生を検知するようにします。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql.lambda_async&lt;/code&gt; は、RDSから直接AWS Lambdaを実行することができ、その際にメッセージを指定できるのです。
-以降ではその手順を説明します。&lt;/p&gt;
-
-&lt;h4 id=&quot;aurora-clusterにiam-roleを追加する&quot;&gt;Aurora ClusterにIAM Roleを追加する&lt;/h4&gt;
-&lt;p&gt;Auroraからlambdaを実行するために、別途権限を付与する必要があります。
-IAMのメニューから専用のIAM Roleを作成しましょう(今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;rdsToLambdaRole&lt;/code&gt; という名前にします)。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;rdsToLambdaRole&lt;/code&gt; には&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;Action&quot;: [
-  &quot;lambda:InvokeFunction&quot;
-]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;が許可されていれば良いので、AWSから提供されている &lt;code class=&quot;highlighter-rouge&quot;&gt;AWSLambdaRole&lt;/code&gt; ポリシーを適用すればOKです。&lt;/p&gt;
-
-&lt;p&gt;作成した &lt;code class=&quot;highlighter-rouge&quot;&gt;rdsToLambdaRole&lt;/code&gt; のARNを &lt;strong&gt;クラスタのパラメータグループ&lt;/strong&gt;の&lt;strong&gt;aws_default_lambda_role&lt;/strong&gt;に指定しましょう。&lt;/p&gt;
-
-&lt;p&gt;こちらのパラメータも &lt;code class=&quot;highlighter-rouge&quot;&gt;dynamic&lt;/code&gt; のためクラスタ再起動は不要です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180219/rds_to_lambda_role.png&quot; alt=&quot;rds_to_lambda_role&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;rdsインスタンスのあるsubnetのルーティング設定をする&quot;&gt;RDSインスタンスのあるsubnetのルーティング設定をする&lt;/h4&gt;
-&lt;p&gt;RDSからのoutbound通信を許可してあげる必要があるので、ルーティングの設定を行います。
-一般的にDBサーバはprivate subnetに置くケースが大半だと思いますので、private subnetから外に出られるように設定してあげましょう。&lt;/p&gt;
-
-&lt;h4 id=&quot;プロシージャ側のエラーハンドリングを追加する&quot;&gt;プロシージャ側のエラーハンドリングを追加する&lt;/h4&gt;
-&lt;p&gt;プロシージャ内でエラーが発生した場合に、lambdaを実行する &lt;code class=&quot;highlighter-rouge&quot;&gt;HANDLER&lt;/code&gt; を先程のプロシージャに追加しましょう。
-lambda関数 &lt;code class=&quot;highlighter-rouge&quot;&gt;rds_monitor&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql.lambda_async&lt;/code&gt; プロシージャで呼び出します。&lt;/p&gt;
-
-&lt;p&gt;追記箇所は以下のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    -- 失敗したらlambdaで通知する
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-      BEGIN
-        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
-        CALL mysql.lambda_async(
-          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
-          CONCAT('{&quot;message&quot;:&quot;', @p2, '&quot;,',
-                  '&quot;state&quot;:&quot;', @p1, '&quot;}')
-        );
-      END;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;先程のプロシージャに組み込んだ場合は以下のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;--
--- hogeテーブルにパーティションを追加するストアドプロシージャ
--- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
--- パーティションは from_date &amp;lt; to_date - 1日 分まで作成されます。
--- 呼び出しサンプル
--- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
---
-DROP PROCEDURE IF EXISTS add_hoge_partition;
-DELIMITER $$
-CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
-  proc_label:BEGIN
-    DECLARE target_date DATE;
-    DECLARE partition_range DATE;
-    DECLARE p_count INT;
-    -- 失敗したらlambdaで通知する
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-      BEGIN
-        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
-        CALL mysql.lambda_async(
-          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
-          CONCAT('{&quot;message&quot;:&quot;', @p2, '&quot;,',
-                  '&quot;state&quot;:&quot;', @p1, '&quot;}')
-        );
-      END;
-
-    -- 日次パーティションの作成
-    SET target_date = from_date;
-    WHILE DATEDIFF(to_date, target_date) &amp;gt; 0 DO
-
-      -- パーティションはLESS THANになるので1日追加
-      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
-      -- パーティションの追加
-      SELECT CONCAT(
-        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
-        DATE_FORMAT(target_date, 'p%Y%m%d'),
-        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
-      ) INTO @ddl;
-
-      PREPARE ddl_stmt FROM @ddl;
-      EXECUTE ddl_stmt;
-      DEALLOCATE PREPARE ddl_stmt;
-
-      -- 次の日次のパーティションの設定
-      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
-    END WHILE;
-
-  END$$
-DELIMITER ;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql.lambda_async&lt;/code&gt;の引数には&lt;strong&gt;lambdaのARN指定が必要&lt;/strong&gt;という点が注意ポイントです。&lt;/p&gt;
-
-&lt;p&gt;DBのマイグレーションツールを使用して複数のAWSアカウントを運用されている方は、AWSのアカウント番号が異なるため、チェックサムが変わってしまいます。マイグレーションツールがテンプレート変数をサポートしているか確認すると良いでしょう。&lt;/p&gt;
-
-&lt;h4 id=&quot;lambda関数を作成する&quot;&gt;lambda関数を作成する&lt;/h4&gt;
-
-&lt;p&gt;Auroraから渡されたメッセージを処理して、監視システムやチャットツールに通知するためのlambda関数を実装します。
-私の場合は監視用SaaSである &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;datadog&lt;/a&gt; に通知していました。&lt;/p&gt;
-
-&lt;h4 id=&quot;備考rdsのエラーログが出力されない&quot;&gt;[備考]RDSのエラーログが出力されない?&lt;/h4&gt;
-&lt;p&gt;コンソール上からRDSインスタンスのエラーログを参照しようと &lt;code class=&quot;highlighter-rouge&quot;&gt;error/mysql-error-running.log&lt;/code&gt; を選択しても、
-以下のように &lt;strong&gt;END OF LOG&lt;/strong&gt; しか表示されない場合があります。
-コンソール上部には 38.2kB とログの容量が記載されているにも関わらずに、です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180219/rds_log_is_empty.png&quot; alt=&quot;rds error log is empty&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;実はこれは、&lt;strong&gt;「AWS側で使用するログを上記のログファイルに出力しているらしく、我々AWSのユーザ側には表示されない」という仕様&lt;/strong&gt; によるものです。少しわかりにくいですが、このログファイルの容量はAWS用のログの容量も含まれて表示されている、ということですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;今回はAurora Clusterからプロシージャを定期実行することで、日付パーティションを定期追加する方法をまとめました。
-マネージドサービスであるRDSのプロシージャ内部の処理は隠蔽されて見通しが悪くなるため、エラーハンドリングをきちんと定義してあげることが肝要です。今回はRDSからlambdaを実行しましたが、CloudwatchLogsへ連携することもできるそうなので、機会があれば試してみたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/create-event.html&quot;&gt;MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/&quot;&gt;AWS Black Belt Online Seminar Amazon Aurora&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/AuroraMySQL.Integrating.Lambda.html#AuroraMySQL.Integrating.ProcLambda&quot;&gt;Amazon Aurora MySQL DB クラスターからの Lambda 関数の呼び出し&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="rds" /><category term="aurora" /><category term="SQL" /><category term="MySQL" /><summary type="html">AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。</summary></entry></feed>
+一言で「セキュリティ」と言っても幅が広いので、自分の業務周辺のセキュリティは自身で守ってあげられる程度のスキルは継続的に研鑽していきたいです。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="cyber" /><category term="security" /><category term="udemy" /><category term="beginner" /><summary type="html">昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。 かくいう私もその口で、今回は Udemy というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。</summary></entry></feed>
