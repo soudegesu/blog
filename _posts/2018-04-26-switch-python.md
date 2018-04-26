@@ -88,6 +88,7 @@ mkdir test_project
 cd test_project
 
 pyenv local 3.6.1/envs/test_project
+
 python -V
 >> Python 3.6.1
 ```
@@ -100,9 +101,50 @@ python -V
 >> Python 2.7.14
 ```
 
-## Linuxサーバの場合
+できました。
+
+## サーバの場合
+
+サーバの場合はどうでしょうか。 私の場合、大抵Linux系OSをサーバ用途で使う事が多く、開発用のローカル環境的な使い方はあまりしません。
+そのため `pyenv` のようにサーバ上で必要に応じて複数のPythonをインストールをするのではなく、特定のバージョンを予めインストールしておく、という方が適しています。
+特に、 [Packer](https://www.packer.io/) と [Ansible](https://www.ansible.com/) で作成するマシンイメージに予めインストールを行います。
+Linuxにはpythonがデフォルトでインストールされているので、それを破壊せずにインストールする必要があります。
+
+なお、 [Pythonの公式ドキュメント](https://docs.python.org/ja/3/using/unix.html#getting-and-installing-the-latest-version-of-python) にも記載がある手順にて、Pythonをソースからビルドする方を個人的にはオススメします。
+
+ただし、警告のところに書かれているように `make altinstall` の方が良いです。
+
+> 警告 make install は python3 バイナリを上書きまたはリンクを破壊してしまうかもしれません。
+> そのため、make install の代わりに exec_prefix/bin/pythonversion のみインストールする make altinstall が推奨されています。
+
+例えば、CentOSであれば以下のようなになります。
+
+* ダウンロード
+
+```
+curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
+tar zxf Python-(バージョン).tgz
+```
+
+* インストール
+
+```
+cd Python-(バージョン).tgz
+
+./configure --prefix=/opt/local
+make
+make altinstall
+```
+
+## まとめ
+今回は異なるバージョンのPythonをインストールし、切り替える方法をまとめました。
+* ローカル環境(Mac)は `pyenv` と `pyenv-virtualenv` でPythonのバージョンと仮想環境を切り替える
+* サーバは Pythonをソースから `altinsall` して複数バージョンが共存できるようにしてあげる
+のがいいかな、と考えています。
 
 
+## 参考にさせていただいたサイト
+* [Python 3.6.5 ドキュメント](https://docs.python.org/ja/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
 <br><br>
 <div style="text-align: center">
