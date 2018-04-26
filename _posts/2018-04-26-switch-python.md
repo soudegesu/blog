@@ -1,5 +1,5 @@
 ---
-title: "Pythonの2と3を切り替えて、仮想環境を作る"
+title: "Pythonの2と3を切り替えて仮想環境を作る"
 description: ""
 date: 2018-04-26 00:00:00 +0900
 categories: python
@@ -29,7 +29,7 @@ Python 2で書かれたコードをPython 3のランタイムで動かすこと�
 
 ### プロジェクト毎にモジュールを管理したい
 
-プロジェクト毎にpythonのライブラリを管理したい(プロジェクト毎に依存モジュールが混ざらないよう)ケースが多いので、
+プロジェクト毎にpythonのライブラリを管理したい(プロジェクト毎に依存モジュールが混ざらないようにしたい)ケースが多いので、
 仮想環境を簡単に管理できる仕組みも欲しいです。
 
 ## Mac OSの場合
@@ -55,7 +55,7 @@ brew install pyenv pyenv-virtualenv
 ### .bashrc を書き換える
 
 bashであれば `.bashrc` 、 zsh であれば `.zshrc` に以下を追記します。
-ターミナルを起動する時に `rehase` してほしくなければ `--no-rehash` を入れます。
+ターミナルを起動する時に `rehash` してほしくなければ `--no-rehash` を入れます。
 
 ```
 export PYENV_ROOT="${HOME}/.pyenv"
@@ -105,17 +105,15 @@ python -V
 
 ## サーバの場合
 
-サーバの場合はどうでしょうか。 私の場合、大抵Linux系OSをサーバ用途で使う事が多く、開発用のローカル環境的な使い方はあまりしません。
-そのため `pyenv` のようにサーバ上で必要に応じて複数のPythonをインストールをするのではなく、特定のバージョンを予めインストールしておく、という方が適しています。
-特に、 [Packer](https://www.packer.io/) と [Ansible](https://www.ansible.com/) で作成するマシンイメージに予めインストールを行います。
-Linuxにはpythonがデフォルトでインストールされているので、それを破壊せずにインストールする必要があります。
+私の場合、大抵Linux系OSをサーバ用途で使う事が多く、開発用のローカル環境的な使い方はあまりしません。
 
-なお、 [Pythonの公式ドキュメント](https://docs.python.org/ja/3/using/unix.html#getting-and-installing-the-latest-version-of-python) にも記載がある手順にて、Pythonをソースからビルドする方を個人的にはオススメします。
+もう少し具体的に言うと、 [Packer](https://www.packer.io/) や [Ansible](https://www.ansible.com/) でPython入りのマシンイメージを焼いて使っています。
 
-ただし、警告のところに書かれているように `make altinstall` の方が良いです。
+このようなユースケースの場合には `pyenv` を使うのではなくて、 **特定のバージョンを予めインストールしておく** 方が適しています。(Jenkinsのようなビルドサーバ用途では `pyenv` の方が良いかもしれません)
 
-> 警告 make install は python3 バイナリを上書きまたはリンクを破壊してしまうかもしれません。
-> そのため、make install の代わりに exec_prefix/bin/pythonversion のみインストールする make altinstall が推奨されています。
+
+今回は [Pythonの公式ドキュメント](https://docs.python.org/ja/3/using/unix.html#getting-and-installing-the-latest-version-of-python) にも記載がある方法で、Pythonをソースからビルドするやり方を個人的にはオススメします。
+
 
 例えば、CentOSであれば以下のようなになります。
 
@@ -136,7 +134,13 @@ make
 make altinstall
 ```
 
+ただし、警告のところに書かれているように **Linuxには予めPythonがインストールされているため、それを破壊しないように** `make altinstall` の方が良いです。
+
+> 警告 make install は python3 バイナリを上書きまたはリンクを破壊してしまうかもしれません。
+> そのため、make install の代わりに exec_prefix/bin/pythonversion のみインストールする make altinstall が推奨されています。
+
 ## まとめ
+
 今回は異なるバージョンのPythonをインストールし、切り替える方法をまとめました。
 * ローカル環境(Mac)は `pyenv` と `pyenv-virtualenv` でPythonのバージョンと仮想環境を切り替える
 * サーバは Pythonをソースから `altinsall` して複数バージョンが共存できるようにしてあげる
@@ -144,6 +148,7 @@ make altinstall
 
 
 ## 参考にさせていただいたサイト
+
 * [Python 3.6.5 ドキュメント](https://docs.python.org/ja/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
 <br><br>
