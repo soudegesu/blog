@@ -1,6 +1,6 @@
 ---
 title: "Pythonの2と3を切り替えて仮想環境を作る"
-description: ""
+description: "Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。"
 date: 2018-04-26 00:00:00 +0900
 categories: python
 tags: python
@@ -20,7 +20,7 @@ Python 3.x は言語のバージョンアップに伴い、2.x 系との後方�
 `__future__` モジュールや [six](https://hhsprings.bitbucket.io/docs/translations/python/six-doc-ja/) を使えば、
 Python 2で書かれたコードをPython 3のランタイムで動かすことができる場合もありますが、基本的には書き直した方が好ましいと考えています。
 
-互換性に纏わる話は、 書籍「エキスパートPython」がバージョン・アップして第2版となって帰ってきたので、そちらを見た方が良いかもしれません。
+互換性に纏わる話は、 バージョン・アップして第2版となって帰ってきた書籍「エキスパートPython」にも触れられていますので、そちらを見た方が良いかもしれません。
 
 <br><br>
 <div style="text-align: center">
@@ -36,13 +36,13 @@ Python 2で書かれたコードをPython 3のランタイムで動かすこと�
 
 MacOSの場合には [pyenv](https://github.com/pyenv/pyenv) を使って複数バージョンをインストールしつつ
 [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) で仮想環境を管理することをオススメします。
-もちろん、awsome的な [anyenv](https://github.com/riywo/anyenv) でも構いません。
+もちろん、`pyenv` の代わりとしてawsome的な [anyenv](https://github.com/riywo/anyenv) でも構いません。
 
 ### Homebrew のインストール
 
 入っていなければ、 [Homebrew](https://brew.sh/index_ja) をインストールしましょう。
 
-TOPページに「このスクリプトをターミナルで叩きなさい」とコマンドが記載されている超親切設計ツールなので、問題なくインストールできるはずです。
+TOPページに「このスクリプトをターミナルで叩きなさい」とコマンドが記載されている超親切設計なツールなので、問題なくインストールできるはずです。
 
 ### pyenvのインストール
 
@@ -117,17 +117,17 @@ python -V
 
 例えば、CentOSであれば以下のようなになります。
 
-* ダウンロード
+* Pythonのダウンロード
 
 ```
 curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
 tar zxf Python-(バージョン).tgz
 ```
 
-* インストール
+* ソースからインストール
 
 ```
-cd Python-(バージョン).tgz
+cd Python-(バージョン)
 
 ./configure --prefix=/opt/local
 make
@@ -142,8 +142,9 @@ make altinstall
 ## まとめ
 
 今回は異なるバージョンのPythonをインストールし、切り替える方法をまとめました。
-* ローカル環境(Mac)は `pyenv` と `pyenv-virtualenv` でPythonのバージョンと仮想環境を切り替える
-* サーバは Pythonをソースから `altinsall` して複数バージョンが共存できるようにしてあげる
+* ローカル環境(Mac)は `pyenv` と `pyenv-virtualenv` で **Pythonのバージョンと仮想環境を切り替える**
+* サーバは Pythonを **ソースから `altinsall`** して複数バージョンが共存できるようにしてあげる
+
 のがいいかな、と考えています。
 
 
