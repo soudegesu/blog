@@ -1,4 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-26T18:12:02+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Pythonの2と3を切り替えて仮想環境を作る</title><link href="https://www.soudegesu.com/python/switch-python/" rel="alternate" type="text/html" title="Pythonの2と3を切り替えて仮想環境を作る" /><published>2018-04-26T00:00:00+09:00</published><updated>2018-04-26T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/switch-python</id><content type="html" xml:base="https://www.soudegesu.com/python/switch-python/">&lt;p&gt;Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-29T17:57:58+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">「人質の経済学」を読んだ</title><link href="https://www.soudegesu.com/book/economics-of-hostages/" rel="alternate" type="text/html" title="「人質の経済学」を読んだ" /><published>2018-04-27T00:00:00+09:00</published><updated>2018-04-27T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/economics-of-hostages</id><content type="html" xml:base="https://www.soudegesu.com/book/economics-of-hostages/">&lt;p&gt;ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。
+エンジニアだからと、&lt;a href=&quot;https://www.oreilly.co.jp/index.shtml&quot;&gt;オライリー本&lt;/a&gt; ばかり読んでいてはいけないですね。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#購入の経緯&quot; id=&quot;markdown-toc-購入の経緯&quot;&gt;購入の経緯&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#人質ビジネス時代の変遷&quot; id=&quot;markdown-toc-人質ビジネス時代の変遷&quot;&gt;人質ビジネス時代の変遷&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#人質解放交渉のリアル&quot; id=&quot;markdown-toc-人質解放交渉のリアル&quot;&gt;人質解放交渉のリアル&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#著者のロレッタナポリオーニさんについて&quot; id=&quot;markdown-toc-著者のロレッタナポリオーニさんについて&quot;&gt;著者のロレッタ・ナポリオーニさんについて&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4163905804/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4163905804&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=7fcab04a4c51902e13a9c5d1d697eadc&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4163905804&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4163905804&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;購入の経緯&quot;&gt;購入の経緯&lt;/h2&gt;
+
+&lt;p&gt;「人質」が「経済」に結びつきそうなのは、世界中のどの地域でしょうか。&lt;/p&gt;
+
+&lt;p&gt;おそらく大半の人が思い浮かべるのは、中東、とりわけイスラム教圏の国々なのではないでしょうか。&lt;/p&gt;
+
+&lt;p&gt;最近は日本のメディアでの報道が減りましたが、一時はイスラム過激派が中心となった武力闘争をはじめ、
+日本人の人質騒動もあったことで、 &lt;strong&gt;「イスラム圏 = 危ない国」というイメージを持ち&lt;/strong&gt; 、
+人命が日常的に危険に晒される地帯においては、言われてみれば確かに、人質ビジネスが成立しそうです。&lt;/p&gt;
+
+&lt;p&gt;たまたま、&lt;a href=&quot;https://www.amazon.co.jp/&quot;&gt;amazon&lt;/a&gt; をネットサーフィンしていたらこの本を見つけ、
+戦火とは程遠い国に住んでいる人間が国際社会の予備知識を蓄える目的も込めて購入しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;人質ビジネス時代の変遷&quot;&gt;人質ビジネス時代の変遷&lt;/h2&gt;
+
+&lt;p&gt;本書の特徴は一つは &lt;strong&gt;人質ビジネスの変遷&lt;/strong&gt; を抑えている点です。&lt;/p&gt;
+
+&lt;p&gt;そもそも、世間一般の「ビジネス」にはトレンドがあります。お金の流通するプラットフォームに流行り廃りがあるのと同様に、&lt;strong&gt;人質ビジネスも一過性のブームに過ぎない&lt;/strong&gt; のです。
+本書では、「人質」が『商材』として機能していた一時代だけではなく、その前後の時代の『お金を産む種』にも十分に触れられているため、論展開に一貫性があります。&lt;/p&gt;
+
+&lt;p&gt;いかに、&lt;strong&gt;地域経済が世界情勢の波に翻弄されながらも、合理的な方向へ変化を遂げていくか&lt;/strong&gt; を垣間見ることが出来ます。&lt;/p&gt;
+
+&lt;h2 id=&quot;人質解放交渉のリアル&quot;&gt;人質解放交渉のリアル&lt;/h2&gt;
+
+&lt;p&gt;もう一つの特徴は、&lt;strong&gt;実際の人質解放交渉の事例&lt;/strong&gt; が多く取り上げていることです。&lt;/p&gt;
+
+&lt;p&gt;人命が商材になる一連の時代には、多くの被害者がいるわけで、各時代の章で様々な被害者の事例が紹介されてきます。
+もちろん、命が助かった事例、残念ながら命を奪われた事例の両方が扱われます。
+&lt;strong&gt;被害者の命運を分けたのは何か&lt;/strong&gt; 、とりわけ、一度に複数人が誘拐されたケースでは &lt;strong&gt;なぜこの人は助かったのに、この人は助からなかったのか&lt;/strong&gt; が筆者の考察や関係者の取材によって明らかになります。&lt;/p&gt;
+
+&lt;p&gt;また、人質解放交渉にあたって、交渉人、政府、実行犯、教唆犯等の &lt;strong&gt;関心事が異なる人間同士の思惑と、複雑な駆け引き&lt;/strong&gt; 
+には、&lt;strong&gt;道徳的観点がスッポリ抜け落ちるリアルさ&lt;/strong&gt; を感じざるを得ませんでした。&lt;/p&gt;
+
+&lt;p&gt;なお、事例ベースの展開が本書の大半を占めるため、事例嫌いの読者の方にはあまり向かないかもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;著者のロレッタナポリオーニさんについて&quot;&gt;著者のロレッタ・ナポリオーニさんについて&lt;/h2&gt;
+
+&lt;p&gt;過去には &lt;a href=&quot;https://www.ted.com/talks/loretta_napoleoni_the_intricate_economics_of_terrorism/transcript?language=ja#t-79189&quot;&gt;TED Talk&lt;/a&gt; での登壇経験もあるようです。&lt;/p&gt;
+
+&lt;p&gt;本書を執筆するにあたり、多くの交渉人や被害者等への取材をしています。&lt;/p&gt;
+
+&lt;p&gt;交渉人は業務上人命を取り扱うことから、部外者に迂闊にセンシティブな情報を流すことはご法度なはずです。&lt;/p&gt;
+
+&lt;p&gt;それにも関わらず、筆者にこれだけの協力をするのは、筆者への一定の信頼関係があり、
+交渉人とのコネクションを構築できている筆者だからこそ表現できた内容も含まれています。&lt;/p&gt;
+
+&lt;p&gt;一方で、 &lt;strong&gt;「イスラム過激派の変遷のルーツ」と「欧米の法律」の関連性&lt;/strong&gt; に対する筆者の見解には
+「筆者のバイアスが入っているのではないかな？」と感じる部分もありました。&lt;/p&gt;
+
+&lt;p&gt;もちろん、単純に彼女の方がプロで、私が素人だからかもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+
+&lt;p&gt;昨今は海外旅行への敷居も下がり、リッチシニアがリタイア後に僻地へ海外旅行三昧のようなケースもよくありますが、
+訪問国への治安も含めた下調べは必要だと感じました。&lt;/p&gt;
+
+&lt;p&gt;加えて、くれぐれも自分の幼い好奇心や正義感で国際社会に迷惑をかけるべきではないことを思い知らせてくれるオススメの良い一冊です。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。 エンジニアだからと、オライリー本 ばかり読んでいてはいけないですね。</summary></entry><entry><title type="html">Pythonの2と3を切り替えて仮想環境を作る</title><link href="https://www.soudegesu.com/python/switch-python/" rel="alternate" type="text/html" title="Pythonの2と3を切り替えて仮想環境を作る" /><published>2018-04-26T00:00:00+09:00</published><updated>2018-04-26T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/switch-python</id><content type="html" xml:base="https://www.soudegesu.com/python/switch-python/">&lt;p&gt;Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。
 今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -1749,224 +1820,4 @@ gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です�
 &lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://acro-engineer.hatenablog.com/entry/2013/10/17/113216&quot;&gt;How to Migrate Netty 3 to 4 (Netty 番外編)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="spring" /><category term="webflux" /><category term="reactor" /><summary type="html">2018/3にリリースされた springboot2 から spring5 がバンドルされるようになりました。 リリースの中でも注目機能と言われている webflux 、とりわけ webflux が内包しているリアクティブプログラミングライブラリである Reactor はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。</summary></entry><entry><title type="html">EthereumでDApps開発のための開発環境を構築する(Truffle&amp;amp;Ganache接続まで)</title><link href="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/" rel="alternate" type="text/html" title="EthereumでDApps開発のための開発環境を構築する(Truffle&amp;Ganache接続まで)" /><published>2018-03-10T00:00:00+09:00</published><updated>2018-03-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/ethereum/ethereum-development-with-ganache</id><content type="html" xml:base="https://www.soudegesu.com/ethereum/ethereum-development-with-ganache/">&lt;p&gt;&lt;a href=&quot;/ethereum/ethereum-development-environment/&quot;&gt;前回の記事&lt;/a&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; の開発環境の構築を行いました。
-今回はさらに &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; 用のフレームワークである &lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を使ってローカルでの開発環境を整えようと思います。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#truffleとは&quot; id=&quot;markdown-toc-truffleとは&quot;&gt;Truffleとは&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ganacheとは&quot; id=&quot;markdown-toc-ganacheとは&quot;&gt;Ganacheとは&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#セットアップ&quot; id=&quot;markdown-toc-セットアップ&quot;&gt;セットアップ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#設定&quot; id=&quot;markdown-toc-設定&quot;&gt;設定&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#packagejson-の修正&quot; id=&quot;markdown-toc-packagejson-の修正&quot;&gt;package.json の修正&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#truffleを初期化する&quot; id=&quot;markdown-toc-truffleを初期化する&quot;&gt;truffleを初期化する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ganacheと接続する&quot; id=&quot;markdown-toc-ganacheと接続する&quot;&gt;Ganacheと接続する&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;truffleとは&quot;&gt;Truffleとは&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/&quot;&gt;Truffle&lt;/a&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; アプリケーションの開発効率を上げるためのフレームワークです。
-ボイラープレート的な仕事をしてくれるところから始まり、 ネットワーク接続の設定管理や、ネットワークのマイグレーション実行や初期化、テストフレームワークをバンドルしていたりなど、一通り開発できるように準備を整えてくれます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/truffle.png&quot; alt=&quot;Truffle top&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;ganacheとは&quot;&gt;Ganacheとは&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/ganache/&quot;&gt;Ganache&lt;/a&gt; はDAppsを開発時のテストをする際に使用するローカル用のプライベートネットワークを構築してくれます。自動マイニングしてくれるので、別でターミナルを立ち上げて、マイニング用のコマンドを実行する必要もありません。発生したトランザクションは順番にソートされて表示もされるので、動作確認も比較的容易にできると思います。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/ganache.png&quot; alt=&quot;Ganache top&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;セットアップ&quot;&gt;セットアップ&lt;/h2&gt;
-&lt;p&gt;以前同様の記事を書きましたが、簡単におさらいします。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Etehreum のインストール&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew tap ethereum/ethereum
-brew install ethereum
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;nodenvのインストール&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;nodenv&lt;/code&gt; を使って切り替えています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install nodenv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;nodenv起動のために、 &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.zshrc&lt;/code&gt; に以下を追記します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export PATH=&quot;$PATH:$HOME/.nodenv/bin:&quot;
-eval &quot;$(nodenv init --no-rehash -)&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;node(9.6.1)のインストールと設定&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nodenv install 9.6.1
-nodenv local 9.6.1
-node -v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; の作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm init
-(面倒なので、以降はEnter)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle&lt;/code&gt; のインストール&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install truffle@4.0.4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;solidityのコンパイラ &lt;code class=&quot;highlighter-rouge&quot;&gt;solc&lt;/code&gt; のインストール&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install solc@0.4.18
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; のインストール&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://truffleframework.com/ganache/&quot;&gt;Ganache&lt;/a&gt; のページからインストーラを取得し実行する。&lt;/p&gt;
-
-&lt;h2 id=&quot;設定&quot;&gt;設定&lt;/h2&gt;
-&lt;h3 id=&quot;packagejson-の修正&quot;&gt;package.json の修正&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle&lt;/code&gt; をグローバルインストールしていないので、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run&lt;/code&gt; でキックできるように &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; を修正します。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;scripts&lt;/code&gt; ブロックを修正します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &quot;scripts&quot;: {
-    &quot;truffle&quot;: &quot;truffle&quot;,
-    &quot;develop&quot;: &quot;truffle develop&quot;,
-    &quot;truffle-ganache&quot;: &quot;truffle migrate --compile-all --reset --network ganache&quot;,
-    &quot;truffle-console&quot;: &quot;truffle console --network ganache&quot;
-  },
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;truffleを初期化する&quot;&gt;truffleを初期化する&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle init 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tree -L 1
-
-.
-├── contracts
-├── migrations
-├── node_modules
-├── package-lock.json
-├── package.json
-├── test
-├── truffle-config.js
-└── truffle.js
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contracts&lt;/code&gt; ディレクトリ
-    &lt;ul&gt;
-      &lt;li&gt;コントラクトプログラムを配置する場所。&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle init&lt;/code&gt; 時に &lt;code class=&quot;highlighter-rouge&quot;&gt;Migrations.sol&lt;/code&gt; が生成される&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;migrations&lt;/code&gt; ディレクトリ
-    &lt;ul&gt;
-      &lt;li&gt;マイグレーションスクリプトを配置する場所。 &lt;code class=&quot;highlighter-rouge&quot;&gt;truffle init&lt;/code&gt; 時に &lt;code class=&quot;highlighter-rouge&quot;&gt;1_initial_migrations.js&lt;/code&gt; が生成される。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt; ディレクトリ
-    &lt;ul&gt;
-      &lt;li&gt;作成したコントラクトプログラムのテストスクリプトを配置する場所。デフォルトで &lt;code class=&quot;highlighter-rouge&quot;&gt;mocha&lt;/code&gt; が使える。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle.js&lt;/code&gt;
-    &lt;ul&gt;
-      &lt;li&gt;truffleの設定ファイル&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-config.js&lt;/code&gt;
-    &lt;ul&gt;
-      &lt;li&gt;truffle.jsと同じ。&lt;code class=&quot;highlighter-rouge&quot;&gt;PowerShell&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;Git-bash&lt;/code&gt; 利用時にはこちらを編集する。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;私はMacユーザなので、&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-config.js&lt;/code&gt; は消してしまいます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rm truffle-config.js
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ganacheと接続する&quot;&gt;Ganacheと接続する&lt;/h3&gt;
-
-&lt;p&gt;次にインストール済みの &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を起動します。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; はデフォルトで10個のアカウントを作成してくれます。指定がなければ1番上に表示されているアカウントが &lt;code class=&quot;highlighter-rouge&quot;&gt;coinbase&lt;/code&gt; になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/boot_ganache.png&quot; alt=&quot;Boot Ganache&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Ganacheが表示しているネットワークの情報を基に、&lt;code class=&quot;highlighter-rouge&quot;&gt;truffle.js&lt;/code&gt; を以下のように編集します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module.exports = {
-  // See &amp;lt;http://truffleframework.com/docs/advanced/configuration&amp;gt;
-  // to customize your Truffle configuration!
-  networks: {
-    ganache: {
-      host: &quot;localhost&quot;,
-      port: 7545,
-      network_id: &quot;*&quot;
-    }
-  }
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; に記載した npm scriptsのコマンドから &lt;code class=&quot;highlighter-rouge&quot;&gt;truffle-ganache&lt;/code&gt; を起動し、
-Ganacheのマイグレーションを行います。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle-ganache
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Ganacheの画面を見てみると1番上のアドレスの &lt;code class=&quot;highlighter-rouge&quot;&gt;balance&lt;/code&gt; (所有しているether) が &lt;code class=&quot;highlighter-rouge&quot;&gt;100&lt;/code&gt; → &lt;code class=&quot;highlighter-rouge&quot;&gt;99.97&lt;/code&gt; に減っています。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/migration_ganache.png&quot; alt=&quot;migration Ganache&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;実はこれ、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run truffle-ganache&lt;/code&gt; 実行により、&lt;code class=&quot;highlighter-rouge&quot;&gt;migrations/1_initial_migrations.js&lt;/code&gt; が実行され、
-そこから &lt;code class=&quot;highlighter-rouge&quot;&gt;contracts/Migrations.sol&lt;/code&gt; がデプロイされています。
-そのマイグレーションの処理自体もトランザクションが行われており、ganacheに &lt;code class=&quot;highlighter-rouge&quot;&gt;gas&lt;/code&gt; をお支払いしたため少しだけ減っています。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;TRANSACTIONS&lt;/code&gt; タブを押すと、トランザクションハッシュが生成されていることを確認できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/transaction_ganache.png&quot; alt=&quot;transaction Ganache&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run truffle-console
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;試しに以下のようなコードを実行すると&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, &quot;ether&quot;)})
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;トランザクションのアドレスが帰ってきます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180310/transaction_sample.png&quot; alt=&quot;transaction sample&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; でローカル環境構築をした後、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; のネットワークに接続設定をして、マイグレーションまでを行いました。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Truffle&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;Ganache&lt;/code&gt; を使うことで、素の &lt;code class=&quot;highlighter-rouge&quot;&gt;Ethereum&lt;/code&gt; 単体で開発するよりも、開発環境周辺の手間が軽減されるので、これから積極的に使っていきたいと思います。
-ここまでできれば、次は &lt;code class=&quot;highlighter-rouge&quot;&gt;Solidity&lt;/code&gt; によるコントラクトの開発と、テストコードによる動作確認です。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="ethereum" /><category term="truffle" /><category term="ganache" /><category term="dapps" /><summary type="html">前回の記事 で Ethereum の開発環境の構築を行いました。 今回はさらに Ethereum 用のフレームワークである Truffle と Ganache を使ってローカルでの開発環境を整えようと思います。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="spring" /><category term="webflux" /><category term="reactor" /><summary type="html">2018/3にリリースされた springboot2 から spring5 がバンドルされるようになりました。 リリースの中でも注目機能と言われている webflux 、とりわけ webflux が内包しているリアクティブプログラミングライブラリである Reactor はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。</summary></entry></feed>
