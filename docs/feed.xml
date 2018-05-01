@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-04-29T17:57:58+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">「人質の経済学」を読んだ</title><link href="https://www.soudegesu.com/book/economics-of-hostages/" rel="alternate" type="text/html" title="「人質の経済学」を読んだ" /><published>2018-04-27T00:00:00+09:00</published><updated>2018-04-27T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/economics-of-hostages</id><content type="html" xml:base="https://www.soudegesu.com/book/economics-of-hostages/">&lt;p&gt;ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-01T16:31:28+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">「ティール組織」はこれからの経営者に読んで欲しい一冊</title><link href="https://www.soudegesu.com/book/reinventing-organizations/" rel="alternate" type="text/html" title="「ティール組織」はこれからの経営者に読んで欲しい一冊" /><published>2018-05-01T00:00:00+09:00</published><updated>2018-05-01T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/reinventing-organizations</id><content type="html" xml:base="https://www.soudegesu.com/book/reinventing-organizations/">&lt;p&gt;巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。
+簡単な書評と所感を書きたいと思います。
+以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot; id=&quot;markdown-toc-超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot;&gt;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#この本は経営者向けの本&quot; id=&quot;markdown-toc-この本は経営者向けの本&quot;&gt;この本は経営者向けの本&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4862762263/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4862762263&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=43e663f0a957755b99c435f78312862e&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4862762263&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4862762263&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot;&gt;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&lt;/h2&gt;
+&lt;p&gt;この書籍は500ページを超える分厚めの書籍です。私は通勤電車の中で毎日これを読んでいたのですが、持ち運びには向きませんね笑。私はKindle Paperwhiteを所有しているので、Kindle版を購入すれば良かったと後悔しました。&lt;/p&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/B00QJDOM6U/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B00QJDOM6U&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=66b7a77610b78e915e749c4b63d7cfc4&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=B00QJDOM6U&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=B00QJDOM6U&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;ただし、そのページ分量に見合うだけのエッセンスは詰まっています。
+特に今どきの組織論系の本でよく語られている内容は所々に散りばめられており、説明も一貫かつ丁寧になされているため、
+この一冊を読めば組織論に関する知識がない読者でも一から体系的に知識を抑えることができるでしょう。
+過去にリーダーシップ論、組織論、自己啓発の類を読んだことがある人は、自己の知識とマッピングされる箇所が多数あるでしょう。&lt;/p&gt;
+
+&lt;p&gt;雑な言い方をすると、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;組織の基本概念はホラクラシー&lt;/li&gt;
+  &lt;li&gt;管理職の役割はManagement3.0&lt;/li&gt;
+  &lt;li&gt;従業員の行動原理はアンソニー・ロビンズ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;と共通する部分をいくつか感じました。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+また、本書のコンテンツはおおまかに以下のような流れにて構成されています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;組織モデルの移り変わり&lt;/li&gt;
+  &lt;li&gt;ティールとはどのような組織か&lt;/li&gt;
+  &lt;li&gt;ティール組織に必要なもの&lt;/li&gt;
+  &lt;li&gt;ティール組織における、経営役員、管理職、従業員の役割&lt;/li&gt;
+  &lt;li&gt;ティール組織を作るには&lt;/li&gt;
+  &lt;li&gt;組織の社会的存在意義を明確にする&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;途中からは実際にティール組織として機能している会社事例を織り交ぜながら話が進んでいきます。
+どの企業も組織内の信頼関係に下支えされた経営を行っており、企業として機能していること自体に凄さを感じえませんでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;この本は経営者向けの本&quot;&gt;この本は経営者向けの本&lt;/h2&gt;
+
+&lt;p&gt;一通り読んで、本書からのメッセージを一言で表現するなら &lt;strong&gt;「『個人』も『組織』も内発的な動機づけによって行動すべきだ」&lt;/strong&gt; といったところでしょう。&lt;/p&gt;
+
+&lt;p&gt;その理論を実現するための柱となる考え方は以下の3つです。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;個人は内発的動機付けによって行動を起こし、周囲と協調しつつ(コンセンサスではない)、自身で意思決定を行う&lt;/li&gt;
+  &lt;li&gt;組織(企業)は個人を活かすために心理的安全性を確保しなければならない&lt;/li&gt;
+  &lt;li&gt;組織(企業)は自分達の社会的存在意義を認識すること&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;この3つのポイントを組織に根付かせるために、ブレークダウンされた論展開がなされていくのですが、
+読めば読むほど、 &lt;strong&gt;「とても良い理論だけど、かなり地ならしが必要」&lt;/strong&gt; と感じてしまいます。&lt;/p&gt;
+
+&lt;p&gt;そして、その「地ならし」を行えるのは &lt;strong&gt;経営者だけ&lt;/strong&gt; だと悟るのです。ボトムアップ式では無理である、と。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;
+ゆえに、この本は &lt;strong&gt;「経営者向けの本である」&lt;/strong&gt; と私は考えています。
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;なお、「どのような企業がティール組織に向いているか」「既存の組織をティール型にするには」という点に関して、
+本書の中で筆者もきちんと触れています。&lt;/p&gt;
+
+&lt;p&gt;その項も納得する部分が多く、納得する部分が多いからこそ、読者が「うちじゃ無理かも」と思わせる。
+特に &lt;strong&gt;日系の大手企業では導入は難しい&lt;/strong&gt; と言わざるを得ません。&lt;/p&gt;
+
+&lt;p&gt;大体の企業はトップダウン式の階層構造型であり、これはティール組織の概ね対極に位置するモデルといえます。
+ティールを適用した場合、中間管理職の層が最も不利益を被りやすく、その不公平感から、結果的に社内の心理的安全性が失われ、導入に失敗するのではないか、と私は推察しました。&lt;/p&gt;
+
+&lt;p&gt;これが中盤以降に発覚するので、いわば「上げて落とす」ような構成になっています。&lt;/p&gt;
+
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+
+&lt;p&gt;いろいろとネガティブなことも書いてしまいましたが、学ぶ所は多い書物です。
+これを読むと、一瞬、「独立して、社長やってみようかな」とすら思ってしまうほど、心清らかな組織論です。&lt;/p&gt;
+
+&lt;p&gt;従業員個人の内発的動機を最大限に活かすことをエンジンとしているので、雇われ社長ではなく、
+内発的動機を持った社長で、かつワンマンでない方にとっては心強い転ばぬ先の杖になるのではないでしょうか。&lt;/p&gt;
+
+&lt;p&gt;また、私のような一介の従業員の目線としては &lt;strong&gt;「やらされ仕事ではなく、自身の内発的動機に基づく仕事に従事したい」&lt;/strong&gt; 
+という意味で、ティールな組織で働いてみたいと思わせてくれました。
+少なくとも、今後の社会人人生の次のステージに向けて、良い影響を与えてくれた良書であることは間違いありません。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4862762263&amp;amp;linkId=b694c3ce45ccea6c53975ef370c6bb7d&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。 簡単な書評と所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry><entry><title type="html">「人質の経済学」を読んだ</title><link href="https://www.soudegesu.com/book/economics-of-hostages/" rel="alternate" type="text/html" title="「人質の経済学」を読んだ" /><published>2018-04-27T00:00:00+09:00</published><updated>2018-04-27T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/economics-of-hostages</id><content type="html" xml:base="https://www.soudegesu.com/book/economics-of-hostages/">&lt;p&gt;ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。
 エンジニアだからと、&lt;a href=&quot;https://www.oreilly.co.jp/index.shtml&quot;&gt;オライリー本&lt;/a&gt; ばかり読んでいてはいけないですね。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -1616,208 +1715,4 @@ data &quot;archive_file&quot; &quot;hogehoge&quot; {
 &lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html&quot;&gt;Amazon Cloudfront 開発者ガイド&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="cloudfront" /><category term="serverless" /><summary type="html">このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。</summary></entry><entry><title type="html">springboot-webfluxのバックプレッシャーを体験してたらいい感じだった</title><link href="https://www.soudegesu.com/java/non-blocking-webflux/" rel="alternate" type="text/html" title="springboot-webfluxのバックプレッシャーを体験してたらいい感じだった" /><published>2018-03-16T00:00:00+09:00</published><updated>2018-03-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/non-blocking-webflux</id><content type="html" xml:base="https://www.soudegesu.com/java/non-blocking-webflux/">&lt;p&gt;2018/3にリリースされた &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot2&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;spring5&lt;/code&gt; がバンドルされるようになりました。
-リリースの中でも注目機能と言われている &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; 、とりわけ &lt;code class=&quot;highlighter-rouge&quot;&gt;webflux&lt;/code&gt; が内包しているリアクティブプログラミングライブラリである &lt;code class=&quot;highlighter-rouge&quot;&gt;Reactor&lt;/code&gt; はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#今回作成したリポジトリ&quot; id=&quot;markdown-toc-今回作成したリポジトリ&quot;&gt;今回作成したリポジトリ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#routerfunctionを登録する&quot; id=&quot;markdown-toc-routerfunctionを登録する&quot;&gt;RouterFunctionを登録する&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#パフォーマンスを測定してみた&quot; id=&quot;markdown-toc-パフォーマンスを測定してみた&quot;&gt;パフォーマンスを測定してみた&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#バックプレッシャーを体験する&quot; id=&quot;markdown-toc-バックプレッシャーを体験する&quot;&gt;バックプレッシャーを体験する&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#springboot-webfluxは普通に生きている&quot; id=&quot;markdown-toc-springboot-webfluxは普通に生きている&quot;&gt;springboot-webfluxは普通に生きている&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#springboot-webmvcはやっぱり死んだ&quot; id=&quot;markdown-toc-springboot-webmvcはやっぱり死んだ&quot;&gt;springboot-webmvcはやっぱり死んだ&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#スレッド増加の傾向を見てみる&quot; id=&quot;markdown-toc-スレッド増加の傾向を見てみる&quot;&gt;スレッド増加の傾向を見てみる&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;今回作成したリポジトリ&quot;&gt;今回作成したリポジトリ&lt;/h2&gt;
-&lt;p&gt;今回作成したリポジトリは &lt;a href=&quot;https://github.com/soudegesu/springboot-webflux-test&quot;&gt;こちら&lt;/a&gt; です。
-全てローカル環境で動かせるように &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; でコンポーネント化してあるものの、 ローカルマシンのリソースを食い合うため、負荷試験をするときはLinuxサーバ上に展開することをオススメします。&lt;/p&gt;
-
-&lt;h2 id=&quot;routerfunctionを登録する&quot;&gt;RouterFunctionを登録する&lt;/h2&gt;
-&lt;p&gt;以下のような &lt;code class=&quot;highlighter-rouge&quot;&gt;RouterFunction&lt;/code&gt; を作成し、 &lt;code class=&quot;highlighter-rouge&quot;&gt;@Bean&lt;/code&gt; で登録しておきます。
-RouterFunctionのレスポンスを返す部分はもう少しいい実装がありそうですが、一旦こうしました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RouterFunction&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Component
-public class HelloWebClientHandler {
-
-    @Value(&quot;${app.backend.uri}&quot;)
-    private String baseUri;
-
-    private static final String PATH = &quot;/test&quot;;
-
-    public RouterFunction&amp;lt;ServerResponse&amp;gt; routes() {
-        return RouterFunctions.route(
-                RequestPredicates.GET(&quot;/hello&quot;)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON))
-                , this::webclient);
-    }
-
-    private Mono&amp;lt;ServerResponse&amp;gt; webclient(ServerRequest req) {
-        return WebClient.builder()
-                .baseUrl(baseUri)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .build()
-                .get()
-                .uri(uriBuilder -&amp;gt; {
-                    uriBuilder.path(PATH);
-                    if (req.queryParam(&quot;time&quot;).isPresent()) {
-                        uriBuilder.queryParam(&quot;time&quot;, req.queryParam(&quot;time&quot;).get());
-                    }
-                    return uriBuilder.build();
-                })
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .flatMap(response -&amp;gt;
-                    ServerResponse.ok()
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(response.bodyToMono(User.class), User.class)
-                            .switchIfEmpty(ServerResponse.notFound().build())
-                );
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;RouterFunctionを登録する側&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;作成した &lt;code class=&quot;highlighter-rouge&quot;&gt;HelloWebClientHandler&lt;/code&gt; を登録します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Configuration
-@EnableWebFlux
-public class WebConfig extends DelegatingWebFluxConfiguration {
-    // ~中略~
-
-    @Bean
-    RouterFunction&amp;lt;ServerResponse&amp;gt; route7(HelloWebClientHandler webClientHandler) {
-        return webClientHandler.routes();
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;あとは &lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt; メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。&lt;/p&gt;
-
-&lt;h2 id=&quot;パフォーマンスを測定してみた&quot;&gt;パフォーマンスを測定してみた&lt;/h2&gt;
-&lt;p&gt;springbootのjarファイルをEC2上に置いて実際にバックプレッシャーの効果を見てみましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;環境情報&quot;&gt;環境情報&lt;/h3&gt;
-&lt;p&gt;私のローカルマシン上からgatlingを実行し、EC2上のspringbootアプリケーションに負荷がけをします。
-springbootアプリケーションは、バックエンドのmockサーバ(OpenRestyを使用)に対して &lt;code class=&quot;highlighter-rouge&quot;&gt;WebClient&lt;/code&gt; を使ってAsyncなHTTP通信を行います。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/architecture.png&quot; alt=&quot;architechture&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;なお、EC2インスタンスは &lt;code class=&quot;highlighter-rouge&quot;&gt;t2.small&lt;/code&gt; を使用し、JVMへの割当メモリは &lt;code class=&quot;highlighter-rouge&quot;&gt;最大256M&lt;/code&gt; に設定しています。
-また、バックプレッシャーを観測したいので、mockサーバではsleep処理を入れています。&lt;/p&gt;
-
-&lt;h3 id=&quot;バックプレッシャーを体験する&quot;&gt;バックプレッシャーを体験する&lt;/h3&gt;
-&lt;h4 id=&quot;springboot-webfluxは普通に生きている&quot;&gt;springboot-webfluxは普通に生きている&lt;/h4&gt;
-&lt;p&gt;バックプレッシャーの効果を見てみましょう。
-gatlingのリクエスト量と、mockサーバ側のsleep時間は以下です。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
-      &lt;th&gt;mockのsleep時間&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;150req/s&lt;/td&gt;
-      &lt;td&gt;1s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-sleep-150.png&quot; alt=&quot;webflux-sleep-150&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;普通に全て200レスポンスが返却されていますね。すごい。&lt;/p&gt;
-
-&lt;p&gt;次にsleep時間を &lt;code class=&quot;highlighter-rouge&quot;&gt;5s&lt;/code&gt; にして見てみます。
-対照実験的な意味で &lt;code class=&quot;highlighter-rouge&quot;&gt;150req/s&lt;/code&gt; がよかったのですが、今回は私のマシンのパワー不足により &lt;code class=&quot;highlighter-rouge&quot;&gt;130&lt;/code&gt; までしか出ませんでした。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
-      &lt;th&gt;mockのsleep時間&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;130req/s&lt;/td&gt;
-      &lt;td&gt;5s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-sleep-130-5s.png&quot; alt=&quot;webflux-sleep-130-5s&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;バックエンドサーバが5秒も応答待ちでも普通に200応答できていますね。&lt;/p&gt;
-
-&lt;h4 id=&quot;springboot-webmvcはやっぱり死んだ&quot;&gt;springboot-webmvcはやっぱり死んだ&lt;/h4&gt;
-&lt;p&gt;比較として、従来の &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-webmvc&lt;/code&gt; ではどうでしょう。
-サーブレットコンテナはデフォルトの &lt;code class=&quot;highlighter-rouge&quot;&gt;embed-tomcat&lt;/code&gt; として、&lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; の設定もデフォルトとします。
-また、mockへの通信を行う &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; はConnectionPoolingから取得するように実装した上で以下の条件でリクエストを流してみました。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;gatlingのリクエスト&lt;/th&gt;
-      &lt;th&gt;mockのsleep時間&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;100req/s&lt;/td&gt;
-      &lt;td&gt;1s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/mvc-sleep-100.png&quot; alt=&quot;mvc-sleep-100&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;うむ。やはりだめでしたか。&lt;/p&gt;
-
-&lt;p&gt;一応、同条件にて、HttpClientのPool数も増やしたりして調整しましたが、エラーレスポンス件数が0にはなりませんでした。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/mvc-sleep-100-tuned.png&quot; alt=&quot;mvc-sleep-100-tuned&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;スレッド増加の傾向を見てみる&quot;&gt;スレッド増加の傾向を見てみる&lt;/h3&gt;
-&lt;p&gt;負荷試験中のスレッドの増加傾向も見てみましょう。この観点は単純に &lt;code class=&quot;highlighter-rouge&quot;&gt;netty4&lt;/code&gt; vs &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat&lt;/code&gt; に依存する部分が大きいのですが、見てみましょう。&lt;/p&gt;
-
-&lt;p&gt;webflux(Netty4)の場合は起動時からスレッド数が一定ですね。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/webflux-thread.png&quot; alt=&quot;webflux-thread&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;tomcatはやはりリクエストをさばくためにスレッドが必要になってしまうため、増加傾向にあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180316/tomcat-thread.png&quot; alt=&quot;tomcat-thread&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-webflux&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;springboo-webmvc&lt;/code&gt; を比較して、バックプレッシャーがどんな感じかを確認しました。
-梱包されている &lt;code class=&quot;highlighter-rouge&quot;&gt;netty4&lt;/code&gt; が持つnon-blockingな仕組みのおかげで、バックエンドサーバの遅延に引きずられることなくレスポンスを返却できていることがわかります。&lt;/p&gt;
-
-&lt;p&gt;しかしながら、もちろん銀の弾丸ではなくて、実装する上でのデメリットや考慮ポイントが他のサイトを見ると情報が色々出てきます。
-例えば、自身が書こうとしている処理がblockingな処理なのか、non-blockingな処理なのかを実装する側が気をつけないといけない、という点があります。
-そのためには、ライブラリがどのように動いているかをきちんと把握しないといけないでしょう。
-加えて、スレッドを共有する形でアプリケーションが動作するので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ThreadLocal&lt;/code&gt; をむやみに使わない方が良い気もしています。&lt;/p&gt;
-
-&lt;p&gt;ただ、 tomcatでサポートしているServlet 3.1の非同期IOよりは良さそうなので、用法を見定めた上で使っていきたいですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://acro-engineer.hatenablog.com/entry/2013/10/17/113216&quot;&gt;How to Migrate Netty 3 to 4 (Netty 番外編)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="java" /><category term="spring" /><category term="webflux" /><category term="reactor" /><summary type="html">2018/3にリリースされた springboot2 から spring5 がバンドルされるようになりました。 リリースの中でも注目機能と言われている webflux 、とりわけ webflux が内包しているリアクティブプログラミングライブラリである Reactor はspringユーザであれば気になるはずです。今回はバックプレッシャーがいい感じだったので、それをまとめてみました。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="cloudfront" /><category term="serverless" /><summary type="html">このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。</summary></entry></feed>
