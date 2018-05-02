@@ -52,19 +52,19 @@ layout: default
 
       {% if page.share %}{% include social-share.html %}{% endif %}
 
-      {% include post_pagination.html %}
     </div>
+
+    {% include post_pagination.html %}
 
     {% if site.comments.provider and page.comments %}
       {% include comments.html %}
     {% endif %}
-  </article>
 
-  {% comment %}<!-- only show related on a post page when not disabled -->{% endcomment %}
+  </article>
   
   {% if page.id and page.related %}
   <div class="page__related">
-    <h3 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "関連記事" }}</h3>
+    <h2 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "関連記事" }}</h2>
     {% assign max_related = 5 %}
     {% assign min_common_tags = 1 %}
     {% assign max_related_counter = 0 %}
@@ -82,7 +82,7 @@ layout: default
   
         {% if same_tag_count >= min_common_tags %}
 
-          {% include archive-single.html type="grid" %}
+          {% include archive-single.html type="list" %}
 
           {% assign max_related_counter = max_related_counter | plus: 1 %}
           {% if max_related_counter >= max_related %}
@@ -93,5 +93,7 @@ layout: default
     </div>      
   </div>
   {% endif %}
+
+  {% comment %}<!-- only show related on a post page when not disabled -->{% endcomment %}
 
 </div>
