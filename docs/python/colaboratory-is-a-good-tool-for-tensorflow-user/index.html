@@ -1,0 +1,1087 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Colaboratoryは機械学習ライブラリ使いのための最高のツールだった | そうなんでげす</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Colaboratoryは機械学習ライブラリ使いのための最高のツールだった" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="普段Jupter notebookで統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題のColaboratoryを触り、その特徴をまとめてみました。" />
+<meta property="og:description" content="普段Jupter notebookで統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題のColaboratoryを触り、その特徴をまとめてみました。" />
+<link rel="canonical" href="https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" />
+<meta property="og:url" content="https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-02T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"description":"普段Jupter notebookで統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題のColaboratoryを触り、その特徴をまとめてみました。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/","headline":"Colaboratoryは機械学習ライブラリ使いのための最高のツールだった","dateModified":"2018-05-02T00:00:00+09:00","datePublished":"2018-05-02T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Colaboratoryは機械学習ライブラリ使いのための最高のツールだった">
+    <meta itemprop="description" content="普段 Jupter notebook で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の Colaboratory を触ってみました。">
+    <meta itemprop="datePublished" content="May 02, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Colaboratoryは機械学習ライブラリ使いのための最高のツールだった
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>普段 <a href="http://jupyter.org/">Jupter notebook</a> で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の <a href="https://colab.research.google.com/">Colaboratory</a> を触ってみました。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#colaboratoryとは" id="markdown-toc-colaboratoryとは">Colaboratoryとは</a></li>
+  <li><a href="#colaboratoryの特徴" id="markdown-toc-colaboratoryの特徴">Colaboratoryの特徴</a>    <ul>
+      <li><a href="#利用料がタダ" id="markdown-toc-利用料がタダ">利用料がタダ</a></li>
+      <li><a href="#gpuも使える" id="markdown-toc-gpuも使える">GPUも使える</a></li>
+      <li><a href="#google-driveと連携できる" id="markdown-toc-google-driveと連携できる">Google Driveと連携できる</a></li>
+      <li><a href="#デフォルトでスニペットが揃っている" id="markdown-toc-デフォルトでスニペットが揃っている">デフォルトでスニペットが揃っている</a></li>
+      <li><a href="#実行環境が選択できる" id="markdown-toc-実行環境が選択できる">実行環境が選択できる</a>        <ul>
+          <li><a href="#ローカルマシンの設定" id="markdown-toc-ローカルマシンの設定">ローカルマシンの設定</a></li>
+          <li><a href="#colaboratoryの設定" id="markdown-toc-colaboratoryの設定">Colaboratoryの設定</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#注意事項" id="markdown-toc-注意事項">注意事項</a>    <ul>
+      <li><a href="#長時間の実行には向かない" id="markdown-toc-長時間の実行には向かない">長時間の実行には向かない</a></li>
+      <li><a href="#コードをクラウド環境に乗せることになる" id="markdown-toc-コードをクラウド環境に乗せることになる">コードをクラウド環境に乗せることになる</a></li>
+      <li><a href="#ランタイム切り替え時にはモジュールの差分を意識する" id="markdown-toc-ランタイム切り替え時にはモジュールの差分を意識する">ランタイム切り替え時にはモジュールの差分を意識する</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="colaboratoryとは">Colaboratoryとは</h2>
+
+<p><a href="https://colab.research.google.com/">Colaboratory</a> はGoogleから提供されている<a href="http://jupyter.org/">Jupter notebook</a> 環境です。</p>
+
+<p>実行環境はGoogle側のクラウドを使わせていただけるので、ユーザの <strong>環境構築は不要</strong> です。</p>
+
+<p>ちなみに、Googleアカウントが無くても利用できますが、Googleアカウントと連携した方がメリットが大きいので、
+作成することをオススメします。</p>
+
+<p><img src="/assets/images/20180502/colaboratory_top.png" alt="colaboratory_top" /></p>
+
+<p>以降では、早速使ってみたColaboratoryの特徴をまとめました。</p>
+
+<h2 id="colaboratoryの特徴">Colaboratoryの特徴</h2>
+<h3 id="利用料がタダ">利用料がタダ</h3>
+
+<p>まず、これが最大のメリットと言えるでしょう。
+<a href="https://research.google.com/colaboratory/faq.html">よくある質問</a> にも記載があったので引用します。</p>
+
+<blockquote>
+  <p><strong>Is it free to use?</strong></p>
+
+  <p>Yes. Colaboratory is a research project that is free to use.</p>
+</blockquote>
+
+<p>無料です。最高です。</p>
+
+<p>なお、特に記載が見当たらなかったので、後述の <strong>GPU利用も無料</strong> で利用できると思います。これは有りがたい。</p>
+
+<h3 id="gpuも使える">GPUも使える</h3>
+
+<p>なんと、<strong>実行環境にGPUも選択できるのです</strong> 。</p>
+
+<p>ローカルマシンだと、全力でファンが回転して、ブラウジングにすら支障が出ます。</p>
+
+<p>ただでさえクラウド上に計算リソースを逃がせるだけでもありがたいのに、GPUを使わせてもらえるなんて最高です。</p>
+
+<p>設定の手順としては以下の2ステップで終了です。</p>
+
+<p><br /></p>
+
+<ul>
+  <li><strong>メニューから [Runtime] &gt; [Change runtime type] を選択</strong></li>
+</ul>
+
+<p><br /></p>
+
+<p><img src="/assets/images/20180502/switch_to_gpu_1.png" alt="switch_to_gpu_1" /></p>
+
+<p><br /></p>
+
+<ul>
+  <li><strong>Hardware accelerator を「GPU」に変更して「Save」</strong></li>
+</ul>
+
+<p><br /></p>
+
+<p><img src="/assets/images/20180502/switch_to_gpu_2.png" alt="switch_to_gpu_2" /></p>
+
+<p><br /></p>
+
+<p>notebook上で以下のコードを実行すれば、GPUに変更されたことを確認できます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import tensorflow as tf
+tf.test.gpu_device_name()
+</code></pre></div></div>
+
+<p>デバイス名が表示されていますね。(CPUの場合は空文字が返ってきます)</p>
+
+<p><img src="/assets/images/20180502/switch_to_gpu_3.png" alt="switch_to_gpu_3" /></p>
+
+<h3 id="google-driveと連携できる">Google Driveと連携できる</h3>
+
+<p>Google のサービスだけあって、Google Driveとの連携も容易です。
+notebookが <code class="highlighter-rouge">.ipynb</code> 形式で連携できるのが嬉しいポイントです。</p>
+
+<p>Colaboratoryで作成したプログラムは自分のGoogle Driveに <code class="highlighter-rouge">.ipynb</code> で保存されます。</p>
+
+<p><img src="/assets/images/20180502/save_to_drive.png" alt="save_to_drive" /></p>
+
+<p><br /></p>
+
+<p>逆に、既にローカルマシン上に存在する <code class="highlighter-rouge">.ipynb</code> ファイルのアップロードには メニューから [Upload notebook] を選択し、
+ファイルをドラッグ&amp;ドロップするだけで読み込むことができます。</p>
+
+<p><img src="/assets/images/20180502/upload_notebook.png" alt="upload_notebook" /></p>
+
+<p><br /></p>
+
+<p>もちろん、Google Drive上にアップロードした <code class="highlighter-rouge">.ipynb</code> ファイルをColaboratoryで開くことも可能です。
+Google Drive上のアイコンが見た目的に違いますし、開こうとするとポップアップが出たりしますが、大丈夫でした。</p>
+
+<h3 id="デフォルトでスニペットが揃っている">デフォルトでスニペットが揃っている</h3>
+
+<p>Colaboratory はJupyter notebookのGUIを少し拡張していて、コードスニペットの機能を持っています。
+コードスニペットを呼び出して、notebookのcellに埋め込むことができます。
+特にGoogle Driveと連携する場合などには、Google APIの呼び出しのコード片を貼り付けるだけで済むので重宝します。</p>
+
+<p><img src="/assets/images/20180502/use_snipet.png" alt="use_snipet" /></p>
+
+<p>ショートカットキーもバインドされていて、 <code class="highlighter-rouge">Command/Ctrl + Alt + P</code> でスニペットウィンドウが表示されるので
+覚えておくのが良さそうです。</p>
+
+<h3 id="実行環境が選択できる">実行環境が選択できる</h3>
+
+<p>少し特殊なユースケースですが、ランタイムをColaboratoryからローカルマシンに切り替えることができます。
+例えば、Colaboratoryで作成したコードをローカルマシンのGPUで動かしたい場合などが該当します。</p>
+
+<p>設定手順は少し特殊なので以下にまとめます。</p>
+
+<h4 id="ローカルマシンの設定">ローカルマシンの設定</h4>
+
+<ul>
+  <li>jupyter notebookをインストールしておく</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install jupyter\[notebook\]
+</code></pre></div></div>
+
+<ul>
+  <li>serverextensionを有効にする</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install jupyter_http_over_ws
+jupyter serverextension enable --py jupyter_http_over_ws
+</code></pre></div></div>
+
+<ul>
+  <li>Colaboratoryのアクセスを許可する</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=8888
+</code></pre></div></div>
+
+<h4 id="colaboratoryの設定">Colaboratoryの設定</h4>
+
+<p>上の手順でローカルマシン上でJupyter notebookが起動している状態にします。</p>
+
+<p>その後、画面右上側の「Connect」 メニューで「Connect to local runtime…」 を選択します。</p>
+
+<p><br /></p>
+
+<p><img src="/assets/images/20180502/switch_runtime.png" alt="switch_runtime" /></p>
+
+<p><br /></p>
+
+<p>これでローカルマシンをランタイムとして実行できます。</p>
+
+<h2 id="注意事項">注意事項</h2>
+
+<p>Colaboratory を使う上での注意点を少しまとめました。</p>
+
+<h3 id="長時間の実行には向かない">長時間の実行には向かない</h3>
+
+<p>ColaboratoryではGPUも使うことができて大変ありがたいのですが、長時間専有して使うことは推奨されていないようです。
+<a href="https://research.google.com/colaboratory/faq.html">よくある質問</a> にも、
+長時間の実行、特に仮想通貨のマイニングには使わないように、と記載がされていました。</p>
+
+<blockquote>
+  <p><strong>How may I use GPUs and why are they sometimes unavailable?</strong></p>
+
+  <p>Colaboratory is intended for interactive use. Long-running background computations, particularly on
+GPUs, may be stopped. Please do not use Colaboratory for cryptocurrency mining. Doing so is
+unsupported and may result in service unavailability. We encourage users who wish to run continuous
+or long-running computations through Colaboratory’s UI to use a local runtime.</p>
+</blockquote>
+
+<p>ちなみに、 <a href="https://stackoverflow.com/questions/49438284/google-colaboratory-with-gpu">GPUを12時間以上実行しようとしたツワモノ</a> の存在を確認しましたが、
+連続稼働時間については公式から具体的な言及がなされていないので、Colaboratoryを商用環境的な用途では使わない方が懸命かもしれません。</p>
+
+<h3 id="コードをクラウド環境に乗せることになる">コードをクラウド環境に乗せることになる</h3>
+
+<p>これはColaboratoryに限らず、クラウドサービス利用における一般的な話になりますが、
+ソースコード管理やデータの取扱いのガバナンスが厳しい企業では利用は難しいかもしれません。</p>
+
+<p>たとえ、用途が一時的であっても、クラウド上に自社の貴重な資産がアップロードされることになるからです。</p>
+
+<h3 id="ランタイム切り替え時にはモジュールの差分を意識する">ランタイム切り替え時にはモジュールの差分を意識する</h3>
+
+<p>当たり前ですが、ランタイムをColaboratoryからローカル環境に切り替える場合には、
+ローカル環境にインストールしているPython モジュールとColaboratoryに差分があることを理解しておきましょう。</p>
+
+<p>具体的に言うと、以下のコードをColaboratoryとローカルのJupyter notebook上の両方で実行してみるとわかります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import pkg_resources
+[pkg for pkg in pkg_resources.working_set]
+</code></pre></div></div>
+
+<ul>
+  <li>ColaboratoryにデフォルトでインストールされているPythonモジュール</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[xgboost 0.7.post4 (/usr/local/lib/python3.6/dist-packages),
+ wheel 0.31.0 (/usr/local/lib/python3.6/dist-packages),
+ Werkzeug 0.14.1 (/usr/local/lib/python3.6/dist-packages),
+ webencodings 0.5.1 (/usr/local/lib/python3.6/dist-packages),
+ wcwidth 0.1.7 (/usr/local/lib/python3.6/dist-packages),
+ urllib3 1.22 (/usr/local/lib/python3.6/dist-packages),
+ uritemplate 3.0.0 (/usr/local/lib/python3.6/dist-packages),
+ traitlets 4.3.2 (/usr/local/lib/python3.6/dist-packages),
+ tornado 4.5.3 (/usr/local/lib/python3.6/dist-packages),
+ testpath 0.3.1 (/usr/local/lib/python3.6/dist-packages),
+ terminado 0.8.1 (/usr/local/lib/python3.6/dist-packages),
+ termcolor 1.1.0 (/usr/local/lib/python3.6/dist-packages),
+ tensorflow 1.7.0 (/usr/local/lib/python3.6/dist-packages),
+ tensorboard 1.7.0 (/usr/local/lib/python3.6/dist-packages),
+ sympy 1.1.1 (/usr/local/lib/python3.6/dist-packages),
+ statsmodels 0.8.0 (/usr/local/lib/python3.6/dist-packages),
+ six 1.11.0 (/usr/local/lib/python3.6/dist-packages),
+ simplegeneric 0.8.1 (/usr/local/lib/python3.6/dist-packages),
+ setuptools 39.1.0 (/usr/local/lib/python3.6/dist-packages),
+ seaborn 0.7.1 (/usr/local/lib/python3.6/dist-packages),
+ scipy 0.19.1 (/usr/local/lib/python3.6/dist-packages),
+ scikit-learn 0.19.1 (/usr/local/lib/python3.6/dist-packages),
+ scikit-image 0.13.1 (/usr/local/lib/python3.6/dist-packages),
+ rsa 3.4.2 (/usr/local/lib/python3.6/dist-packages),
+ requests 2.18.4 (/usr/local/lib/python3.6/dist-packages),
+ requests-oauthlib 0.8.0 (/usr/local/lib/python3.6/dist-packages),
+ pyzmq 16.0.4 (/usr/local/lib/python3.6/dist-packages),
+ PyYAML 3.12 (/usr/local/lib/python3.6/dist-packages),
+ PyWavelets 0.5.2 (/usr/local/lib/python3.6/dist-packages),
+ pytz 2018.4 (/usr/local/lib/python3.6/dist-packages),
+ python-dateutil 2.5.3 (/usr/local/lib/python3.6/dist-packages),
+ pyparsing 2.2.0 (/usr/local/lib/python3.6/dist-packages),
+ Pygments 2.1.3 (/usr/local/lib/python3.6/dist-packages),
+ pyasn1 0.4.2 (/usr/local/lib/python3.6/dist-packages),
+ pyasn1-modules 0.2.1 (/usr/local/lib/python3.6/dist-packages),
+ ptyprocess 0.5.2 (/usr/local/lib/python3.6/dist-packages),
+ psutil 5.4.5 (/usr/local/lib/python3.6/dist-packages),
+ protobuf 3.5.2.post1 (/usr/local/lib/python3.6/dist-packages),
+ prompt-toolkit 1.0.15 (/usr/local/lib/python3.6/dist-packages),
+ portpicker 1.2.0 (/usr/local/lib/python3.6/dist-packages),
+ plotly 1.12.12 (/usr/local/lib/python3.6/dist-packages),
+ pip 10.0.1 (/usr/local/lib/python3.6/dist-packages),
+ Pillow 4.0.0 (/usr/local/lib/python3.6/dist-packages),
+ pickleshare 0.7.4 (/usr/local/lib/python3.6/dist-packages),
+ pexpect 4.5.0 (/usr/local/lib/python3.6/dist-packages),
+ patsy 0.5.0 (/usr/local/lib/python3.6/dist-packages),
+ pandocfilters 1.4.2 (/usr/local/lib/python3.6/dist-packages),
+ pandas 0.22.0 (/usr/local/lib/python3.6/dist-packages),
+ pandas-gbq 0.4.1 (/usr/local/lib/python3.6/dist-packages),
+ opencv-python 3.4.0.12 (/usr/local/lib/python3.6/dist-packages),
+ olefile 0.45.1 (/usr/local/lib/python3.6/dist-packages),
+ oauthlib 2.0.7 (/usr/local/lib/python3.6/dist-packages),
+ oauth2client 4.1.2 (/usr/local/lib/python3.6/dist-packages),
+ numpy 1.14.3 (/usr/local/lib/python3.6/dist-packages),
+ notebook 5.2.2 (/usr/local/lib/python3.6/dist-packages),
+ nltk 3.2.5 (/usr/local/lib/python3.6/dist-packages),
+ networkx 2.1 (/usr/local/lib/python3.6/dist-packages),
+ nbformat 4.4.0 (/usr/local/lib/python3.6/dist-packages),
+ nbconvert 5.3.1 (/usr/local/lib/python3.6/dist-packages),
+ mpmath 1.0.0 (/usr/local/lib/python3.6/dist-packages),
+ mistune 0.8.3 (/usr/local/lib/python3.6/dist-packages),
+ matplotlib 2.1.2 (/usr/local/lib/python3.6/dist-packages),
+ MarkupSafe 1.0 (/usr/local/lib/python3.6/dist-packages),
+ Markdown 2.6.11 (/usr/local/lib/python3.6/dist-packages),
+ Keras 2.1.6 (/usr/local/lib/python3.6/dist-packages),
+ jupyter-core 4.4.0 (/usr/local/lib/python3.6/dist-packages),
+ jupyter-client 5.2.3 (/usr/local/lib/python3.6/dist-packages),
+ jsonschema 2.6.0 (/usr/local/lib/python3.6/dist-packages),
+ Jinja2 2.10 (/usr/local/lib/python3.6/dist-packages),
+ ipython 5.5.0 (/usr/local/lib/python3.6/dist-packages),
+ ipython-genutils 0.2.0 (/usr/local/lib/python3.6/dist-packages),
+ ipykernel 4.6.1 (/usr/local/lib/python3.6/dist-packages),
+ idna 2.6 (/usr/local/lib/python3.6/dist-packages),
+ httplib2 0.11.3 (/usr/local/lib/python3.6/dist-packages),
+ html5lib 0.9999999 (/usr/local/lib/python3.6/dist-packages),
+ h5py 2.7.1 (/usr/local/lib/python3.6/dist-packages),
+ grpcio 1.11.0 (/usr/local/lib/python3.6/dist-packages),
+ googleapis-common-protos 1.5.3 (/usr/local/lib/python3.6/dist-packages),
+ google-resumable-media 0.3.1 (/usr/local/lib/python3.6/dist-packages),
+ google-colab 0.0.1a1 (/usr/local/lib/python3.6/dist-packages),
+ google-cloud-translate 1.3.1 (/usr/local/lib/python3.6/dist-packages),
+ google-cloud-storage 1.8.0 (/usr/local/lib/python3.6/dist-packages),
+ google-cloud-language 1.0.1 (/usr/local/lib/python3.6/dist-packages),
+ google-cloud-core 0.28.1 (/usr/local/lib/python3.6/dist-packages),
+ google-cloud-bigquery 1.1.0 (/usr/local/lib/python3.6/dist-packages),
+ google-auth 1.4.1 (/usr/local/lib/python3.6/dist-packages),
+ google-auth-oauthlib 0.2.0 (/usr/local/lib/python3.6/dist-packages),
+ google-auth-httplib2 0.0.3 (/usr/local/lib/python3.6/dist-packages),
+ google-api-python-client 1.6.7 (/usr/local/lib/python3.6/dist-packages),
+ google-api-core 1.1.1 (/usr/local/lib/python3.6/dist-packages),
+ gast 0.2.0 (/usr/local/lib/python3.6/dist-packages),
+ future 0.16.0 (/usr/local/lib/python3.6/dist-packages),
+ entrypoints 0.2.3 (/usr/local/lib/python3.6/dist-packages),
+ decorator 4.3.0 (/usr/local/lib/python3.6/dist-packages),
+ cycler 0.10.0 (/usr/local/lib/python3.6/dist-packages),
+ crcmod 1.7 (/usr/local/lib/python3.6/dist-packages),
+ chardet 3.0.4 (/usr/local/lib/python3.6/dist-packages),
+ certifi 2018.4.16 (/usr/local/lib/python3.6/dist-packages),
+ cachetools 2.0.1 (/usr/local/lib/python3.6/dist-packages),
+ bleach 1.5.0 (/usr/local/lib/python3.6/dist-packages),
+ beautifulsoup4 4.6.0 (/usr/local/lib/python3.6/dist-packages),
+ astor 0.6.2 (/usr/local/lib/python3.6/dist-packages),
+ absl-py 0.2.0 (/usr/local/lib/python3.6/dist-packages)]
+</code></pre></div></div>
+
+<ul>
+  <li>Jupyter notebookにデフォルトでインストールされているPythonモジュール</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[widgetsnbextension 3.2.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ webencodings 0.5.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ wcwidth 0.1.7 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ traitlets 4.3.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ tornado 5.0.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ testpath 0.3.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ terminado 0.8.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ six 1.11.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ simplegeneric 0.8.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ setuptools 28.8.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ Send2Trash 1.5.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ qtconsole 4.3.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ pyzmq 17.0.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ python-dateutil 2.7.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ Pygments 2.2.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ ptyprocess 0.5.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ prompt-toolkit 1.0.15 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ pip 10.0.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ pickleshare 0.7.4 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ pexpect 4.5.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ parso 0.2.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ pandocfilters 1.4.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ notebook 5.4.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ nbformat 4.4.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ nbconvert 5.3.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ mistune 0.8.3 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ MarkupSafe 1.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jupyter 1.0.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jupyter-core 4.4.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jupyter-console 5.2.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jupyter-client 5.2.3 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jsonschema 2.6.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ Jinja2 2.10 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ jedi 0.12.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ ipywidgets 7.2.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ ipython 6.3.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ ipython-genutils 0.2.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ ipykernel 4.8.2 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ html5lib 1.0.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ entrypoints 0.2.3 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ decorator 4.3.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ bleach 2.1.3 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ backcall 0.1.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
+ appnope 0.1.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages)]
+</code></pre></div></div>
+
+<p>機械学習ライブラリや数値計算系ライブラリ、Google APIなどがColaboratoryには入っていますね。
+必要に応じてローカル環境にもライブラリをインストールしましょう。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回はColaboratoryの特徴をまとめてみました。
+実行環境として必要な基盤はほとんど揃っているため、簡単に開発をスタートできるのが大変嬉しいです。
+加えて、従来と比較して、Googleのサービスと容易に連携させることができるので、例えば、Google Spread Sheetに基データをストアしている方などは大変重宝するでしょう。
+ただし、Googleのクラウドサービスですから、仕事での利用を視野に入れている人は、所属企業のガバナンスを確認した上で使うと良いでしょう。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+  <li><a href="https://research.google.com/colaboratory/faq.html">Frequently Asked Questions</a></li>
+  <li><a href="https://research.google.com/colaboratory/local-runtimes.html">Local runtimes</a></li>
+</ul>
+
+<p><br /></p>
+<div style="text-align: center">
+<a target="_blank" href="https://www.amazon.co.jp/gp/product/4873118344/ref=as_li_tl?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=4873118344&amp;linkCode=as2&amp;tag=soudegesu-22&amp;linkId=972efa59090adfce72f22528173f3769"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4873118344&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=soudegesu-22" /></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;l=am2&amp;o=9&amp;a=4873118344" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/colaboratory" class="page__taxonomy-item" rel="tag">colaboratory</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/machine-learning" class="page__taxonomy-item" rel="tag">machine-learning</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/python" class="page__taxonomy-item" rel="tag">python</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/tensorflow" class="page__taxonomy-item" rel="tag">tensorflow</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/categories/python" class="page__taxonomy-item" rel="tag">python</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-05-02T00:00:00+09:00">May 02, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Colaboratoryは機械学習ライブラリ使いのための最高のツールだった https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+    </div>
+
+    
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/book/reinventing-organizations/" class="pagination--pager" title="「ティール組織」はこれからの経営者に読んで欲しい一冊
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+
+  </article>
+  
+  
+  <div class="page__related">
+    <h2 class="page__related-title">関連記事</h2>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/python/switch-python/" rel="permalink">Pythonの2と3を切り替えて仮想環境を作る
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。
+今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/python/python-datetime/" rel="permalink">Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、pythonのdatetimeを使った文字列から日時への変換 や タイムゾーンの変更 を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/tensorflow/tensorflow-anaconda/" rel="permalink">Anaconda環境にTensorflowをインストールする
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/python/pyenv/anaconda" rel="permalink">pyenvとpyenv-virtualenvでanacondaと共存する
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">はじめに
+今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
+anacondaを使用する機会も増えてきたので、pyenv installからのpyenv localコマンドでanaconda環境が構築するのですが、
+activateの部分をもう少しスマートに行いたいため、 pye...</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+    </div>      
+  </div>
+  
+
+  
+
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
