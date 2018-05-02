@@ -9,8 +9,9 @@
   <head>
     <meta charset="utf-8">
 
-<!-- Begin Jekyll SEO tag v2.3.0 -->
+<!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>AWS LambdaでCasperJSを実行してファイルアップロードを自動化する | そうなんでげす</title>
+<meta name="generator" content="Jekyll v3.7.3" />
 <meta property="og:title" content="AWS LambdaでCasperJSを実行してファイルアップロードを自動化する" />
 <meta name="author" content="soudegesu" />
 <meta property="og:locale" content="en_US" />
@@ -26,7 +27,7 @@
 <meta name="twitter:creator" content="@alten_manten" />
 <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 <script type="application/ld+json">
-{"name":null,"description":"AWS Lambda上でCasperJSを動かしてファイルアップロードの自動化を行いました。本来であればAPIでバイナリデータをPOSTできれば良かったのですが、アップロード先のシステムでAPIが存在しなかったため、CasperJSを使ってファイルをアップロードするという暴挙に出ました。AWS LambdaでCasperJSを実行する際の注意点などを書きます。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/aws/casperjs-on-lambda/","publisher":null,"image":null,"headline":"AWS LambdaでCasperJSを実行してファイルアップロードを自動化する","dateModified":"2018-04-23T00:00:00+09:00","datePublished":"2018-04-23T00:00:00+09:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/aws/casperjs-on-lambda/"},"@context":"http://schema.org"}</script>
+{"description":"AWS Lambda上でCasperJSを動かしてファイルアップロードの自動化を行いました。本来であればAPIでバイナリデータをPOSTできれば良かったのですが、アップロード先のシステムでAPIが存在しなかったため、CasperJSを使ってファイルをアップロードするという暴挙に出ました。AWS LambdaでCasperJSを実行する際の注意点などを書きます。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/aws/casperjs-on-lambda/","headline":"AWS LambdaでCasperJSを実行してファイルアップロードを自動化する","dateModified":"2018-04-23T00:00:00+09:00","datePublished":"2018-04-23T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/aws/casperjs-on-lambda/"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -472,6 +473,310 @@ CasperJSのコードも短かったのが良かったのかもしれません。
 
   
   
+  
+  <div class="page__related">
+    <h3 class="page__related-title">関連記事</h3>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/s3-cross-account/" rel="permalink">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
+設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
+しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
+共有された側ではS3バケットの...</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="permalink">AWS LambdaのコードをTerraformでデプロイする
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
+AWS Lambdaは Cloud9 がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。
+ブラウザエディタは そのままwebにつながる というのが最大の強みですが、まだまだ手元のリポジトリでコード...</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" rel="permalink">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/" rel="permalink">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
+今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
+AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/validate-certification-manager" rel="permalink">AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+          
+          
+            
+    </div>      
+  </div>
+  
+
 </div>
 
 
