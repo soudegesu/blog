@@ -124,7 +124,7 @@ var store = [{
         "tags": ["book"],
         "url": "https://www.soudegesu.com/book/reinventing-organizations/",
         "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
-        "title": "Colaboratoryは機械学習ライブラリ使いのための最高のツールだった",
+        "title": "Colaboratoryは機械学習エンジニアための最高のツールだった",
         "excerpt":"普段 Jupter notebook で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の Colaboratory を触ってみました。 Colaboratoryとは Colaboratoryの特徴 利用料がタダ GPUも使える Google Driveと連携できる デフォルトでスニペットが揃っている 実行環境が選択できる ローカルマシンの設定 Colaboratoryの設定 注意事項 長時間の実行には向かない コードをクラウド環境に乗せることになる ランタイム切り替え時にはモジュールの差分を意識する まとめ 参考にさせていただいたサイトColaboratoryとは Colaboratory はGoogleから提供されているJupter notebook 環境です。 実行環境はGoogle側のクラウドを使わせていただけるので、ユーザの 環境構築は不要 です。 ちなみに、Googleアカウントが無くても利用できますが、Googleアカウントと連携した方がメリットが大きいので、作成することをオススメします。 以降では、早速使ってみたColaboratoryの特徴をまとめました。 Colaboratoryの特徴 利用料がタダ まず、これが最大のメリットと言えるでしょう。よくある質問 にも記載があったので引用します。 Is it free to use? Yes. Colaboratory is a research project that is free to...","categories": ["python"],
         "tags": ["colaboratory","machine-learning","tensorflow","python"],
         "url": "https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/",

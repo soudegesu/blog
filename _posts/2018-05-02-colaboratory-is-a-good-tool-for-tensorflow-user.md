@@ -1,5 +1,5 @@
 ---
-title: "Colaboratoryは機械学習ライブラリ使いのための最高のツールだった"
+title: "Colaboratoryは機械学習エンジニアための最高のツールだった"
 description: "普段Jupter notebookで統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題のColaboratoryを触り、その特徴をまとめてみました。"
 date: 2018-05-02 00:00:00 +0900
 categories: python
