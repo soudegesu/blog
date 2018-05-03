@@ -51,7 +51,7 @@ S3を使わない理由は **節約** です!!
 
 アーキテクチャの概要は以下のようになります。
 
-![colaboratory_top]({{site.baseurl}}/assets/images/20180503/architecture.png)
+![architecture]({{site.baseurl}}/assets/images/20180503/architecture.png)
 
 ### express-sitemap を試す
 
