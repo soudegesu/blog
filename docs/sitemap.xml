@@ -105,6 +105,10 @@
 <lastmod>2018-05-02T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/nodejs/express-sitemap-module/</loc>
+<lastmod>2018-05-03T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -234,6 +238,9 @@
 <loc>https://www.soudegesu.com/tags/serverless/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/nodejs/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/tags/terraform/</loc>
 </url>
 <url>
@@ -256,6 +263,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/machine-learning/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/express/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
@@ -301,6 +311,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/book/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/categories/nodejs/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/page2/</loc>
