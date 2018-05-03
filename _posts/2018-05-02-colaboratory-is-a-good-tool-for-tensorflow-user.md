@@ -120,20 +120,20 @@ Colaboratory はJupyter notebookのGUIを少し拡張していて、コードス
 
 * jupyter notebookをインストールしておく
 
-```
+```bash
 pip install jupyter\[notebook\]
 ```
 
 * serverextensionを有効にする
 
-```
+```bash
 pip install jupyter_http_over_ws
 jupyter serverextension enable --py jupyter_http_over_ws
 ```
 
 * Colaboratoryのアクセスを許可する
 
-```
+```bash
 jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=8888
 ```
 
@@ -186,14 +186,14 @@ ColaboratoryではGPUも使うことができて大変ありがたいのです�
 
 具体的に言うと、以下のコードをColaboratoryとローカルのJupyter notebook上の両方で実行してみるとわかります。
 
-```
+```python
 import pkg_resources
 [pkg for pkg in pkg_resources.working_set]
 ```
 
 * ColaboratoryにデフォルトでインストールされているPythonモジュール
 
-```
+```python
 [xgboost 0.7.post4 (/usr/local/lib/python3.6/dist-packages),
  wheel 0.31.0 (/usr/local/lib/python3.6/dist-packages),
  Werkzeug 0.14.1 (/usr/local/lib/python3.6/dist-packages),
@@ -301,7 +301,7 @@ import pkg_resources
 
 * Jupyter notebookにデフォルトでインストールされているPythonモジュール
 
-```
+```python
 [widgetsnbextension 3.2.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  webencodings 0.5.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  wcwidth 0.1.7 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),

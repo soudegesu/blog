@@ -55,7 +55,7 @@ AuroraというよりはMySQLの仕様に関する説明も多いのでご了承
 以下のようなクエリを発行し `hoge` テーブルを作成します。
 加えて、パーティション名のルールは `p` + `yyyyMMdd` として、`create_at` カラムでRANGEパーティション指定をします。
 
-```
+```sql
 -- create hoge table
 DROP TABLE IF EXISTS hoge;
 CREATE TABLE hoge (
@@ -75,7 +75,7 @@ ALTER TABLE hoge PARTITION BY RANGE (UNIX_TIMESTAMP(create_at)) (
 次にパーティションを追加するためのプロシージャを登録します。
 可視性の観点でバリデーション等は省略しています。
 
-```
+```sql
 --
 -- hogeテーブルにパーティションを追加するストアドプロシージャ
 -- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
@@ -122,7 +122,7 @@ DELIMITER ;
 
 とりあえず、現在日付から365日ぶんのパーティションを追加しましょう。
 
-```
+```sql
 CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
 ```
 
@@ -139,7 +139,7 @@ MySQLには `CREATE EVENT` 構文にてイベントをスケジュール実行�
 その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
 少々見づらいですが、`INFORMATION_SCHEMA` から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。
 
-```
+```sql
 CREATE EVENT add_hoge_partition
 ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
 COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
@@ -165,13 +165,13 @@ Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Wr
 Clusterを組んだ場合においては、「WriterとReaderの両方で実行されてしまうのでは？」と思い、以下のクエリを実行してみたところ、**プロシージャはWriterで1回だけ呼ばれている** ことが確認できました。
 
 * WriterでEVENTを確認
-```
+```sql
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
 > 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
 ```
 
 * ReaderでEVENTを確認
-```
+```sql
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
 > Empty set (0.01 sec)
 ```
@@ -193,7 +193,7 @@ Auroraからlambdaを実行するために、別途権限を付与する必要�
 IAMのメニューから専用のIAM Roleを作成しましょう(今回は `rdsToLambdaRole` という名前にします)。
 `rdsToLambdaRole` には 
 
-```
+```json
 "Action": [
   "lambda:InvokeFunction"
 ]
@@ -217,7 +217,7 @@ lambda関数 `rds_monitor` を `mysql.lambda_async` プロシージャで呼び�
 
 追記箇所は以下のようになります。
 
-```
+```sql
     -- 失敗したらlambdaで通知する
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
       BEGIN
@@ -233,7 +233,7 @@ lambda関数 `rds_monitor` を `mysql.lambda_async` プロシージャで呼び�
 
 先程のプロシージャに組み込んだ場合は以下のようになります。
 
-```
+```sql
 --
 -- hogeテーブルにパーティションを追加するストアドプロシージャ
 -- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時

@@ -75,7 +75,7 @@ Lambdaに付与するIAM Roleを作成します。
 まず、以下のようなAssume Role Policy を作成します。
  `Lambda` と `Lambda@Edge` は別ものとして扱われているため、 `edgelambda.amazonaws.com` の記載が必要です。
 
-```
+```json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -138,7 +138,7 @@ Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイ
 #### Lambda@EdgeからCloudfrontへのレスポンス形式に注意する
 `オリジンリクエスト` の場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。
 
-```
+```javascript
 {
     body: 'content',
     bodyEncoding: 'text' | 'base64',
@@ -171,7 +171,7 @@ Cloudfrontは設定項目が多いためTerraformに書き起こすのに時間�
 
 * LambdaのTerraformサンプル
 
-```
+```bash
 resource "aws_lambda_function" "hogehoge" {
     filename = "../hogehoge.zip"
     function_name = "hoeghoge"
@@ -193,7 +193,7 @@ data "archive_file" "hogehoge" {
 
 * CloudfrontのTerraformサンプル
 
-```
+```bash
 resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
     origin {
         domain_name = "xxxx.soudegesu.com"
@@ -250,7 +250,7 @@ resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
 
 ポイントなのは Cloudfront側の以下の部分で、
 
-```
+```bash
     lambda_function_association {
         event_type = "origin-request"
         lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"

@@ -29,19 +29,19 @@ Homebrewがあれば簡単にインストールができます。
 
 * リポジトリを追加
 
-```
+```bash
 brew tap ethereum/ethereum
 ```
 
 * Ethereum をインストール
 
-```
+```bash
 brew install ethereum
 ```
 
 * バージョンを確認
 
-```
+```bash
 geth -h
 
 > NAME:
@@ -61,7 +61,7 @@ geth -h
 
 以降の作業は以下のディレクトリにて実施します。(誤解を招かないように念のため)
 
-```
+```bash
 pwd
 > /Users/xxxxxx/workspace/eth_private_net
 ```
@@ -72,14 +72,14 @@ pwd
 `Ethereum` の 1.6から `puppeth` コマンドが追加されました。
 これを使って初期化を行います。
 
-```
+```bash
 puppeth
 ```
 
 すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
 今回は `soudegesu` にしました。
 
-```
+```bash
 +-----------------------------------------------------------+
 | Welcome to puppeth, your Ethereum private network manager |
 |                                                           |
@@ -98,7 +98,7 @@ Please specify a network name to administer (no spaces, please)
 
 以降も対話形式で入力していきます。まず、 `2. Configure new genesis` を選択します。
 
-```
+```bash
 Sweet, you can set this via --network=soudegesu next time!
 
 INFO [03-05|14:24:17] Administering Ethereum network           name=soudegesu
@@ -114,7 +114,7 @@ What would you like to do? (default = stats)
 
 次にコンセンサスルールを決めます。今回は `Ethash` にしましょう。
 
-```
+```bash
 Which consensus engine to use? (default = clique)
  1. Ethash - proof-of-work
  2. Clique - proof-of-authority
@@ -123,7 +123,7 @@ Which consensus engine to use? (default = clique)
 
 次はとりあえずデフォルトにしておきます。
 
-```
+```bash
 Which accounts are allowed to seal? (mandatory at least one)
 > 0x
 ```
@@ -131,7 +131,7 @@ Which accounts are allowed to seal? (mandatory at least one)
 次に使用するネットワークIDを指定します。
 適当に `4224` にします。
 
-```
+```bash
 Specify your chain/network ID if you want an explicit one (default = random)
 > 4224
 ```
@@ -147,7 +147,7 @@ Specify your chain/network ID if you want an explicit one (default = random)
 
 次にgenesisの設定管理を選択します。
 
-```
+```bash
 What would you like to do? (default = stats)
  1. Show network stats
  2. Manage existing genesis
@@ -158,7 +158,7 @@ What would you like to do? (default = stats)
 
 genesisの設定をエクスポートします。
 
-```
+```bash
  1. Modify existing fork rules
  2. Export genesis configuration
  3. Remove genesis configuration
@@ -167,7 +167,7 @@ genesisの設定をエクスポートします。
 
 次はデフォルトでOK
 
-```
+```bash
 Which file to save the genesis into? (default = soudegesu.json)
 >
 ```
@@ -177,7 +177,7 @@ Which file to save the genesis into? (default = soudegesu.json)
 
 `soudegesu.json` が作成されていることが確認できます。
 
-```
+```javascript
 cat soudegesu.json
 
 {
@@ -210,7 +210,7 @@ cat soudegesu.json
 
 次にネットワークの初期化を行います。
 
-```
+```bash
 geth --datadir ./private init ./soudegesu.json
 
 INFO [03-05|14:54:31] Maximum peer count                       ETH=25 LES=0 total=25
@@ -228,13 +228,13 @@ INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightcha
 
 ether(wei) をやりとりするためのアカウントを作成します。
 
-```
+```bash
 geth --datadir . account new
 ```
 
 適当にパスワードを設定すると `Address` のところにアカウントのアドレスが表示されます。
 
-```
+```bash
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Passphrase:
 Repeat passphrase:
@@ -243,7 +243,7 @@ Address: {アカウントA}
 
 作成が完了すると `keystore` ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。
 
-```
+```bash
 ls keystore
 
 UTC--2018-03-05T06-00-32.829542689Z--アカウントA
@@ -251,7 +251,7 @@ UTC--2018-03-05T06-00-32.829542689Z--アカウントA
 
 作成されたアカウントを確認します。
 
-```
+```bash
 geth --datadir . account list
 Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
 ```
@@ -264,18 +264,18 @@ Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net
 
 先程作成した `keystore` の情報を移動します。
 
-```
+```bash
 cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.
 ```
 
 作成したユーザのパスワードファイルを作成します。
-```
+```bash
 echo (account new する時に指定したパスワード) > private/password.sec
 ```
 
 実行してみましょう。
 
-```
+```bash
 geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private_net/private" --nodiscover --rpc --rpcport "8545" --port "30303" --rpccorsdomain "*" --nat "any" --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath "~/Library/Ethereum/geth.ipc"
 ```
 
@@ -294,7 +294,7 @@ geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private
 その後、以下を実行し、Javascriptコンソールを起動します。
 コンソールは対話形式で入力していくことが可能です。
 
-```
+```javascript
 geth attach
 
 instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
@@ -306,35 +306,35 @@ at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
 
 まず存在するアカウントを確認しておきます。
 
-```
+```javascript
 > eth.accounts
 ["アカウントA", "アカウントB", "アカウントC"]
 ```
 
 マイニング時のメインアカウントを確認します。
 
-```
+```javascript
 > eth.coinbase
 アカウントA
 ```
 
 現時点での保有量を確認します。
 
-```
+```javascript
 > eth.getBalance(eth.accounts[0])
 285000000000000000000
 ```
 
 単位が `wei` でわかりにくいので `ether` にしましょう。
 
-```
+```javascript
 > web3.fromWei(eth.getBalance(eth.coinbase), "ether")
 288
 ```
 
 アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。
 
-```
+```javascript
 # アカウントA -> アカウントB へ10 ether送る
 eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, "ether")})
 > ハッシュ値
@@ -345,7 +345,7 @@ eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(
 
 以下で確認することができました。
 
-```
+```javascript
 > web3.fromWei(eth.getBalance(eth.accounts[1]), "ether")
 10
 > web3.fromWei(eth.getBalance(eth.accounts[2]), "ether")

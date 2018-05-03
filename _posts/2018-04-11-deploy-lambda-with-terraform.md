@@ -49,7 +49,7 @@ AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な�
 
 またディレクトリ構成はこんな感じです。
 
-```
+```bash
 .
 ├── Makefile
 ├── README.md
@@ -100,7 +100,7 @@ Lambdaにソースコードを適用する方法は3種類存在します。
 
 * `build.sh`
 
-```
+```bash
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
@@ -122,7 +122,7 @@ cp -rf ${SRC_DIR}/* ${WORKSPACE}
 terraformで `archive_file` というデータリソースを使用することで、指定されたディレクトリをzip圧縮して出力することができます。
 加えて、Lambda関数の作成の際に `aws_lambda_function` リソースの `source_code_hash` プロパティに、zipアーカイブしたデータリソースのbase64エンコードを指定することができるので、これでzipのデプロイコードの完成です。
 
-```
+```bash
 #####################################
 #Lambda
 #####################################
@@ -149,7 +149,7 @@ data "archive_file" "lambda_zip" {
 
 * `Makefile`
 
-```
+```bash
 deploy:
 	@${CD} && \
 		sh ../build.sh && \
