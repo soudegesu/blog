@@ -338,12 +338,12 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 <p>CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
 <strong>CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい</strong> ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Change browser lang
-casper.on('started', function () {
-    this.page.customHeaders = {
-        "Accept-Language": "en-US"
-    }
-});
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Change browser lang</span>
+<span class="nx">casper</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'started'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">page</span><span class="p">.</span><span class="nx">customHeaders</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"Accept-Language"</span><span class="p">:</span> <span class="s2">"en-US"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
 </code></pre></div></div>
 
 <p><strong>ランタイムに依存しない</strong> という意味でも設定しておいた方が良いと思います。</p>

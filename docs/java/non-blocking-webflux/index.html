@@ -264,44 +264,44 @@ RouterFunctionのレスポンスを返す部分はもう少しいい実装があ
   <li><code class="highlighter-rouge">RouterFunction</code></li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Component
-public class HelloWebClientHandler {
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWebClientHandler</span> <span class="o">{</span>
 
-    @Value("${app.backend.uri}")
-    private String baseUri;
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${app.backend.uri}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">baseUri</span><span class="o">;</span>
 
-    private static final String PATH = "/test";
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PATH</span> <span class="o">=</span> <span class="s">"/test"</span><span class="o">;</span>
 
-    public RouterFunction&lt;ServerResponse&gt; routes() {
-        return RouterFunctions.route(
-                RequestPredicates.GET("/hello")
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON))
-                , this::webclient);
-    }
+    <span class="kd">public</span> <span class="n">RouterFunction</span><span class="o">&lt;</span><span class="n">ServerResponse</span><span class="o">&gt;</span> <span class="nf">routes</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">RouterFunctions</span><span class="o">.</span><span class="na">route</span><span class="o">(</span>
+                <span class="n">RequestPredicates</span><span class="o">.</span><span class="na">GET</span><span class="o">(</span><span class="s">"/hello"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="n">RequestPredicates</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON</span><span class="o">))</span>
+                <span class="o">,</span> <span class="k">this</span><span class="o">::</span><span class="n">webclient</span><span class="o">);</span>
+    <span class="o">}</span>
 
-    private Mono&lt;ServerResponse&gt; webclient(ServerRequest req) {
-        return WebClient.builder()
-                .baseUrl(baseUri)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .build()
-                .get()
-                .uri(uriBuilder -&gt; {
-                    uriBuilder.path(PATH);
-                    if (req.queryParam("time").isPresent()) {
-                        uriBuilder.queryParam("time", req.queryParam("time").get());
-                    }
-                    return uriBuilder.build();
-                })
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .flatMap(response -&gt;
-                    ServerResponse.ok()
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(response.bodyToMono(User.class), User.class)
-                            .switchIfEmpty(ServerResponse.notFound().build())
-                );
-    }
-}
+    <span class="kd">private</span> <span class="n">Mono</span><span class="o">&lt;</span><span class="n">ServerResponse</span><span class="o">&gt;</span> <span class="nf">webclient</span><span class="o">(</span><span class="n">ServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">WebClient</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">baseUrl</span><span class="o">(</span><span class="n">baseUri</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">defaultHeader</span><span class="o">(</span><span class="n">HttpHeaders</span><span class="o">.</span><span class="na">CONTENT_TYPE</span><span class="o">,</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">get</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">uri</span><span class="o">(</span><span class="n">uriBuilder</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                    <span class="n">uriBuilder</span><span class="o">.</span><span class="na">path</span><span class="o">(</span><span class="n">PATH</span><span class="o">);</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">req</span><span class="o">.</span><span class="na">queryParam</span><span class="o">(</span><span class="s">"time"</span><span class="o">).</span><span class="na">isPresent</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="n">uriBuilder</span><span class="o">.</span><span class="na">queryParam</span><span class="o">(</span><span class="s">"time"</span><span class="o">,</span> <span class="n">req</span><span class="o">.</span><span class="na">queryParam</span><span class="o">(</span><span class="s">"time"</span><span class="o">).</span><span class="na">get</span><span class="o">());</span>
+                    <span class="o">}</span>
+                    <span class="k">return</span> <span class="n">uriBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
+                <span class="o">})</span>
+                <span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">exchange</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">response</span> <span class="o">-&gt;</span>
+                    <span class="n">ServerResponse</span><span class="o">.</span><span class="na">ok</span><span class="o">()</span>
+                            <span class="o">.</span><span class="na">contentType</span><span class="o">(</span><span class="n">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON</span><span class="o">)</span>
+                            <span class="o">.</span><span class="na">body</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">bodyToMono</span><span class="o">(</span><span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                            <span class="o">.</span><span class="na">switchIfEmpty</span><span class="o">(</span><span class="n">ServerResponse</span><span class="o">.</span><span class="na">notFound</span><span class="o">().</span><span class="na">build</span><span class="o">())</span>
+                <span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
 <ul>
@@ -310,16 +310,16 @@ public class HelloWebClientHandler {
 
 <p>作成した <code class="highlighter-rouge">HelloWebClientHandler</code> を登録します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Configuration
-@EnableWebFlux
-public class WebConfig extends DelegatingWebFluxConfiguration {
-    // ~中略~
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebFlux</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">extends</span> <span class="n">DelegatingWebFluxConfiguration</span> <span class="o">{</span>
+    <span class="c1">// ~中略~</span>
 
-    @Bean
-    RouterFunction&lt;ServerResponse&gt; route7(HelloWebClientHandler webClientHandler) {
-        return webClientHandler.routes();
-    }
-}
+    <span class="nd">@Bean</span>
+    <span class="n">RouterFunction</span><span class="o">&lt;</span><span class="n">ServerResponse</span><span class="o">&gt;</span> <span class="nf">route7</span><span class="o">(</span><span class="n">HelloWebClientHandler</span> <span class="n">webClientHandler</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">webClientHandler</span><span class="o">.</span><span class="na">routes</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
 <p>あとは <code class="highlighter-rouge">main</code> メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。</p>
