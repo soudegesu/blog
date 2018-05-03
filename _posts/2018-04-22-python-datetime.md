@@ -44,7 +44,7 @@ datetime型の `fromtimestamp` 関数を使えば記述もシンプルに済ま�
 
 `fromtimestamp` 関数を使った変換のサンプルは以下になります。
 
-```
+```python
 import datetime
 
 e = 1524349374
@@ -58,7 +58,7 @@ print(dt)
 
 少数点以下にミリ秒を含んでいても問題なく変換できます。
 
-```
+```python
 # epochtimeからdatetime(ミリ秒含む)
 import datetime
 
@@ -73,7 +73,7 @@ print(dt2)
 
 整数部分でミリ秒部分が表現されている(エポックミリ秒表記)場合には、何桁までがミリ秒を表しているのか確認した後、割ってあげます。
 
-```
+```python
 # epochmillitimeからdatetime
 import datetime
 
@@ -93,7 +93,7 @@ print(dt3)
 `strptime` 関数を使えば簡単に変換できます。
 ミリ秒は `%f` 、 タイムゾーンは `%z` を使えばパースしてくれます。
 
-```
+```python
 # タイムゾーンあり
 import datetime
 
@@ -110,7 +110,7 @@ print(dt)
 **日付文字列がどのタイムゾーンのデータを表しているか** を調べる必要があります。
 少し邪道感ありますが、データ仕様（タイムゾーンが何か）を確認した後に文字列結合してしまうのが楽ちんです。
 
-```
+```python
 # タイムゾーンなし日付文字列(文字列結合)
 import datetime
 
@@ -128,7 +128,7 @@ print(dt.tzinfo)
 `dateutil` の `parse` 関数を使用する際に `tzinfos` を引数に与えることで指定のtimezoneで処理をしてくれる書き方です。
 先程の例と比べて、パッと見でどこのタイムゾーンかが識別しやすくなる、という利点があります。
 
-```
+```python
 # タイムゾーンなし日付文字列(dateutilを使う)
 import datetime
 from dateutil.parser import parse
@@ -184,7 +184,7 @@ print(str_to_dt)
 
 awareとnaiveに留意せずにタイムゾーン変換の処理を書くと、動作環境によって得られる結果が変わってしまうため、注意が必要です。
 
-```
+```python
 # 文字列から日付(実行マシン上のタイムゾーンに引きずられる)
 import datetime
 from pytz import timezone

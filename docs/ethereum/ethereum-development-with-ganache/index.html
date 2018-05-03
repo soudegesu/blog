@@ -267,7 +267,7 @@
   <li>Etehreum のインストール</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap ethereum/ethereum
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap ethereum/ethereum
 brew install ethereum
 </code></pre></div></div>
 
@@ -277,44 +277,44 @@ brew install ethereum
 
 <p>私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 <code class="highlighter-rouge">nodenv</code> を使って切り替えています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install nodenv
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install nodenv
 </code></pre></div></div>
 
 <p>nodenv起動のために、 <code class="highlighter-rouge">~/.zshrc</code> に以下を追記します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH="$PATH:$HOME/.nodenv/bin:"
-eval "$(nodenv init --no-rehash -)"
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/.nodenv/bin:"</span>
+<span class="nb">eval</span> <span class="s2">"</span><span class="k">$(</span>nodenv init <span class="nt">--no-rehash</span> -<span class="k">)</span><span class="s2">"</span>
 </code></pre></div></div>
 
 <ul>
   <li>node(9.6.1)のインストールと設定</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nodenv install 9.6.1
-nodenv local 9.6.1
-node -v
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nodenv install 9.6.1
+nodenv <span class="nb">local </span>9.6.1
+node <span class="nt">-v</span>
 </code></pre></div></div>
 
 <ul>
   <li><code class="highlighter-rouge">package.json</code> の作成</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm init
-(面倒なので、以降はEnter)
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm init
+<span class="o">(</span>面倒なので、以降はEnter<span class="o">)</span>
 </code></pre></div></div>
 
 <ul>
   <li><code class="highlighter-rouge">truffle</code> のインストール</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install truffle@4.0.4
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install truffle@4.0.4
 </code></pre></div></div>
 
 <ul>
   <li>solidityのコンパイラ <code class="highlighter-rouge">solc</code> のインストール</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install solc@0.4.18
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install solc@0.4.18
 </code></pre></div></div>
 
 <ul>
@@ -328,30 +328,30 @@ node -v
 <p><code class="highlighter-rouge">truffle</code> をグローバルインストールしていないので、<code class="highlighter-rouge">npm run</code> でキックできるように <code class="highlighter-rouge">package.json</code> を修正します。
 <code class="highlighter-rouge">package.json</code> の <code class="highlighter-rouge">scripts</code> ブロックを修正します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  "scripts": {
-    "truffle": "truffle",
-    "develop": "truffle develop",
-    "truffle-ganache": "truffle migrate --compile-all --reset --network ganache",
-    "truffle-console": "truffle console --network ganache"
-  },
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="s2">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"truffle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"truffle"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"develop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"truffle develop"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"truffle-ganache"</span><span class="p">:</span><span class="w"> </span><span class="s2">"truffle migrate --compile-all --reset --network ganache"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"truffle-console"</span><span class="p">:</span><span class="w"> </span><span class="s2">"truffle console --network ganache"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="truffleを初期化する">truffleを初期化する</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle init 
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle init 
 </code></pre></div></div>
 
 <p>実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tree -L 1
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tree <span class="nt">-L</span> 1
 
-.
+<span class="nb">.</span>
 ├── contracts
 ├── migrations
 ├── node_modules
 ├── package-lock.json
 ├── package.json
-├── test
+├── <span class="nb">test</span>
 ├── truffle-config.js
 └── truffle.js
 </code></pre></div></div>
@@ -386,7 +386,7 @@ node -v
 
 <p>私はMacユーザなので、<code class="highlighter-rouge">truffle-config.js</code> は消してしまいます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm truffle-config.js
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm truffle-config.js
 </code></pre></div></div>
 
 <h3 id="ganacheと接続する">Ganacheと接続する</h3>
@@ -398,23 +398,23 @@ node -v
 
 <p>Ganacheが表示しているネットワークの情報を基に、<code class="highlighter-rouge">truffle.js</code> を以下のように編集します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module.exports = {
-  // See &lt;http://truffleframework.com/docs/advanced/configuration&gt;
-  // to customize your Truffle configuration!
-  networks: {
-    ganache: {
-      host: "localhost",
-      port: 7545,
-      network_id: "*"
-    }
-  }
-};
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// See &lt;http://truffleframework.com/docs/advanced/configuration&gt;</span>
+  <span class="c1">// to customize your Truffle configuration!</span>
+  <span class="na">networks</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">ganache</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">host</span><span class="p">:</span> <span class="s2">"localhost"</span><span class="p">,</span>
+      <span class="na">port</span><span class="p">:</span> <span class="mi">7545</span><span class="p">,</span>
+      <span class="na">network_id</span><span class="p">:</span> <span class="s2">"*"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">package.json</code> に記載した npm scriptsのコマンドから <code class="highlighter-rouge">truffle-ganache</code> を起動し、
 Ganacheのマイグレーションを行います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle-ganache
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle-ganache
 </code></pre></div></div>
 
 <p>Ganacheの画面を見てみると1番上のアドレスの <code class="highlighter-rouge">balance</code> (所有しているether) が <code class="highlighter-rouge">100</code> → <code class="highlighter-rouge">99.97</code> に減っています。</p>
@@ -431,17 +431,17 @@ Ganacheのマイグレーションを行います。</p>
 
 <p>また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle-console
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run truffle-console
 </code></pre></div></div>
 
 <p>試しに以下のようなコードを実行すると</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, "ether")})
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">sendTransaction</span><span class="p">({</span><span class="na">from</span><span class="p">:</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="na">to</span><span class="p">:</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="na">value</span><span class="p">:</span><span class="nx">web3</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">"ether"</span><span class="p">)})</span>
 </code></pre></div></div>
 
 <p>トランザクションのアドレスが帰ってきます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span>  <span class="s1">'0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'</span>
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">Ganache</code> の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。</p>

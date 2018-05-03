@@ -294,41 +294,41 @@
 
 <p><code class="highlighter-rouge">fromtimestamp</code> 関数を使った変換のサンプルは以下になります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import datetime
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">datetime</span>
 
-e = 1524349374
-dt = datetime.datetime.fromtimestamp(e)
-print(dt)
+<span class="n">e</span> <span class="o">=</span> <span class="mi">1524349374</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
 
-# &gt;&gt; 2018-04-22 07:22:54
+<span class="c"># &gt;&gt; 2018-04-22 07:22:54</span>
 </code></pre></div></div>
 
 <h4 id="ミリ秒を含むepochtimeからdatetime">ミリ秒を含むepochtimeからdatetime</h4>
 
 <p>少数点以下にミリ秒を含んでいても問題なく変換できます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># epochtimeからdatetime(ミリ秒含む)
-import datetime
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># epochtimeからdatetime(ミリ秒含む)</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
-mills = 1524349374.099776
-dt2 = datetime.datetime.fromtimestamp(mills)
-print(dt2)
+<span class="n">mills</span> <span class="o">=</span> <span class="mf">1524349374.099776</span>
+<span class="n">dt2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">mills</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dt2</span><span class="p">)</span>
 
-# &gt;&gt; 2018-04-22 07:22:54.099776
+<span class="c"># &gt;&gt; 2018-04-22 07:22:54.099776</span>
 </code></pre></div></div>
 
 <h4 id="エポックミリ秒からdatetime">エポックミリ秒からdatetime</h4>
 
 <p>整数部分でミリ秒部分が表現されている(エポックミリ秒表記)場合には、何桁までがミリ秒を表しているのか確認した後、割ってあげます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># epochmillitimeからdatetime
-import datetime
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># epochmillitimeからdatetime</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
-mills = 1524349374099
-dt3 = datetime.datetime.fromtimestamp(mills / 1000)
-print(dt3)
+<span class="n">mills</span> <span class="o">=</span> <span class="mi">1524349374099</span>
+<span class="n">dt3</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">mills</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dt3</span><span class="p">)</span>
 
-# &gt;&gt; 2018-04-22 07:22:54.099000
+<span class="c"># &gt;&gt; 2018-04-22 07:22:54.099000</span>
 </code></pre></div></div>
 
 <h3 id="文字列からdatetime">文字列からdatetime</h3>
@@ -340,14 +340,14 @@ print(dt3)
 <p><code class="highlighter-rouge">strptime</code> 関数を使えば簡単に変換できます。
 ミリ秒は <code class="highlighter-rouge">%f</code> 、 タイムゾーンは <code class="highlighter-rouge">%z</code> を使えばパースしてくれます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># タイムゾーンあり
-import datetime
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># タイムゾーンあり</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
-utc_date_str = '2018-04-01 20:10:56.123+0900'
-dt = datetime.datetime.strptime(utc_date_str, '%Y-%m-%d %H:%M:%S.%f%z')
+<span class="n">utc_date_str</span> <span class="o">=</span> <span class="s">'2018-04-01 20:10:56.123+0900'</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">utc_date_str</span><span class="p">,</span> <span class="s">'</span><span class="si">%</span><span class="s">Y-</span><span class="si">%</span><span class="s">m-</span><span class="si">%</span><span class="s">d </span><span class="si">%</span><span class="s">H:</span><span class="si">%</span><span class="s">M:</span><span class="si">%</span><span class="s">S.</span><span class="si">%</span><span class="s">f</span><span class="si">%</span><span class="s">z'</span><span class="p">)</span>
 
-print(dt)
-# &gt;&gt; 2018-04-01 20:10:56.123000+09:00
+<span class="k">print</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="c"># &gt;&gt; 2018-04-01 20:10:56.123000+09:00</span>
 </code></pre></div></div>
 
 <h4 id="タイムゾーンなし日付文字列からdatetime">タイムゾーンなし日付文字列からdatetime</h4>
@@ -356,32 +356,32 @@ print(dt)
 <strong>日付文字列がどのタイムゾーンのデータを表しているか</strong> を調べる必要があります。
 少し邪道感ありますが、データ仕様（タイムゾーンが何か）を確認した後に文字列結合してしまうのが楽ちんです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># タイムゾーンなし日付文字列(文字列結合)
-import datetime
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># タイムゾーンなし日付文字列(文字列結合)</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
-utc_date_str = '2018-04-01 20:10:56'
-# JSTとして取扱う
-dt = datetime.datetime.strptime(utc_date_str + '+0900', '%Y-%m-%d %H:%M:%S%z')
+<span class="n">utc_date_str</span> <span class="o">=</span> <span class="s">'2018-04-01 20:10:56'</span>
+<span class="c"># JSTとして取扱う</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">utc_date_str</span> <span class="o">+</span> <span class="s">'+0900'</span><span class="p">,</span> <span class="s">'</span><span class="si">%</span><span class="s">Y-</span><span class="si">%</span><span class="s">m-</span><span class="si">%</span><span class="s">d </span><span class="si">%</span><span class="s">H:</span><span class="si">%</span><span class="s">M:</span><span class="si">%</span><span class="s">S</span><span class="si">%</span><span class="s">z'</span><span class="p">)</span>
 
-print(dt)
-print(dt.tzinfo)
-# &gt;&gt; 2018-04-01 20:10:56+09:00
-# &gt;&gt; UTC+09:00
+<span class="k">print</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span>
+<span class="c"># &gt;&gt; 2018-04-01 20:10:56+09:00</span>
+<span class="c"># &gt;&gt; UTC+09:00</span>
 </code></pre></div></div>
 
 <p>別パターンは <code class="highlighter-rouge">dateutil</code> を使うパターンも書いておきます。
 <code class="highlighter-rouge">dateutil</code> の <code class="highlighter-rouge">parse</code> 関数を使用する際に <code class="highlighter-rouge">tzinfos</code> を引数に与えることで指定のtimezoneで処理をしてくれる書き方です。
 先程の例と比べて、パッと見でどこのタイムゾーンかが識別しやすくなる、という利点があります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># タイムゾーンなし日付文字列(dateutilを使う)
-import datetime
-from dateutil.parser import parse
-from dateutil.tz import gettz
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># タイムゾーンなし日付文字列(dateutilを使う)</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="nn">dateutil.tz</span> <span class="kn">import</span> <span class="n">gettz</span>
 
-tzinfos = {'JST' : gettz('Asia/Tokyo')}
-date_str = '2018-04-01 20:10:56'
-str_to_dt = parse(date_str + ' JST', tzinfos=tzinfos)
-print(str_to_dt)
+<span class="n">tzinfos</span> <span class="o">=</span> <span class="p">{</span><span class="s">'JST'</span> <span class="p">:</span> <span class="n">gettz</span><span class="p">(</span><span class="s">'Asia/Tokyo'</span><span class="p">)}</span>
+<span class="n">date_str</span> <span class="o">=</span> <span class="s">'2018-04-01 20:10:56'</span>
+<span class="n">str_to_dt</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">date_str</span> <span class="o">+</span> <span class="s">' JST'</span><span class="p">,</span> <span class="n">tzinfos</span><span class="o">=</span><span class="n">tzinfos</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">str_to_dt</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="日時データを扱う上で注意すべきこと">日時データを扱う上で注意すべきこと</h2>
@@ -467,36 +467,36 @@ Naive オブジェクトはいくつかの現実的な側面を無視してし�
 
 <p>awareとnaiveに留意せずにタイムゾーン変換の処理を書くと、動作環境によって得られる結果が変わってしまうため、注意が必要です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 文字列から日付(実行マシン上のタイムゾーンに引きずられる)
-import datetime
-from pytz import timezone
-import pytz
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 文字列から日付(実行マシン上のタイムゾーンに引きずられる)</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
 
-# タイムゾーンなし文字列からdatetimeに変換する
-date_str = '2018-04-01 20:10:56'
-# この処理で得られるstr_to_dtはnaive
-str_to_dt = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-print("Str to dt")
-print(str_to_dt)                      # 2018-04-01 20:10:56
-print(str_to_dt.timestamp())          # 1522581056.0
-print(str_to_dt.tzname())             # None
+<span class="c"># タイムゾーンなし文字列からdatetimeに変換する</span>
+<span class="n">date_str</span> <span class="o">=</span> <span class="s">'2018-04-01 20:10:56'</span>
+<span class="c"># この処理で得られるstr_to_dtはnaive</span>
+<span class="n">str_to_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s">'</span><span class="si">%</span><span class="s">Y-</span><span class="si">%</span><span class="s">m-</span><span class="si">%</span><span class="s">d </span><span class="si">%</span><span class="s">H:</span><span class="si">%</span><span class="s">M:</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Str to dt"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">str_to_dt</span><span class="p">)</span>                      <span class="c"># 2018-04-01 20:10:56</span>
+<span class="k">print</span><span class="p">(</span><span class="n">str_to_dt</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>          <span class="c"># 1522581056.0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">str_to_dt</span><span class="o">.</span><span class="n">tzname</span><span class="p">())</span>             <span class="c"># None</span>
 
-# 以下、naiveな時刻をベースに演算すると、ずれる
-utc = timezone('UTC')
-utc_dt = str_to_dt.astimezone(utc)
-print("UTC dt")
-print(utc_dt)                         # 2018-04-01 11:10:56+00:00
-print(utc_dt.timestamp())             # 1522581056.0
-print(utc_dt.tzname())                # UTC
-print(utc_dt.tzinfo.utcoffset(utc_dt))# 0:00:00
+<span class="c"># 以下、naiveな時刻をベースに演算すると、ずれる</span>
+<span class="n">utc</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="s">'UTC'</span><span class="p">)</span>
+<span class="n">utc_dt</span> <span class="o">=</span> <span class="n">str_to_dt</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">utc</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"UTC dt"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">utc_dt</span><span class="p">)</span>                         <span class="c"># 2018-04-01 11:10:56+00:00</span>
+<span class="k">print</span><span class="p">(</span><span class="n">utc_dt</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>             <span class="c"># 1522581056.0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">utc_dt</span><span class="o">.</span><span class="n">tzname</span><span class="p">())</span>                <span class="c"># UTC</span>
+<span class="k">print</span><span class="p">(</span><span class="n">utc_dt</span><span class="o">.</span><span class="n">tzinfo</span><span class="o">.</span><span class="n">utcoffset</span><span class="p">(</span><span class="n">utc_dt</span><span class="p">))</span><span class="c"># 0:00:00</span>
 
-jst = timezone('Asia/Tokyo');
-jst_dt = str_to_dt.astimezone(jst);
-print("JST dt")
-print(jst_dt)                         # 2018-04-01 20:10:56+09:00
-print(jst_dt.timestamp())             # 1522581056.0
-print(jst_dt.tzname())                # JST
-print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
+<span class="n">jst</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="s">'Asia/Tokyo'</span><span class="p">);</span>
+<span class="n">jst_dt</span> <span class="o">=</span> <span class="n">str_to_dt</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">jst</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"JST dt"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">jst_dt</span><span class="p">)</span>                         <span class="c"># 2018-04-01 20:10:56+09:00</span>
+<span class="k">print</span><span class="p">(</span><span class="n">jst_dt</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>             <span class="c"># 1522581056.0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">jst_dt</span><span class="o">.</span><span class="n">tzname</span><span class="p">())</span>                <span class="c"># JST</span>
+<span class="k">print</span><span class="p">(</span><span class="n">jst_dt</span><span class="o">.</span><span class="n">tzinfo</span><span class="o">.</span><span class="n">utcoffset</span><span class="p">(</span><span class="n">jst_dt</span><span class="p">))</span><span class="c"># 9:00:00</span>
 
 </code></pre></div></div>
 

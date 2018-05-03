@@ -23,7 +23,7 @@ RouterFunctionのレスポンスを返す部分はもう少しいい実装があ
 
 * `RouterFunction`
 
-```
+```java
 @Component
 public class HelloWebClientHandler {
 
@@ -68,7 +68,7 @@ public class HelloWebClientHandler {
 
 作成した `HelloWebClientHandler` を登録します。
 
-```
+```java
 @Configuration
 @EnableWebFlux
 public class WebConfig extends DelegatingWebFluxConfiguration {

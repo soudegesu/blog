@@ -285,7 +285,7 @@ AWS Lambdaは <a href="https://aws.amazon.com/jp/cloud9/">Cloud9</a> がコン�
 
 <p>またディレクトリ構成はこんな感じです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">.</span>
 ├── Makefile
 ├── README.md
 ├── build.sh
@@ -349,7 +349,7 @@ AWS Lambdaは <a href="https://aws.amazon.com/jp/cloud9/">Cloud9</a> がコン�
   <li><code class="highlighter-rouge">build.sh</code></li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
 
 <span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> <span class="k">$(</span>dirname <span class="nv">$0</span><span class="k">)</span><span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">${</span><span class="nv">SCRIPT_DIR</span><span class="k">}</span>/workspace
@@ -370,24 +370,24 @@ cp <span class="nt">-rf</span> <span class="k">${</span><span class="nv">SRC_DIR
 terraformで <code class="highlighter-rouge">archive_file</code> というデータリソースを使用することで、指定されたディレクトリをzip圧縮して出力することができます。
 加えて、Lambda関数の作成の際に <code class="highlighter-rouge">aws_lambda_function</code> リソースの <code class="highlighter-rouge">source_code_hash</code> プロパティに、zipアーカイブしたデータリソースのbase64エンコードを指定することができるので、これでzipのデプロイコードの完成です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#####################################
-#Lambda
-#####################################
-resource "aws_lambda_function" "auth_log_monitoring" {
-    filename = "../lambda.zip"
-    function_name = "do_something"
-    role = "arn:aws:iam::${var.account_id}:role/XXXXXXRole"
-    handler = "main.lambda_handler"
-    source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
-    runtime = "python3.6"
-    timeout = 150
-}
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#####################################</span>
+<span class="c">#Lambda</span>
+<span class="c">#####################################</span>
+resource <span class="s2">"aws_lambda_function"</span> <span class="s2">"auth_log_monitoring"</span> <span class="o">{</span>
+    filename <span class="o">=</span> <span class="s2">"../lambda.zip"</span>
+    function_name <span class="o">=</span> <span class="s2">"do_something"</span>
+    role <span class="o">=</span> <span class="s2">"arn:aws:iam::</span><span class="k">${</span><span class="nv">var</span><span class="p">.account_id</span><span class="k">}</span><span class="s2">:role/XXXXXXRole"</span>
+    handler <span class="o">=</span> <span class="s2">"main.lambda_handler"</span>
+    source_code_hash <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">data</span><span class="p">.archive_file.lambda_zip.output_base64sha256</span><span class="k">}</span><span class="s2">"</span>
+    runtime <span class="o">=</span> <span class="s2">"python3.6"</span>
+    timeout <span class="o">=</span> 150
+<span class="o">}</span>
 
-data "archive_file" "lambda_zip" {
-    type = "zip"
-    source_dir  = "../workspace"
-    output_path = "../lambda.zip"
-}
+data <span class="s2">"archive_file"</span> <span class="s2">"lambda_zip"</span> <span class="o">{</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">"zip"</span>
+    source_dir  <span class="o">=</span> <span class="s2">"../workspace"</span>
+    output_path <span class="o">=</span> <span class="s2">"../lambda.zip"</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
 <h3 id="ビルドデプロイをつなげる">ビルド&amp;デプロイをつなげる</h3>
@@ -398,12 +398,12 @@ data "archive_file" "lambda_zip" {
   <li><code class="highlighter-rouge">Makefile</code></li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>deploy:
-	@${CD} &amp;&amp; \
-		sh ../build.sh &amp;&amp; \
-		terraform workspace select ${ENV} &amp;&amp; \
-		terraform apply \
-        -var-file=${VARS}
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>deploy:
+	@<span class="k">${</span><span class="nv">CD</span><span class="k">}</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+		sh ../build.sh <span class="o">&amp;&amp;</span> <span class="se">\</span>
+		terraform workspace <span class="k">select</span> <span class="k">${</span><span class="nv">ENV</span><span class="k">}</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+		terraform apply <span class="se">\</span>
+        <span class="nt">-var-file</span><span class="o">=</span><span class="k">${</span><span class="nv">VARS</span><span class="k">}</span>
 </code></pre></div></div>
 
 <p>あとは <code class="highlighter-rouge">make deploy</code> を打てば実行できます。(リポジトリ的にはterraformのリモートバケットの初期化を先に行う必要はあります。)</p>

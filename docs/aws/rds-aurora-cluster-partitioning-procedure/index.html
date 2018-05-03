@@ -327,63 +327,63 @@ AuroraというよりはMySQLの仕様に関する説明も多いのでご了承
 <p>以下のようなクエリを発行し <code class="highlighter-rouge">hoge</code> テーブルを作成します。
 加えて、パーティション名のルールは <code class="highlighter-rouge">p</code> + <code class="highlighter-rouge">yyyyMMdd</code> として、<code class="highlighter-rouge">create_at</code> カラムでRANGEパーティション指定をします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- create hoge table
-DROP TABLE IF EXISTS hoge;
-CREATE TABLE hoge (
-  id varchar(255) NOT NULL,
-  info varchar(255) NOT NULL,
-  create_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id, create_at),
-  INDEX index_id (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- create hoge table</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">hoge</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">hoge</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">info</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">create_at</span> <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">create_at</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">index_id</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8</span><span class="p">;</span>
 
-ALTER TABLE hoge PARTITION BY RANGE (UNIX_TIMESTAMP(create_at)) (
-  PARTITION p20180219 VALUES LESS THAN (UNIX_TIMESTAMP('2018-02-19 00:00:00'))
-);
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">hoge</span> <span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">RANGE</span> <span class="p">(</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="n">create_at</span><span class="p">))</span> <span class="p">(</span>
+  <span class="n">PARTITION</span> <span class="n">p20180219</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2018-02-19 00:00:00'</span><span class="p">))</span>
+<span class="p">);</span>
 </code></pre></div></div>
 
 <h3 id="パーティション追加用のプロシージャを作成">パーティション追加用のプロシージャを作成</h3>
 <p>次にパーティションを追加するためのプロシージャを登録します。
 可視性の観点でバリデーション等は省略しています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--
--- hogeテーブルにパーティションを追加するストアドプロシージャ
--- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
--- パーティションは from_date &lt; to_date - 1日 分まで作成されます。
--- 呼び出しサンプル
--- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
---
-DROP PROCEDURE IF EXISTS add_hoge_partition;
-DELIMITER $$
-CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
-  proc_label:BEGIN
-    DECLARE target_date DATE;
-    DECLARE partition_range DATE;
-    DECLARE p_count INT;
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">--</span>
+<span class="c1">-- hogeテーブルにパーティションを追加するストアドプロシージャ</span>
+<span class="c1">-- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時</span>
+<span class="c1">-- パーティションは from_date &lt; to_date - 1日 分まで作成されます。</span>
+<span class="c1">-- 呼び出しサンプル</span>
+<span class="c1">-- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));</span>
+<span class="c1">--</span>
+<span class="k">DROP</span> <span class="k">PROCEDURE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">add_hoge_partition</span><span class="p">;</span>
+<span class="k">DELIMITER</span> <span class="err">$$</span>
+<span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="n">add_hoge_partition</span><span class="p">(</span><span class="k">IN</span> <span class="n">from_date</span> <span class="n">DATE</span><span class="p">,</span> <span class="k">IN</span> <span class="n">to_date</span> <span class="n">DATE</span><span class="p">)</span>
+  <span class="n">proc_label</span><span class="p">:</span><span class="k">BEGIN</span>
+    <span class="k">DECLARE</span> <span class="n">target_date</span> <span class="n">DATE</span><span class="p">;</span>
+    <span class="k">DECLARE</span> <span class="n">partition_range</span> <span class="n">DATE</span><span class="p">;</span>
+    <span class="k">DECLARE</span> <span class="n">p_count</span> <span class="n">INT</span><span class="p">;</span>
 
-    -- 日次パーティションの作成
-    SET target_date = from_date;
-    WHILE DATEDIFF(to_date, target_date) &gt; 0 DO
+    <span class="c1">-- 日次パーティションの作成</span>
+    <span class="k">SET</span> <span class="n">target_date</span> <span class="o">=</span> <span class="n">from_date</span><span class="p">;</span>
+    <span class="n">WHILE</span> <span class="n">DATEDIFF</span><span class="p">(</span><span class="n">to_date</span><span class="p">,</span> <span class="n">target_date</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">DO</span>
 
-      -- パーティションはLESS THANになるので1日追加
-      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
-      -- パーティションの追加
-      SELECT CONCAT(
-        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
-        DATE_FORMAT(target_date, 'p%Y%m%d'),
-        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
-      ) INTO @ddl;
+      <span class="c1">-- パーティションはLESS THANになるので1日追加</span>
+      <span class="k">SET</span> <span class="n">partition_range</span> <span class="o">=</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="n">INTERVAL</span> <span class="mi">1</span> <span class="k">DAY</span><span class="p">);</span>
+      <span class="c1">-- パーティションの追加</span>
+      <span class="k">SELECT</span> <span class="n">CONCAT</span><span class="p">(</span>
+        <span class="s1">'ALTER TABLE hoge ADD PARTITION ( PARTITION '</span><span class="p">,</span>
+        <span class="n">DATE_FORMAT</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="s1">'p%Y%m%d'</span><span class="p">),</span>
+        <span class="s1">' VALUES LESS THAN (UNIX_TIMESTAMP('</span><span class="p">,</span> <span class="n">QUOTE</span><span class="p">(</span><span class="n">DATE_FORMAT</span><span class="p">(</span><span class="n">partition_range</span><span class="p">,</span> <span class="s1">'%Y-%m-%d 00:00:00'</span><span class="p">)),</span> <span class="s1">')))'</span>
+      <span class="p">)</span> <span class="k">INTO</span> <span class="o">@</span><span class="n">ddl</span><span class="p">;</span>
 
-      PREPARE ddl_stmt FROM @ddl;
-      EXECUTE ddl_stmt;
-      DEALLOCATE PREPARE ddl_stmt;
+      <span class="k">PREPARE</span> <span class="n">ddl_stmt</span> <span class="k">FROM</span> <span class="o">@</span><span class="n">ddl</span><span class="p">;</span>
+      <span class="k">EXECUTE</span> <span class="n">ddl_stmt</span><span class="p">;</span>
+      <span class="k">DEALLOCATE</span> <span class="k">PREPARE</span> <span class="n">ddl_stmt</span><span class="p">;</span>
 
-      -- 次の日次のパーティションの設定
-      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
-    END WHILE;
+      <span class="c1">-- 次の日次のパーティションの設定</span>
+      <span class="k">SET</span> <span class="n">target_date</span> <span class="o">=</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="n">INTERVAL</span> <span class="mi">1</span> <span class="k">DAY</span><span class="p">);</span>
+    <span class="k">END</span> <span class="n">WHILE</span><span class="p">;</span>
 
-  END$$
-DELIMITER ;
+  <span class="k">END</span><span class="err">$$</span>
+<span class="k">DELIMITER</span> <span class="p">;</span>
 
 </code></pre></div></div>
 
@@ -392,7 +392,7 @@ DELIMITER ;
 
 <p>とりあえず、現在日付から365日ぶんのパーティションを追加しましょう。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CALL</span> <span class="n">add_hoge_partition</span><span class="p">(</span><span class="n">CURDATE</span><span class="p">(),</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">CURDATE</span><span class="p">(),</span> <span class="n">INTERVAL</span> <span class="mi">365</span> <span class="k">DAY</span><span class="p">));</span>
 </code></pre></div></div>
 
 <p>なお、パーティションは <strong>追加しかできない</strong> ことに注意してください。</p>
@@ -408,14 +408,14 @@ DELIMITER ;
 <p>その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
 少々見づらいですが、<code class="highlighter-rouge">INFORMATION_SCHEMA</code> から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE EVENT add_hoge_partition
-ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
-COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
-DO CALL 
-    add_hoge_partition(
-        (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge', DATE_ADD(
-            (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
-        );
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="n">EVENT</span> <span class="n">add_hoge_partition</span>
+<span class="k">ON</span> <span class="n">SCHEDULE</span> <span class="k">EVERY</span> <span class="mi">1</span> <span class="k">DAY</span> <span class="n">STARTS</span> <span class="s1">'2018-02-19 00:00:00'</span>
+<span class="k">COMMENT</span> <span class="s1">'hogeテーブルに対して1日毎に1日分のパーティションを追加します'</span>
+<span class="k">DO</span> <span class="k">CALL</span> 
+    <span class="n">add_hoge_partition</span><span class="p">(</span>
+        <span class="p">(</span><span class="k">select</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="k">max</span><span class="p">(</span><span class="n">PARTITION_DESCRIPTION</span><span class="p">))</span> <span class="k">from</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">PARTITIONS</span> <span class="k">where</span> <span class="k">TABLE_NAME</span> <span class="o">=</span> <span class="s1">'hoge'</span><span class="p">,</span> <span class="n">DATE_ADD</span><span class="p">(</span>
+            <span class="p">(</span><span class="k">select</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="k">max</span><span class="p">(</span><span class="n">PARTITION_DESCRIPTION</span><span class="p">))</span> <span class="k">from</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">PARTITIONS</span> <span class="k">where</span> <span class="k">TABLE_NAME</span> <span class="o">=</span> <span class="s1">'hoge'</span><span class="p">),</span><span class="n">INTERVAL</span> <span class="mi">1</span> <span class="k">DAY</span><span class="p">)</span>
+        <span class="p">);</span>
 
 </code></pre></div></div>
 
@@ -436,13 +436,13 @@ Clusterを組んだ場合においては、「WriterとReaderの両方で実行�
 
 <ul>
   <li>WriterでEVENTを確認
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
-&gt; 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">PROCESSLIST</span> <span class="k">where</span> <span class="k">USER</span> <span class="o">=</span> <span class="s1">'event_scheduler'</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="mi">1</span>	<span class="n">event_scheduler</span>	<span class="n">localhost</span>		<span class="n">Daemon</span>	<span class="mi">40803</span>	<span class="n">Waiting</span> <span class="k">for</span> <span class="k">next</span> <span class="n">activation</span>	
 </code></pre></div>    </div>
   </li>
   <li>ReaderでEVENTを確認
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
-&gt; Empty set (0.01 sec)
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">PROCESSLIST</span> <span class="k">where</span> <span class="k">USER</span> <span class="o">=</span> <span class="s1">'event_scheduler'</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="n">Empty</span> <span class="k">set</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="n">sec</span><span class="p">)</span>
 </code></pre></div>    </div>
   </li>
 </ul>
@@ -464,10 +464,10 @@ Clusterを組んだ場合においては、「WriterとReaderの両方で実行�
 IAMのメニューから専用のIAM Roleを作成しましょう(今回は <code class="highlighter-rouge">rdsToLambdaRole</code> という名前にします)。
 <code class="highlighter-rouge">rdsToLambdaRole</code> には</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Action": [
-  "lambda:InvokeFunction"
-]
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="s2">"lambda:InvokeFunction"</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
 
 <p>が許可されていれば良いので、AWSから提供されている <code class="highlighter-rouge">AWSLambdaRole</code> ポリシーを適用すればOKです。</p>
 
@@ -487,69 +487,69 @@ lambda関数 <code class="highlighter-rouge">rds_monitor</code> を <code class=
 
 <p>追記箇所は以下のようになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    -- 失敗したらlambdaで通知する
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-      BEGIN
-        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
-        CALL mysql.lambda_async(
-          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
-          CONCAT('{"message":"', @p2, '",',
-                  '"state":"', @p1, '"}')
-        );
-      END;
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">-- 失敗したらlambdaで通知する</span>
+    <span class="k">DECLARE</span> <span class="n">EXIT</span> <span class="k">HANDLER</span> <span class="k">FOR</span> <span class="k">SQLEXCEPTION</span>
+      <span class="k">BEGIN</span>
+        <span class="k">GET</span> <span class="k">DIAGNOSTICS</span> <span class="n">CONDITION</span> <span class="mi">1</span> <span class="o">@</span><span class="n">p1</span> <span class="o">=</span> <span class="k">RETURNED_SQLSTATE</span><span class="p">,</span> <span class="o">@</span><span class="n">p2</span> <span class="o">=</span> <span class="k">MESSAGE_TEXT</span><span class="p">;</span>
+        <span class="k">CALL</span> <span class="n">mysql</span><span class="p">.</span><span class="n">lambda_async</span><span class="p">(</span>
+          <span class="s1">'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor'</span><span class="p">,</span>
+          <span class="n">CONCAT</span><span class="p">(</span><span class="s1">'{"message":"'</span><span class="p">,</span> <span class="o">@</span><span class="n">p2</span><span class="p">,</span> <span class="s1">'",'</span><span class="p">,</span>
+                  <span class="s1">'"state":"'</span><span class="p">,</span> <span class="o">@</span><span class="n">p1</span><span class="p">,</span> <span class="s1">'"}'</span><span class="p">)</span>
+        <span class="p">);</span>
+      <span class="k">END</span><span class="p">;</span>
 
 </code></pre></div></div>
 
 <p>先程のプロシージャに組み込んだ場合は以下のようになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--
--- hogeテーブルにパーティションを追加するストアドプロシージャ
--- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
--- パーティションは from_date &lt; to_date - 1日 分まで作成されます。
--- 呼び出しサンプル
--- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));
---
-DROP PROCEDURE IF EXISTS add_hoge_partition;
-DELIMITER $$
-CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
-  proc_label:BEGIN
-    DECLARE target_date DATE;
-    DECLARE partition_range DATE;
-    DECLARE p_count INT;
-    -- 失敗したらlambdaで通知する
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-      BEGIN
-        GET DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
-        CALL mysql.lambda_async(
-          'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor',
-          CONCAT('{"message":"', @p2, '",',
-                  '"state":"', @p1, '"}')
-        );
-      END;
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">--</span>
+<span class="c1">-- hogeテーブルにパーティションを追加するストアドプロシージャ</span>
+<span class="c1">-- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時</span>
+<span class="c1">-- パーティションは from_date &lt; to_date - 1日 分まで作成されます。</span>
+<span class="c1">-- 呼び出しサンプル</span>
+<span class="c1">-- CALL add_hoge_partition(str_to_date('2018-01-01', '%Y-%m-%d'), str_to_date('2019-01-01', '%Y-%m-%d'));</span>
+<span class="c1">--</span>
+<span class="k">DROP</span> <span class="k">PROCEDURE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">add_hoge_partition</span><span class="p">;</span>
+<span class="k">DELIMITER</span> <span class="err">$$</span>
+<span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="n">add_hoge_partition</span><span class="p">(</span><span class="k">IN</span> <span class="n">from_date</span> <span class="n">DATE</span><span class="p">,</span> <span class="k">IN</span> <span class="n">to_date</span> <span class="n">DATE</span><span class="p">)</span>
+  <span class="n">proc_label</span><span class="p">:</span><span class="k">BEGIN</span>
+    <span class="k">DECLARE</span> <span class="n">target_date</span> <span class="n">DATE</span><span class="p">;</span>
+    <span class="k">DECLARE</span> <span class="n">partition_range</span> <span class="n">DATE</span><span class="p">;</span>
+    <span class="k">DECLARE</span> <span class="n">p_count</span> <span class="n">INT</span><span class="p">;</span>
+    <span class="c1">-- 失敗したらlambdaで通知する</span>
+    <span class="k">DECLARE</span> <span class="n">EXIT</span> <span class="k">HANDLER</span> <span class="k">FOR</span> <span class="k">SQLEXCEPTION</span>
+      <span class="k">BEGIN</span>
+        <span class="k">GET</span> <span class="k">DIAGNOSTICS</span> <span class="n">CONDITION</span> <span class="mi">1</span> <span class="o">@</span><span class="n">p1</span> <span class="o">=</span> <span class="k">RETURNED_SQLSTATE</span><span class="p">,</span> <span class="o">@</span><span class="n">p2</span> <span class="o">=</span> <span class="k">MESSAGE_TEXT</span><span class="p">;</span>
+        <span class="k">CALL</span> <span class="n">mysql</span><span class="p">.</span><span class="n">lambda_async</span><span class="p">(</span>
+          <span class="s1">'arn:aws:lambda:ap-northeast-1:${account_id}:function:rds_monitor'</span><span class="p">,</span>
+          <span class="n">CONCAT</span><span class="p">(</span><span class="s1">'{"message":"'</span><span class="p">,</span> <span class="o">@</span><span class="n">p2</span><span class="p">,</span> <span class="s1">'",'</span><span class="p">,</span>
+                  <span class="s1">'"state":"'</span><span class="p">,</span> <span class="o">@</span><span class="n">p1</span><span class="p">,</span> <span class="s1">'"}'</span><span class="p">)</span>
+        <span class="p">);</span>
+      <span class="k">END</span><span class="p">;</span>
 
-    -- 日次パーティションの作成
-    SET target_date = from_date;
-    WHILE DATEDIFF(to_date, target_date) &gt; 0 DO
+    <span class="c1">-- 日次パーティションの作成</span>
+    <span class="k">SET</span> <span class="n">target_date</span> <span class="o">=</span> <span class="n">from_date</span><span class="p">;</span>
+    <span class="n">WHILE</span> <span class="n">DATEDIFF</span><span class="p">(</span><span class="n">to_date</span><span class="p">,</span> <span class="n">target_date</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">DO</span>
 
-      -- パーティションはLESS THANになるので1日追加
-      SET partition_range = DATE_ADD(target_date, INTERVAL 1 DAY);
-      -- パーティションの追加
-      SELECT CONCAT(
-        'ALTER TABLE hoge ADD PARTITION ( PARTITION ',
-        DATE_FORMAT(target_date, 'p%Y%m%d'),
-        ' VALUES LESS THAN (UNIX_TIMESTAMP(', QUOTE(DATE_FORMAT(partition_range, '%Y-%m-%d 00:00:00')), ')))'
-      ) INTO @ddl;
+      <span class="c1">-- パーティションはLESS THANになるので1日追加</span>
+      <span class="k">SET</span> <span class="n">partition_range</span> <span class="o">=</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="n">INTERVAL</span> <span class="mi">1</span> <span class="k">DAY</span><span class="p">);</span>
+      <span class="c1">-- パーティションの追加</span>
+      <span class="k">SELECT</span> <span class="n">CONCAT</span><span class="p">(</span>
+        <span class="s1">'ALTER TABLE hoge ADD PARTITION ( PARTITION '</span><span class="p">,</span>
+        <span class="n">DATE_FORMAT</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="s1">'p%Y%m%d'</span><span class="p">),</span>
+        <span class="s1">' VALUES LESS THAN (UNIX_TIMESTAMP('</span><span class="p">,</span> <span class="n">QUOTE</span><span class="p">(</span><span class="n">DATE_FORMAT</span><span class="p">(</span><span class="n">partition_range</span><span class="p">,</span> <span class="s1">'%Y-%m-%d 00:00:00'</span><span class="p">)),</span> <span class="s1">')))'</span>
+      <span class="p">)</span> <span class="k">INTO</span> <span class="o">@</span><span class="n">ddl</span><span class="p">;</span>
 
-      PREPARE ddl_stmt FROM @ddl;
-      EXECUTE ddl_stmt;
-      DEALLOCATE PREPARE ddl_stmt;
+      <span class="k">PREPARE</span> <span class="n">ddl_stmt</span> <span class="k">FROM</span> <span class="o">@</span><span class="n">ddl</span><span class="p">;</span>
+      <span class="k">EXECUTE</span> <span class="n">ddl_stmt</span><span class="p">;</span>
+      <span class="k">DEALLOCATE</span> <span class="k">PREPARE</span> <span class="n">ddl_stmt</span><span class="p">;</span>
 
-      -- 次の日次のパーティションの設定
-      SET target_date = DATE_ADD(target_date, INTERVAL 1 DAY);
-    END WHILE;
+      <span class="c1">-- 次の日次のパーティションの設定</span>
+      <span class="k">SET</span> <span class="n">target_date</span> <span class="o">=</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">target_date</span><span class="p">,</span> <span class="n">INTERVAL</span> <span class="mi">1</span> <span class="k">DAY</span><span class="p">);</span>
+    <span class="k">END</span> <span class="n">WHILE</span><span class="p">;</span>
 
-  END$$
-DELIMITER ;
+  <span class="k">END</span><span class="err">$$</span>
+<span class="k">DELIMITER</span> <span class="p">;</span>
 
 </code></pre></div></div>
 

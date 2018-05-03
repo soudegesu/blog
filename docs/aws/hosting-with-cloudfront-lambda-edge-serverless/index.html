@@ -366,23 +366,23 @@ VPSサービスは通常のレンタルサーバよりもランニングコス�
 まず、以下のようなAssume Role Policy を作成します。
  <code class="highlighter-rouge">Lambda</code> と <code class="highlighter-rouge">Lambda@Edge</code> は別ものとして扱われているため、 <code class="highlighter-rouge">edgelambda.amazonaws.com</code> の記載が必要です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": [
-          "edgelambda.amazonaws.com",
-          "lambda.amazonaws.com"
-        ]
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"Service"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"edgelambda.amazonaws.com"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"lambda.amazonaws.com"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sts:AssumeRole"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>作成したPolicyと <code class="highlighter-rouge">CloudWatchLogsFullAccess</code> のポリシーをアタッチしたRoleを作成します。
 名前はとりあえず <strong>EdgeLambdaForCloudfrontRole</strong> としましょう。</p>
@@ -442,19 +442,19 @@ expressの使い方の説明は割愛しますが、実装時に注意すべき�
 <h4 id="lambdaedgeからcloudfrontへのレスポンス形式に注意する">Lambda@EdgeからCloudfrontへのレスポンス形式に注意する</h4>
 <p><code class="highlighter-rouge">オリジンリクエスト</code> の場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-    body: 'content',
-    bodyEncoding: 'text' | 'base64',
-    headers: {
-        'header name in lowercase': [{
-            key: 'header name in standard case',
-            value: 'header value'
-         }],
-         ...
-    },
-    status: 'HTTP status code',
-    statusDescription: 'status description'
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="nl">body</span><span class="p">:</span> <span class="s1">'content'</span><span class="p">,</span>
+    <span class="nx">bodyEncoding</span><span class="p">:</span> <span class="s1">'text'</span> <span class="o">|</span> <span class="s1">'base64'</span><span class="p">,</span>
+    <span class="nx">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'header name in lowercase'</span><span class="p">:</span> <span class="p">[{</span>
+            <span class="na">key</span><span class="p">:</span> <span class="s1">'header name in standard case'</span><span class="p">,</span>
+            <span class="na">value</span><span class="p">:</span> <span class="s1">'header value'</span>
+         <span class="p">}],</span>
+         <span class="p">...</span>
+    <span class="p">},</span>
+    <span class="nx">status</span><span class="p">:</span> <span class="s1">'HTTP status code'</span><span class="p">,</span>
+    <span class="nx">statusDescription</span><span class="p">:</span> <span class="s1">'status description'</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>これを愚直に実装するのは少々手間がかかるので、 <a href="https://github.com/jgautheron/aws-serverless-express-edge">aws-serverless-express-edge</a> というnpmモジュールを使ってしまうのが早いです。</p>
@@ -476,22 +476,22 @@ Lambda関数の更新の都度バージョンを上げていくスタイルに�
   <li>LambdaのTerraformサンプル</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_lambda_function" "hogehoge" {
-    filename = "../hogehoge.zip"
-    function_name = "hoeghoge"
-    publish = true
-    role = "${EdgeLambdaForCloudfrontRoleのARN}"
-    handler = "index.handler"
-    source_code_hash = "${data.archive_file.hogehoge.output_base64sha256}"
-    runtime = "nodejs6.10"
-    timeout = 30
-}
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource <span class="s2">"aws_lambda_function"</span> <span class="s2">"hogehoge"</span> <span class="o">{</span>
+    filename <span class="o">=</span> <span class="s2">"../hogehoge.zip"</span>
+    function_name <span class="o">=</span> <span class="s2">"hoeghoge"</span>
+    publish <span class="o">=</span> <span class="nb">true
+    </span>role <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">EdgeLambdaForCloudfrontRole</span><span class="p">のARN</span><span class="k">}</span><span class="s2">"</span>
+    handler <span class="o">=</span> <span class="s2">"index.handler"</span>
+    source_code_hash <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">data</span><span class="p">.archive_file.hogehoge.output_base64sha256</span><span class="k">}</span><span class="s2">"</span>
+    runtime <span class="o">=</span> <span class="s2">"nodejs6.10"</span>
+    timeout <span class="o">=</span> 30
+<span class="o">}</span>
 
-data "archive_file" "hogehoge" {
-    type = "zip"
-    source_dir  = "../workspace"
-    output_path = "../hogehoge.zip"
-}
+data <span class="s2">"archive_file"</span> <span class="s2">"hogehoge"</span> <span class="o">{</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">"zip"</span>
+    source_dir  <span class="o">=</span> <span class="s2">"../workspace"</span>
+    output_path <span class="o">=</span> <span class="s2">"../hogehoge.zip"</span>
+<span class="o">}</span>
 
 </code></pre></div></div>
 
@@ -499,66 +499,66 @@ data "archive_file" "hogehoge" {
   <li>CloudfrontのTerraformサンプル</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
-    origin {
-        domain_name = "xxxx.soudegesu.com"
-        origin_id   = "Custom-your-xxxx.soudegesu.com"
-        custom_origin_config {
-            http_port = 80
-            https_port = 443
-            origin_protocol_policy = "http-only"
-            origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
-        }
-    }
-    aliases = ["xxxx.soudegesu.com"]
-    enabled = true
-    is_ipv6_enabled = true
-    comment = "tools distribution"
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource <span class="s2">"aws_cloudfront_distribution"</span> <span class="s2">"hogehogefront_cloudfront"</span> <span class="o">{</span>
+    origin <span class="o">{</span>
+        domain_name <span class="o">=</span> <span class="s2">"xxxx.soudegesu.com"</span>
+        origin_id   <span class="o">=</span> <span class="s2">"Custom-your-xxxx.soudegesu.com"</span>
+        custom_origin_config <span class="o">{</span>
+            http_port <span class="o">=</span> 80
+            https_port <span class="o">=</span> 443
+            origin_protocol_policy <span class="o">=</span> <span class="s2">"http-only"</span>
+            origin_ssl_protocols <span class="o">=</span> <span class="o">[</span><span class="s2">"TLSv1"</span>, <span class="s2">"TLSv1.1"</span>, <span class="s2">"TLSv1.2"</span><span class="o">]</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    aliases <span class="o">=</span> <span class="o">[</span><span class="s2">"xxxx.soudegesu.com"</span><span class="o">]</span>
+    enabled <span class="o">=</span> <span class="nb">true
+    </span>is_ipv6_enabled <span class="o">=</span> <span class="nb">true
+    </span>comment <span class="o">=</span> <span class="s2">"tools distribution"</span>
 
-    default_cache_behavior {
-        allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-        cached_methods   = ["GET", "HEAD"]
-        target_origin_id = "Custom-xxxx.soudegesu.com"
+    default_cache_behavior <span class="o">{</span>
+        allowed_methods  <span class="o">=</span> <span class="o">[</span><span class="s2">"GET"</span>, <span class="s2">"HEAD"</span>, <span class="s2">"OPTIONS"</span><span class="o">]</span>
+        cached_methods   <span class="o">=</span> <span class="o">[</span><span class="s2">"GET"</span>, <span class="s2">"HEAD"</span><span class="o">]</span>
+        target_origin_id <span class="o">=</span> <span class="s2">"Custom-xxxx.soudegesu.com"</span>
 
-        forwarded_values {
-            query_string = false
+        forwarded_values <span class="o">{</span>
+            query_string <span class="o">=</span> <span class="nb">false
 
-            cookies {
-                forward = "none"
-            }
-        }
+            </span>cookies <span class="o">{</span>
+                forward <span class="o">=</span> <span class="s2">"none"</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
 
-        viewer_protocol_policy = "redirect-to-https"
-        min_ttl = 86400
-        default_ttl = 604800
-        max_ttl = 2592000
-        compress = true
-        lambda_function_association {
-            event_type = "origin-request"
-            lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
-        }
-    }
+        viewer_protocol_policy <span class="o">=</span> <span class="s2">"redirect-to-https"</span>
+        min_ttl <span class="o">=</span> 86400
+        default_ttl <span class="o">=</span> 604800
+        max_ttl <span class="o">=</span> 2592000
+        compress <span class="o">=</span> <span class="nb">true
+        </span>lambda_function_association <span class="o">{</span>
+            event_type <span class="o">=</span> <span class="s2">"origin-request"</span>
+            lambda_arn <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">aws_lambda_function</span><span class="p">.hogehoge.qualified_arn</span><span class="k">}</span><span class="s2">"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    viewer_certificate {
-        acm_certificate_arn = "${ACMのARN}"
-        minimum_protocol_version = "TLSv1.1_2016"
-        ssl_support_method = "sni-only"
-    }
+    viewer_certificate <span class="o">{</span>
+        acm_certificate_arn <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ACM</span><span class="p">のARN</span><span class="k">}</span><span class="s2">"</span>
+        minimum_protocol_version <span class="o">=</span> <span class="s2">"TLSv1.1_2016"</span>
+        ssl_support_method <span class="o">=</span> <span class="s2">"sni-only"</span>
+    <span class="o">}</span>
 
-    restrictions {
-        geo_restriction {
-            restriction_type = "none"
-        }
-    }
-}
+    restrictions <span class="o">{</span>
+        geo_restriction <span class="o">{</span>
+            restriction_type <span class="o">=</span> <span class="s2">"none"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
 <p>ポイントなのは Cloudfront側の以下の部分で、</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    lambda_function_association {
-        event_type = "origin-request"
-        lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
-    }
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    lambda_function_association <span class="o">{</span>
+        event_type <span class="o">=</span> <span class="s2">"origin-request"</span>
+        lambda_arn <span class="o">=</span> <span class="s2">"</span><span class="k">${</span><span class="nv">aws_lambda_function</span><span class="p">.hogehoge.qualified_arn</span><span class="k">}</span><span class="s2">"</span>
+    <span class="o">}</span>
 
 </code></pre></div></div>
 

@@ -48,7 +48,7 @@ TOPページに「このスクリプトをターミナルで叩きなさい」�
 
 `pyenv` と `pyenv-virtualenv` をインストールします。
 
-```
+```bash
 brew install pyenv pyenv-virtualenv
 ```
 
@@ -57,7 +57,7 @@ brew install pyenv pyenv-virtualenv
 bashであれば `.bashrc` 、 zsh であれば `.zshrc` に以下を追記します。
 ターミナルを起動する時に `rehash` してほしくなければ `--no-rehash` を入れます。
 
-```
+```bash
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="$PATH:${PYENV_ROOT}/bin:${PYENV_ROOT}/shims"
 
@@ -69,21 +69,21 @@ eval "$(pyenv virtualenv-init -)"
 
 ベースになるPythonをインストールします。
 
-```
+```bash
 pyenv install 3.6.1
 ```
 
 その後、対象のプロジェクト専用の仮想環境を準備します。
 仮想環境の名前は `test_project` にしておきます。
 
-```
+```bash
 pyenv virtualenv 3.6.1 test_project
 ```
 
 次に `test_project` ディレクトリを作成して、
 そのディレクトリ配下では `Python 3.6.1` のである仮想環境 `test_project` を使うように設定します。
 
-```
+```bash
 mkdir test_project
 cd test_project
 
@@ -95,7 +95,7 @@ python -V
 
 試しにディレクトリから出てみましょう。
 
-```
+```bash
 cd ../
 python -V
 >> Python 2.7.14
@@ -119,14 +119,14 @@ python -V
 
 * Pythonのダウンロード
 
-```
+```bash
 curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
 tar zxf Python-(バージョン).tgz
 ```
 
 * ソースからインストール
 
-```
+```bash
 cd Python-(バージョン)
 
 ./configure --prefix=/opt/local

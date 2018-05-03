@@ -29,7 +29,7 @@ tags: ethereum truffle ganache dapps
 
 * Etehreum のインストール
 
-```
+```bash
 brew tap ethereum/ethereum
 brew install ethereum
 ```
@@ -38,20 +38,20 @@ brew install ethereum
 
 私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 `nodenv` を使って切り替えています。
 
-```
+```bash
 brew install nodenv
 ```
 
 nodenv起動のために、 `~/.zshrc` に以下を追記します。
 
-```
+```bash
 export PATH="$PATH:$HOME/.nodenv/bin:"
 eval "$(nodenv init --no-rehash -)"
 ```
 
 * node(9.6.1)のインストールと設定
 
-```
+```bash
 nodenv install 9.6.1
 nodenv local 9.6.1
 node -v
@@ -59,20 +59,20 @@ node -v
 
 * `package.json` の作成
 
-```
+```bash
 npm init
 (面倒なので、以降はEnter)
 ```
 
 * `truffle` のインストール
 
-```
+```bash
 npm install truffle@4.0.4
 ```
 
 * solidityのコンパイラ `solc` のインストール
 
-```
+```bash
 npm install solc@0.4.18
 ```
 
@@ -86,7 +86,7 @@ npm install solc@0.4.18
 `truffle` をグローバルインストールしていないので、`npm run` でキックできるように `package.json` を修正します。
 `package.json` の `scripts` ブロックを修正します。
 
-```
+```json
   "scripts": {
     "truffle": "truffle",
     "develop": "truffle develop",
@@ -97,13 +97,13 @@ npm install solc@0.4.18
 
 ### truffleを初期化する
 
-```
+```bash
 npm run truffle init 
 ```
 
 実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。
 
-```
+```bash
 tree -L 1
 
 .
@@ -131,7 +131,7 @@ tree -L 1
 
 私はMacユーザなので、`truffle-config.js` は消してしまいます。
 
-```
+```bash
 rm truffle-config.js
 ```
 
@@ -144,7 +144,7 @@ rm truffle-config.js
 
 Ganacheが表示しているネットワークの情報を基に、`truffle.js` を以下のように編集します。
 
-```
+```javascript
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -161,7 +161,7 @@ module.exports = {
 `package.json` に記載した npm scriptsのコマンドから `truffle-ganache` を起動し、
 Ganacheのマイグレーションを行います。
 
-```
+```bash
 npm run truffle-ganache
 ```
 
@@ -179,19 +179,19 @@ Ganacheの画面を見てみると1番上のアドレスの `balance` (所有し
 
 また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、
 
-```
+```bash
 npm run truffle-console
 ```
 
 試しに以下のようなコードを実行すると
 
-```
+```javascript
 web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, "ether")})
 ```
 
 トランザクションのアドレスが帰ってきます。
 
-```
+```bash
 >  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
 ```
 

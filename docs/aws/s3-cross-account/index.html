@@ -283,38 +283,38 @@ AWS CLIのインストールも嫌がられてしまったため、 <strong>「A
 <p>アカウントAで <code class="highlighter-rouge">soudegesu-bucket-foo</code> というS3バケットを作成し、以下のようにバケットポリシーを作成することで
 アカウントBにバケット共有の設定をしました。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "GetObject",
-            "Action": [
-                "s3:GetObject"
-            ],
-            "Effect": "Allow",
-            "Resource": "arn:aws:s3:::soudegesu-bucket-foo/*",
-            "Principal": {
-                "AWS": [
-                    "アカウントBのAWSアカウントID"
-                ]
-            }
-        },
-        {
-            "Sid": "ListBucket",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Effect": "Allow",
-            "Resource": "arn:aws:s3:::soudegesu-bucket-foo",
-            "Principal": {
-                "AWS": [
-                    "アカウントBのAWSアカウントID"
-                ]
-            }
-        }
-    ]
-}
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GetObject"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"s3:GetObject"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::soudegesu-bucket-foo/*"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"AWS"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"アカウントBのAWSアカウントID"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ListBucket"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"s3:ListBucket"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::soudegesu-bucket-foo"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"AWS"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"アカウントBのAWSアカウントID"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、</p>
 
