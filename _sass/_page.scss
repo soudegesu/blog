@@ -61,7 +61,11 @@
     font-size: $type-size-5;
   }
 
-  p, li, dl {
+  li {
+    font-size: $type-size-9;
+  }
+
+  p, dl {
     font-size: $type-size-6;
   }
 
