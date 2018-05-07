@@ -1,4 +1,297 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-03T18:37:16+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう</title><link href="https://www.soudegesu.com/nodejs/express-sitemap-module/" rel="alternate" type="text/html" title="Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう" /><published>2018-05-03T00:00:00+09:00</published><updated>2018-05-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/nodejs/express-sitemap-module</id><content type="html" xml:base="https://www.soudegesu.com/nodejs/express-sitemap-module/">&lt;p&gt;以前書いた 「&lt;a href=&quot;/aws/hosting-with-cloudfront-lambda-edge-serverless/&quot;&gt;Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう&lt;/a&gt;」 の記事で、Node.jsの &lt;a href=&quot;http://expressjs.com/ja/&quot;&gt;express&lt;/a&gt; アプリケーションを作成しました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-08T08:38:02+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した</title><link href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" rel="alternate" type="text/html" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した" /><published>2018-05-07T00:00:00+09:00</published><updated>2018-05-07T00:00:00+09:00</updated><id>https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life</id><content type="html" xml:base="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/">&lt;p&gt;2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。
+今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。&lt;/p&gt;
+
+&lt;p&gt;この文章が、どこか遠くの、名前も知らないおとっつぁんエンジニアにとって1つのモデルケースになれば幸いだ。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4788914727/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4788914727&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=9147d66f012f84db2f7aad00296c8195&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4788914727&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4788914727&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;なお、以降は「朝方生活」を &lt;strong&gt;「アーリーバード(early bird)」&lt;/strong&gt; 、「夜型生活」を &lt;strong&gt;「ナイトオウル（night owl）」&lt;/strong&gt;  と呼ぶことにする。
+アーリーバードは英語の慣用句で「早起き」「朝早く来る人」を意味している。ゴルフをする人には馴染みのある単語かもしれない（私はやらないけど）。ナイトオウルはその逆だ。
+この言い換え自体に特別な意味はないが、私はこの単語が気に入っているのでそう呼ぶことにしたい。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#おとっつぁんエンジニアがアーリーバード野郎になった経緯&quot; id=&quot;markdown-toc-おとっつぁんエンジニアがアーリーバード野郎になった経緯&quot;&gt;おとっつぁんエンジニアがアーリーバード野郎になった経緯&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#家族構成とか&quot; id=&quot;markdown-toc-家族構成とか&quot;&gt;家族構成とか&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#私&quot; id=&quot;markdown-toc-私&quot;&gt;私&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#妻&quot; id=&quot;markdown-toc-妻&quot;&gt;妻&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#子供--2&quot; id=&quot;markdown-toc-子供--2&quot;&gt;子供 ✕ 2&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#それはある日突然に妻の時短勤務終了のお知らせ&quot; id=&quot;markdown-toc-それはある日突然に妻の時短勤務終了のお知らせ&quot;&gt;それはある日突然に〜妻の時短勤務終了のお知らせ〜&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#働き方改革と時差bizの大号令&quot; id=&quot;markdown-toc-働き方改革と時差bizの大号令&quot;&gt;「働き方改革」と「時差BiZ」の大号令&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#1日のライフサイクル&quot; id=&quot;markdown-toc-1日のライフサイクル&quot;&gt;1日のライフサイクル&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ナイトオウル時代&quot; id=&quot;markdown-toc-ナイトオウル時代&quot;&gt;ナイトオウル時代&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#キリが良いところまでが生活誤差の原因&quot; id=&quot;markdown-toc-キリが良いところまでが生活誤差の原因&quot;&gt;「キリが良いところまで」が生活誤差の原因&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#子供を寝かしつけた後に勉強を試みた&quot; id=&quot;markdown-toc-子供を寝かしつけた後に勉強を試みた&quot;&gt;子供を寝かしつけた後に勉強を試みた&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#犠牲になるのは睡眠時間&quot; id=&quot;markdown-toc-犠牲になるのは睡眠時間&quot;&gt;犠牲になるのは睡眠時間&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#アーリーバード時代&quot; id=&quot;markdown-toc-アーリーバード時代&quot;&gt;アーリーバード時代&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#生活のリズムが概ね一定になった&quot; id=&quot;markdown-toc-生活のリズムが概ね一定になった&quot;&gt;生活のリズムが概ね一定になった&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#仕事の量を調整するようになった&quot; id=&quot;markdown-toc-仕事の量を調整するようになった&quot;&gt;仕事の量を調整するようになった&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#子供と一緒に過ごす時間は勉強やらない&quot; id=&quot;markdown-toc-子供と一緒に過ごす時間は勉強やらない&quot;&gt;子供と一緒に過ごす時間は勉強やらない&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#飲み会に行かけなくなってパフォーマンスも一定になった&quot; id=&quot;markdown-toc-飲み会に行かけなくなってパフォーマンスも一定になった&quot;&gt;飲み会に行か(け)なくなってパフォーマンスも一定になった&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#週末も睡眠のサイクルは変えない&quot; id=&quot;markdown-toc-週末も睡眠のサイクルは変えない&quot;&gt;週末も睡眠のサイクルは変えない&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;おとっつぁんエンジニアがアーリーバード野郎になった経緯&quot;&gt;おとっつぁんエンジニアがアーリーバード野郎になった経緯&lt;/h2&gt;
+
+&lt;h3 id=&quot;家族構成とか&quot;&gt;家族構成とか&lt;/h3&gt;
+
+&lt;p&gt;妻と子供2人の4人暮らし。まず、家族のことを簡単に説明する必要があるだろう。&lt;/p&gt;
+
+&lt;h4 id=&quot;私&quot;&gt;私&lt;/h4&gt;
+
+&lt;p&gt;都内でシステムエンジニアをしている。
+主な守備範囲はwebアプリケーションの設計・開発・ちょっとだけシステム監視設計と運用。&lt;/p&gt;
+
+&lt;p&gt;転職経験数: 1&lt;/p&gt;
+
+&lt;h4 id=&quot;妻&quot;&gt;妻&lt;/h4&gt;
+
+&lt;p&gt;共働き。ITとは関係ない仕事に従事している。そのため、システム屋の苦労に対する理解は皆無。&lt;/p&gt;
+
+&lt;p&gt;姉さん女房。&lt;/p&gt;
+
+&lt;p&gt;外国語堪能。&lt;/p&gt;
+
+&lt;p&gt;かつて、時短勤務で子供の面倒を見てくれていた。&lt;/p&gt;
+
+&lt;h4 id=&quot;子供--2&quot;&gt;子供 ✕ 2&lt;/h4&gt;
+
+&lt;p&gt;日中は保育園に通っている。&lt;/p&gt;
+
+&lt;p&gt;プリキュア。プリンセスソフィア。プリンセスエレナ。仮面ライダービルドに取り憑かれている。&lt;/p&gt;
+
+&lt;h3 id=&quot;それはある日突然に妻の時短勤務終了のお知らせ&quot;&gt;それはある日突然に〜妻の時短勤務終了のお知らせ〜&lt;/h3&gt;
+
+&lt;p&gt;2017年度のはじめ頃、妻から相談があった。 &lt;strong&gt;「フルタイムに切り替えたい」&lt;/strong&gt; と。&lt;/p&gt;
+
+&lt;p&gt;当時、妻は時短勤務で業務に当たっていて、時短勤務の期間終了まではまだ時間があった。&lt;/p&gt;
+
+&lt;p&gt;もう少し話を聞いてみる。意志の源泉は  &lt;strong&gt;「転職を見据えてフルタイムに切り替えたい」&lt;/strong&gt; のようだ。&lt;/p&gt;
+
+&lt;p&gt;妻は新卒入社した会社に勤め続け、転職経験は0。 大方、世間では「働き盛り」といわれる年代層だ。&lt;/p&gt;
+
+&lt;p&gt;これまで、彼女は育児のために、数年間時短勤務を続けてくれていた。
+加えて、残念なことに、妻が勤務している会社では &lt;strong&gt;時短勤務の人間は人事評価がされない。白羽の矢が立たない。&lt;/strong&gt; というレガシーな文化があった。&lt;/p&gt;
+
+&lt;p&gt;これからの時代、雇用情勢の流れは読めなくなるだろうという考えは漠然とあったし、何よりも、比較的ハイスペックな妻が企業に飼い殺されているように以前から感じていた。&lt;/p&gt;
+
+&lt;p&gt;だから私は妻の意志を尊重しようと思った。&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: #3604E8&quot;&gt;「OK, 上司と相談してみよう。で、いつからフルタイム勤務を希望？」&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: #FF530D&quot;&gt;「GW明けくらいかな？」&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: #3604E8&quot;&gt;「早っ」&lt;/span&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;働き方改革と時差bizの大号令&quot;&gt;「働き方改革」と「時差BiZ」の大号令&lt;/h3&gt;
+
+&lt;p&gt;ちょうどその頃、世間的にはどこもかしこも 政府の &lt;a href=&quot;http://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000148322.html&quot;&gt; &lt;strong&gt;「働き方改革」&lt;/strong&gt; &lt;/a&gt;  と、東京都の &lt;a href=&quot;https://jisa-biz.tokyo/&quot;&gt; &lt;strong&gt;「時差Biz」&lt;/strong&gt; &lt;/a&gt; 。&lt;/p&gt;
+
+&lt;p&gt;当時の政府が推奨する働き方改革は「勤務時間をただ短くする（残業禁止）」だけの短絡的なものだったが、
+法令遵守意識のある企業には効果はバツグンだった。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;社内でも 「◯◯時までには退社するように」 というルールが適用された。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;◯◯時を超えて残業をしていると上司が叱られる仕組みだ。&lt;/p&gt;
+
+&lt;p&gt;社会的な追い風もあってか、結果的に、「朝方勤務にしたいっす」 という私の希望はあっさり通った。&lt;/p&gt;
+
+&lt;p&gt;こうして私はアーリーバード野郎になった。&lt;/p&gt;
+
+&lt;h2 id=&quot;1日のライフサイクル&quot;&gt;1日のライフサイクル&lt;/h2&gt;
+
+&lt;p&gt;1日のライフサイクルがどうなったかまとめてみる。
+ナイトオウル時代は、いわゆる &lt;strong&gt;Before&lt;/strong&gt; 、アーリーバード時代は &lt;strong&gt;After&lt;/strong&gt; で考えていただけると良い。&lt;/p&gt;
+
+&lt;h3 id=&quot;ナイトオウル時代&quot;&gt;ナイトオウル時代&lt;/h3&gt;
+
+&lt;p&gt;ぶっちゃけ、ナイトオウルを名乗るほど夜型でもなかったが、1日は以下のように過ごしていた。
+なお、 グラフの凡例を簡単に説明しておく。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;タスク名&lt;/td&gt;
+      &lt;td&gt;説明&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;一人タスク&lt;/td&gt;
+      &lt;td&gt;一人で過ごす時間&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;with 子供タスク&lt;/td&gt;
+      &lt;td&gt;子供と一緒にいる時間&lt;br /&gt;・主に育児が中心&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;仕事&lt;/td&gt;
+      &lt;td&gt;会社で仕事に従事している時間&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;生活誤差&lt;/td&gt;
+      &lt;td&gt;生活上で微妙に発生する時間的誤差&lt;br /&gt;・トイレ行ってて電車1本見送ったとか&lt;br /&gt;・子供が遅くてこの位時間かかるよねとか&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180507/before.png&quot; alt=&quot;before&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;こうやってグラフに起こしてみると、改めて自身のライフサイクルの把握が簡単にできるものだ。&lt;/p&gt;
+
+&lt;p&gt;自戒の意味も込めて、以前の私のスケジュールのイケていなかった点を羅列しておく。&lt;/p&gt;
+
+&lt;h4 id=&quot;キリが良いところまでが生活誤差の原因&quot;&gt;「キリが良いところまで」が生活誤差の原因&lt;/h4&gt;
+&lt;p&gt;私は仕事のスタイルが「先行逃げ切り型」なので、プロジェクト序盤に案件遂行上の不確実性をなるべく減らそうとする。&lt;/p&gt;
+
+&lt;p&gt;そこで、「キリがいいところまでやろう」と残業をしてしまうわけだが、とはいえ、タスクの量やその日のパフォーマンスに依存するため、終業時間がブレるのだ。&lt;/p&gt;
+
+&lt;p&gt;真面目な会社員にも見えるこの思想が良くなかったのであろう。&lt;/p&gt;
+
+&lt;h4 id=&quot;子供を寝かしつけた後に勉強を試みた&quot;&gt;子供を寝かしつけた後に勉強を試みた&lt;/h4&gt;
+
+&lt;p&gt;独身時代には「子供」が存在しなかったため、夜に勉強しても問題なかった。
+しかし、子供がいるおとっつぁんは違う。おとっつぁんは子供と一緒に布団のある部屋まで行き、子供が寝るまで見守らなければいけないのだ。&lt;/p&gt;
+
+&lt;p&gt;風呂上がりに暗い部屋にしばらくいると睡魔にも襲われるし、仮に寝かしつけた後に勉強しようと部屋に戻っても &lt;strong&gt;「あぁ。もうこんな時間か」感&lt;/strong&gt; がやばい。&lt;/p&gt;
+
+&lt;p&gt;そんな状態で勉強が捗るわけがない。&lt;/p&gt;
+
+&lt;h4 id=&quot;犠牲になるのは睡眠時間&quot;&gt;犠牲になるのは睡眠時間&lt;/h4&gt;
+
+&lt;p&gt;それでもなんとか「勉強しないと」と気合いを入れると、結局寝るのが遅くなる。
+起床時間はある程度決まるから、しわ寄せは睡眠時間に来るわけだ。それは次の日のパフォーマンスに対するキックバックとしてやってくる。&lt;/p&gt;
+
+&lt;p&gt;たまに「睡眠時間を削るな」みたいな話を聞くけど、私はそこではなくて「パフォーマンスを下げない」ことが大切だと考えている。&lt;/p&gt;
+
+&lt;p&gt;私の場合にはパフォーマンスをキープするためには睡眠時間が必要だっただけ。&lt;/p&gt;
+
+&lt;p&gt;残念ながら、私はショートスリーパーではないので、エナジー満タンには7時間睡眠は欲しいし、最低でも6時間寝ないと次の日のパフォーマンスに差し障る。&lt;/p&gt;
+
+&lt;p&gt;もっと早くに実践しておけば有意義な20代を謳歌できたかもしれない。&lt;/p&gt;
+
+&lt;h3 id=&quot;アーリーバード時代&quot;&gt;アーリーバード時代&lt;/h3&gt;
+
+&lt;p&gt;アーリーバード時代になってからはこうなった。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180507/after.png&quot; alt=&quot;after&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;妻からは以下のタスクを引き取った形になる。主に &lt;code class=&quot;highlighter-rouge&quot;&gt;with 子供タスク&lt;/code&gt; だ。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;子供の迎え&amp;amp;明日の保育園の準備&lt;/li&gt;
+  &lt;li&gt;子供と晩飯を食べる&lt;/li&gt;
+  &lt;li&gt;子供を風呂に入れる&lt;/li&gt;
+  &lt;li&gt;子供を寝かしつける&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;逆に、朝の育児は妻にお願いした。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;子供を保育園に送る&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;次に、以前と比較して、ライフサイクルが大きく変わった所を書いておこうと思う。&lt;/p&gt;
+
+&lt;h4 id=&quot;生活のリズムが概ね一定になった&quot;&gt;生活のリズムが概ね一定になった&lt;/h4&gt;
+
+&lt;p&gt;以前と比べて、生活誤差が大幅に減ったことがわかる。それにより、以降のタスクも変に大きくブレることはなくなり、&lt;strong&gt;使える時間の把握が容易になった。&lt;/strong&gt;
+睡眠時間も一定になったので、日毎のパフォーマンスのばらつきも減った。&lt;/p&gt;
+
+&lt;p&gt;これを実現するために、&lt;strong&gt;退社時間を周囲に宣言した&lt;/strong&gt; ことは大きかったと思う。&lt;/p&gt;
+
+&lt;p&gt;退社時間は、子供の保育園の迎え時間から逆算して決めた。保育園の迎えに間に合わなければ、さらに延長保育となってしまうからだ。&lt;/p&gt;
+
+&lt;p&gt;「〇〇時で退社するので、打ち合わせはそれまでによろしくお願いしまーす」と宣言し、加えて、イントラのスケジュール帳は〇〇時以降「退社します」を毎日入れておく。&lt;/p&gt;
+
+&lt;p&gt;それでも会議が退社時間を延長しようもんなら「帰りやす」と言って立ち去る。&lt;/p&gt;
+
+&lt;p&gt;聖域的例外は認めない。&lt;/p&gt;
+
+&lt;p&gt;正直かなりの胆力が必要だが、この徹底を1ヶ月程継続したところ、結果として、本当に私の参加が必要な打ち合わせは日中開催になり、&lt;strong&gt;保険として呼ばれる会議の数は0になった。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;会議が減少して、本来業務に充てれる時間が大幅に増えた。仕事で使う技術も一段深く理解して使用できるだけの調査時間を確保できるようになった。&lt;/p&gt;
+
+&lt;h4 id=&quot;仕事の量を調整するようになった&quot;&gt;仕事の量を調整するようになった&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;退社時間に強制力があることで、「それまでに終わらせる」意識がより強くなった&lt;/strong&gt; ことに関連して、仕事そのものを調整するようになった。&lt;/p&gt;
+
+&lt;p&gt;とりわけ「やらない仕事を決める」ケースは増えたと思う。&lt;/p&gt;
+
+&lt;p&gt;「リソース(社員)をいかに最適化するか」に熱心な上司がいる職場もあるだろう。
+予算管理をする人間の目線なら、ある種正しい気もするので、ここに深く言及する気はない。&lt;/p&gt;
+
+&lt;p&gt;ただ、「リソースを遊ばせない」ことが目的になっているアサインの場合は注意が必要だ。&lt;/p&gt;
+
+&lt;p&gt;その場合には、冷淡に突っぱねると色々可愛そうなので、ヒアリングをしてみる。
+そうすると、エンジニアリング以前の問題だったりするケースもあるので「まずこれをやってみては？」と言ってみると、それで片がつくこともしばしば。&lt;/p&gt;
+
+&lt;p&gt;だから、仕事をトリアージしてみると、&lt;strong&gt;やらなくてはいけない仕事は意外に少ない&lt;/strong&gt; ことに気づく。&lt;/p&gt;
+
+&lt;h4 id=&quot;子供と一緒に過ごす時間は勉強やらない&quot;&gt;子供と一緒に過ごす時間は勉強やらない&lt;/h4&gt;
+
+&lt;p&gt;子供の行動は予測不能なので、子供と過ごす時間での「ながら」作業は可能な限りやめた。育児と勉強をパラレルでやっても全く頭に入らない。
+だから、子供を保育園からピックアップした後は、子供と同じことをすることにした。&lt;/p&gt;
+
+&lt;p&gt;一緒に晩御飯を食べ、遊び、風呂に入り、寝る。&lt;/p&gt;
+
+&lt;p&gt;打キーするくらいなら「今日保育園どうだったよ？」と聞いて上げた方が色々良い気がする。&lt;/p&gt;
+
+&lt;p&gt;もう一度起きて夜遅くまで勉強したところで、脳みそも半分寝てるから効率悪いから、子供と一緒にグレースフルシャットダウンだ。&lt;/p&gt;
+
+&lt;p&gt;勉強は早朝か通勤中か業務中にやれば良い、と割り切る。だから、「今日も勉強できなかったなぁ」という後悔が発生しにくい。&lt;/p&gt;
+
+&lt;h4 id=&quot;飲み会に行かけなくなってパフォーマンスも一定になった&quot;&gt;飲み会に行か(け)なくなってパフォーマンスも一定になった&lt;/h4&gt;
+
+&lt;p&gt;これは子供の迎えがあるから仕方ないのだが、基本飲み会に行けなくなった。
+おとっつぁんの飲み会離れ自体は慣れればどうということもなく、寧ろ二日酔いでパフォーマンス悪化する日がなくなったため、仕事は安定してこなせる。
+結果、お酒に少し弱くなった。&lt;/p&gt;
+
+&lt;h4 id=&quot;週末も睡眠のサイクルは変えない&quot;&gt;週末も睡眠のサイクルは変えない&lt;/h4&gt;
+
+&lt;p&gt;週末も同じ睡眠サイクルを取るように心がけている。早起きを体に染み込ませることで、週末の朝一番の学習効率はかなり良い。&lt;/p&gt;
+
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+
+&lt;p&gt;結論から言うと、 &lt;strong&gt;アーリーバード生活は良い&lt;/strong&gt; 。結果的に外的要因でこの生活になったわけだが、今後も続けていきたいと思うし、エンジニアの人にはオススメだ。
+妻には「あんたは夜型だから無理だ」と言われたが、1ヶ月も続けると体が慣れてくるので誰でもできると思う。日が長くなるこれから始めるのが良いだろう。&lt;/p&gt;
+
+&lt;p&gt;お断りだけしておくと、&lt;strong&gt;周囲の人間の協力と、会社に対する自身の成果が一定量あるからできている&lt;/strong&gt; 。&lt;/p&gt;
+
+&lt;p&gt;責任と義務、ではなくて、責任と裁量のバランス。&lt;/p&gt;
+
+&lt;p&gt;一方で、あからさまに「周囲に迷惑をかけている」と申し訳ない感を漂わせる必要は &lt;strong&gt;ない&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;感謝でいいのだ。「あなたたちのおかげで気持ちよく仕事ができているよ！Thanks！」と。&lt;/p&gt;
+
+&lt;p&gt;ありがとう同僚たち&amp;amp;妻よ。&lt;/p&gt;
+
+&lt;p&gt;そして、がんばれ、おとっつぁんエンジニアのみなさん。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4873113075/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873113075&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=3e25a755976d46e27fd83f9535e099b3&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873113075&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873113075&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="engineer-life" /><summary type="html">2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。 今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。</summary></entry><entry><title type="html">Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう</title><link href="https://www.soudegesu.com/nodejs/express-sitemap-module/" rel="alternate" type="text/html" title="Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう" /><published>2018-05-03T00:00:00+09:00</published><updated>2018-05-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/nodejs/express-sitemap-module</id><content type="html" xml:base="https://www.soudegesu.com/nodejs/express-sitemap-module/">&lt;p&gt;以前書いた 「&lt;a href=&quot;/aws/hosting-with-cloudfront-lambda-edge-serverless/&quot;&gt;Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう&lt;/a&gt;」 の記事で、Node.jsの &lt;a href=&quot;http://expressjs.com/ja/&quot;&gt;express&lt;/a&gt; アプリケーションを作成しました。&lt;/p&gt;
 
 &lt;p&gt;大抵、webコンテンツを作る時にメインフレームワーク以外のその他のプラグインで何を使おうか迷ってしまいます。
 今回はexpressアプリケーションのサイトマップ生成用npmモジュールを比較してみました。&lt;/p&gt;
@@ -1685,153 +1978,4 @@ Naive オブジェクトはいくつかの現実的な側面を無視してし�
 
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4873118352/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873118352&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=e1b8ecca6e0185cd2701dc949c301805&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873118352&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873118352&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="continuous-delivery" /><category term="agile" /><summary type="html">継続的デリバリ(Continuous Delivery)はITの現場で一般的なものと浸透してきました。 継続的デリバリを実現するためには、継続的インテグレーションの仕組みと 再現性のあるデプロイメントパイプライン基盤の整備が必要です。 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。 今回は頻繁にリリース可能な環境下において、より安全にサービスをデリバリするための個人的な考えをまとめたものです。</summary></entry><entry><title type="html">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか</title><link href="https://www.soudegesu.com/aws/s3-cross-account/" rel="alternate" type="text/html" title="クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか" /><published>2018-04-13T00:00:00+09:00</published><updated>2018-04-13T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/s3-cross-account</id><content type="html" xml:base="https://www.soudegesu.com/aws/s3-cross-account/">&lt;p&gt;AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
-設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
-しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
-共有された側ではS3バケットのコンソールにバケットが表示されません。
-今回はなんとかして閲覧する方法はないものかと試行錯誤してみました。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#やりたいこと&quot; id=&quot;markdown-toc-やりたいこと&quot;&gt;やりたいこと&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#s3をファイルストレージサービス的にファイル共有に使いたい&quot; id=&quot;markdown-toc-s3をファイルストレージサービス的にファイル共有に使いたい&quot;&gt;S3をファイルストレージサービス的にファイル共有に使いたい&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#でもバケットのあるawsアカウントにログインさせたくない&quot; id=&quot;markdown-toc-でもバケットのあるawsアカウントにログインさせたくない&quot;&gt;でもバケットのあるAWSアカウントにログインさせたくない&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#課題&quot; id=&quot;markdown-toc-課題&quot;&gt;課題&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#ユーザはブラウザしか使えない&quot; id=&quot;markdown-toc-ユーザはブラウザしか使えない&quot;&gt;ユーザはブラウザしか使えない&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot; id=&quot;markdown-toc-コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot;&gt;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#案1-バケットのurlを直接叩かせる非公式&quot; id=&quot;markdown-toc-案1-バケットのurlを直接叩かせる非公式&quot;&gt;案1 バケットのURLを直接叩かせる[非公式]&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#案2-switch-roleを使う正攻法&quot; id=&quot;markdown-toc-案2-switch-roleを使う正攻法&quot;&gt;案2 Switch Roleを使う[正攻法]&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;やりたいこと&quot;&gt;やりたいこと&lt;/h2&gt;
-&lt;h3 id=&quot;s3をファイルストレージサービス的にファイル共有に使いたい&quot;&gt;S3をファイルストレージサービス的にファイル共有に使いたい&lt;/h3&gt;
-
-&lt;p&gt;今回やろうとしていたことを簡単に説明します。
-以下の図にまとめました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/share_bucket.png&quot; alt=&quot;share_bucket&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;既に本番環境で稼働しているサービスがあり(アカウントA)、
-アカウントA内にあるS3バケットにストアしているデータを他部門に提供する必要が出てきました。&lt;/p&gt;
-
-&lt;h3 id=&quot;でもバケットのあるawsアカウントにログインさせたくない&quot;&gt;でもバケットのあるAWSアカウントにログインさせたくない&lt;/h3&gt;
-&lt;p&gt;普通に考えれば、アカウントAで他部門向けのIAM GroupとIAM Userを作成する、というのが簡易な解になるのですが、少し事情があります。
-アカウントA自体が社内のセキュリティレベルが高めに規定されているため、他部門のIAM UserをアカウントAの中に作るのが難しいのです。
-そのため、 他部門向けの &lt;strong&gt;別のAWSアカウントBを作成し、アカウントBに対して対象のバケットのみを共有するようにすれば要求が充足されるのではないか&lt;/strong&gt;、という話になり、その方法を中心に検討をすることになりました。&lt;/p&gt;
-
-&lt;h2 id=&quot;課題&quot;&gt;課題&lt;/h2&gt;
-&lt;h3 id=&quot;ユーザはブラウザしか使えない&quot;&gt;ユーザはブラウザしか使えない&lt;/h3&gt;
-
-&lt;p&gt;今回のケースでは他部門の人間がエンジニアではないため、&lt;strong&gt;ブラウザでのファイルダウンロードしかできない&lt;/strong&gt; という制約がありました。 
-AWS CLIのインストールも嫌がられてしまったため、 &lt;strong&gt;「AWSのS3コンソールからファイルを見せる」&lt;/strong&gt; 必要がありました。&lt;/p&gt;
-
-&lt;h3 id=&quot;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&quot;&gt;コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない&lt;/h3&gt;
-
-&lt;p&gt;アカウントAで &lt;code class=&quot;highlighter-rouge&quot;&gt;soudegesu-bucket-foo&lt;/code&gt; というS3バケットを作成し、以下のようにバケットポリシーを作成することで
-アカウントBにバケット共有の設定をしました。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2012-10-17&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Statement&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Sid&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;GetObject&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Action&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;s3:GetObject&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Effect&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Allow&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Resource&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;arn:aws:s3:::soudegesu-bucket-foo/*&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Principal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AWS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;アカウントBのAWSアカウントID&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Sid&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ListBucket&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Action&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;s3:ListBucket&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Effect&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Allow&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Resource&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;arn:aws:s3:::soudegesu-bucket-foo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Principal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AWS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;アカウントBのAWSアカウントID&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/account_a_bucket_list.png&quot; alt=&quot;account_a_bucket_list&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;アカウントBでのS3コンソールから共有されたバケットを確認できないのです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/account_b_bucket_list.png&quot; alt=&quot;account_b_bucket_list&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;実は &lt;strong&gt;S3のバケットリストはバケットを作成したオーナー側にしか表示されない&lt;/strong&gt; というAWSのS3の仕様があります。
-これは AWS CLIでも同様で、 &lt;code class=&quot;highlighter-rouge&quot;&gt;aws s3 ls&lt;/code&gt; コマンドを実行しても、自分のアカウントで作成されたバケットの一覧しか取得できません。&lt;/p&gt;
-
-&lt;p&gt;なんてこったい。&lt;/p&gt;
-
-&lt;h3 id=&quot;案1-バケットのurlを直接叩かせる非公式&quot;&gt;案1 バケットのURLを直接叩かせる[非公式]&lt;/h3&gt;
-
-&lt;p&gt;一瞬「やばい」と思いましたが、どうにかなりそうな方法が見つかりました。
-それは &lt;strong&gt;共有バケットのURLを直接をブラウザに入力する&lt;/strong&gt; という方法です。&lt;/p&gt;
-
-&lt;p&gt;AWSコンソール上のS3のURLのルールは以下のようになっていて、
-AWSコンソールにログインしたセッション上で直叩きするとブラウザ上で表示することができます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://s3.console.aws.amazon.com/s3/buckets/{バケット名}/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;今回の例で言えば、AWSアカウントBにログインした状態で下のURLを直叩きします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180413/find_bucket_b.png&quot; alt=&quot;find_bucket&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;見えました。やったぜ。&lt;/p&gt;
-
-&lt;p&gt;ただし、この方法は現時点(2018年4月現在)でのS3コンソールの仕様ということらしく、公式でサポートされている仕様ではありません。
-一応AWSのサポートにも聞いてみましたが、結果的に見えているけど、今後変わるかもしれない、ということでした。&lt;/p&gt;
-
-&lt;h3 id=&quot;案2-switch-roleを使う正攻法&quot;&gt;案2 Switch Roleを使う[正攻法]&lt;/h3&gt;
-
-&lt;p&gt;結局、マルチアカウント間でコンソール上でいい感じに見せたい場合の正攻法はSwitch Roleになりそうです。
-Switch Roleを使ったアカウントの切り替えは記事にされている方がいっぱいいらっしゃるのでそちらを参考にいただいた方が良いです。&lt;/p&gt;
-
-&lt;p&gt;参考までにいくつかリンクを貼っておきます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://qiita.com/yoshidashingo/items/d13a9b17f111d5d91a2e&quot;&gt;Swith Roleで複数のAWSアカウント間を切替える&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_roles_use_switch-role-console.html&quot;&gt;ロールの切り替え（AWS マネジメントコンソール）&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;「クロスアカウントで共有されたS3バケットはAWSコンソール上から閲覧可能なのか」&lt;/strong&gt; というタイトルで今回書きましたが、
-結論を言うと&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;可能&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;しかし、以下の条件を知っておく必要がありそうです。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;共有されたバケットがS3コンソールのバケット一覧で参照可能なのは&lt;strong&gt;バケットのオーナーアカウント&lt;/strong&gt;のみ&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;バケットのURLを直接入力する&lt;/strong&gt;ことで、共有先のアカウントでもブラウザ上で確認ができる&lt;/li&gt;
-  &lt;li&gt;ただし、URL直接入力の方法は公式サポートされていないので、真面目にやるならSwitch Roleで対応する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;今回はURLを直接入力する方法で大丈夫そうだったので、よかったよかった。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4797392568/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797392568&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=2317c39300679077409ccb55e8076219&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4797392568&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4797392568&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="s3" /><summary type="html">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。 設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。 しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、 共有された側ではS3バケットのコンソールにバケットが表示されません。 今回はなんとかして閲覧する方法はないものかと試行錯誤してみました。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="continuous-delivery" /><category term="agile" /><summary type="html">継続的デリバリ(Continuous Delivery)はITの現場で一般的なものと浸透してきました。 継続的デリバリを実現するためには、継続的インテグレーションの仕組みと 再現性のあるデプロイメントパイプライン基盤の整備が必要です。 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。 今回は頻繁にリリース可能な環境下において、より安全にサービスをデリバリするための個人的な考えをまとめたものです。</summary></entry></feed>
