@@ -20,6 +20,41 @@ tags: springboot
 
 ## 事前準備
 
+### テストを準備しておく
+* 単体テスト
+* Integration テスト
+* 負荷テスト
+
+## build.gradleの変更
+
+* バージョンアップする
+`1.5.9.RELEASE` -> `2.0.1.RELEASE`
+
+[2.0.1のissue](https://github.com/spring-projects/spring-boot/milestone/98?closed=1) を見るとわかるが、165のissueがクローズされている
+
+今のとおｒ
+
+* enabled = trueを追加
+
+jar {
+    baseName = 'soudegesu-demo-app'
+    enabled = true
+}
+
+* `bootRepackage` が廃止になったため変更
+
+```
+bootRepackage {
+    mainClass = 'com.soudegesu.demo.app.Application'
+    executable = true
+}
+
+springBoot {
+    mainClassName = 'com.soudegesu.demo.app.Application'
+}
+
+```
+
 ## 参考にさせていただいたサイト
 * [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
 * [Spring Boot with Java 9 and above](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above)
