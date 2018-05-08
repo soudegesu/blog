@@ -73,39 +73,47 @@ Springbootの場合には
 
 外側から見たシステムの振る舞いやパフォーマンスに影響がないかを確認する必要があるからだ。
 
+なお、負荷テストではbefore/afterの比較ができないと意味がないので、既存のシステムでさばけるパフォーマンスは一度計測しておく。
+
 とりあえず私の場合は既にメンテンナスされている資産があるので、それを使うことにする。
 
-## build.gradleの変更
+## いざマイグレーション!!
 
-* バージョンアップする
-`1.5.9.RELEASE` -> `2.0.1.RELEASE`
+### build.gradleの変更
 
-[2.0.1のissue](https://github.com/spring-projects/spring-boot/milestone/98?closed=1) を見るとわかるが、165のissueがクローズされている
+* Springbootをバージョンアップ
 
-bugfixだらけ、というわけではない。
+これはいたって簡単だ。今回は記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
 
-* enabled = trueを追加
+* `bootRepackage` タスクを変更
 
-jar {
-    baseName = 'soudegesu-demo-app'
-    enabled = true
-}
+`bootRepackage` タスクが廃止になったため、 `springBoot` タスクに変更した。
 
-* `bootRepackage` が廃止になったため変更
-
-```
+```groovy
 bootRepackage {
     mainClass = 'com.soudegesu.demo.app.Application'
     executable = true
 }
+```
 
+```groovy
 springBoot {
     mainClassName = 'com.soudegesu.demo.app.Application'
 }
-
 ```
 
-###
+* executable jarにするための設定を追加
+
+jarタスクに `enabled = true` を追加
+
+```groovy
+jar {
+    baseName = 'soudegesu-demo-app'
+    enabled = true
+}
+```
+
+### コンパイルエラーやwarningを解決していく
 
 * パッケージの変更
 
