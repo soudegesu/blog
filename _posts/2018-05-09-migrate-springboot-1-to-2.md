@@ -67,6 +67,10 @@ springBoot {
 
 ### spring-data-jpa
 
+* CrudRepositoryからfindOneが消えた
+ので `findByXX` にて自前実装
+
+
 こんなエラーが出た。 `@GeneratedValue(strategy= GenerationType.AUTO)` でAUTO INCREMENTで入れている時に起きた
 ```
 org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
