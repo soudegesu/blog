@@ -79,6 +79,20 @@ Springbootの場合には
 
 ## いざマイグレーション!!
 
+### 環境情報
+
+* Java
+  * 1.8.0_152
+* Gradle
+  * 4.4
+* マイグレーション対象のspringbootモジュール
+  * spring-boot-starter-web
+  * spring-boot-starter-data-jpa
+  * spring-boot-starter-actuator
+  * spring-boot-configuration-processor
+  * spring-boot-starter-thymeleaf
+  * spring-boot-gradle-plugin(ビルド用)
+
 ### build.gradleの変更
 
 * Springbootをバージョンアップ
@@ -87,7 +101,7 @@ Springbootの場合には
 
 * `bootRepackage` タスクを変更
 
-`bootRepackage` タスクが廃止になったため、 `springBoot` タスクに変更した。
+[Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため、 `springBoot` タスクに変更した。
 
 ```groovy
 bootRepackage {
@@ -115,29 +129,42 @@ jar {
 
 ### コンパイルエラーやwarningを解決していく
 
-* パッケージの変更
+`build.gradle` を編集して依存関係を更新すると、コンパイルエラーやwarningが出てくるので、それを適宜直していく。
 
-|変更前|変更後|
-|===|===|
+パッケージやクラスに変更があり、それに合わせてIFも修正する必要があった。
+ざっくり以下に置き換えている。
+
+|変更前      |変更後    |
+|===========|=========|
 |org.springframework.boot.autoconfigure.web.ErrorAttributes|org.springframework.boot.web.servlet.error.ErrorAttributes|
 |org.springframework.web.context.request.RequestAttributes|org.springframework.web.context.request.WebRequest|
-|org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter|import org.springframework.web.servlet.config.annotation.WebMvcConfigurer|
+|org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter|org.springframework.web.servlet.config.annotation.WebMvcConfigurer|
 
-### spring-data-jpa
+少し面倒だったのは [spring-data-jpa](https://projects.spring.io/spring-data-jpa/) の
+`CrudRepository` から `findOne` が削除されたため、 implementしているクラス側で `findByXX` を自前定義してあげた。
 
-* CrudRepositoryからfindOneが消えた
-ので `findByXX` にて自前実装
+コンパイルエラーが治ったら、単体テストを実行し、クラスレベルのデグレードが起きないことを確認した。
 
+## 実行時エラーを解決する
 
-こんなエラーが出た。 `@GeneratedValue(strategy= GenerationType.AUTO)` でAUTO INCREMENTで入れている時に起きた
+次に、マイグレーション済みのSpringbootアプリケーションを起動できるようになったら、結合テストを実行して振る舞いに変化がないかをチェックする。
+
+エラーがやはり出た。
+
+DBへのINSERTが伴うリクエストの処理にて、 [spring-data-jpa](https://projects.spring.io/spring-data-jpa/) がエラーを吐き出している。
+
 ```
 org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
-Caused by: org.hibernate.exception.SQLGrammarException: error performing isolated work
+(中略)
 Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
-Query is: select next_val as id_val from hibernate_sequence for update
+  Query is: select next_val as id_val from hibernate_sequence for update
 ```
 
-spring.jpa.hibernate.use-new-id-generator-mappings: false を追加
+DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 `@GeneratedValue(strategy= GenerationType.AUTO)` で入れている時に起きた
+
+`application.yaml` に `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
+
+これを false にすると hibernateの `IdentifierGenerator` が
 
 ### springboot-actuatorの変更
 
