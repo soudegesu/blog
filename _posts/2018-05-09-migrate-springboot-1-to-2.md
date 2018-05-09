@@ -1,6 +1,6 @@
 ---
-title: "Spring Bootを1.5から2へマイグレーションしてみて大変だった"
-description: ""
+title: "Spring Bootを1.5から2へマイグレーションしてみた"
+description: "Sprin"
 date: 2018-05-09 00:00:00 +0900
 categories: java
 tags: springboot
@@ -10,6 +10,7 @@ tags: springboot
 * Table Of Contents
 {:toc}
 
+![springboot]({{site.baseurl}}/assets/images/20180509/springboot.png)
 
 [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
 を参考にSpring Bootの目メジャーバージョンアップを試みた。
@@ -17,16 +18,16 @@ tags: springboot
 ## モチベーション
 ### これからのJava時代に備えて
 
-今私は Springbootの `1.5.9` を使っているのだが、2018/05時点において、公式からは [Springboot 1.5のJava9サポート予定はない](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above) ことが公表されている。
+今私は Spring Bootの `1.5.9` を使っているのだが、2018/05時点において、公式からは [Spring Boot 1.5のJava9サポート予定はない](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above) ことが公表されている。
 
 以前、[JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ](/java/java9-modularity/) を書いた時には
-Springbootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(**複数ライブラリ間でのパッケージ重複問題**)、完全移行を断念した経緯があった。
+Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(**複数ライブラリ間でのパッケージ重複問題**)、完全移行を断念した経緯があった。
 
-その後、Springbootの2.0が2018/03にローンチされた後、Java9上で動作することを確認している。
+その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを確認している。
 
-つまり、 **Javaの進化に追従していきたいプロダクトは、Springboot2にマイグレーションする必要がある** のだ。
+つまり、 **Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある** のだ。
 
-### 2019年1月までにSpringboot2への以降を
+### 2019年1月までにSpring Boot2への以降を
 
 マイグレーションを進める上で、スケジュール感の算段を立てる必要がある。
 
@@ -38,11 +39,11 @@ Javaに関して抑えておきたいのは2点
 
 である。
 
-次に [Springbootのロードマップ](https://github.com/spring-projects/spring-boot/milestones) も確認しておく。
+次に [Spring Bootのロードマップ](https://github.com/spring-projects/spring-boot/milestones) も確認しておく。
 
 ![springboot-milestone]({{site.baseurl}}/assets/images/20180509/springboot-milestones.png)
 
-Springbootの場合には
+Spring Bootの場合には
 
 * `2.0.2` のリリースは2018/05予定
 * `2.1.0.RC1` のリリースが2018/09予定
@@ -85,7 +86,7 @@ Springbootの場合には
   * 1.8.0_152
 * Gradle
   * 4.4
-* マイグレーション対象のspringbootモジュール
+* マイグレーション対象のSpring Bootモジュール
   * spring-boot-starter-web
   * spring-boot-starter-data-jpa
   * spring-boot-starter-actuator
@@ -95,15 +96,16 @@ Springbootの場合には
 
 ### build.gradleの変更
 
-* Springbootをバージョンアップ
+* Spring Bootをバージョンアップ
 
-これはいたって簡単だ。今回は記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
+今回は記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
 
 * `bootRepackage` タスクを変更
 
 [Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため、 `springBoot` タスクに変更した。
 
 ```groovy
+// Before
 bootRepackage {
     mainClass = 'com.soudegesu.demo.app.Application'
     executable = true
@@ -111,6 +113,7 @@ bootRepackage {
 ```
 
 ```groovy
+// After
 springBoot {
     mainClassName = 'com.soudegesu.demo.app.Application'
 }
@@ -125,6 +128,29 @@ jar {
     baseName = 'soudegesu-demo-app'
     enabled = true
 }
+```
+
+### application.yaml の修正
+
+`application.yaml` を修正する。設定項目は使っているモジュールに依存するので、詳細は触れないが、
+私の場合には主に `springboot-actuator` の設定変更が発生した。
+**yaml構造の変更** と **actuator endpointの公開設定** と **メトリック取得方法指定** といったところ。
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics,httptrace,threaddump,heapdump
+  metrics:
+    export:
+      datadog:
+        api-key: (APIのキー)
+        step: 30s
+  security:
+    enabled: false
+  server:
+    port: ポート番号
 ```
 
 ### コンパイルエラーやwarningを解決していく
@@ -147,7 +173,7 @@ jar {
 
 ## 実行時エラーを解決する
 
-次に、マイグレーション済みのSpringbootアプリケーションを起動できるようになったら、結合テストを実行して振る舞いに変化がないかをチェックする。
+次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、結合テストを流して振る舞いに変化がないかをチェックする。
 
 エラーがやはり出た。
 
@@ -157,36 +183,41 @@ DBへのINSERTが伴うリクエストの処理にて、 [spring-data-jpa](https
 org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
 (中略)
 Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
+
   Query is: select next_val as id_val from hibernate_sequence for update
+
 ```
 
-DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 `@GeneratedValue(strategy= GenerationType.AUTO)` で入れている時に起きた
+DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 そこはEntityでフィールドには `@GeneratedValue(strategy= GenerationType.AUTO)` がアノテーション付与されているのだが、 `hibernate_sequence` を使ったID生成を試みてしまっているようだ。
 
-`application.yaml` に `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
+以前はこのような処理をしていなかったので、 `application.yaml` に `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
 
-これを false にすると hibernateの `IdentifierGenerator` が
+### メトリックの取得設定を変える（springboot-actuator）
 
-### springboot-actuatorの変更
+正直これが一番めんどくさかった。
 
+[springboot-actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html) を使用しているのだが、
+バージョンアップに伴い、
 
+* **メトリック毎にエンドポイントが分割された**
+  * 一発で取得できなくなった
+* **取得できるメトリック名に後方互換がなくなった**
+  * 諸事情で後方互換性を持たせるには自前実装が必要
+* **メトリック拡張のロジックに修正が必要になった**
+  * [dropwizard metrics](http://metrics.dropwizard.io/4.0.0/) でメトリック拡張してた場合も改修必要
 
-```yaml
- management:
-+  endpoints:
-+    web:
-+      exposure:
-+        include: info,health,metrics,httptrace,threaddump,heapdump
-   security:
-     enabled: false
--  port: 8081
-+  server:
-+    port: 8081
-```
+springboot-actuator のメトリックをシステム監視に利用しているプロダクトは辛い。
 
-* レスポンスボディが変わった
+<br>
 
-before
-```
+もう少し具体的に説明しておく。
+
+#### 以前は一発で取れた
+
+以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
+拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。
+
+```json
 {
     "mem": 485331,
     "mem.free": 253058,
@@ -214,7 +245,6 @@ before
     "gc.ps_marksweep.count": 2,
     "gc.ps_marksweep.time": 388,
     〜(中略)〜
-    "instrumented.responseCodes.other.fiveMinuteRate": 0,
     "httpsessions.max": -1,
     "httpsessions.active": 0,
     "datasource.primary.active": 0,
@@ -222,10 +252,12 @@ before
 }
 ```
 
-after
+#### これからはメトリック毎に取得する
 
+`/actuator/metrics` を参考に取得可能なメトリックを確認して
+(この時点でメトリック名に互換性がないことがわかる)
 
-```
+```json
 {
     "names": [
         "http.server.requests",
@@ -238,50 +270,8 @@ after
         "tomcat.sessions.expired",
         "hikaricp.connections.usage",
         "tomcat.global.request.max",
-        "tomcat.global.error",
-        "jvm.gc.max.data.size",
-        "logback.events",
-        "system.cpu.count",
-        "jvm.memory.max",
-        "jdbc.connections.active",
-        "jvm.buffer.total.capacity",
-        "jvm.buffer.count",
-        "process.files.max",
-        "jvm.threads.daemon",
-        "hikaricp.connections",
-        "process.start.time",
-        "hikaricp.connections.active",
-        "tomcat.global.sent",
-        "hikaricp.connections.creation.percentile",
-        "tomcat.sessions.active.max",
-        "tomcat.threads.config.max",
-        "jvm.gc.live.data.size",
-        "process.files.open",
-        "process.cpu.usage",
-        "hikaricp.connections.acquire",
-        "hikaricp.connections.timeout",
-        "tomcat.servlet.request",
-        "jvm.gc.pause",
-        "hikaricp.connections.idle",
-        "process.uptime",
-        "tomcat.global.received",
-        "system.load.average.1m",
-        "tomcat.cache.hit",
-        "hikaricp.connections.pending",
-        "hikaricp.connections.acquire.percentile",
-        "tomcat.servlet.error",
-        "tomcat.servlet.request.max",
-        "hikaricp.connections.usage.percentile",
-        "jdbc.connections.max",
-        "tomcat.cache.access",
+        (中略)
         "tomcat.threads.busy",
-        "tomcat.sessions.active.current",
-        "system.cpu.usage",
-        "jvm.threads.live",
-        "jvm.classes.loaded",
-        "jvm.classes.unloaded",
-        "jvm.threads.peak",
-        "tomcat.threads.current",
         "tomcat.global.request",
         "hikaricp.connections.creation",
         "jvm.gc.memory.promoted",
@@ -291,48 +281,39 @@ after
 }
 ```
 
-* dropwizardMetricsを削除する
+`/actuator/metrics/(メトリック名)` でリクエストをしてあげなければならない。
 
-* 今まで使っていたメトリック
+例えば以下のようになる。
 
+パス: `/actuator/metrics/tomcat.sessions.created`
+
+```json
+{
+    "name": "tomcat.sessions.created",
+    "measurements": [
+        {
+            "statistic": "COUNT",
+            "value": 0
+        }
+    ],
+    "availableTags": []
+}
 ```
-mem.free
-mem
-heap.used
-heap
-nonheap.used
-nonheap
-```
 
-### micrometer-registry-datadog を入れる
+結構変わってしまったではないか。。
 
-* micrometer-registry-datadog を `build.gradle` に追加する
+#### micrometer-registry-datadog を入れる
+
+たまたま [Datadog](https://www.datadoghq.com/) を導入していたため、
+簡単な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。
+
+* `build.gradle` に依存モジュールを追加
 
 ```groovy
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
 ```
 
-ローカル環境の場合
-
-```yaml
-# Spring Boot Actuator Settings
-management:
-  metrics:
-    export:
-      datadog:
-        enabled: false
-```
-
-それ以外の環境の場合
-
-```yaml
-management:
-  metrics:
-    export:
-      datadog:
-        api-key: ${API-KEY}
-        step: 30s
-```
+### 負荷試験だ
 
 ## 参考にさせていただいたサイト
 * [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
