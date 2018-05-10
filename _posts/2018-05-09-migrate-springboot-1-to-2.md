@@ -1,19 +1,18 @@
 ---
 title: "Spring Bootを1.5から2へマイグレーションしてみた"
-description: "Sprin"
+description: "Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存の1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。"
 date: 2018-05-09 00:00:00 +0900
 categories: java
 tags: springboot
 ---
 
+Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
+を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。
 
 * Table Of Contents
 {:toc}
 
 ![springboot]({{site.baseurl}}/assets/images/20180509/springboot.png)
-
-[Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
-を参考にSpring Bootの目メジャーバージョンアップを試みた。
 
 ## モチベーション
 ### これからのJava時代に備えて
@@ -313,7 +312,15 @@ springboot-actuator のメトリックをシステム監視に利用している
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
 ```
 
-### 負荷試験だ
+### とどめの負荷試験
+
+最後に環境にデプロイして、負荷試験を行う。
+プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。
+
+* ストレステスト
+* ロングランテスト
+
+## まとめ
 
 ## 参考にさせていただいたサイト
 * [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
