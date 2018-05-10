@@ -189,7 +189,13 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 
 DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 そこはEntityでフィールドには `@GeneratedValue(strategy= GenerationType.AUTO)` がアノテーション付与されているのだが、 `hibernate_sequence` を使ったID生成を試みてしまっているようだ。
 
-以前はこのような処理をしていなかったので、 `application.yaml` に `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
+確認してみたところ、デフォルトの挙動が変わっているようだ。
+
+> Id generator
+>
+> The spring.jpa.hibernate.use-new-id-generator-mappings property is now true by default to align with the default behaviour of Hibernate. If you need to temporarily restore this now deprecated behaviour, set the property to false.
+
+そのため、 `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
 
 ### メトリックの取得設定を変える（springboot-actuator）
 
