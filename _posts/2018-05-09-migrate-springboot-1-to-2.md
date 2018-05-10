@@ -322,6 +322,15 @@ compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1
 
 ## まとめ
 
+今回はSpring Boot 1.5のプロジェクトを 2.0に以降してみた。
+
+負荷試験含めて実施したため、全体としての所要時間はかかりましたが、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。
+強いて言えば `springboot-actuator` のメトリック変更がコード以外の部分に波及したのは厄介でした。
+
+2.x自体もリリースされて日が浅いので、事故っても損害が少ないプロダクトから適用していきたいですね。
+
+そして、来るべきJava 11に早めに備えておきたい！
+
 ## 参考にさせていただいたサイト
 * [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
 * [Spring Boot with Java 9 and above](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above)
