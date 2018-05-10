@@ -9,10 +9,10 @@ tags: springboot
 Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
 を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。
 
+![springboot]({{site.baseurl}}/assets/images/20180509/springboot.png)
+
 * Table Of Contents
 {:toc}
-
-![springboot]({{site.baseurl}}/assets/images/20180509/springboot.png)
 
 ## モチベーション
 ### これからのJava時代に備えて
