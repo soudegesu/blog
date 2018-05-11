@@ -1,5 +1,5 @@
 ---
-title: "Spring Bootを1.5から2へマイグレーションしてみた"
+title: "Spring Bootを1.5から2へマイグレーションするステップとポイント"
 description: "Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存の1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。"
 date: 2018-05-09 00:00:00 +0900
 categories: java
@@ -7,7 +7,9 @@ tags: springboot
 ---
 
 Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
-を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。
+を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。
+
+spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っている。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。
 
 ![springboot]({{site.baseurl}}/assets/images/20180509/springboot.png)
 
@@ -17,26 +19,25 @@ Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide
 ## モチベーション
 ### これからのJava時代に備えて
 
-今私は Spring Bootの `1.5.9` を使っているのだが、2018/05時点において、公式からは [Spring Boot 1.5のJava9サポート予定はない](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above) ことが公表されている。
+Spring Bootの `1.5.9` を使っていたのだけど、2018/05時点において、公式からは [Spring Boot 1.5のJava9サポート予定はない](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above) ことが公表されている。
 
 以前、[JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ](/java/java9-modularity/) を書いた時には
 Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(**複数ライブラリ間でのパッケージ重複問題**)、完全移行を断念した経緯があった。
 
-その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを確認している。
-
-つまり、 **Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある** のだ。
+その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを一応確認しておいたので、
+ **Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある** し、 Spring Boot使いは **既にJavaのマイグレーション準備期間に突入した** のだ。
 
 ### 2019年1月までにSpring Boot2への以降を
 
-マイグレーションを進める上で、スケジュール感の算段を立てる必要がある。
+「いつまでに何をしないといけないか？」、つまり、スケジュール感の算段を立てる必要がありそうだ。
 
-[Oracleの公式](http://www.oracle.com/technetwork/jp/java/eol-135779-ja.html) でJavaのロードマップを確認しよう。
+まずは、 [Oracleの公式](http://www.oracle.com/technetwork/jp/java/eol-135779-ja.html) でJavaのロードマップを確認しよう。
 
 Javaに関して抑えておきたいのは2点
 * Java11は `2018/09` から利用可能
 * Java8は `2019/01` にサポートが切れる
 
-である。
+<br>
 
 次に [Spring Bootのロードマップ](https://github.com/spring-projects/spring-boot/milestones) も確認しておく。
 
@@ -58,7 +59,8 @@ Spring Bootの場合には
 
 ## マイグレーションに必要な事前準備
 
-いきなりマイグレーションをすると破綻するので、事前準備が必要だ。
+いきなりマイグレーション作業をすると破綻するので、事前準備が必要だ。
+
 具体的に言うと **テストコード** と **メトリック取得の仕組み** の2つが必要になる。
 
 テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。
@@ -68,8 +70,7 @@ Spring Bootの場合には
 
 メトリック取得の仕組みはなんでも良いが、私は [Datadog](https://www.datadoghq.com/) を使っている。
 
-プロジェクトによってはあまりテストコードが整備されていないかもしれないが、
-今回のケースでは特に **結合テストと負荷テストの存在は欠かせない** 。
+プロジェクトによっては、結合テストと負荷テストまで手が届いていないかもしれないが、今回のようなマイグレーションには欠かせないので作っておこう。
 
 外側から見たシステムの振る舞いやパフォーマンスに影響がないかを確認する必要があるからだ。
 
@@ -97,11 +98,11 @@ Spring Bootの場合には
 
 * Spring Bootをバージョンアップ
 
-今回は記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
+記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
 
 * `bootRepackage` タスクを削除
 
-[Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため削除した。最初は `springBoot` タスクに `mainClassName` 記述が必要だと考えていたのだが、ドキュメントを読んだところ、 `public static void main(String[] args)` を見てよしなにやってくれる、と書いてあった。
+[Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため削除した。 `public static void main(String[] args)` を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも `mainClassName` の記述は必須ではない。
 
 ```groovy
 // 削除
@@ -154,7 +155,7 @@ management:
 
 ## 実行時エラーを解決する
 
-次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、結合テストを流して振る舞いに変化がないかをチェックする。
+次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、ローカルで結合テストを流して、振る舞いに変化がないかをチェックする。
 
 エラーがやはり出た。
 
@@ -169,7 +170,7 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 
 ```
 
-DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 そこはEntityでフィールドには `@GeneratedValue(strategy= GenerationType.AUTO)` がアノテーション付与されているのだが、 `hibernate_sequence` を使ったID生成を試みてしまっているようだ。
+DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに `@GeneratedValue(strategy= GenerationType.AUTO)` アノテーションを付与しているのだが、 `hibernate_sequence` を使ったID生成を試みてしまっているようだ。
 
 確認してみたところ、デフォルトの挙動が変わっているようだ。
 
@@ -177,19 +178,19 @@ DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあ�
 >
 > The spring.jpa.hibernate.use-new-id-generator-mappings property is now true by default to align with the default behaviour of Hibernate. If you need to temporarily restore this now deprecated behaviour, set the property to false.
 
-そのため、 `spring.jpa.hibernate.use-new-id-generator-mappings: false` を追加してあげる。
+そのため、 `spring.jpa.hibernate.use-new-id-generator-mappings: false` を `application.yaml` に追加してあげる。
 
 ### メトリックの取得設定を変える（springboot-actuator）
 
 正直これが一番めんどくさかった。
 
 [springboot-actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html) を使用しているのだが、
-バージョンアップに伴い、
+バージョンアップに伴い大きく以下の変更が入っている。
 
 * **メトリック毎にエンドポイントが分割された**
   * 一発で取得できなくなった
 * **取得できるメトリック名に後方互換がなくなった**
-  * 諸事情で後方互換性を持たせるには自前実装が必要
+  * 諸事情で後方互換性を持たせたい時には自前実装が必要
 * **メトリック拡張のロジックに修正が必要になった**
   * [dropwizard metrics](http://metrics.dropwizard.io/4.0.0/) でメトリック拡張してた場合も改修必要
 
@@ -292,7 +293,7 @@ springboot-actuator のメトリックをシステム監視に利用している
 #### micrometer-registry-datadog を入れる
 
 たまたま [Datadog](https://www.datadoghq.com/) を導入していたため、
-簡単な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。
+簡易な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。
 
 * `build.gradle` に依存モジュールを追加
 
@@ -304,7 +305,7 @@ compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1
 
 ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に `jar` をデプロイする時に落とし穴に遭遇した。
 
-`service` 起動する際に
+`service` コマンド起動時に
 
 ```bash
 invalid file (bad magic number): Exec format error
@@ -322,20 +323,36 @@ bootJar {
 }
 ```
 
-## とどめの負荷試験
+## とどめの負荷テスト
 
 最後に環境にデプロイして、負荷試験を行う。
-プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。
+プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。（人によって言い方が変わるので注意）
 
 * ストレステスト
+  * サービス需要予測とそれ以上の瞬間最大風速を計測
+  * できれば3点計測する
 * ロングランテスト
+  * 長期間実施してサーバリソースが枯渇しないか、周辺のコンポーネントに迷惑かけないか計測
+
+これらをdatadog上で大きな変化がないことを確認して、終了。
 
 ## まとめ
 
-今回はSpring Boot 1.5のプロジェクトを 2.0に以降してみた。
+今回はSpring Boot 1.5のプロジェクトを 2.0にマイグレーションしてみました。
 
-負荷試験含めて実施したため、全体としての所要時間はかかりましたが、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。
-強いて言えば `springboot-actuator` のメトリック変更がコード以外の部分に波及したのは厄介でした。
+大きな流れをまとめると
+
+* テストコード準備する
+* マイグレ前のアプリケーションのパフォーマンスを計測しておく
+* ライブラリを差し替える
+* 単体テストを動かしながら、コンパイルエラーを取り除く
+* 結合テストを動かしながら、実行時エラーを取り除く
+* サーバにデプロイする
+* 負荷テストして、パフォーマンスが大きく変わっていないことを確認
+
+負荷テスト含めて実施したため、全体としての所要時間はかかりました（1人でやって1.5weekくらい）が、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。これは [Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide) の内容が以前よりも充実したことが寄与していると思う。
+
+強いて言うと、 `springboot-actuator` のメトリック変更がコード以外の部分に波及したのは厄介でした。
 
 2.x自体もリリースされて日が浅いので、事故っても損害が少ないプロダクトから適用していきたいですね。
 
