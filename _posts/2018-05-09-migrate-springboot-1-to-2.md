@@ -99,34 +99,16 @@ Spring Bootの場合には
 
 今回は記事を書いている時点での最新 `2.0.1.RELEASE` に変更する。
 
-* `bootRepackage` タスクを変更
+* `bootRepackage` タスクを削除
 
-[Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため、 `springBoot` タスクに変更した。
-
-```groovy
-// Before
-bootRepackage {
-    mainClass = 'com.soudegesu.demo.app.Application'
-    executable = true
-}
-```
+[Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため削除した。最初は `springBoot` タスクに `mainClassName` 記述が必要だと考えていたのだが、ドキュメントを読んだところ、 `public static void main(String[] args)` を見てよしなにやってくれる、と書いてあった。
 
 ```groovy
-// After
-springBoot {
-    mainClassName = 'com.soudegesu.demo.app.Application'
-}
-```
-
-* executable jarにするための設定を追加
-
-jarタスクに `enabled = true` を追加
-
-```groovy
-jar {
-    baseName = 'soudegesu-demo-app'
-    enabled = true
-}
+// 削除
+//bootRepackage {
+//    mainClass = 'com.soudegesu.demo.app.Application'
+//    executable = true
+//}
 ```
 
 ### application.yaml の修正
@@ -318,7 +300,29 @@ springboot-actuator のメトリックをシステム監視に利用している
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
 ```
 
-### とどめの負荷試験
+### まさかにEC2（AmazonLinux）デプロイで落とし穴
+
+ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に `jar` をデプロイする時に落とし穴に遭遇した。
+
+`service` 起動する際に
+
+```bash
+invalid file (bad magic number): Exec format error
+```
+
+のようなエラーメッセージが出て起動できなくなってしまったのだ。
+
+しかし、 `java -jar` コマンドでは起動できる。
+
+これには `bootJar` タスク実行時に起動スクリプトを含めることで対応した。
+
+```groovy
+bootJar {
+    launchScript()
+}
+```
+
+## とどめの負荷試験
 
 最後に環境にデプロイして、負荷試験を行う。
 プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。
