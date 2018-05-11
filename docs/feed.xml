@@ -1,4 +1,442 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-08T08:38:02+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した</title><link href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" rel="alternate" type="text/html" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した" /><published>2018-05-07T00:00:00+09:00</published><updated>2018-05-07T00:00:00+09:00</updated><id>https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life</id><content type="html" xml:base="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/">&lt;p&gt;2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-12T06:56:07+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Spring Bootを1.5から2へマイグレーションするステップとポイント</title><link href="https://www.soudegesu.com/java/migrate-springboot-1-to-2/" rel="alternate" type="text/html" title="Spring Bootを1.5から2へマイグレーションするステップとポイント" /><published>2018-05-11T00:00:00+09:00</published><updated>2018-05-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/migrate-springboot-1-to-2</id><content type="html" xml:base="https://www.soudegesu.com/java/migrate-springboot-1-to-2/">&lt;p&gt;Spring Bootの2がリリースされたので、&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt;
+を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。&lt;/p&gt;
+
+&lt;p&gt;spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っている。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180511/springboot.png&quot; alt=&quot;springboot&quot; /&gt;&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#これからのjava時代に備えて&quot; id=&quot;markdown-toc-これからのjava時代に備えて&quot;&gt;これからのJava時代に備えて&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#2019年1月までにspring-boot2への以降を&quot; id=&quot;markdown-toc-2019年1月までにspring-boot2への以降を&quot;&gt;2019年1月までにSpring Boot2への以降を&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#マイグレーションに必要な事前準備&quot; id=&quot;markdown-toc-マイグレーションに必要な事前準備&quot;&gt;マイグレーションに必要な事前準備&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#いざマイグレーション&quot; id=&quot;markdown-toc-いざマイグレーション&quot;&gt;いざマイグレーション!!&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#buildgradleの変更&quot; id=&quot;markdown-toc-buildgradleの変更&quot;&gt;build.gradleの変更&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#applicationyaml-の修正&quot; id=&quot;markdown-toc-applicationyaml-の修正&quot;&gt;application.yaml の修正&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#コンパイルエラーやwarningを解決していく&quot; id=&quot;markdown-toc-コンパイルエラーやwarningを解決していく&quot;&gt;コンパイルエラーやwarningを解決していく&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#実行時エラーを解決する&quot; id=&quot;markdown-toc-実行時エラーを解決する&quot;&gt;実行時エラーを解決する&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#メトリックの取得設定を変えるspringboot-actuator&quot; id=&quot;markdown-toc-メトリックの取得設定を変えるspringboot-actuator&quot;&gt;メトリックの取得設定を変える（springboot-actuator）&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#以前は一発で取れた&quot; id=&quot;markdown-toc-以前は一発で取れた&quot;&gt;以前は一発で取れた&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#これからはメトリック毎に取得する&quot; id=&quot;markdown-toc-これからはメトリック毎に取得する&quot;&gt;これからはメトリック毎に取得する&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#micrometer-registry-datadog-を入れる&quot; id=&quot;markdown-toc-micrometer-registry-datadog-を入れる&quot;&gt;micrometer-registry-datadog を入れる&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#まさかにec2amazonlinuxデプロイで落とし穴&quot; id=&quot;markdown-toc-まさかにec2amazonlinuxデプロイで落とし穴&quot;&gt;まさかにEC2（AmazonLinux）デプロイで落とし穴&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#とどめの負荷テスト&quot; id=&quot;markdown-toc-とどめの負荷テスト&quot;&gt;とどめの負荷テスト&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+&lt;h3 id=&quot;これからのjava時代に備えて&quot;&gt;これからのJava時代に備えて&lt;/h3&gt;
+
+&lt;p&gt;Spring Bootの &lt;code class=&quot;highlighter-rouge&quot;&gt;1.5.9&lt;/code&gt; を使っていたのだけど、2018/05時点において、公式からは &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above&quot;&gt;Spring Boot 1.5のJava9サポート予定はない&lt;/a&gt; ことが公表されている。&lt;/p&gt;
+
+&lt;p&gt;以前、&lt;a href=&quot;/java/java9-modularity/&quot;&gt;JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ&lt;/a&gt; を書いた時には
+Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(&lt;strong&gt;複数ライブラリ間でのパッケージ重複問題&lt;/strong&gt;)、完全移行を断念した経緯があった。&lt;/p&gt;
+
+&lt;p&gt;その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを一応確認しておいたので、
+ &lt;strong&gt;Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある&lt;/strong&gt; し、 Spring Boot使いは &lt;strong&gt;既にJavaのマイグレーション準備期間に突入した&lt;/strong&gt; のだ。&lt;/p&gt;
+
+&lt;h3 id=&quot;2019年1月までにspring-boot2への以降を&quot;&gt;2019年1月までにSpring Boot2への以降を&lt;/h3&gt;
+
+&lt;p&gt;「いつまでに何をしないといけないか？」、つまり、スケジュール感の算段を立てる必要がありそうだ。&lt;/p&gt;
+
+&lt;p&gt;まずは、 &lt;a href=&quot;http://www.oracle.com/technetwork/jp/java/eol-135779-ja.html&quot;&gt;Oracleの公式&lt;/a&gt; でJavaのロードマップを確認しよう。&lt;/p&gt;
+
+&lt;p&gt;Javaに関して抑えておきたいのは2点&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Java11は &lt;code class=&quot;highlighter-rouge&quot;&gt;2018/09&lt;/code&gt; から利用可能&lt;/li&gt;
+  &lt;li&gt;Java8は &lt;code class=&quot;highlighter-rouge&quot;&gt;2019/01&lt;/code&gt; にサポートが切れる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;次に &lt;a href=&quot;https://github.com/spring-projects/spring-boot/milestones&quot;&gt;Spring Bootのロードマップ&lt;/a&gt; も確認しておく。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180511/springboot-milestones.png&quot; alt=&quot;springboot-milestone&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Spring Bootの場合には&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.0.2&lt;/code&gt; のリリースは2018/05予定&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.1.0.RC1&lt;/code&gt; のリリースが2018/09予定&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.1.0.RC2&lt;/code&gt; 以降は未定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;がポイントだ。&lt;/p&gt;
+
+&lt;p&gt;結論として、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;2018/09までに &lt;code class=&quot;highlighter-rouge&quot;&gt;sprignboot 2.0.x&lt;/code&gt; にマイグレーションする&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;2019/01までに &lt;code class=&quot;highlighter-rouge&quot;&gt;Java 11&lt;/code&gt; にマイグレーションする&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;という段取りで進めていくとスムーズだと考えている。&lt;/p&gt;
+
+&lt;h2 id=&quot;マイグレーションに必要な事前準備&quot;&gt;マイグレーションに必要な事前準備&lt;/h2&gt;
+
+&lt;p&gt;いきなりマイグレーション作業をすると破綻するので、事前準備が必要だ。&lt;/p&gt;
+
+&lt;p&gt;具体的に言うと &lt;strong&gt;テストコード&lt;/strong&gt; と &lt;strong&gt;メトリック取得の仕組み&lt;/strong&gt; の2つが必要になる。&lt;/p&gt;
+
+&lt;p&gt;テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;単体テスト&lt;/li&gt;
+  &lt;li&gt;結合テスト&lt;/li&gt;
+  &lt;li&gt;負荷テスト&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;メトリック取得の仕組みはなんでも良いが、私は &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt; を使っている。&lt;/p&gt;
+
+&lt;p&gt;プロジェクトによっては、結合テストと負荷テストまで手が届いていないかもしれないが、今回のようなマイグレーションには欠かせないので作っておこう。&lt;/p&gt;
+
+&lt;p&gt;外側から見たシステムの振る舞いやパフォーマンスに影響がないかを確認する必要があるからだ。&lt;/p&gt;
+
+&lt;p&gt;なお、負荷テストではbefore/afterの比較ができないと意味がないので、既存のシステムでさばけるパフォーマンスは一度計測しておく。&lt;/p&gt;
+
+&lt;p&gt;とりあえず私の場合は既にメンテンナスされている資産があるので、それを使うことにする。&lt;/p&gt;
+
+&lt;h2 id=&quot;いざマイグレーション&quot;&gt;いざマイグレーション!!&lt;/h2&gt;
+
+&lt;h3 id=&quot;環境情報&quot;&gt;環境情報&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Java
+    &lt;ul&gt;
+      &lt;li&gt;1.8.0_152&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Gradle
+    &lt;ul&gt;
+      &lt;li&gt;4.4&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;マイグレーション対象のSpring Bootモジュール
+    &lt;ul&gt;
+      &lt;li&gt;spring-boot-starter-web&lt;/li&gt;
+      &lt;li&gt;spring-boot-starter-data-jpa&lt;/li&gt;
+      &lt;li&gt;spring-boot-starter-actuator&lt;/li&gt;
+      &lt;li&gt;spring-boot-configuration-processor&lt;/li&gt;
+      &lt;li&gt;spring-boot-starter-thymeleaf&lt;/li&gt;
+      &lt;li&gt;spring-boot-gradle-plugin(ビルド用)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;buildgradleの変更&quot;&gt;build.gradleの変更&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Spring Bootをバージョンアップ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;記事を書いている時点での最新 &lt;code class=&quot;highlighter-rouge&quot;&gt;2.0.1.RELEASE&lt;/code&gt; に変更する。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bootRepackage&lt;/code&gt; タスクを削除&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/&quot;&gt;Spring Boot Gradle Plugin&lt;/a&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;bootRepackage&lt;/code&gt; タスクが廃止になったため削除した。 &lt;code class=&quot;highlighter-rouge&quot;&gt;public static void main(String[] args)&lt;/code&gt; を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも &lt;code class=&quot;highlighter-rouge&quot;&gt;mainClassName&lt;/code&gt; の記述は必須ではない。&lt;/p&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// 削除&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//bootRepackage {&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//    mainClass = 'com.soudegesu.demo.app.Application'&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//    executable = true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;applicationyaml-の修正&quot;&gt;application.yaml の修正&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; を修正する。設定項目は使っているモジュールに依存するので、詳細は触れないが、
+私の場合には主に &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-actuator&lt;/code&gt; の設定変更が発生した。
+&lt;strong&gt;yaml構造の変更&lt;/strong&gt; と &lt;strong&gt;actuator endpointの公開設定&lt;/strong&gt; と &lt;strong&gt;メトリック取得方法指定&lt;/strong&gt; といったところ。&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;management&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;endpoints&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;exposure&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;info,health,metrics,httptrace,threaddump,heapdump&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;metrics&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;datadog&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;api-key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(APIのキー)&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;30s&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;false&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ポート番号&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;コンパイルエラーやwarningを解決していく&quot;&gt;コンパイルエラーやwarningを解決していく&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; を編集して依存関係を更新すると、コンパイルエラーやwarningが出てくるので、それを適宜直していく。&lt;/p&gt;
+
+&lt;p&gt;パッケージやクラスに変更があり、それに合わせてIFも修正する必要があった。
+ざっくり以下に置き換えている。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;変更前&lt;/td&gt;
+      &lt;td&gt;変更後&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;org.springframework.boot.autoconfigure.web.ErrorAttributes&lt;/td&gt;
+      &lt;td&gt;org.springframework.boot.web.servlet.error.ErrorAttributes&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;org.springframework.web.context.request.RequestAttributes&lt;/td&gt;
+      &lt;td&gt;org.springframework.web.context.request.WebRequest&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter&lt;/td&gt;
+      &lt;td&gt;org.springframework.web.servlet.config.annotation.WebMvcConfigurer&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+&lt;p&gt;少し面倒だったのは &lt;a href=&quot;https://projects.spring.io/spring-data-jpa/&quot;&gt;spring-data-jpa&lt;/a&gt; の
+&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;findOne&lt;/code&gt; が削除されたため、 implementしているクラス側で &lt;code class=&quot;highlighter-rouge&quot;&gt;findByXX&lt;/code&gt; を自前定義してあげた。&lt;/p&gt;
+
+&lt;p&gt;コンパイルエラーが治ったら、単体テストを実行し、クラスレベルのデグレードが起きないことを確認した。&lt;/p&gt;
+
+&lt;h2 id=&quot;実行時エラーを解決する&quot;&gt;実行時エラーを解決する&lt;/h2&gt;
+
+&lt;p&gt;次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、ローカルで結合テストを流して、振る舞いに変化がないかをチェックする。&lt;/p&gt;
+
+&lt;p&gt;エラーがやはり出た。&lt;/p&gt;
+
+&lt;p&gt;DBへのINSERTが伴うリクエストの処理にて、 &lt;a href=&quot;https://projects.spring.io/spring-data-jpa/&quot;&gt;spring-data-jpa&lt;/a&gt; がエラーを吐き出している。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
+(中略)
+Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
+
+  Query is: select next_val as id_val from hibernate_sequence for update
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに &lt;code class=&quot;highlighter-rouge&quot;&gt;@GeneratedValue(strategy= GenerationType.AUTO)&lt;/code&gt; アノテーションを付与しているのだが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate_sequence&lt;/code&gt; を使ったID生成を試みてしまっているようだ。&lt;/p&gt;
+
+&lt;p&gt;確認してみたところ、デフォルトの挙動が変わっているようだ。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Id generator&lt;/p&gt;
+
+  &lt;p&gt;The spring.jpa.hibernate.use-new-id-generator-mappings property is now true by default to align with the default behaviour of Hibernate. If you need to temporarily restore this now deprecated behaviour, set the property to false.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;そのため、 &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.jpa.hibernate.use-new-id-generator-mappings: false&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; に追加してあげる。&lt;/p&gt;
+
+&lt;h3 id=&quot;メトリックの取得設定を変えるspringboot-actuator&quot;&gt;メトリックの取得設定を変える（springboot-actuator）&lt;/h3&gt;
+
+&lt;p&gt;正直これが一番めんどくさかった。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html&quot;&gt;springboot-actuator&lt;/a&gt; を使用しているのだが、
+バージョンアップに伴い大きく以下の変更が入っている。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;メトリック毎にエンドポイントが分割された&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;一発で取得できなくなった&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;取得できるメトリック名に後方互換がなくなった&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;諸事情で後方互換性を持たせたい時には自前実装が必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;メトリック拡張のロジックに修正が必要になった&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;http://metrics.dropwizard.io/4.0.0/&quot;&gt;dropwizard metrics&lt;/a&gt; でメトリック拡張してた場合も改修必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;springboot-actuator のメトリックをシステム監視に利用しているプロダクトは辛い。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;もう少し具体的に説明しておく。&lt;/p&gt;
+
+&lt;h4 id=&quot;以前は一発で取れた&quot;&gt;以前は一発で取れた&lt;/h4&gt;
+
+&lt;p&gt;以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
+拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mem&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;485331&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mem.free&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;253058&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;processors&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;instance.uptime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;312097&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uptime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;338799&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;systemload.average&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.69384765625&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;419840&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.init&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;131072&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;166781&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1864192&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;66648&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.init&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2496&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65492&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.peak&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;177&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.daemon&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;155&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.totalStarted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;243&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;158&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9613&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes.loaded&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9613&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes.unloaded&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_scavenge.count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_scavenge.time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;373&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_marksweep.count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_marksweep.time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;388&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;〜(中略)〜&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpsessions.max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpsessions.active&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;datasource.primary.active&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;datasource.primary.usage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;これからはメトリック毎に取得する&quot;&gt;これからはメトリック毎に取得する&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics&lt;/code&gt; を参考に取得可能なメトリックを確認して
+(この時点でメトリック名に互換性がないことがわかる)&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;names&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http.server.requests&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.buffer.memory.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.memory.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.gc.memory.allocated&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.memory.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jdbc.connections.min&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.created&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.expired&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hikaricp.connections.usage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.global.request.max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(中略)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.threads.busy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.global.request&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hikaricp.connections.creation&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.gc.memory.promoted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.rejected&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.alive.max&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics/(メトリック名)&lt;/code&gt; でリクエストをしてあげなければならない。&lt;/p&gt;
+
+&lt;p&gt;例えば以下のようになる。&lt;/p&gt;
+
+&lt;p&gt;パス: &lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics/tomcat.sessions.created&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.created&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;measurements&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;statistic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;COUNT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;availableTags&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;結構変わってしまったではないか。。&lt;/p&gt;
+
+&lt;h4 id=&quot;micrometer-registry-datadog-を入れる&quot;&gt;micrometer-registry-datadog を入れる&lt;/h4&gt;
+
+&lt;p&gt;たまたま &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt; を導入していたため、
+簡易な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; に依存モジュールを追加&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'io.micrometer'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'micrometer-registry-datadog'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'1.0.3'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;まさかにec2amazonlinuxデプロイで落とし穴&quot;&gt;まさかにEC2（AmazonLinux）デプロイで落とし穴&lt;/h3&gt;
+
+&lt;p&gt;ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に &lt;code class=&quot;highlighter-rouge&quot;&gt;jar&lt;/code&gt; をデプロイする時に落とし穴に遭遇した。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt; コマンド起動時に&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;invalid file &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bad magic number&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Exec format error
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;のようなエラーメッセージが出て起動できなくなってしまったのだ。&lt;/p&gt;
+
+&lt;p&gt;しかし、 &lt;code class=&quot;highlighter-rouge&quot;&gt;java -jar&lt;/code&gt; コマンドでは起動できる。&lt;/p&gt;
+
+&lt;p&gt;これには &lt;code class=&quot;highlighter-rouge&quot;&gt;bootJar&lt;/code&gt; タスク実行時に起動スクリプトを含めることで対応した。&lt;/p&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;bootJar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;launchScript&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;とどめの負荷テスト&quot;&gt;とどめの負荷テスト&lt;/h2&gt;
+
+&lt;p&gt;最後に環境にデプロイして、負荷試験を行う。
+プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。（人によって言い方が変わるので注意）&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ストレステスト
+    &lt;ul&gt;
+      &lt;li&gt;サービス需要予測とそれ以上の瞬間最大風速を計測&lt;/li&gt;
+      &lt;li&gt;できれば3点計測する&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ロングランテスト
+    &lt;ul&gt;
+      &lt;li&gt;長期間実施してサーバリソースが枯渇しないか、周辺のコンポーネントに迷惑かけないか計測&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これらをdatadog上で大きな変化がないことを確認して、終了。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はSpring Boot 1.5のプロジェクトを 2.0にマイグレーションしてみました。&lt;/p&gt;
+
+&lt;p&gt;大きな流れをまとめると&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;テストコード準備する&lt;/li&gt;
+  &lt;li&gt;マイグレ前のアプリケーションのパフォーマンスを計測しておく&lt;/li&gt;
+  &lt;li&gt;ライブラリを差し替える&lt;/li&gt;
+  &lt;li&gt;単体テストを動かしながら、コンパイルエラーを取り除く&lt;/li&gt;
+  &lt;li&gt;結合テストを動かしながら、実行時エラーを取り除く&lt;/li&gt;
+  &lt;li&gt;サーバにデプロイする&lt;/li&gt;
+  &lt;li&gt;負荷テストして、パフォーマンスが大きく変わっていないことを確認&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;負荷テスト含めて実施したため、全体としての所要時間はかかりました（1人でやって1.5weekくらい）が、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。これは &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt; の内容が以前よりも充実したことが寄与していると思う。&lt;/p&gt;
+
+&lt;p&gt;強いて言うと、 &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-actuator&lt;/code&gt; のメトリック変更がコード以外の部分に波及したのは厄介でした。&lt;/p&gt;
+
+&lt;p&gt;2.x自体もリリースされて日が浅いので、事故っても損害が少ないプロダクトから適用していきたいですね。&lt;/p&gt;
+
+&lt;p&gt;そして、来るべきJava 11に早めに備えておきたい！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above&quot;&gt;Spring Boot with Java 9 and above&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><summary type="html">Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guide を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。</summary></entry><entry><title type="html">子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した</title><link href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" rel="alternate" type="text/html" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した" /><published>2018-05-07T00:00:00+09:00</published><updated>2018-05-07T00:00:00+09:00</updated><id>https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life</id><content type="html" xml:base="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/">&lt;p&gt;2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。
 今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。&lt;/p&gt;
 
 &lt;p&gt;この文章が、どこか遠くの、名前も知らないおとっつぁんエンジニアにとって1つのモデルケースになれば幸いだ。&lt;/p&gt;
@@ -1831,151 +2269,4 @@ Naive オブジェクトはいくつかの現実的な側面を無視してし�
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/479738946X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479738946X&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=4d6041eaf55821514ce2f3c16f0b9a5c&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=479738946X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=479738946X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="python" /><summary type="html">仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、pythonのdatetimeを使った文字列から日時への変換 や タイムゾーンの変更 を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。</summary></entry><entry><title type="html">継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう</title><link href="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/" rel="alternate" type="text/html" title="継続的デリバリのためにfeatureのリリースと改善系アイテムのリリースは分けよう" /><published>2018-04-16T00:00:00+09:00</published><updated>2018-04-16T00:00:00+09:00</updated><id>https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature</id><content type="html" xml:base="https://www.soudegesu.com/continuous-delivery/separate-improvement-and-feature/">&lt;p&gt;&lt;a href=&quot;http://www.ryuzee.com/contents/blog/4241&quot;&gt;継続的デリバリ(Continuous Delivery)&lt;/a&gt;はITの現場で一般的なものと浸透してきました。
-継続的デリバリを実現するためには、継続的インテグレーションの仕組みと
-再現性のあるデプロイメントパイプライン基盤の整備が必要です。
-これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。
-今回は頻繁にリリース可能な環境下において、より安全にサービスをデリバリするための個人的な考えをまとめたものです。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#デプロイの失敗を考える&quot; id=&quot;markdown-toc-デプロイの失敗を考える&quot;&gt;デプロイの失敗を考える&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#decoupling-deployment-from-releaseデプロイとリリースは分離しよう&quot; id=&quot;markdown-toc-decoupling-deployment-from-releaseデプロイとリリースは分離しよう&quot;&gt;Decoupling deployment from release(デプロイとリリースは分離しよう)&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#失敗した時の被ダメージ&quot; id=&quot;markdown-toc-失敗した時の被ダメージ&quot;&gt;失敗した時の「被ダメージ」&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#失敗したときの被ダメージを軽減する&quot; id=&quot;markdown-toc-失敗したときの被ダメージを軽減する&quot;&gt;失敗したときの被ダメージを「軽減」する&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#一度にリリースする量を減らす&quot; id=&quot;markdown-toc-一度にリリースする量を減らす&quot;&gt;一度にリリースする量を減らす&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#decoupling-improvement-from-feature改善とフィーチャーは分離しよう&quot; id=&quot;markdown-toc-decoupling-improvement-from-feature改善とフィーチャーは分離しよう&quot;&gt;Decoupling improvement from feature(改善とフィーチャーは分離しよう)&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#失敗リスクを細分化する&quot; id=&quot;markdown-toc-失敗リスクを細分化する&quot;&gt;失敗リスクを細分化する&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;デプロイの失敗を考える&quot;&gt;デプロイの失敗を考える&lt;/h2&gt;
-&lt;h3 id=&quot;decoupling-deployment-from-releaseデプロイとリリースは分離しよう&quot;&gt;Decoupling deployment from release(デプロイとリリースは分離しよう)&lt;/h3&gt;
-
-&lt;p&gt;かつて、Technology Readerのtechniquesに &lt;a href=&quot;https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release&quot;&gt;Decoupling deployment from release&lt;/a&gt; というものが紹介されていました。
-これは、ITの現場で「商用作業」または「本番リリース」と言われている作業を2つのプロセスに分割して行うことを提案しています。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;商用環境へのシステムの展開(デプロイ)&lt;/li&gt;
-  &lt;li&gt;デプロイされたシステムをサービスインさせる(リリース)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;デプロイしてもエンドユーザに成果物は提供されません。リリースして初めて利用可能になります。
-つまり、リリースしない限りはビジネスに与える影響がないのです。デプロイ後に成果物の動作確認をし、問題があれば切り戻せば良いのです。&lt;/p&gt;
-
-&lt;p&gt;これはビジネス上のリスクを軽減するための方法としてとても画期的な発想で、私もプロダクト開発に携わる時には可能な限り &lt;a href=&quot;https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release&quot;&gt;Decoupling deployment from release&lt;/a&gt; ができるシステム構成やデプロイメント基盤の構築を心がけています。&lt;/p&gt;
-
-&lt;p&gt;チームのメンバーにも「デプロイ」と「リリース」という単語を明確に意味を分けて使うようにお願いしているし、彼らも納得してそうしてくれているので有り難い限りです。&lt;/p&gt;
-
-&lt;p&gt;エンジニアが「自分の行っている行為がビジネスラインに与える影響」を意識するのはとても良いことで、
-単にビジネスインパクトといっても、&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「新しいfeatureを提供する」というポジティブなビジネスインパクト&lt;/strong&gt; もあれば、&lt;br /&gt;
-&lt;strong&gt;「システム障害」「セキュリティインシデント」のようなネガティブなビジネスインパクト&lt;/strong&gt; もありますから、&lt;/p&gt;
-
-&lt;p&gt;ポジティブなものは「どうやって最大化するか」を、ネガティブなものは「どうやって最小化するか」を
-考えながら仕事をするのはエンジニア冥利に尽きるわけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.thoughtworks.com/radar/techniques/decoupling-deployment-from-release&quot;&gt;Decoupling deployment from release&lt;/a&gt; はどちらかと言えば後者の、ネガティブなビジネスインパクトを軽減するためのテクニックに分類できると私は理解しています。&lt;/p&gt;
-
-&lt;h3 id=&quot;失敗した時の被ダメージ&quot;&gt;失敗した時の「被ダメージ」&lt;/h3&gt;
-&lt;p&gt;仮にデプロイ後の動作確認で何らか問題が見つかったとします。&lt;br /&gt;
-その場合、サービスされているシステムはそのままに、デプロイしたリソースを切り戻すことになるでしょう。&lt;br /&gt;
-問題が発生したリソースは撤収され、ビジネスにネガティブなインパクトを与えることはありませんでした。&lt;/p&gt;
-
-&lt;p&gt;あー良かった良かった。&lt;/p&gt;
-
-&lt;p&gt;…本当にそうなのでしょうか？&lt;/p&gt;
-
-&lt;p&gt;もし、今回リリースする成果物のfeatureが&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;プレスリリースを打っていたら？&lt;/li&gt;
-  &lt;li&gt;法人のお客様に約束をしていたら？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;どうなるでしょうか。&lt;/p&gt;
-
-&lt;p&gt;そうですね。プロダクトにおける重要なマイルストーンを含む場合、「新しいfeatureを提供する」というポジティブなビジネスインパクトを妨げる &lt;strong&gt;機会損失&lt;/strong&gt; というネガティブなビジネスインパクトを与えているはずです。&lt;/p&gt;
-
-&lt;p&gt;優れたアジャイル開発チームであれば「&lt;a href=&quot;https://matome.naver.jp/odai/2133468389280396901&quot;&gt;顧客が本当に必要だったもの&lt;/a&gt;」
-を肌でも感じていますが、&lt;strong&gt;取り組むべき価値のあるfeatureから順次提供している&lt;/strong&gt; はずです。この観点を踏まえると、「マイルストン通りfeatureを提供できないこと」は「重度のシステム障害が起こる」よりはマシですが、問題に変わりはありません。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4873117321/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873117321&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=ca20d76273c1a09d878e5bd16acf1f2e&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873117321&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873117321&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;失敗したときの被ダメージを軽減する&quot;&gt;失敗したときの被ダメージを「軽減」する&lt;/h2&gt;
-
-&lt;p&gt;結局、エンジニアは自分の置かれた環境と判断材料を基にして &lt;strong&gt;リスクの発生のしやすさ&lt;/strong&gt; と &lt;strong&gt;顕在化した時の被ダメージ&lt;/strong&gt; を頭の片隅において仕事をしているのです。
-先程の例は更に突き詰めていくと、 &lt;strong&gt;「デプロイ作業の工数が無駄になった」&lt;/strong&gt; とか、会社によっては &lt;strong&gt;「障害報告の工数が発生した」&lt;/strong&gt; みたいな人件費の話も出てきて、&lt;strong&gt;失敗による被ダメージは「軽減する」ことしかできない&lt;/strong&gt; ことが伺えます。&lt;/p&gt;
-
-&lt;p&gt;ではダメージを軽減するにはどうするか。いくつかのヒントを以下に書きます。&lt;/p&gt;
-
-&lt;h3 id=&quot;一度にリリースする量を減らす&quot;&gt;一度にリリースする量を減らす&lt;/h3&gt;
-
-&lt;p&gt;1回にリリースする成果物の量(バッチサイズ)を減らすことです。featureを2つも3つも入れないことです。
-例えば、3つのfeatureのうち1つ問題があったら、もれなく3つ分の機会損失が発生します。
-そのため、リリース可能な1つずつのfeatureをシリアルに提供し、シリアルになる分、短いサイクルで提供するのです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180416/separate.png&quot; alt=&quot;separate&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;これはDevOps界隈でもフィードバックループを循環させる方法としてよく聞きます。&lt;/p&gt;
-
-&lt;h3 id=&quot;decoupling-improvement-from-feature改善とフィーチャーは分離しよう&quot;&gt;Decoupling improvement from feature(改善とフィーチャーは分離しよう)&lt;/h3&gt;
-
-&lt;p&gt;バッチサイズを調整するという観点で、リリースされる成果物の性質にも目を向けてみます。
-「&lt;strong&gt;その成果物自体にビジネスインパクトがあるかどうか&lt;/strong&gt;」 という判断軸で分割してみましょう。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ポジティブなビジネスインパクトを与える
-    &lt;ul&gt;
-      &lt;li&gt;プロダクトにおけるfeature&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;直接的なビジネスインパクトをもたらさない
-    &lt;ul&gt;
-      &lt;li&gt;セキュリティパッチ適用&lt;/li&gt;
-      &lt;li&gt;ライブラリバージョンアップ&lt;/li&gt;
-      &lt;li&gt;OS差し替え&lt;/li&gt;
-      &lt;li&gt;システム構成変更&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;ここで言いたいのは、「いわゆる&lt;strong&gt;feature&lt;/strong&gt;と、いわゆる&lt;strong&gt;システム改善&lt;/strong&gt;はリリースタイミングを分割した方が良い」ということです。
-なぜならば、システム改善のデプロイに失敗して切り戻したとしても、既に提供されているfeatureには影響を出さずに済むからです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180416/os_patch.png&quot; alt=&quot;os_patch&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;失敗リスクを細分化する&quot;&gt;失敗リスクを細分化する&lt;/h2&gt;
-
-&lt;p&gt;Decoupling improvement from feature のような考え方でリリース物に色分けをすると、リスクの分散構造が理解しやすくなるという副産物があります。
-例えば、 &lt;strong&gt;feature開発のために、ライブラリをこっそりバージョンアップしてしまう現象&lt;/strong&gt; は現場でよく見かけます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180416/feature_stone.png&quot; alt=&quot;feature_stone&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;ライブラリのバージョンアップ自体は改善アイテムに分類することができ、 &lt;strong&gt;個別のタイミングでデプロイすべき&lt;/strong&gt; なのです。
-(時系列的にはfeatureの前にデプロイされているべきです)&lt;/p&gt;
-
-&lt;p&gt;デプロイを分割することによって、featureのリリースを行う時点では、既にライブラリのバージョンアップやDBマイグレーションは成功しているので、これらの失敗リスクを加味する必要がなくなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;継続的デリバリを安定して行うための考え方をまとめました。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;デプロイとリリースのプロセスは分ける&lt;/li&gt;
-  &lt;li&gt;一回のリリース物のサイズを小さくする&lt;/li&gt;
-  &lt;li&gt;「直接的なビジネスインパクトがあるかどうか」という判断軸でリリース物を分割するのもアリ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;小さな変化を積み重ねることで、最終的には大きな変更を成し遂げることができると考えています。&lt;/p&gt;
-
-&lt;p&gt;今後の個人的なタスクとしては &lt;code class=&quot;highlighter-rouge&quot;&gt;Springbootの1.5→2.x系へのバージョンアップ&lt;/code&gt; や、&lt;code class=&quot;highlighter-rouge&quot;&gt;Amazon Linux → Amazon Linux2&lt;/code&gt;への移行、&lt;code class=&quot;highlighter-rouge&quot;&gt;Java 11以降へのマイグレーション&lt;/code&gt; といったイベントが目白押しなので、意識しながら作業していきたいです。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4873118352/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873118352&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=e1b8ecca6e0185cd2701dc949c301805&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873118352&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873118352&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="continuous-delivery" /><category term="agile" /><summary type="html">継続的デリバリ(Continuous Delivery)はITの現場で一般的なものと浸透してきました。 継続的デリバリを実現するためには、継続的インテグレーションの仕組みと 再現性のあるデプロイメントパイプライン基盤の整備が必要です。 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。 今回は頻繁にリリース可能な環境下において、より安全にサービスをデリバリするための個人的な考えをまとめたものです。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="python" /><summary type="html">仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、pythonのdatetimeを使った文字列から日時への変換 や タイムゾーンの変更 を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。</summary></entry></feed>
