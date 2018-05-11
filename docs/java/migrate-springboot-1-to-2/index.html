@@ -1,0 +1,1036 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="jp" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Spring Bootを1.5から2へマイグレーションするステップとポイント | そうなんでげす</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Spring Bootを1.5から2へマイグレーションするステップとポイント" />
+<meta name="author" content="soudegesu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存の1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。" />
+<meta property="og:description" content="Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存の1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。" />
+<link rel="canonical" href="https://www.soudegesu.com/java/migrate-springboot-1-to-2/" />
+<meta property="og:url" content="https://www.soudegesu.com/java/migrate-springboot-1-to-2/" />
+<meta property="og:site_name" content="そうなんでげす" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-11T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@alten_manten" />
+<meta name="twitter:creator" content="@alten_manten" />
+<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+<script type="application/ld+json">
+{"description":"Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存の1.5のプロジェクトをマイグレーションしました。行なったときの段取りとポイントを簡単にまとめています。spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っています。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/java/migrate-springboot-1-to-2/","headline":"Spring Bootを1.5から2へマイグレーションするステップとポイント","dateModified":"2018-05-11T00:00:00+09:00","datePublished":"2018-05-11T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/java/migrate-springboot-1-to-2/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Spring Bootを1.5から2へマイグレーションするステップとポイント">
+    <meta itemprop="description" content="Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guideを参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。">
+    <meta itemprop="datePublished" content="May 11, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Spring Bootを1.5から2へマイグレーションするステップとポイント
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>Spring Bootの2がリリースされたので、<a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide">Spring Boot 2.0 Migration Guide</a>
+を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。</p>
+
+<p>spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っている。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。</p>
+
+<p><img src="/assets/images/20180511/springboot.png" alt="springboot" /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#モチベーション" id="markdown-toc-モチベーション">モチベーション</a>    <ul>
+      <li><a href="#これからのjava時代に備えて" id="markdown-toc-これからのjava時代に備えて">これからのJava時代に備えて</a></li>
+      <li><a href="#2019年1月までにspring-boot2への以降を" id="markdown-toc-2019年1月までにspring-boot2への以降を">2019年1月までにSpring Boot2への以降を</a></li>
+    </ul>
+  </li>
+  <li><a href="#マイグレーションに必要な事前準備" id="markdown-toc-マイグレーションに必要な事前準備">マイグレーションに必要な事前準備</a></li>
+  <li><a href="#いざマイグレーション" id="markdown-toc-いざマイグレーション">いざマイグレーション!!</a>    <ul>
+      <li><a href="#環境情報" id="markdown-toc-環境情報">環境情報</a></li>
+      <li><a href="#buildgradleの変更" id="markdown-toc-buildgradleの変更">build.gradleの変更</a></li>
+      <li><a href="#applicationyaml-の修正" id="markdown-toc-applicationyaml-の修正">application.yaml の修正</a></li>
+      <li><a href="#コンパイルエラーやwarningを解決していく" id="markdown-toc-コンパイルエラーやwarningを解決していく">コンパイルエラーやwarningを解決していく</a></li>
+    </ul>
+  </li>
+  <li><a href="#実行時エラーを解決する" id="markdown-toc-実行時エラーを解決する">実行時エラーを解決する</a>    <ul>
+      <li><a href="#メトリックの取得設定を変えるspringboot-actuator" id="markdown-toc-メトリックの取得設定を変えるspringboot-actuator">メトリックの取得設定を変える（springboot-actuator）</a>        <ul>
+          <li><a href="#以前は一発で取れた" id="markdown-toc-以前は一発で取れた">以前は一発で取れた</a></li>
+          <li><a href="#これからはメトリック毎に取得する" id="markdown-toc-これからはメトリック毎に取得する">これからはメトリック毎に取得する</a></li>
+          <li><a href="#micrometer-registry-datadog-を入れる" id="markdown-toc-micrometer-registry-datadog-を入れる">micrometer-registry-datadog を入れる</a></li>
+        </ul>
+      </li>
+      <li><a href="#まさかにec2amazonlinuxデプロイで落とし穴" id="markdown-toc-まさかにec2amazonlinuxデプロイで落とし穴">まさかにEC2（AmazonLinux）デプロイで落とし穴</a></li>
+    </ul>
+  </li>
+  <li><a href="#とどめの負荷テスト" id="markdown-toc-とどめの負荷テスト">とどめの負荷テスト</a></li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="モチベーション">モチベーション</h2>
+<h3 id="これからのjava時代に備えて">これからのJava時代に備えて</h3>
+
+<p>Spring Bootの <code class="highlighter-rouge">1.5.9</code> を使っていたのだけど、2018/05時点において、公式からは <a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above">Spring Boot 1.5のJava9サポート予定はない</a> ことが公表されている。</p>
+
+<p>以前、<a href="/java/java9-modularity/">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ</a> を書いた時には
+Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(<strong>複数ライブラリ間でのパッケージ重複問題</strong>)、完全移行を断念した経緯があった。</p>
+
+<p>その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを一応確認しておいたので、
+ <strong>Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある</strong> し、 Spring Boot使いは <strong>既にJavaのマイグレーション準備期間に突入した</strong> のだ。</p>
+
+<h3 id="2019年1月までにspring-boot2への以降を">2019年1月までにSpring Boot2への以降を</h3>
+
+<p>「いつまでに何をしないといけないか？」、つまり、スケジュール感の算段を立てる必要がありそうだ。</p>
+
+<p>まずは、 <a href="http://www.oracle.com/technetwork/jp/java/eol-135779-ja.html">Oracleの公式</a> でJavaのロードマップを確認しよう。</p>
+
+<p>Javaに関して抑えておきたいのは2点</p>
+<ul>
+  <li>Java11は <code class="highlighter-rouge">2018/09</code> から利用可能</li>
+  <li>Java8は <code class="highlighter-rouge">2019/01</code> にサポートが切れる</li>
+</ul>
+
+<p><br /></p>
+
+<p>次に <a href="https://github.com/spring-projects/spring-boot/milestones">Spring Bootのロードマップ</a> も確認しておく。</p>
+
+<p><img src="/assets/images/20180511/springboot-milestones.png" alt="springboot-milestone" /></p>
+
+<p>Spring Bootの場合には</p>
+
+<ul>
+  <li><code class="highlighter-rouge">2.0.2</code> のリリースは2018/05予定</li>
+  <li><code class="highlighter-rouge">2.1.0.RC1</code> のリリースが2018/09予定</li>
+  <li><code class="highlighter-rouge">2.1.0.RC2</code> 以降は未定</li>
+</ul>
+
+<p>がポイントだ。</p>
+
+<p>結論として、</p>
+<ul>
+  <li><strong>2018/09までに <code class="highlighter-rouge">sprignboot 2.0.x</code> にマイグレーションする</strong></li>
+  <li><strong>2019/01までに <code class="highlighter-rouge">Java 11</code> にマイグレーションする</strong></li>
+</ul>
+
+<p>という段取りで進めていくとスムーズだと考えている。</p>
+
+<h2 id="マイグレーションに必要な事前準備">マイグレーションに必要な事前準備</h2>
+
+<p>いきなりマイグレーション作業をすると破綻するので、事前準備が必要だ。</p>
+
+<p>具体的に言うと <strong>テストコード</strong> と <strong>メトリック取得の仕組み</strong> の2つが必要になる。</p>
+
+<p>テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。</p>
+<ul>
+  <li>単体テスト</li>
+  <li>結合テスト</li>
+  <li>負荷テスト</li>
+</ul>
+
+<p>メトリック取得の仕組みはなんでも良いが、私は <a href="https://www.datadoghq.com/">Datadog</a> を使っている。</p>
+
+<p>プロジェクトによっては、結合テストと負荷テストまで手が届いていないかもしれないが、今回のようなマイグレーションには欠かせないので作っておこう。</p>
+
+<p>外側から見たシステムの振る舞いやパフォーマンスに影響がないかを確認する必要があるからだ。</p>
+
+<p>なお、負荷テストではbefore/afterの比較ができないと意味がないので、既存のシステムでさばけるパフォーマンスは一度計測しておく。</p>
+
+<p>とりあえず私の場合は既にメンテンナスされている資産があるので、それを使うことにする。</p>
+
+<h2 id="いざマイグレーション">いざマイグレーション!!</h2>
+
+<h3 id="環境情報">環境情報</h3>
+
+<ul>
+  <li>Java
+    <ul>
+      <li>1.8.0_152</li>
+    </ul>
+  </li>
+  <li>Gradle
+    <ul>
+      <li>4.4</li>
+    </ul>
+  </li>
+  <li>マイグレーション対象のSpring Bootモジュール
+    <ul>
+      <li>spring-boot-starter-web</li>
+      <li>spring-boot-starter-data-jpa</li>
+      <li>spring-boot-starter-actuator</li>
+      <li>spring-boot-configuration-processor</li>
+      <li>spring-boot-starter-thymeleaf</li>
+      <li>spring-boot-gradle-plugin(ビルド用)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="buildgradleの変更">build.gradleの変更</h3>
+
+<ul>
+  <li>Spring Bootをバージョンアップ</li>
+</ul>
+
+<p>記事を書いている時点での最新 <code class="highlighter-rouge">2.0.1.RELEASE</code> に変更する。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">bootRepackage</code> タスクを削除</li>
+</ul>
+
+<p><a href="https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/">Spring Boot Gradle Plugin</a> の <code class="highlighter-rouge">bootRepackage</code> タスクが廃止になったため削除した。 <code class="highlighter-rouge">public static void main(String[] args)</code> を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも <code class="highlighter-rouge">mainClassName</code> の記述は必須ではない。</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 削除</span>
+<span class="c1">//bootRepackage {</span>
+<span class="c1">//    mainClass = 'com.soudegesu.demo.app.Application'</span>
+<span class="c1">//    executable = true</span>
+<span class="c1">//}</span>
+</code></pre></div></div>
+
+<h3 id="applicationyaml-の修正">application.yaml の修正</h3>
+
+<p><code class="highlighter-rouge">application.yaml</code> を修正する。設定項目は使っているモジュールに依存するので、詳細は触れないが、
+私の場合には主に <code class="highlighter-rouge">springboot-actuator</code> の設定変更が発生した。
+<strong>yaml構造の変更</strong> と <strong>actuator endpointの公開設定</strong> と <strong>メトリック取得方法指定</strong> といったところ。</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">management</span><span class="pi">:</span>
+  <span class="na">endpoints</span><span class="pi">:</span>
+    <span class="na">web</span><span class="pi">:</span>
+      <span class="na">exposure</span><span class="pi">:</span>
+        <span class="na">include</span><span class="pi">:</span> <span class="s">info,health,metrics,httptrace,threaddump,heapdump</span>
+  <span class="na">metrics</span><span class="pi">:</span>
+    <span class="na">export</span><span class="pi">:</span>
+      <span class="na">datadog</span><span class="pi">:</span>
+        <span class="na">api-key</span><span class="pi">:</span> <span class="s">(APIのキー)</span>
+        <span class="na">step</span><span class="pi">:</span> <span class="s">30s</span>
+  <span class="na">security</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+  <span class="na">server</span><span class="pi">:</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="s">ポート番号</span>
+</code></pre></div></div>
+
+<h3 id="コンパイルエラーやwarningを解決していく">コンパイルエラーやwarningを解決していく</h3>
+
+<p><code class="highlighter-rouge">build.gradle</code> を編集して依存関係を更新すると、コンパイルエラーやwarningが出てくるので、それを適宜直していく。</p>
+
+<p>パッケージやクラスに変更があり、それに合わせてIFも修正する必要があった。
+ざっくり以下に置き換えている。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>変更前</td>
+      <td>変更後</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>org.springframework.boot.autoconfigure.web.ErrorAttributes</td>
+      <td>org.springframework.boot.web.servlet.error.ErrorAttributes</td>
+    </tr>
+    <tr>
+      <td>org.springframework.web.context.request.RequestAttributes</td>
+      <td>org.springframework.web.context.request.WebRequest</td>
+    </tr>
+    <tr>
+      <td>org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter</td>
+      <td>org.springframework.web.servlet.config.annotation.WebMvcConfigurer</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>少し面倒だったのは <a href="https://projects.spring.io/spring-data-jpa/">spring-data-jpa</a> の
+<code class="highlighter-rouge">CrudRepository</code> から <code class="highlighter-rouge">findOne</code> が削除されたため、 implementしているクラス側で <code class="highlighter-rouge">findByXX</code> を自前定義してあげた。</p>
+
+<p>コンパイルエラーが治ったら、単体テストを実行し、クラスレベルのデグレードが起きないことを確認した。</p>
+
+<h2 id="実行時エラーを解決する">実行時エラーを解決する</h2>
+
+<p>次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、ローカルで結合テストを流して、振る舞いに変化がないかをチェックする。</p>
+
+<p>エラーがやはり出た。</p>
+
+<p>DBへのINSERTが伴うリクエストの処理にて、 <a href="https://projects.spring.io/spring-data-jpa/">spring-data-jpa</a> がエラーを吐き出している。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
+(中略)
+Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
+
+  Query is: select next_val as id_val from hibernate_sequence for update
+
+</code></pre></div></div>
+
+<p>DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに <code class="highlighter-rouge">@GeneratedValue(strategy= GenerationType.AUTO)</code> アノテーションを付与しているのだが、 <code class="highlighter-rouge">hibernate_sequence</code> を使ったID生成を試みてしまっているようだ。</p>
+
+<p>確認してみたところ、デフォルトの挙動が変わっているようだ。</p>
+
+<blockquote>
+  <p>Id generator</p>
+
+  <p>The spring.jpa.hibernate.use-new-id-generator-mappings property is now true by default to align with the default behaviour of Hibernate. If you need to temporarily restore this now deprecated behaviour, set the property to false.</p>
+</blockquote>
+
+<p>そのため、 <code class="highlighter-rouge">spring.jpa.hibernate.use-new-id-generator-mappings: false</code> を <code class="highlighter-rouge">application.yaml</code> に追加してあげる。</p>
+
+<h3 id="メトリックの取得設定を変えるspringboot-actuator">メトリックの取得設定を変える（springboot-actuator）</h3>
+
+<p>正直これが一番めんどくさかった。</p>
+
+<p><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html">springboot-actuator</a> を使用しているのだが、
+バージョンアップに伴い大きく以下の変更が入っている。</p>
+
+<ul>
+  <li><strong>メトリック毎にエンドポイントが分割された</strong>
+    <ul>
+      <li>一発で取得できなくなった</li>
+    </ul>
+  </li>
+  <li><strong>取得できるメトリック名に後方互換がなくなった</strong>
+    <ul>
+      <li>諸事情で後方互換性を持たせたい時には自前実装が必要</li>
+    </ul>
+  </li>
+  <li><strong>メトリック拡張のロジックに修正が必要になった</strong>
+    <ul>
+      <li><a href="http://metrics.dropwizard.io/4.0.0/">dropwizard metrics</a> でメトリック拡張してた場合も改修必要</li>
+    </ul>
+  </li>
+</ul>
+
+<p>springboot-actuator のメトリックをシステム監視に利用しているプロダクトは辛い。</p>
+
+<p><br /></p>
+
+<p>もう少し具体的に説明しておく。</p>
+
+<h4 id="以前は一発で取れた">以前は一発で取れた</h4>
+
+<p>以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
+拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"mem"</span><span class="p">:</span><span class="w"> </span><span class="mi">485331</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"mem.free"</span><span class="p">:</span><span class="w"> </span><span class="mi">253058</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"processors"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"instance.uptime"</span><span class="p">:</span><span class="w"> </span><span class="mi">312097</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uptime"</span><span class="p">:</span><span class="w"> </span><span class="mi">338799</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"systemload.average"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.69384765625</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"heap.committed"</span><span class="p">:</span><span class="w"> </span><span class="mi">419840</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"heap.init"</span><span class="p">:</span><span class="w"> </span><span class="mi">131072</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"heap.used"</span><span class="p">:</span><span class="w"> </span><span class="mi">166781</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"heap"</span><span class="p">:</span><span class="w"> </span><span class="mi">1864192</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nonheap.committed"</span><span class="p">:</span><span class="w"> </span><span class="mi">66648</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nonheap.init"</span><span class="p">:</span><span class="w"> </span><span class="mi">2496</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nonheap.used"</span><span class="p">:</span><span class="w"> </span><span class="mi">65492</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nonheap"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"threads.peak"</span><span class="p">:</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"threads.daemon"</span><span class="p">:</span><span class="w"> </span><span class="mi">155</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"threads.totalStarted"</span><span class="p">:</span><span class="w"> </span><span class="mi">243</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"threads"</span><span class="p">:</span><span class="w"> </span><span class="mi">158</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"classes"</span><span class="p">:</span><span class="w"> </span><span class="mi">9613</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"classes.loaded"</span><span class="p">:</span><span class="w"> </span><span class="mi">9613</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"classes.unloaded"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gc.ps_scavenge.count"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gc.ps_scavenge.time"</span><span class="p">:</span><span class="w"> </span><span class="mi">373</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gc.ps_marksweep.count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gc.ps_marksweep.time"</span><span class="p">:</span><span class="w"> </span><span class="mi">388</span><span class="p">,</span><span class="w">
+    </span><span class="err">〜(中略)〜</span><span class="w">
+    </span><span class="s2">"httpsessions.max"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"httpsessions.active"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"datasource.primary.active"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"datasource.primary.usage"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="これからはメトリック毎に取得する">これからはメトリック毎に取得する</h4>
+
+<p><code class="highlighter-rouge">/actuator/metrics</code> を参考に取得可能なメトリックを確認して
+(この時点でメトリック名に互換性がないことがわかる)</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"names"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"http.server.requests"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jvm.buffer.memory.used"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jvm.memory.used"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jvm.gc.memory.allocated"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jvm.memory.committed"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jdbc.connections.min"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.sessions.created"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.sessions.expired"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"hikaricp.connections.usage"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.global.request.max"</span><span class="p">,</span><span class="w">
+        </span><span class="err">(中略)</span><span class="w">
+        </span><span class="s2">"tomcat.threads.busy"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.global.request"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"hikaricp.connections.creation"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"jvm.gc.memory.promoted"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.sessions.rejected"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tomcat.sessions.alive.max"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">/actuator/metrics/(メトリック名)</code> でリクエストをしてあげなければならない。</p>
+
+<p>例えば以下のようになる。</p>
+
+<p>パス: <code class="highlighter-rouge">/actuator/metrics/tomcat.sessions.created</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tomcat.sessions.created"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"measurements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"statistic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"availableTags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>結構変わってしまったではないか。。</p>
+
+<h4 id="micrometer-registry-datadog-を入れる">micrometer-registry-datadog を入れる</h4>
+
+<p>たまたま <a href="https://www.datadoghq.com/">Datadog</a> を導入していたため、
+簡易な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">build.gradle</code> に依存モジュールを追加</li>
+</ul>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">compile</span> <span class="nl">group:</span> <span class="s1">'io.micrometer'</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">'micrometer-registry-datadog'</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">'1.0.3'</span>
+</code></pre></div></div>
+
+<h3 id="まさかにec2amazonlinuxデプロイで落とし穴">まさかにEC2（AmazonLinux）デプロイで落とし穴</h3>
+
+<p>ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に <code class="highlighter-rouge">jar</code> をデプロイする時に落とし穴に遭遇した。</p>
+
+<p><code class="highlighter-rouge">service</code> コマンド起動時に</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>invalid file <span class="o">(</span>bad magic number<span class="o">)</span>: Exec format error
+</code></pre></div></div>
+
+<p>のようなエラーメッセージが出て起動できなくなってしまったのだ。</p>
+
+<p>しかし、 <code class="highlighter-rouge">java -jar</code> コマンドでは起動できる。</p>
+
+<p>これには <code class="highlighter-rouge">bootJar</code> タスク実行時に起動スクリプトを含めることで対応した。</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bootJar</span> <span class="o">{</span>
+    <span class="n">launchScript</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="とどめの負荷テスト">とどめの負荷テスト</h2>
+
+<p>最後に環境にデプロイして、負荷試験を行う。
+プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。（人によって言い方が変わるので注意）</p>
+
+<ul>
+  <li>ストレステスト
+    <ul>
+      <li>サービス需要予測とそれ以上の瞬間最大風速を計測</li>
+      <li>できれば3点計測する</li>
+    </ul>
+  </li>
+  <li>ロングランテスト
+    <ul>
+      <li>長期間実施してサーバリソースが枯渇しないか、周辺のコンポーネントに迷惑かけないか計測</li>
+    </ul>
+  </li>
+</ul>
+
+<p>これらをdatadog上で大きな変化がないことを確認して、終了。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回はSpring Boot 1.5のプロジェクトを 2.0にマイグレーションしてみました。</p>
+
+<p>大きな流れをまとめると</p>
+
+<ul>
+  <li>テストコード準備する</li>
+  <li>マイグレ前のアプリケーションのパフォーマンスを計測しておく</li>
+  <li>ライブラリを差し替える</li>
+  <li>単体テストを動かしながら、コンパイルエラーを取り除く</li>
+  <li>結合テストを動かしながら、実行時エラーを取り除く</li>
+  <li>サーバにデプロイする</li>
+  <li>負荷テストして、パフォーマンスが大きく変わっていないことを確認</li>
+</ul>
+
+<p>負荷テスト含めて実施したため、全体としての所要時間はかかりました（1人でやって1.5weekくらい）が、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。これは <a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide">Spring Boot 2.0 Migration Guide</a> の内容が以前よりも充実したことが寄与していると思う。</p>
+
+<p>強いて言うと、 <code class="highlighter-rouge">springboot-actuator</code> のメトリック変更がコード以外の部分に波及したのは厄介でした。</p>
+
+<p>2.x自体もリリースされて日が浅いので、事故っても損害が少ないプロダクトから適用していきたいですね。</p>
+
+<p>そして、来るべきJava 11に早めに備えておきたい！</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+<ul>
+  <li><a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide">Spring Boot 2.0 Migration Guide</a></li>
+  <li><a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above">Spring Boot with Java 9 and above</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/springboot" class="page__taxonomy-item" rel="tag">springboot</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/categories/java" class="page__taxonomy-item" rel="tag">java</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-05-11T00:00:00+09:00">May 11, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Spring Bootを1.5から2へマイグレーションするステップとポイント https://www.soudegesu.com/java/migrate-springboot-1-to-2/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/java/migrate-springboot-1-to-2/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/java/migrate-springboot-1-to-2/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/java/migrate-springboot-1-to-2/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/java/migrate-springboot-1-to-2/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+    </div>
+
+    
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" class="pagination--pager" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+
+  </article>
+  
+  
+  <div class="page__related">
+    <h2 class="page__related-title">関連記事</h2>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/java/java9-modularity/" rel="permalink">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+    </div>      
+  </div>
+  
+
+  
+
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
