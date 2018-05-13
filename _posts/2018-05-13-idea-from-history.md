@@ -3,7 +3,7 @@ title: "「歴史からの発想　停滞と拘束からいかに脱するか」
 description: "「歴史からの発想　停滞と拘束からいかに脱するか」を読みました。人通り読み終えたので、所感を書きたいと思います。以降の内容は 若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。"
 date: 2018-05-13 00:00:00 +0900
 categories: book
-tags: book
+tags: book 組織論
 ---
 
 「 [歴史からの発想　停滞と拘束からいかに脱するか](https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4532192161&linkCode=as2&tag=soudegesu-22&linkId=5513b5e79762b891cc2f9498116b17fa) 」を読みました。
