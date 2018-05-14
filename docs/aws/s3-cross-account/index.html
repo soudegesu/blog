@@ -5,30 +5,107 @@
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
 -->
-<html lang="jp" class="no-js">
+<html lang="ja" class="no-js">
   <head>
     <meta charset="utf-8">
 
-<!-- Begin Jekyll SEO tag v2.4.0 -->
-<title>クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか | そうなんでげす</title>
-<meta name="generator" content="Jekyll v3.7.3" />
-<meta property="og:title" content="クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか" />
-<meta name="author" content="soudegesu" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。" />
-<meta property="og:description" content="S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。" />
-<link rel="canonical" href="https://www.soudegesu.com/aws/s3-cross-account/" />
-<meta property="og:url" content="https://www.soudegesu.com/aws/s3-cross-account/" />
-<meta property="og:site_name" content="そうなんでげす" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-04-13T00:00:00+09:00" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@alten_manten" />
-<meta name="twitter:creator" content="@alten_manten" />
-<meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
-<script type="application/ld+json">
-{"description":"S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。","author":{"@type":"Person","name":"soudegesu"},"@type":"BlogPosting","url":"https://www.soudegesu.com/aws/s3-cross-account/","headline":"クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか","dateModified":"2018-04-13T00:00:00+09:00","datePublished":"2018-04-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.soudegesu.com/aws/s3-cross-account/"},"@context":"http://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか - そうなんでげす</title>
+
+
+
+
+<meta name="description" content="S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。">
+
+
+
+
+<meta name="author" content="soudegesu">
+
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="そうなんでげす">
+<meta property="og:title" content="クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか">
+
+
+  <link rel="canonical" href="https://www.soudegesu.com/aws/s3-cross-account/">
+  <meta property="og:url" content="https://www.soudegesu.com/aws/s3-cross-account/">
+
+
+
+  <meta property="og:description" content="S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。">
+
+
+
+  <meta name="twitter:site" content="@alten_manten">
+  <meta name="twitter:title" content="クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか">
+  <meta name="twitter:description" content="S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。両アカウントからバケットに対して操作を行うことができるため、大変便利な機能です。バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、共有された側ではS3バケットのコンソールにバケットが表示されません。なんとかして閲覧する方法はないものかと試行錯誤してみました。">
+  <meta name="twitter:url" content="https://www.soudegesu.com/aws/s3-cross-account/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/soudegesu.jpg">
+    
+  
+
+  
+    <meta name="twitter:creator" content="@alten_manten">
+  
+
+
+
+
+
+  <meta property="og:image" content="https://www.soudegesu.com/assets/images/soudegesu.jpg">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-04-13T00:00:00+09:00">
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "https://www.soudegesu.com",
+      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+    }
+  </script>
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "soudegsu",
+      "url" : "https://www.soudegesu.com",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+
+
+
+
+<!-- end SEO -->
 
 
 <link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
