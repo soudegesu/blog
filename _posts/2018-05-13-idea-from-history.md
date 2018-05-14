@@ -4,6 +4,8 @@ description: "「歴史からの発想　停滞と拘束からいかに脱する
 date: 2018-05-13 00:00:00 +0900
 categories: book
 tags: book 組織論
+header:
+  teaser: https://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4532192161&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 ---
 
 「 [歴史からの発想　停滞と拘束からいかに脱するか](https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4532192161&linkCode=as2&tag=soudegesu-22&linkId=5513b5e79762b891cc2f9498116b17fa) 」を読みました。
