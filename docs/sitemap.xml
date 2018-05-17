@@ -121,6 +121,10 @@
 <lastmod>2018-05-13T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/java/datadog-with-springboot-micrometer/</loc>
+<lastmod>2018-05-17T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -286,6 +290,9 @@
 <loc>https://www.soudegesu.com/tags/engineer-life/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/datadog/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
 </url>
 <url>
@@ -341,5 +348,8 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/page3/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/page4/</loc>
 </url>
 </urlset>

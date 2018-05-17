@@ -1,4 +1,250 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-15T08:51:37+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった</title><link href="https://www.soudegesu.com/book/idea-from-history/" rel="alternate" type="text/html" title="「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった" /><published>2018-05-13T00:00:00+09:00</published><updated>2018-05-13T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/idea-from-history</id><content type="html" xml:base="https://www.soudegesu.com/book/idea-from-history/">&lt;p&gt;「 &lt;a href=&quot;https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4532192161&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=5513b5e79762b891cc2f9498116b17fa&quot;&gt;歴史からの発想　停滞と拘束からいかに脱するか&lt;/a&gt; 」を読みました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-18T08:51:12+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった</title><link href="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/" rel="alternate" type="text/html" title="micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった" /><published>2018-05-17T00:00:00+09:00</published><updated>2018-05-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/datadog-with-springboot-micrometer</id><content type="html" xml:base="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/">&lt;p&gt;以前書いた「 &lt;a href=&quot;/java/migrate-springboot-1-to-2/&quot;&gt;Spring Bootを1.5から2へマイグレーションするステップとポイント&lt;/a&gt; 」 にて、
+&lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt;に対してメトリックを送信するの仕組みを &lt;a href=&quot;https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog&quot;&gt;micrometer-registry-datadog&lt;/a&gt; に変更したのですが、
+Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/micrometer.png&quot; alt=&quot;micrometer&quot; /&gt;&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#micrometerって何&quot; id=&quot;markdown-toc-micrometerって何&quot;&gt;Micrometerって何&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot; id=&quot;markdown-toc-spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot;&gt;Spring Boot アプリケーションに micrometer-registry-datadog を設定する&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#buildgradleの修正&quot; id=&quot;markdown-toc-buildgradleの修正&quot;&gt;build.gradleの修正&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#applicationyamlの修正&quot; id=&quot;markdown-toc-applicationyamlの修正&quot;&gt;application.yamlの修正&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#メトリックに情報を付与する&quot; id=&quot;markdown-toc-メトリックに情報を付与する&quot;&gt;メトリックに情報を付与する&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#datadog上でjvmのメトリックを見てみよう&quot; id=&quot;markdown-toc-datadog上でjvmのメトリックを見てみよう&quot;&gt;Datadog上でJVMのメトリックを見てみよう&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#jvmの使用メモリ&quot; id=&quot;markdown-toc-jvmの使用メモリ&quot;&gt;JVMの使用メモリ&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#全体の使用量&quot; id=&quot;markdown-toc-全体の使用量&quot;&gt;全体の使用量&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ヒープ領域のみ&quot; id=&quot;markdown-toc-ヒープ領域のみ&quot;&gt;ヒープ領域のみ&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#survivor領域&quot; id=&quot;markdown-toc-survivor領域&quot;&gt;Survivor領域&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#領域毎にグループ化する&quot; id=&quot;markdown-toc-領域毎にグループ化する&quot;&gt;領域毎にグループ化する&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#jvmメトリックの構成&quot; id=&quot;markdown-toc-jvmメトリックの構成&quot;&gt;JVMメトリックの構成&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#micrometer-registry-datadog使用時の注意点&quot; id=&quot;markdown-toc-micrometer-registry-datadog使用時の注意点&quot;&gt;micrometer-registry-datadog使用時の注意点&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot; id=&quot;markdown-toc-datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot;&gt;Datadogへのメトリック送信に失敗した場合にはWARNログが出力される&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;micrometerって何&quot;&gt;Micrometerって何&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt; はJVM上で動くアプリケーションのメトリックを取得するためのライブラリです。&lt;/p&gt;
+
+&lt;p&gt;各種モニタリングツールとの連携が可能で、2018/05時点では以下のモニタリングツールに対応しています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/Netflix/atlas/wiki&quot;&gt;Atlas&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://ganglia.sourceforge.net/&quot;&gt;Ganglia&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://graphiteapp.org/&quot;&gt;Graphite&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.influxdata.com/&quot;&gt;Influx&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html&quot;&gt;JMX&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://newrelic.com/&quot;&gt;New Relic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://prometheus.io/&quot;&gt;Prometheus&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://signalfx.com/&quot;&gt;SignalFx&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/etsy/statsd&quot;&gt;StatsD&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.wavefront.com/&quot;&gt;Wavefront&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これらのモニタリングツールと対になるライブラリを使用することで、取得したメトリックを容易に送ることができるのです。&lt;/p&gt;
+
+&lt;h2 id=&quot;spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot;&gt;Spring Boot アプリケーションに micrometer-registry-datadog を設定する&lt;/h2&gt;
+
+&lt;p&gt;Spring Bootに &lt;a href=&quot;https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog&quot;&gt;micrometer-registry-datadog&lt;/a&gt; を入れて、 Datadogにメトリックを溜め込んでみましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;buildgradleの修正&quot;&gt;build.gradleの修正&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; の依存関係に micrometer-registry-datadog を追加します。
+なお、Micrometer自体は &lt;code class=&quot;highlighter-rouge&quot;&gt;spring-boot-starter-actuator&lt;/code&gt; に含まれています。&lt;/p&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.springframework.boot'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'spring-boot-starter-actuator'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2.0.1.RELEASE'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'io.micrometer'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'micrometer-registry-datadog'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'1.0.3'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;applicationyamlの修正&quot;&gt;application.yamlの修正&lt;/h3&gt;
+
+&lt;p&gt;application.yaml に設定を追加します。
+公式ドキュメントだと指定可能なプロパティが全て列挙されていないので、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;io.micrometer.datadog.DatadogConfig&lt;/code&gt; クラスの中を見ることで確認できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;management&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;metrics&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;datadog&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;api-key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;${datadogのAPIキー}&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;15s&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# メトリックの収集間隔&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;メトリックに情報を付与する&quot;&gt;メトリックに情報を付与する&lt;/h3&gt;
+
+&lt;p&gt;こちらは必須ではありません。&lt;/p&gt;
+
+&lt;p&gt;Datadog上でタグを使ってメトリックを横断的にフィルタできると嬉しいケースがあるので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;commonTags&lt;/code&gt; を使って、ホスト名やモニターグループを設定すると良いと思います。&lt;/p&gt;
+
+&lt;p&gt;また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.&lt;/code&gt; のprefixを付与しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;nd&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeterRegistryCustomizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MeterRegistry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;customizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;meterFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeterFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+                            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Meter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Meter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;spring.&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+                            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;monitoring_group&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;system_component_a&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InetAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getLocalHost&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHostName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UnknownHostException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;LOGGER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fail to resolve hostname.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;datadog上でjvmのメトリックを見てみよう&quot;&gt;Datadog上でJVMのメトリックを見てみよう&lt;/h2&gt;
+
+&lt;p&gt;さて本題です。アプリケーションを起動し、Datadog上でメトリックを確認してみましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;jvmの使用メモリ&quot;&gt;JVMの使用メモリ&lt;/h3&gt;
+
+&lt;h4 id=&quot;全体の使用量&quot;&gt;全体の使用量&lt;/h4&gt;
+
+&lt;p&gt;JVMの使用メモリ量は &lt;code class=&quot;highlighter-rouge&quot;&gt;jvm.memory.used&lt;/code&gt; のメトリックで確認できます。 (先程 &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.&lt;/code&gt; のprefixをつけているので、下の図では &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.jvm.memory.used&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/used_memory.png&quot; alt=&quot;used_memory&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;ヒープ領域のみ&quot;&gt;ヒープ領域のみ&lt;/h4&gt;
+
+&lt;p&gt;次に &lt;code class=&quot;highlighter-rouge&quot;&gt;area:heap&lt;/code&gt; を指定すると、ヒープ領域のみに絞りこむことができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/heap_only.png&quot; alt=&quot;heap_only&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;survivor領域&quot;&gt;Survivor領域&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;id:ps_survivor_space&lt;/code&gt; を追加すると、 ヒープの中のさらにSurvivor領域のみにも絞り込めます。これは嬉しい。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/survivor_only.png&quot; alt=&quot;survivor_only&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;領域毎にグループ化する&quot;&gt;領域毎にグループ化する&lt;/h4&gt;
+
+&lt;p&gt;もちろん、 &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; をfromではなく、グルーピングで使用すると、Heap領域に対する各領域の状態が確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/heap_group_by_id.png&quot; alt=&quot;heap_group_by_id&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;jvmメトリックの構成&quot;&gt;JVMメトリックの構成&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jvm.memory.used&lt;/code&gt; メトリックの構造をまとめると以下。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;metric&lt;/th&gt;
+      &lt;th&gt;area&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;jvm.memory.used&lt;/td&gt;
+      &lt;td&gt;heap&lt;/td&gt;
+      &lt;td&gt;ps_eden_space&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;ps_old_gen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;ps_survivor_space&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;nonheap&lt;/td&gt;
+      &lt;td&gt;metaspace&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;code_cache&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;cmpressed_class_space&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;他にも、例えば、 バッファメモリもそれぞれDirect BufferとMapped Bufferでメトリックが取れたりする。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;metric&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;jvm.buffer.memory.used&lt;/td&gt;
+      &lt;td&gt;direct&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;mapped&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;micrometer-registry-datadog使用時の注意点&quot;&gt;micrometer-registry-datadog使用時の注意点&lt;/h2&gt;
+
+&lt;h3 id=&quot;datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot;&gt;Datadogへのメトリック送信に失敗した場合にはWARNログが出力される&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;micrometer-registry-datadog&lt;/code&gt; がバックグラウンドで定期的にメトリックを打ち上げてくれますが、
+通信に失敗した場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;WARN&lt;/code&gt; レベルのログが出力されます。&lt;/p&gt;
+
+&lt;p&gt;そのため、 &lt;strong&gt;アプリケーションのログ監視をしている場合には、影響がないか確認しておきましょう&lt;/strong&gt; 。&lt;/p&gt;
+
+&lt;p&gt;参考までに、エラーは以下のような感じで出ていました。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;failed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;send&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metrics&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SocketTimeoutException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;socketConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Native&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;doConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;350&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connectToAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;206&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;188&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SocksSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SocksSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;392&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Socket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Socket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;589&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ssl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SSLSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SSLSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;673&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NetworkClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;doConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NetworkClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;175&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;openServer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;463&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;openServer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;558&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;264&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;New&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;367&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractDelegateHttpsURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewHttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractDelegateHttpsURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;191&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;以下略&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;micrometer-registry-datadog&lt;/code&gt; を使用すると、取得したいメトリックの情報が構造化されて、フィルタリングがしやすくなりました。
+特にJVMのメモリのメトリックは以前よりも直感的になった印象があります。&lt;/p&gt;
+
+&lt;p&gt;今回のMicrometerに限らず、 Application Performance Monitoring 界隈のライブラリが様々出回ってきたので、この方面も学習していきたいですね。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://micrometer.io/docs/registry/datadog&quot;&gt;Micrometer Datadog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント 」 にて、 Datadogに対してメトリックを送信するの仕組みを micrometer-registry-datadog に変更したのですが、 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。</summary></entry><entry><title type="html">「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった</title><link href="https://www.soudegesu.com/book/idea-from-history/" rel="alternate" type="text/html" title="「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった" /><published>2018-05-13T00:00:00+09:00</published><updated>2018-05-13T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/idea-from-history</id><content type="html" xml:base="https://www.soudegesu.com/book/idea-from-history/">&lt;p&gt;「 &lt;a href=&quot;https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4532192161&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=5513b5e79762b891cc2f9498116b17fa&quot;&gt;歴史からの発想　停滞と拘束からいかに脱するか&lt;/a&gt; 」を読みました。
 たまたまamazonサーフィンしていたら見つけた本なのですが、タイトルが気になったので買ってみました。
 人通り読み終えたので、所感を書きたいと思います。
 以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
@@ -536,7 +782,7 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above&quot;&gt;Spring Boot with Java 9 and above&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><summary type="html">Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guide を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。</summary></entry><entry><title type="html">子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した</title><link href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" rel="alternate" type="text/html" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した" /><published>2018-05-07T00:00:00+09:00</published><updated>2018-05-07T00:00:00+09:00</updated><id>https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life</id><content type="html" xml:base="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/">&lt;p&gt;2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guide を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。</summary></entry><entry><title type="html">子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した</title><link href="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/" rel="alternate" type="text/html" title="子持ちおとっつぁんエンジニアが朝方生活に切り替えて1年が経過した" /><published>2018-05-07T00:00:00+09:00</published><updated>2018-05-07T00:00:00+09:00</updated><id>https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life</id><content type="html" xml:base="https://www.soudegesu.com/engineer-life/one-year-passed-since-the-early-bird-life/">&lt;p&gt;2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。
 今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。&lt;/p&gt;
 
 &lt;p&gt;この文章が、どこか遠くの、名前も知らないおとっつぁんエンジニアにとって1つのモデルケースになれば幸いだ。&lt;/p&gt;
@@ -1940,140 +2186,4 @@ MySQLエンジンのバージョンを上げれそうであれば、それで対
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/486594043X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=486594043X&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=aa4c69d72db754bc626b9aa59c0d415a&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=486594043X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=486594043X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aurora" /><summary type="html">アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。</summary></entry><entry><title type="html">AWS LambdaでCasperJSを実行してファイルアップロードを自動化する</title><link href="https://www.soudegesu.com/aws/casperjs-on-lambda/" rel="alternate" type="text/html" title="AWS LambdaでCasperJSを実行してファイルアップロードを自動化する" /><published>2018-04-23T00:00:00+09:00</published><updated>2018-04-23T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/casperjs-on-lambda</id><content type="html" xml:base="https://www.soudegesu.com/aws/casperjs-on-lambda/">&lt;p&gt;AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
-APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#日次でファイルをアップロードしたい&quot; id=&quot;markdown-toc-日次でファイルをアップロードしたい&quot;&gt;日次でファイルをアップロードしたい&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#casperjsとは&quot; id=&quot;markdown-toc-casperjsとは&quot;&gt;CasperJSとは&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#lambda--casperjs-で実現してみよう&quot; id=&quot;markdown-toc-lambda--casperjs-で実現してみよう&quot;&gt;Lambda + CasperJS で実現してみよう&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#実装時のポイント&quot; id=&quot;markdown-toc-実装時のポイント&quot;&gt;実装時のポイント&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot; id=&quot;markdown-toc-lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot;&gt;Lambdaに割り当てるリソースは大きめに、タイムアウトは長く設定する&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#aws-lambdaにphantomjsのパスを通す&quot; id=&quot;markdown-toc-aws-lambdaにphantomjsのパスを通す&quot;&gt;AWS LambdaにPhantomJSのパスを通す&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot; id=&quot;markdown-toc-s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot;&gt;S3オブジェクトを一度Lambdaのコンテナ上にダウンロードする&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot; id=&quot;markdown-toc-lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot;&gt;Lambda実行の最後にS3バケットへ画面キャプチャをアップロードする&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ブラウザの言語設定を英語にした&quot; id=&quot;markdown-toc-ブラウザの言語設定を英語にした&quot;&gt;ブラウザの言語設定を英語にした&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;日次でファイルをアップロードしたい&quot;&gt;日次でファイルをアップロードしたい&lt;/h2&gt;
-
-&lt;p&gt;ことの発端は以前書いた記事 「&lt;a href=&quot;/aws/s3-cross-account/&quot;&gt;クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか&lt;/a&gt;」 にて、
-&lt;strong&gt;S3のバケット共有の機能を使ってファイルの提供をしようと試みた&lt;/strong&gt; のですが、社内のセキュリティ統制的にNGを喰らってしまいましたので、
-指定のファイルストレージサービスを経由してファイルの授受を行う必要が出てきました。&lt;/p&gt;
-
-&lt;p&gt;そのファイルストレージサービスというのが若干レガシーなシステムで、APIを使ったファイルのアップロードができません。
-そのため、ヘッドレスブラウザでのGUI操作ができるライブラリを使用してファイルアップロードをしようと考えた次第です。&lt;/p&gt;
-
-&lt;p&gt;これを実装しないと、私が毎朝システムにログインしてファイルをアップロードするという苦行が発生するため、是が非でも作る必要がありました。&lt;/p&gt;
-
-&lt;p&gt;退屈なことはプログラムにやらせましょう。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/487311778X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=487311778X&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=22f6b91a2296dc4b4344bbc4b08fc5dd&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=487311778X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL160_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=487311778X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;casperjsとは&quot;&gt;CasperJSとは&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;http://casperjs.org/&quot;&gt;CasperJS&lt;/a&gt; は &lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt; のラッパーライブラリです。
-PhantomJS 自体はwebkitをベースとしたヘッドレスブラウザです。
-実ブラウザを起動するSeleniumよりも高速に動作するので、GUIを持つ必要のない処理（例えばGUIの自動テストや、今回のような機械的な処理)に向いています。
-昨年頃に &lt;a href=&quot;https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja&quot;&gt;Chromeもヘッドレスで起動できる&lt;/a&gt; ようになっているため、
-PhantomJSでなくても良いのですが、過去にPhantomJSを使った経験があったため、再びこれを採用しています。&lt;/p&gt;
-
-&lt;p&gt;ラッパーであるCasperJSを使う利点は、ブラウザ操作のユーティリティが揃っていることです。
-セレクタに対するwaitや、イベントの発火、データ入力等のコードをシンプルに書くことができます。&lt;/p&gt;
-
-&lt;p&gt;というか、PhantomJS単体だと自前定義のfunctionが多くなるためオススメできません。&lt;/p&gt;
-
-&lt;h2 id=&quot;lambda--casperjs-で実現してみよう&quot;&gt;Lambda + CasperJS で実現してみよう&lt;/h2&gt;
-
-&lt;p&gt;早速実装してみましょう。今回作成したプログラムは &lt;a href=&quot;https://github.com/soudegesu/casper-lambda-test&quot;&gt;こちら&lt;/a&gt; です。
-なお、このプログラム自体は &lt;a href=&quot;https://github.com/narainsagar/node-casperjs-aws-lambda&quot;&gt;node-casperjs-aws-lambda&lt;/a&gt; を参考にしています。&lt;/p&gt;
-
-&lt;p&gt;今回実装したアーキテクチャはざっくり以下のようなイメージです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180423/casperjs.png&quot; alt=&quot;casper_architecture&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;実行環境やライブラリは以下になります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Node 6.10&lt;/li&gt;
-  &lt;li&gt;CasperJS 1.1.4&lt;/li&gt;
-  &lt;li&gt;PhantomJS 2.1.1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;また、処理の流れは以下になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;LambdaがETL処理をする&lt;/li&gt;
-  &lt;li&gt;ETL処理終了後にS3にファイルをアップロード&lt;/li&gt;
-  &lt;li&gt;BucketのPUTイベントを基にファイルアップロード用のLambdaが実行される&lt;/li&gt;
-  &lt;li&gt;LambdaでCasperJSが動き、他サービスにファイルをアップロードする&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;実装時のポイント&quot;&gt;実装時のポイント&lt;/h2&gt;
-
-&lt;h3 id=&quot;lambdaに割り当てるリソースは大きめにタイムアウトは長く設定する&quot;&gt;Lambdaに割り当てるリソースは大きめに、タイムアウトは長く設定する&lt;/h3&gt;
-&lt;p&gt;ヘッドレスとは言え、CasperJSを実行するために、Lambdaに割り当てるメモリは大きめにした方が良いです。&lt;/p&gt;
-
-&lt;p&gt;加えて、Lambdaのタイムアウト値は最大値の5分に設定しておきましょう。もちろん、これらは実装する処理の重さに依存します。&lt;/p&gt;
-
-&lt;h3 id=&quot;aws-lambdaにphantomjsのパスを通す&quot;&gt;AWS LambdaにPhantomJSのパスを通す&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node_module&lt;/code&gt; 内のPhantomJSはLambda上ではいい感じに見てくれなかったので、&lt;a href=&quot;http://phantomjs.org/download.html&quot;&gt;PhantomJSのバイナリをダウンロード&lt;/a&gt;して直接パスを通してあげました。&lt;/p&gt;
-
-&lt;p&gt;余談ですが、AWS Lambdaの環境変数一覧は &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/current-supported-versions.html&quot;&gt;ここ&lt;/a&gt; に纏められています。はじめて知りました。&lt;/p&gt;
-
-&lt;h3 id=&quot;s3オブジェクトを一度lambdaのコンテナ上にダウンロードする&quot;&gt;S3オブジェクトを一度Lambdaのコンテナ上にダウンロードする&lt;/h3&gt;
-
-&lt;p&gt;S3のPUTイベントをトリガーに処理が実行されるのですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;event&lt;/code&gt; オブジェクトにはバケットの情報やオブジェクトキーの情報しかないため、
-そこから一度、Lambdaコンテナの &lt;code class=&quot;highlighter-rouge&quot;&gt;/tmp/&lt;/code&gt; 配下とかに一度ダウンロードします。&lt;/p&gt;
-
-&lt;h3 id=&quot;lambda実行の最後にs3バケットへ画面キャプチャをアップロードする&quot;&gt;Lambda実行の最後にS3バケットへ画面キャプチャをアップロードする&lt;/h3&gt;
-
-&lt;p&gt;CasperJSのデバッグはコンソールに情報を出力するよりも &lt;code class=&quot;highlighter-rouge&quot;&gt;caputure&lt;/code&gt; 関数を呼び出して、その瞬間の画面キャプチャを取得する方が捗ります。
-ただ、Lambda上で実行している場合には、Lambdaの処理が終了するとコンテナも終了するため、処理の最後に任意のS3にアップロードしてあげます。&lt;/p&gt;
-
-&lt;p&gt;なお、キャプチャファイルはカレントディレクトリ( &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/task&lt;/code&gt; 配下)に出力しようとすると、書き込み権限がないエラーになってしまいましたので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/tmp/&lt;/code&gt; に吐き出しています。&lt;/p&gt;
-
-&lt;p&gt;また、キャプチャーした画像ファイルは大抵複数できあがるので、&lt;code class=&quot;highlighter-rouge&quot;&gt;aws-sdk&lt;/code&gt; でS3アップロードする処理は &lt;code class=&quot;highlighter-rouge&quot;&gt;Promisse&lt;/code&gt; を使って書きました。&lt;/p&gt;
-
-&lt;h3 id=&quot;ブラウザの言語設定を英語にした&quot;&gt;ブラウザの言語設定を英語にした&lt;/h3&gt;
-
-&lt;p&gt;CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
-&lt;strong&gt;CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい&lt;/strong&gt; ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Change browser lang&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;casper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'started'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;customHeaders&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&quot;Accept-Language&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;en-US&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;ランタイムに依存しない&lt;/strong&gt; という意味でも設定しておいた方が良いと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;今回はAWS Lambda上でCasperJSを実行することで、S3上のファイルを別のストレージサービスへアップロードすることができました。
-CasperJSからPhantomJSを呼び出せるようにPATHに追加したり、キャプチャ画像をアップロードするためのバケットを準備したり、
-下準備に若干時間がかかりますが、一度作れば動きが理解できると思います。&lt;/p&gt;
-
-&lt;p&gt;Lambdaのタイムアウト時間の最大値である5分以内に処理を終了させる必要があるため、最初はタイムアウトしないか心配でした。
-しかし、メモリも大きめに割り当てて上げると実行自体は数十秒くらいで終了したので、ヘッドレスブラウザ最強です。
-CasperJSのコードも短かったのが良かったのかもしれません。&lt;/p&gt;
-
-&lt;p&gt;と、これを書きながら、「CasperJSのコードを複数のLambdaで分担してGUIのテストできたらかっこいいな」と感じました。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://casperjs.org/&quot;&gt;CasperJS&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/narainsagar/node-casperjs-aws-lambda&quot;&gt;node-casperjs-aws-lambda&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/4883379930/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4883379930&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=ae79fa81d72604fbe4a1f4f71e97c369&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4883379930&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4883379930&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="lambda" /><category term="casperjs" /><summary type="html">AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。 APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aurora" /><summary type="html">アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。</summary></entry></feed>
