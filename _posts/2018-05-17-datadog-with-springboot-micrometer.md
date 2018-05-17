@@ -1,6 +1,6 @@
 ---
 title: "micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった"
-description: ""
+description: "以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント」 にて、Datadogに対してメトリックを送信するの仕組みをmicrometer-registry-datadogに変更したのですが、Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。"
 date: 2018-05-17 00:00:00 +0900
 categories: java
 tags: springboot datadog
@@ -54,7 +54,8 @@ Spring Bootに [micrometer-registry-datadog](https://mvnrepository.com/artifact/
 ### application.yamlの修正
 
 application.yaml に設定を追加します。
-`io.micrometer.datadog.DatadogConfig` クラスの中を見ると指定可能なプロパティを確認できます。
+公式ドキュメントだと指定可能なプロパティが全て列挙されていないので、
+`io.micrometer.datadog.DatadogConfig` クラスの中を見ることで確認できます。
 
 ```yaml
 management:
@@ -65,7 +66,122 @@ management:
         step: 15s # メトリックの収集間隔
 ```
 
-## Datadog上ではどう見えるか
+### メトリックに情報を付与する
+
+こちらは必須ではありません。
+
+Datadog上でタグを使ってメトリックを横断的にフィルタできると嬉しいケースがあるので、 `commonTags` を使って、ホスト名やモニターグループを設定すると良いと思います。
+
+また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに `spring.` のprefixを付与しています。
+
+```java
+    @Bean
+    public MeterRegistryCustomizer<MeterRegistry> customizer() {
+        return registry -> {
+            try {
+                registry.config()
+                        .meterFilter(new MeterFilter() {
+                            @Override
+                            public Meter.Id map(Meter.Id id) {
+                                return id.withName("spring." + id.getName());
+                            }
+                        })
+                        .commonTags("env", "local")
+                        .commonTags("monitoring_group", "system_component_a")
+                        .commonTags("host", InetAddress.getLocalHost().getHostName());
+            } catch (UnknownHostException e) {
+                LOGGER.error("fail to resolve hostname.", e);
+            }
+        };
+    }
+```
+
+## Datadog上でJVMのメトリックを見てみよう
+
+さて本題です。アプリケーションを起動し、Datadog上でメトリックを確認してみましょう。
+
+### JVMの使用メモリ
+
+#### 全体の使用量
+
+JVMの使用メモリ量は `jvm.memory.used` のメトリックで確認できます。 (先程 `spring.` のprefixをつけているので、下の図では `spring.jvm.memory.used`)
+
+![used_memory]({{site.baseurl}}/assets/images/20180517/used_memory.png)
+
+#### ヒープ領域のみ
+
+次に `area:heap` を指定すると、ヒープ領域のみに絞りこむことができます。
+
+![heap_only]({{site.baseurl}}/assets/images/20180517/heap_only.png)
+
+#### Survivor領域
+
+`id:ps_survivor_space` を追加すると、 ヒープの中のさらにSurvivor領域のみにも絞り込めます。これは嬉しい。
+
+![survivor_only]({{site.baseurl}}/assets/images/20180517/survivor_only.png)
+
+#### 領域毎にグループ化する
+
+もちろん、 `id` をfromではなく、グルーピングで使用すると、Heap領域に対する各領域の状態が確認できます。
+
+![heap_group_by_id]({{site.baseurl}}/assets/images/20180517/heap_group_by_id.png)
+
+### JVMメトリックの構成
+
+`jvm.memory.used` メトリックの構造をまとめると以下。
+
+|metric         |area   |id |
+|---------------|-------|---|
+|jvm.memory.used|heap   |ps_eden_space|
+|               |       |ps_old_gen|
+|               |       |ps_survivor_space|
+|               |nonheap|metaspace|
+|               |       |code_cache|
+|               |       |cmpressed_class_space|
+
+他にも、例えば、 バッファメモリもそれぞれDirect BufferとMapped Bufferでメトリックが取れたりする。
+
+|metric                 |id     |
+|-----------------------|-------|
+|jvm.buffer.memory.used |direct |
+|                       |mapped |
+
+
+## micrometer-registry-datadog使用時の注意点
+
+### Datadogへのメトリック送信に失敗した場合にはWARNログが出力される
+
+`micrometer-registry-datadog` がバックグラウンドで定期的にメトリックを打ち上げてくれますが、
+通信に失敗した場合には `WARN` レベルのログが出力されます。
+
+そのため、 **アプリケーションのログ監視をしている場合には、影響がないか確認しておきましょう** 。
+
+参考までに、エラーは以下のような感じで出ていました。
+
+```java
+failed to send metrics
+    java.net.SocketTimeoutException: connect timed out
+    at java.net.PlainSocketImpl.socketConnect(Native Method)
+    at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+    at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+    at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+    at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+    at java.net.Socket.connect(Socket.java:589)
+    at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:673)
+    at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+    at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+    at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+    at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+    at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+    at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+    (以下略)
+```
+
+## まとめ
+`micrometer-registry-datadog` を使用すると、取得したいメトリックの情報が構造化されて、フィルタリングがしやすくなりました。
+特にJVMのメモリのメトリックは以前よりも直感的になった印象があります。
+
+今回のMicrometerに限らず、 Application Performance Monitoring 界隈のライブラリが様々出回ってきたので、この方面も学習していきたいですね。
 
 ## 参考にさせていただいたサイト
 * [Micrometer Datadog](https://micrometer.io/docs/registry/datadog)
