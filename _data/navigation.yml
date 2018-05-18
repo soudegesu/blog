@@ -4,6 +4,8 @@ main:
   #   url: /about/
   - title: "Archives"
     url: /archives/
+  - title: "Tags"
+    url: /tags/
   # - title: "Sample Collections"
   #   url: /collection-archive/
   #- title: "Sitemap"
