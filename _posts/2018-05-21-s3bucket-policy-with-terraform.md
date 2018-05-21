@@ -41,8 +41,8 @@ resource "aws_s3_bucket_policy" "b" {
       "Resource": "arn:aws:s3:::my_tf_test_bucket/*",
       "Condition": {
          "IpAddress": {"aws:SourceIp": "8.8.8.8/32"}
-      } 
-    } 
+      }
+    }
   ]
 }
 POLICY
@@ -51,12 +51,12 @@ POLICY
 
 だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。
 
-## IAMポリシーのデータソースを使う
+## IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う
 
-結論から言うと、 [aws_iam_policy_document](https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html) 
+結論から言うと、 [aws_iam_policy_document](https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html)
 のデータソースを使用することができます。
 
-データソース名から 「IAMポリシーしか書けないのでは？」 と思うかもしれませんが、意外とできました。 
+データソース名から 「IAMにしか適用できないのでは？」 と思うかもしれませんが、結局はポリシードキュメントなので使えます。
 
 ```
 resource "aws_s3_bucket" "b" {
@@ -72,26 +72,23 @@ data "aws_iam_policy_document" "bucket_policy_document" {
 
     statement {
         sid = "IPAllow"
-
         effect = "Deny"
-
         principals {
-            type = "Service"
+            type = "*"
             identifiers = ["*"]
         }
-
         actions = [
             "s3:*"
         ]
-
         resources = [
             "arn:aws:s3:::my_tf_test_bucket/*"
         ]
-
         condition {
-            test = "StringEquals"
-            variable = "aws:Referer"
-            values = ["XXXXXXXXXXXXX"]
+            test = "IpAddress"
+            variable = "aws:SourceIp"
+            values = [
+              "8.8.8.8/32"
+            ]
         }
     }
 }
@@ -102,7 +99,31 @@ data "aws_iam_policy_document" "bucket_policy_document" {
 
 データソースをJSON文字列にしてくれます。
 
-S3もTerraformぽいコードにできるよ！という小ネタでした。
+AWS公式の [IAM JSON ポリシーエレメント: 条件演算子](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_elements_condition_operators.html) にもある通り、
+`IpAddress` も条件演算子のひとつとして定義されているので、ちゃんと `condition` ブロックで使えます。
+
+強いてクセを挙げるとしたら、
+
+```
+"Principal": "*",
+```
+
+を表現するために
+
+```
+principals {
+    type = "*"
+    identifiers = ["*"]
+}
+```
+
+と記述しないといけない所でしょうか。
+
+## まとめ
+
+S3バケットのポリシードキュメントも `aws_iam_policy_document` を使えば、Terraformのコードとして管理できます。
+HCLからポリシードキュメント（JSON）を生成するために、微妙に書き方が違う部分がありますが、それは普段通りTerraformの公式を読めばなんとかなるでしょう。
+さらばヒアドキュメント！！
 
 ## 参考にさせていただいたサイト
 * [Terraform - Data Source:aws_iam_policy_document](https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html)
