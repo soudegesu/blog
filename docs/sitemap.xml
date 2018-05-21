@@ -125,6 +125,10 @@
 <lastmod>2018-05-17T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/</loc>
+<lastmod>2018-05-21T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -291,6 +295,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/datadog/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/iam/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
