@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-19T07:15:58+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった</title><link href="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/" rel="alternate" type="text/html" title="micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった" /><published>2018-05-17T00:00:00+09:00</published><updated>2018-05-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/datadog-with-springboot-micrometer</id><content type="html" xml:base="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/">&lt;p&gt;以前書いた「 &lt;a href=&quot;/java/migrate-springboot-1-to-2/&quot;&gt;Spring Bootを1.5から2へマイグレーションするステップとポイント&lt;/a&gt; 」 にて、
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-22T07:52:27+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">TerraformでS3のバケットポリシーを書く方法</title><link href="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/" rel="alternate" type="text/html" title="TerraformでS3のバケットポリシーを書く方法" /><published>2018-05-21T00:00:00+09:00</published><updated>2018-05-21T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/s3bucket-policy-with-terraform</id><content type="html" xml:base="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/">&lt;p&gt;インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt; も例外ではないのですが、S3バケットのポリシー設定の所でふと気付いたので書いておきます。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#terraform公式のs3のバケットポリシーが&quot; id=&quot;markdown-toc-terraform公式のs3のバケットポリシーが&quot;&gt;Terraform公式のS3のバケットポリシーが…&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot; id=&quot;markdown-toc-iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot;&gt;IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;terraform公式のs3のバケットポリシーが&quot;&gt;Terraform公式のS3のバケットポリシーが…&lt;/h2&gt;
+
+&lt;p&gt;Terraform公式の &lt;a href=&quot;https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html&quot;&gt;aws_s3_bucket_policy&lt;/a&gt;
+のリソースは &lt;code class=&quot;highlighter-rouge&quot;&gt;policy&lt;/code&gt; の部分がヒアドキュメントで書かれています。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
+  bucket = &quot;my_tf_test_bucket&quot;
+}
+
+resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
+  bucket = &quot;${aws_s3_bucket.b.id}&quot;
+  policy =&amp;lt;&amp;lt;POLICY
+{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Id&quot;: &quot;MYBUCKETPOLICY&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;IPAllow&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:*&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;,
+      &quot;Condition&quot;: {
+         &quot;IpAddress&quot;: {&quot;aws:SourceIp&quot;: &quot;8.8.8.8/32&quot;}
+      }
+    }
+  ]
+}
+POLICY
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。&lt;/p&gt;
+
+&lt;h2 id=&quot;iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot;&gt;IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う&lt;/h2&gt;
+
+&lt;p&gt;結論から言うと、 &lt;a href=&quot;https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html&quot;&gt;aws_iam_policy_document&lt;/a&gt;
+のデータソースを使用することができます。&lt;/p&gt;
+
+&lt;p&gt;データソース名から 「IAMにしか適用できないのでは？」 と思うかもしれませんが、結局はポリシードキュメントなので使えます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
+  bucket = &quot;my_tf_test_bucket&quot;
+}
+
+resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
+  bucket = &quot;${aws_s3_bucket.b.id}&quot;
+  policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;
+}
+
+data &quot;aws_iam_policy_document&quot; &quot;bucket_policy_document&quot; {
+
+    statement {
+        sid = &quot;IPAllow&quot;
+        effect = &quot;Deny&quot;
+        principals {
+            type = &quot;*&quot;
+            identifiers = [&quot;*&quot;]
+        }
+        actions = [
+            &quot;s3:*&quot;
+        ]
+        resources = [
+            &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;
+        ]
+        condition {
+            test = &quot;IpAddress&quot;
+            variable = &quot;aws:SourceIp&quot;
+            values = [
+              &quot;8.8.8.8/32&quot;
+            ]
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ポイントは &lt;code class=&quot;highlighter-rouge&quot;&gt;policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;&lt;/code&gt; の所です。&lt;/p&gt;
+
+&lt;p&gt;データソースをJSON文字列にしてくれます。&lt;/p&gt;
+
+&lt;p&gt;AWS公式の &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_elements_condition_operators.html&quot;&gt;IAM JSON ポリシーエレメント: 条件演算子&lt;/a&gt; にもある通り、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;IpAddress&lt;/code&gt; も条件演算子のひとつとして定義されているので、ちゃんと &lt;code class=&quot;highlighter-rouge&quot;&gt;condition&lt;/code&gt; ブロックで使えます。&lt;/p&gt;
+
+&lt;p&gt;強いてクセを挙げるとしたら、&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;Principal&quot;: &quot;*&quot;,
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;を表現するために&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;principals {
+    type = &quot;*&quot;
+    identifiers = [&quot;*&quot;]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と記述しないといけない所でしょうか。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;S3バケットのポリシードキュメントも &lt;code class=&quot;highlighter-rouge&quot;&gt;aws_iam_policy_document&lt;/code&gt; を使えば、Terraformのコードとして管理できます。
+HCLからポリシードキュメント（JSON）を生成するために、微妙に書き方が違う部分がありますが、それは普段通りTerraformの公式を読めばなんとかなるでしょう。
+さらばヒアドキュメント！！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html&quot;&gt;Terraform - Data Source:aws_iam_policy_document&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html&quot;&gt;Terraform - Data Source: aws_s3_bucket_policy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=B06XKHGJHP&amp;amp;linkId=a3a59917979f77c73643421d8d843a47&quot;&gt;&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=4844339265&amp;amp;linkId=81ad40d815fd96079a683238ffb6a249&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="terraform" /><category term="s3" /><category term="iam" /><summary type="html">インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。</summary></entry><entry><title type="html">micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった</title><link href="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/" rel="alternate" type="text/html" title="micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった" /><published>2018-05-17T00:00:00+09:00</published><updated>2018-05-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/datadog-with-springboot-micrometer</id><content type="html" xml:base="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/">&lt;p&gt;以前書いた「 &lt;a href=&quot;/java/migrate-springboot-1-to-2/&quot;&gt;Spring Bootを1.5から2へマイグレーションするステップとポイント&lt;/a&gt; 」 にて、
 &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt;に対してメトリックを送信するの仕組みを &lt;a href=&quot;https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog&quot;&gt;micrometer-registry-datadog&lt;/a&gt; に変更したのですが、
 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。&lt;/p&gt;
 
@@ -2085,105 +2211,4 @@ make altinstall
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/offer-listing/479738946X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479738946X&amp;amp;linkCode=am2&amp;amp;tag=soudegesu-22&amp;amp;linkId=4d6041eaf55821514ce2f3c16f0b9a5c&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=479738946X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=479738946X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="python" /><summary type="html">Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。 今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。</summary></entry><entry><title type="html">MySQL/PostgreSQLの脆弱性が発表された時に、RDS Aurora使いはどう対処すべきか</title><link href="https://www.soudegesu.com/aws/aurora-security/" rel="alternate" type="text/html" title="MySQL/PostgreSQLの脆弱性が発表された時に、RDS Aurora使いはどう対処すべきか" /><published>2018-04-24T00:00:00+09:00</published><updated>2018-04-24T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/aurora-security</id><content type="html" xml:base="https://www.soudegesu.com/aws/aurora-security/">&lt;p&gt;アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#経緯セキュリティバスターズからの依頼&quot; id=&quot;markdown-toc-経緯セキュリティバスターズからの依頼&quot;&gt;[経緯]セキュリティバスターズからの依頼&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#auroraの仕組み&quot; id=&quot;markdown-toc-auroraの仕組み&quot;&gt;Auroraの仕組み&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#サポートに聞いてみよう&quot; id=&quot;markdown-toc-サポートに聞いてみよう&quot;&gt;サポートに聞いてみよう&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#latest-bulletins-を見てみよう&quot; id=&quot;markdown-toc-latest-bulletins-を見てみよう&quot;&gt;Latest Bulletins を見てみよう&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;経緯セキュリティバスターズからの依頼&quot;&gt;[経緯]セキュリティバスターズからの依頼&lt;/h2&gt;
-&lt;p&gt;そこそこ大きい会社になってくると、セキュリティを専門とする部署があって、
-&lt;a href=&quot;http://cve.mitre.org/&quot;&gt;CVE&lt;/a&gt; の情報を収集しては&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「こんな脆弱性が発表されたぞ！君たちのプロダクトは大丈夫なのか！？報告したまえ！」&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;みたいなやりとりが発生します。情報を展開してくれるのは大変ありがたいのですが、やりたまえって、なんかそういうエージェント仕込むやつでもいいから少しは手伝ってくだされ。&lt;/p&gt;
-
-&lt;p&gt;例のごとく、&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「MySQLの脆弱性が発表されたぞ！これな！」&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;というお達しと共に&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CVE-2018-XXXX
-CVE-2018-XXXX
-CVE-2018-XXXX
-(以下略)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;対象と思しきCVEのリストが展開されるのです。&lt;/p&gt;
-
-&lt;p&gt;純粋なMySQL/PostgreSQLでないにせよ、OSSのデータベースエンジンに互換性のあるAuroraを使用している場合、我々は公表された脆弱性にどう対処するのが良いのか？とふと思ったわけです。&lt;/p&gt;
-
-&lt;p&gt;なお、私の使っているAuroraのバージョンは &lt;code class=&quot;highlighter-rouge&quot;&gt;1.15.1&lt;/code&gt; 、互換のあるMySQLのバージョンは &lt;code class=&quot;highlighter-rouge&quot;&gt;5.6.10-log&lt;/code&gt; でした。&lt;/p&gt;
-
-&lt;h2 id=&quot;auroraの仕組み&quot;&gt;Auroraの仕組み&lt;/h2&gt;
-
-&lt;p&gt;そもそも「互換性がある」 からと言って、内部的な仕組みは違うので、一概に言えないのが難しい所です。&lt;/p&gt;
-
-&lt;p&gt;例えば、下のスライドを見ると少しわかるのですが、ストレージ部分のアーキテクチャはAurora独自な感があるので、&lt;a href=&quot;http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-2755&quot;&gt;CVE-2018-2755&lt;/a&gt; みたいなレプリケーションに関連する脆弱性は対象にならないのではないか、と推察したりもできます。&lt;/p&gt;
-
-&lt;div class=&quot;embed-container rich &quot;&gt;&lt;iframe src=&quot;https://www.slideshare.net/slideshow/embed_code/key/m7BMjMqJzXfMzf&quot; width=&quot;427&quot; height=&quot;356&quot; frameborder=&quot;0&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; style=&quot;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&quot; allowfullscreen=&quot;&quot;&gt; &lt;/iframe&gt; &lt;div style=&quot;margin-bottom:5px&quot;&gt; &lt;strong&gt; &lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/amazon-aurora-aurora&quot; title=&quot;Amazon Aurora - Auroraの止まらない進化とその中身&quot; target=&quot;_blank&quot;&gt;Amazon Aurora - Auroraの止まらない進化とその中身&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan&quot; target=&quot;_blank&quot;&gt;Amazon Web Services Japan&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;h2 id=&quot;サポートに聞いてみよう&quot;&gt;サポートに聞いてみよう&lt;/h2&gt;
-
-&lt;p&gt;ただ、推察の域を出ないので、AWSのサポートに聞いてみました。&lt;/p&gt;
-
-&lt;p&gt;結果、結論を簡単にまとめると、&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQLのバージョンに存在する脆弱性は一概にAuroraにもあるとは限らない&lt;/li&gt;
-  &lt;li&gt;AWSのセキュリティ適用状況は &lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/&quot;&gt;Latest Bulletins&lt;/a&gt; を確認して欲しい&lt;/li&gt;
-  &lt;li&gt;インスタンスへのセキュリティパッチの適用状況についてはユーザが確認することはできない&lt;/li&gt;
-  &lt;li&gt;メンテナンスウィンドウにて必須のパッチの適用がスケジューリングされ、時限的に適用される(緊急の場合にはその限りではない)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;マネージドサービスだし、「まかせておけ」ということか。&lt;/p&gt;
-
-&lt;h2 id=&quot;latest-bulletins-を見てみよう&quot;&gt;Latest Bulletins を見てみよう&lt;/h2&gt;
-
-&lt;p&gt;過去にどのような対応があったかを見てみます。
-&lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/&quot;&gt;Latest Bulletins&lt;/a&gt; はRDSだけでなく、
-他のAWSサービス全般のセキュリティアップデートが表示されます。&lt;/p&gt;
-
-&lt;p&gt;その中から、過去のRDSの対応した脆弱性を探してみます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/amazon-rds-security-advisory-cve-2016-6663-cve-2016-6664/&quot;&gt;Amazon RDS Security Advisory (CVE-2016-6663 and CVE-2016-6664)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/amazon-rds-mysql-security-advisory-cve-2016-6662/&quot;&gt;Amazon RDS - MySQL Security Advisory (CVE-2016-6662)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/cve-2014-2478/&quot;&gt;Amazon RDS for Oracle Security Advisory&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/security/security-bulletins/mysql-5-5-and-5-6-security-advisory/&quot;&gt;Amazon RDS – MySQL Security Advisory&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Auroraのものは見つかりませんでした。&lt;/p&gt;
-
-&lt;p&gt;CVEの脆弱性とリンクされている上の2つを確認してみると、CVEがアップデートされてから半年後くらいに対応した感じでしょうか。
-AWSサービス単位でまとめられているわけでもないので、とりあえず、この情報だけでは脆弱性対処の早い/遅いの判断もできなさそうです。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;今回はRDS Auroraのセキュリティへの対応を調べてみました。
-結論を言うと、&lt;strong&gt;ユーザはAWS側におまかせする形になる&lt;/strong&gt; ので、ブラックボックスになってしまいます。&lt;/p&gt;
-
-&lt;p&gt;もし特定の脆弱性が気になるようなら、サポートセンター経由で個別に相談するのもよいでしょうし、
-MySQLエンジンのバージョンを上げれそうであれば、それで対処してしまう、という割り切りもありかな、とぼんやり思いました。&lt;/p&gt;
-
-&lt;p&gt;逆に、脆弱性と思しき事象がある場合には、メールにて報告をする窓口も設けられていたので(調査のお手伝いをする必要がありますが)、がっぷりおつで対峙するのも手かもしれませんね。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/blogs/database/introducing-the-aurora-storage-engine/&quot;&gt;Introducing the Aurora Storage Engine&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/amazon-aurora-aurora&quot;&gt;Amazon Aurora - Auroraの止まらない進化とその中身&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/486594043X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=486594043X&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=aa4c69d72db754bc626b9aa59c0d415a&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=486594043X&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=486594043X&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aurora" /><summary type="html">アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="python" /><summary type="html">Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。 今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。</summary></entry></feed>
