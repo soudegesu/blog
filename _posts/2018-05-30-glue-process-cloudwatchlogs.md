@@ -1,5 +1,5 @@
 ---
-title: "AWS GlueでCloudWatch LogsのログファイルをETLしようとして失敗した話"
+title: "AWS GlueでS3上のCloudWatch LogsのログファイルをETLしようとして失敗した話"
 description: "S3に退避した CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。結論から言うと、GlueのCrawlerがログをいい感じにパースできなかったので、失敗しました、という話です。"
 date: 2018-05-30 00:00:00 +0900
 categories: aws
@@ -27,7 +27,25 @@ CloudWatch LogsのログストリームをS3へエクスポートできました
 
 AWS上でETL処理を行うのであれば、聞いたことがあるのはやはり [AWS Glue](https://aws.amazon.com/jp/glue/) でしょう。
 
-Apache Sparkをベースとしており、私も利用が初めてなので、せっかくだから使ってみようと考えたわけです。
+Apache Sparkをベースとしており、せっかくだから使ってみようと考えたわけです。
+
+## やってみよう
+
+以下のような構成で処理させようと考えていました。
+
+![architecture]({{site.baseurl}}/assets/images/20180530/architecture.png)
+
+[AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する](https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/) にも記載がありますが、
+Glueには **Crawler** という設定があり、指定したデータソースの更新を定期的に確認し、データカタログをよしなに作ってくれる便利機能があります。
+
+### Clawlerの設定
+
+
+### ログフォーマットの罠
+
+
+## まとめ
+
 
 
 ## 参考にさせていただいたサイト
