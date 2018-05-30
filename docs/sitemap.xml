@@ -133,6 +133,10 @@
 <lastmod>2018-05-23T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/</loc>
+<lastmod>2018-05-30T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -308,6 +312,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/stepfunction/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/glue/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>

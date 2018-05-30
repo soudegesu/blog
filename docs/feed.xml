@@ -1,4 +1,120 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-27T07:35:22+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする</title><link href="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" rel="alternate" type="text/html" title="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする" /><published>2018-05-23T00:00:00+09:00</published><updated>2018-05-23T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3</id><content type="html" xml:base="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">&lt;p&gt;CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-31T08:43:33+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</title><link href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="alternate" type="text/html" title="S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話" /><published>2018-05-30T00:00:00+09:00</published><updated>2018-05-30T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/glue-process-cloudwatchlogs</id><content type="html" xml:base="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/">&lt;p&gt;S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#s3のファイルをetlしたい&quot; id=&quot;markdown-toc-s3のファイルをetlしたい&quot;&gt;S3のファイルをETLしたい&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#etlといえばglue&quot; id=&quot;markdown-toc-etlといえばglue&quot;&gt;ETLといえばGlue&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#やってみよう&quot; id=&quot;markdown-toc-やってみよう&quot;&gt;やってみよう&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#基データのログフォーマット&quot; id=&quot;markdown-toc-基データのログフォーマット&quot;&gt;基データのログフォーマット&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#crawlerの設定でつまずく&quot; id=&quot;markdown-toc-crawlerの設定でつまずく&quot;&gt;Crawlerの設定でつまずく&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ログフォーマットが変わっている&quot; id=&quot;markdown-toc-ログフォーマットが変わっている&quot;&gt;ログフォーマットが変わっている？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#grokも模索してみたが&quot; id=&quot;markdown-toc-grokも模索してみたが&quot;&gt;Grokも模索してみたが。。&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サポートにも相談してみたが&quot; id=&quot;markdown-toc-サポートにも相談してみたが&quot;&gt;サポートにも相談してみたが。。&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+
+&lt;h3 id=&quot;s3のファイルをetlしたい&quot;&gt;S3のファイルをETLしたい&lt;/h3&gt;
+
+&lt;p&gt;「 &lt;a href=&quot;/aws/export-cloudwatchlogs-to-s3/&quot;&gt;Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする&lt;/a&gt; 」 の記事にて、
+CloudWatch LogsのログストリームをS3へエクスポートしました。&lt;/p&gt;
+
+&lt;p&gt;次のステップとしては、データ分析しやすいようにETLしようというわけです。&lt;/p&gt;
+
+&lt;h3 id=&quot;etlといえばglue&quot;&gt;ETLといえばGlue&lt;/h3&gt;
+
+&lt;p&gt;AWS上でETL処理を行うのであれば、聞いたことがあるのはやはり &lt;a href=&quot;https://aws.amazon.com/jp/glue/&quot;&gt;AWS Glue&lt;/a&gt; でしょう。&lt;/p&gt;
+
+&lt;p&gt;Apache Sparkをベースとしており、せっかくだから使ってみたかったわけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;やってみよう&quot;&gt;やってみよう&lt;/h2&gt;
+
+&lt;p&gt;以下のような構成で処理させようと考えていました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/architecture.png&quot; alt=&quot;architecture&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;基データのログフォーマット&quot;&gt;基データのログフォーマット&lt;/h3&gt;
+
+&lt;p&gt;CloudWatch LogsはログデータがJSONフォーマットになっていると、
+JSON pathのような検索ができたり、ログを展開したときにpretty printしてくれるのでよく使ってしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/cloudwatch_logs.png&quot; alt=&quot;cloudwatch_logs&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;今回処理させたいデータも、この &lt;strong&gt;JSONフォーマットのログをCloudWatch Logsのエクスポート機能でS3にファイル出力したもの&lt;/strong&gt; です。&lt;/p&gt;
+
+&lt;h3 id=&quot;crawlerの設定でつまずく&quot;&gt;Crawlerの設定でつまずく&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/&quot;&gt;AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する&lt;/a&gt; にも記載がありますが、
+Glueには &lt;strong&gt;Crawler&lt;/strong&gt; という設定があり、指定したデータソースの更新を確認し、データカタログを &lt;strong&gt;よしなに作ってくれる機能&lt;/strong&gt; があります。&lt;/p&gt;
+
+&lt;p&gt;ただ、どう「よしなに」作ってくれるかというと、 &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/glue/latest/dg/add-classifier.html&quot;&gt;公式ドキュメント&lt;/a&gt;
+記載の通り、テキストのフォーマット毎に指定のロジックがあり、それに準じて処理するデータ形式を判断しているようです。&lt;/p&gt;
+
+&lt;p&gt;これを見て &lt;strong&gt;「よっしゃ、いい感じにJSONになるのね」&lt;/strong&gt; と早合点して、ポチポチ設定を進めていったのが問題でした。&lt;/p&gt;
+
+&lt;h3 id=&quot;ログフォーマットが変わっている&quot;&gt;ログフォーマットが変わっている？&lt;/h3&gt;
+
+&lt;p&gt;Crawlerが S3バケットのファイルからデータカタログを作成してくれたわけですが、以下のように 「&lt;a href=&quot;http://amzn.github.io/ion-docs/&quot;&gt;ion&lt;/a&gt; でした」
+という結果が出てきました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/ion.png&quot; alt=&quot;ion&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;「あれ？jsonではないの？」&lt;/p&gt;
+
+&lt;p&gt;そう思って、S3上の .gz ファイルの中身を見てみると以下のような形式になっていました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2018-05-27T00:00:00.107Z {ログのJSON文字列}
+2018-05-27T00:01:36.107Z {ログのJSON文字列}
+(以下略)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;CloudWatch Logsからログデータをエクスポートすると、タイムスタンプ情報も出力されてしまい、 JSON形式でなくなっていた&lt;/strong&gt; わけですね。&lt;/p&gt;
+
+&lt;h3 id=&quot;grokも模索してみたが&quot;&gt;Grokも模索してみたが。。&lt;/h3&gt;
+
+&lt;p&gt;Crawlerがログファイルを分類するために、自前の &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/glue/latest/dg/custom-classifier.html&quot;&gt;カスタム分類子&lt;/a&gt; を設定することもできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/crawler_classifier.png&quot; alt=&quot;crawler_classifier&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Grok&lt;/li&gt;
+  &lt;li&gt;XML&lt;/li&gt;
+  &lt;li&gt;JSON&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の3つが定義されているのですが、XMLとJSONはすでにテキスト形式がそのフォーマットに加工されている必要があるので、使えそうにありません。
+よく Log Stash などで使われる &lt;strong&gt;Grok形式&lt;/strong&gt; が一番カスタマイズ性が高いのですが、この設定を用いても
+要素が可変になるJSONを処理することはできませんでした。&lt;/p&gt;
+
+&lt;h3 id=&quot;サポートにも相談してみたが&quot;&gt;サポートにも相談してみたが。。&lt;/h3&gt;
+
+&lt;p&gt;「私のGlueの設定が悪いのかも」と一縷の望みを託して、AWSのサポートにも聞いてみたのですが、「Glue単体で今回のログフォーマットは処理できない」と回答をいただきました。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;GlueのCrawlerでいい感じにデータカタログを作るのに失敗しました。&lt;/p&gt;
+
+&lt;p&gt;デフォルトの分類子、または、自前で定義したカスタム分類子によってGlueのCrawlerはデータカタログを作成してくれます。
+しかし、すべてのフォーマットに対して柔軟に処理できるわけではないので、フォーマットによってはGlueが処理しやすいように前段で自前ETLを挟んであげる必要がありそうです。&lt;/p&gt;
+
+&lt;p&gt;特に今回のような、 &lt;strong&gt;CloudWatch LogsのログがJSON形式で、エクスポート機能でS3に外出ししたファイル（ログの一部がJSON形式）&lt;/strong&gt; の場合には相性が悪いということがわかりました。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/&quot;&gt;AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e91e78f505e53d2986a0635db4aad1ce&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="s3" /><category term="cloudwatchlogs" /><category term="glue" /><summary type="html">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。 結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。</summary></entry><entry><title type="html">Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする</title><link href="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" rel="alternate" type="text/html" title="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする" /><published>2018-05-23T00:00:00+09:00</published><updated>2018-05-23T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3</id><content type="html" xml:base="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">&lt;p&gt;CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
 しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -2313,75 +2429,4 @@ or long-running computations through Colaboratory’s UI to use a local runtime.
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4862762263&amp;amp;linkId=b694c3ce45ccea6c53975ef370c6bb7d&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
 &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。 簡単な書評と所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry><entry><title type="html">「人質の経済学」を読んだ</title><link href="https://www.soudegesu.com/book/economics-of-hostages/" rel="alternate" type="text/html" title="「人質の経済学」を読んだ" /><published>2018-04-27T00:00:00+09:00</published><updated>2018-04-27T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/economics-of-hostages</id><content type="html" xml:base="https://www.soudegesu.com/book/economics-of-hostages/">&lt;p&gt;ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。
-エンジニアだからと、&lt;a href=&quot;https://www.oreilly.co.jp/index.shtml&quot;&gt;オライリー本&lt;/a&gt; ばかり読んでいてはいけないですね。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#購入の経緯&quot; id=&quot;markdown-toc-購入の経緯&quot;&gt;購入の経緯&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#人質ビジネス時代の変遷&quot; id=&quot;markdown-toc-人質ビジネス時代の変遷&quot;&gt;人質ビジネス時代の変遷&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#人質解放交渉のリアル&quot; id=&quot;markdown-toc-人質解放交渉のリアル&quot;&gt;人質解放交渉のリアル&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#著者のロレッタナポリオーニさんについて&quot; id=&quot;markdown-toc-著者のロレッタナポリオーニさんについて&quot;&gt;著者のロレッタ・ナポリオーニさんについて&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4163905804/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4163905804&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=7fcab04a4c51902e13a9c5d1d697eadc&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4163905804&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4163905804&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;購入の経緯&quot;&gt;購入の経緯&lt;/h2&gt;
-
-&lt;p&gt;「人質」が「経済」に結びつきそうなのは、世界中のどの地域でしょうか。&lt;/p&gt;
-
-&lt;p&gt;おそらく大半の人が思い浮かべるのは、中東、とりわけイスラム教圏の国々なのではないでしょうか。&lt;/p&gt;
-
-&lt;p&gt;最近は日本のメディアでの報道が減りましたが、一時はイスラム過激派が中心となった武力闘争をはじめ、
-日本人の人質騒動もあったことで、 &lt;strong&gt;「イスラム圏 = 危ない国」というイメージを持ち&lt;/strong&gt; 、
-人命が日常的に危険に晒される地帯においては、言われてみれば確かに、人質ビジネスが成立しそうです。&lt;/p&gt;
-
-&lt;p&gt;たまたま、&lt;a href=&quot;https://www.amazon.co.jp/&quot;&gt;amazon&lt;/a&gt; をネットサーフィンしていたらこの本を見つけ、
-戦火とは程遠い国に住んでいる人間が国際社会の予備知識を蓄える目的も込めて購入しました。&lt;/p&gt;
-
-&lt;h2 id=&quot;人質ビジネス時代の変遷&quot;&gt;人質ビジネス時代の変遷&lt;/h2&gt;
-
-&lt;p&gt;本書の特徴は一つは &lt;strong&gt;人質ビジネスの変遷&lt;/strong&gt; を抑えている点です。&lt;/p&gt;
-
-&lt;p&gt;そもそも、世間一般の「ビジネス」にはトレンドがあります。お金の流通するプラットフォームに流行り廃りがあるのと同様に、&lt;strong&gt;人質ビジネスも一過性のブームに過ぎない&lt;/strong&gt; のです。
-本書では、「人質」が『商材』として機能していた一時代だけではなく、その前後の時代の『お金を産む種』にも十分に触れられているため、論展開に一貫性があります。&lt;/p&gt;
-
-&lt;p&gt;いかに、&lt;strong&gt;地域経済が世界情勢の波に翻弄されながらも、合理的な方向へ変化を遂げていくか&lt;/strong&gt; を垣間見ることが出来ます。&lt;/p&gt;
-
-&lt;h2 id=&quot;人質解放交渉のリアル&quot;&gt;人質解放交渉のリアル&lt;/h2&gt;
-
-&lt;p&gt;もう一つの特徴は、&lt;strong&gt;実際の人質解放交渉の事例&lt;/strong&gt; が多く取り上げていることです。&lt;/p&gt;
-
-&lt;p&gt;人命が商材になる一連の時代には、多くの被害者がいるわけで、各時代の章で様々な被害者の事例が紹介されてきます。
-もちろん、命が助かった事例、残念ながら命を奪われた事例の両方が扱われます。
-&lt;strong&gt;被害者の命運を分けたのは何か&lt;/strong&gt; 、とりわけ、一度に複数人が誘拐されたケースでは &lt;strong&gt;なぜこの人は助かったのに、この人は助からなかったのか&lt;/strong&gt; が筆者の考察や関係者の取材によって明らかになります。&lt;/p&gt;
-
-&lt;p&gt;また、人質解放交渉にあたって、交渉人、政府、実行犯、教唆犯等の &lt;strong&gt;関心事が異なる人間同士の思惑と、複雑な駆け引き&lt;/strong&gt; 
-には、&lt;strong&gt;道徳的観点がスッポリ抜け落ちるリアルさ&lt;/strong&gt; を感じざるを得ませんでした。&lt;/p&gt;
-
-&lt;p&gt;なお、事例ベースの展開が本書の大半を占めるため、事例嫌いの読者の方にはあまり向かないかもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;著者のロレッタナポリオーニさんについて&quot;&gt;著者のロレッタ・ナポリオーニさんについて&lt;/h2&gt;
-
-&lt;p&gt;過去には &lt;a href=&quot;https://www.ted.com/talks/loretta_napoleoni_the_intricate_economics_of_terrorism/transcript?language=ja#t-79189&quot;&gt;TED Talk&lt;/a&gt; での登壇経験もあるようです。&lt;/p&gt;
-
-&lt;p&gt;本書を執筆するにあたり、多くの交渉人や被害者等への取材をしています。&lt;/p&gt;
-
-&lt;p&gt;交渉人は業務上人命を取り扱うことから、部外者に迂闊にセンシティブな情報を流すことはご法度なはずです。&lt;/p&gt;
-
-&lt;p&gt;それにも関わらず、筆者にこれだけの協力をするのは、筆者への一定の信頼関係があり、
-交渉人とのコネクションを構築できている筆者だからこそ表現できた内容も含まれています。&lt;/p&gt;
-
-&lt;p&gt;一方で、 &lt;strong&gt;「イスラム過激派の変遷のルーツ」と「欧米の法律」の関連性&lt;/strong&gt; に対する筆者の見解には
-「筆者のバイアスが入っているのではないかな？」と感じる部分もありました。&lt;/p&gt;
-
-&lt;p&gt;もちろん、単純に彼女の方がプロで、私が素人だからかもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
-
-&lt;p&gt;昨今は海外旅行への敷居も下がり、リッチシニアがリタイア後に僻地へ海外旅行三昧のようなケースもよくありますが、
-訪問国への治安も含めた下調べは必要だと感じました。&lt;/p&gt;
-
-&lt;p&gt;加えて、くれぐれも自分の幼い好奇心や正義感で国際社会に迷惑をかけるべきではないことを思い知らせてくれるオススメの良い一冊です。&lt;/p&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。 エンジニアだからと、オライリー本 ばかり読んでいてはいけないですね。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。 簡単な書評と所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>

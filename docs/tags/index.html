@@ -377,8 +377,6 @@
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
-<!-- Push to group_names -->
-
 <!-- If not equal to previous then it must be unique as sorted -->
 
 <!-- Push to group_names -->
@@ -393,19 +391,9 @@
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
-<!-- If not equal to previous then it must be unique as sorted -->
-
 <!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
-
-<!-- If not equal to previous then it must be unique as sorted -->
-
-<!-- Push to group_names -->
-
-<!-- If not equal to previous then it must be unique as sorted -->
-
-<!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
@@ -441,19 +429,13 @@
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
-<!-- Push to group_names -->
-
-<!-- If not equal to previous then it must be unique as sorted -->
-
 <!-- If not equal to previous then it must be unique as sorted -->
 
 <!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
-<!-- If not equal to previous then it must be unique as sorted -->
-
-<!-- If not equal to previous then it must be unique as sorted -->
+<!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
@@ -465,13 +447,9 @@
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
-<!-- If not equal to previous then it must be unique as sorted -->
-
 <!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
-
-<!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
@@ -493,6 +471,30 @@
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
 <!-- Push to group_names -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
@@ -502,6 +504,12 @@
 <!-- If not equal to previous then it must be unique as sorted -->
 
 <!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
+
+<!-- Push to group_names -->
+
+<!-- If not equal to previous then it must be unique as sorted -->
 
 <!-- If not equal to previous then it must be unique as sorted -->
 
@@ -576,6 +584,10 @@
 <!-- If not equal to previous then it must be unique as sorted -->
 
 <!-- group_items -->
+
+<!-- Collect if contains -->
+
+<!-- Push to group_items -->
 
 <!-- Collect if contains -->
 
@@ -912,7 +924,11 @@
     
       
     
+      
+    
   
+    
+      
     
       
     
@@ -1117,6 +1133,14 @@
       
     
       
+        <li>
+          <a href="#s3">
+            <strong>s3</strong> <span class="taxonomy__count">4</span>
+          </a>
+        </li>
+      
+    
+      
     
       
     
@@ -1233,12 +1257,6 @@
       
     
       
-        <li>
-          <a href="#s3">
-            <strong>s3</strong> <span class="taxonomy__count">3</span>
-          </a>
-        </li>
-      
     
       
     
@@ -1252,6 +1270,8 @@
             <strong>book</strong> <span class="taxonomy__count">3</span>
           </a>
         </li>
+      
+    
       
     
       
@@ -1442,6 +1462,14 @@
         </li>
       
     
+      
+    
+      
+        <li>
+          <a href="#cloudwatchlogs">
+            <strong>cloudwatchlogs</strong> <span class="taxonomy__count">2</span>
+          </a>
+        </li>
       
     
       
@@ -1765,17 +1793,19 @@
       
     
       
+    
+      
         <li>
-          <a href="#cloudwatchlogs">
-            <strong>cloudwatchlogs</strong> <span class="taxonomy__count">1</span>
+          <a href="#stepfunction">
+            <strong>stepfunction</strong> <span class="taxonomy__count">1</span>
           </a>
         </li>
       
     
       
         <li>
-          <a href="#stepfunction">
-            <strong>stepfunction</strong> <span class="taxonomy__count">1</span>
+          <a href="#glue">
+            <strong>glue</strong> <span class="taxonomy__count">1</span>
           </a>
         </li>
       
@@ -2334,6 +2364,31 @@ APIでデータをPOSTできれば簡単なのですが、今回はGUI上から�
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="permalink">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
+
+</p>
+  </article>
+</div>
+
+<div class="list__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" rel="permalink">Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする
 </a>
       
@@ -2745,6 +2800,33 @@ Javaアプリケーションのメトリック取得がいい感じだったの�
     <p class="archive__item-excerpt" itemprop="description">以前、IPFS を調査したことがあり、そこから Ethereum の存在を知りました。
 昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
 今回はDApps開発のための下準備までを纏めます。
+
+</p>
+  </article>
+</div>
+
+<h2 id="glue" class="archive__subtitle">glue</h2>
+
+<div class="list__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="permalink">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
 
 </p>
   </article>
@@ -3309,6 +3391,31 @@ AuroraというよりはMySQLの仕様に関する説明も多いのでご了承
 </div>
 
 <h2 id="s3" class="archive__subtitle">s3</h2>
+
+<div class="list__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="permalink">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
+
+</p>
+  </article>
+</div>
 
 <div class="list__item">
   <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
