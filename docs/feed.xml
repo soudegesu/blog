@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-05-31T08:43:33+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</title><link href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="alternate" type="text/html" title="S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話" /><published>2018-05-30T00:00:00+09:00</published><updated>2018-05-30T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/glue-process-cloudwatchlogs</id><content type="html" xml:base="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/">&lt;p&gt;S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-06-08T08:37:07+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">「ピープルウェア」を読んでマネジメントを考える</title><link href="https://www.soudegesu.com/book/peopleware/" rel="alternate" type="text/html" title="「ピープルウェア」を読んでマネジメントを考える" /><published>2018-06-05T00:00:00+09:00</published><updated>2018-06-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/peopleware</id><content type="html" xml:base="https://www.soudegesu.com/book/peopleware/">&lt;p&gt;今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。
+以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#人間同士のコラボレーションの重要性を説いた本&quot; id=&quot;markdown-toc-人間同士のコラボレーションの重要性を説いた本&quot;&gt;人間同士のコラボレーションの重要性を説いた本&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#チーミングに関する話&quot; id=&quot;markdown-toc-チーミングに関する話&quot;&gt;チーミングに関する話&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#成功するチームのメンバー構成&quot; id=&quot;markdown-toc-成功するチームのメンバー構成&quot;&gt;成功するチームのメンバー構成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#チームにマイナスをもたらす人物の危険性を考慮する&quot; id=&quot;markdown-toc-チームにマイナスをもたらす人物の危険性を考慮する&quot;&gt;チームにマイナスをもたらす人物の危険性を考慮する&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#マネジメント層の役割について&quot; id=&quot;markdown-toc-マネジメント層の役割について&quot;&gt;マネジメント層の役割について&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#マネジメントはナイスミドルがやるべきなのか&quot; id=&quot;markdown-toc-マネジメントはナイスミドルがやるべきなのか&quot;&gt;マネジメントはナイスミドルがやるべきなのか&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#マネジメント層をやめるべきだ&quot; id=&quot;markdown-toc-マネジメント層をやめるべきだ&quot;&gt;マネジメント「層」をやめるべきだ&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#森と木を見てエンパワーするのが仕事&quot; id=&quot;markdown-toc-森と木を見てエンパワーするのが仕事&quot;&gt;森と木を見て、エンパワーするのが仕事&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/B00I96CJWO/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B00I96CJWO&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=6ae02fcebb6f0d35b7626bba2e51f880&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=B00I96CJWO&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=B00I96CJWO&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;人間同士のコラボレーションの重要性を説いた本&quot;&gt;人間同士のコラボレーションの重要性を説いた本&lt;/h2&gt;
+
+&lt;p&gt;本書はソフトウェア開発における &lt;strong&gt;「人の問題」&lt;/strong&gt; にフォーカスした書籍である。&lt;/p&gt;
+
+&lt;p&gt;以下はエンジニア間の会話でもよく引き合いに出るフレーズだが、これの出処は本書である。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;実際のところ、ソフトウェア開発上の問題の多くは、技術的というよりも社会学的なものである。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;人間がもたらす現場あるあるな残念事例も紹介されてくるのだが、基本的なスタンスとしては
+&lt;strong&gt;チームやプロジェクトを失敗に導く方法と、それが引き起こす問題やリスクの指摘&lt;/strong&gt; をしてくれる。
+一方で、課題への対処については、直接的な解決策の提示は少ない。
+事例ベースでの成功したパターンの紹介とそれに対する解説が記載される程度だ。&lt;/p&gt;
+
+&lt;p&gt;人間的な問題は要素が複雑であり一般化するのは難しいことから、解決策は状況に応じて現場で考えねばならない、ということかもしれない。&lt;/p&gt;
+
+&lt;h2 id=&quot;チーミングに関する話&quot;&gt;チーミングに関する話&lt;/h2&gt;
+&lt;p&gt;本書ではチーミングについても触れている。
+単に良いチームを作り・維持するための話だけではなく、やはり課題・リスク中心の話題（これが原因で生産性が落ちている、等）が多かった気がする。&lt;/p&gt;
+
+&lt;h3 id=&quot;成功するチームのメンバー構成&quot;&gt;成功するチームのメンバー構成&lt;/h3&gt;
+
+&lt;p&gt;最近では &lt;a href=&quot;https://bizhint.jp/keyword/101187&quot;&gt;心理的安全性&lt;/a&gt; という言葉が良く取り上げられるが、チームも一概に成功する「構成」はないのであろう。&lt;/p&gt;
+
+&lt;p&gt;個々が特定分野のプロフェッショナルとして自立し、チームで必要なケイパビリティを充足するようなチームは聞いたことがある。&lt;/p&gt;
+
+&lt;p&gt;一方、本書ではチームメンバー間の活性化を得意とする「触媒」としての役割を持ったメンバーが所属している構成のチームを紹介している。
+&lt;strong&gt;個人単体としての成果は低い（ほとんど無いに等しい）が、チームメンバーの成果に寄与する人&lt;/strong&gt; なわけであるから、触媒という表現は的を得ている。&lt;/p&gt;
+
+&lt;p&gt;今思えば、私自身も触媒的な役割をするメンバーがいるチームで仕事をしたことがあるが、あの時は雰囲気も良く、アウトプットもあり、「最高のチームだ」と感じることができた。&lt;/p&gt;
+
+&lt;p&gt;過去に &lt;a href=&quot;http://okutta.blog.jp/archives/18749840.html&quot;&gt;エンジニアのモチベーションを上げるために応援専門の女子を採用する中国企業&lt;/a&gt; の話題が
+一時期バズった（軽く問題扱いすらされた）けど、解像度を粗くすれば、これも触媒としての役割を持ったチームカテゴリに分類されるような気がした。&lt;/p&gt;
+
+&lt;h3 id=&quot;チームにマイナスをもたらす人物の危険性を考慮する&quot;&gt;チームにマイナスをもたらす人物の危険性を考慮する&lt;/h3&gt;
+
+&lt;p&gt;成熟したチームを作り上げるのは時間もかかるし、必要な要素がたくさんある。
+それに対し、チームを崩壊させるだけなら、いくつも手段はあるし、それらの中のいくつかを行使するだけだし、手間もかからない。&lt;/p&gt;
+
+&lt;p&gt;とりわけ、 &lt;strong&gt;「微妙なメンバーをチームに招き入れる」&lt;/strong&gt; のは最大のリスクであろう。&lt;/p&gt;
+
+&lt;p&gt;組織の活動を停滞させる原因はたった一人の人間であった、というのも私自身経験もしている。いわば、「プロのトラブルメーカー」だ。&lt;/p&gt;
+
+&lt;p&gt;どこかの外資系企業の人事担当者の話を見聞きしたことがあるが、&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;優秀な人間を逃すリスク　＜　変な人間を会社に入れないリスク&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;が優先されると聞いた。&lt;/p&gt;
+
+&lt;p&gt;だから、入り口を狭くする、と。&lt;/p&gt;
+
+&lt;h2 id=&quot;マネジメント層の役割について&quot;&gt;マネジメント層の役割について&lt;/h2&gt;
+
+&lt;p&gt;本書は人間のコラボレーションの話であるから、マネジメント層の話に触れないわけにはいくまい。
+マネジメント層がチームの邪魔をしないのはもちろん、どうやってチームをエンパワーするか、というヒントが本書には含まれていた。&lt;/p&gt;
+
+&lt;h3 id=&quot;マネジメントはナイスミドルがやるべきなのか&quot;&gt;マネジメントはナイスミドルがやるべきなのか&lt;/h3&gt;
+
+&lt;p&gt;この手の本を読んでいると、より一層 &lt;strong&gt;「マネジメントという仕事の重要性」&lt;/strong&gt; を感じるわけだが、
+現状の（少なくとも私の観測範囲の中の）マネジメント層は &lt;strong&gt;ナイスミドルより上&lt;/strong&gt; の年齢層が担っているケースが多い。これは問題ではないだろうか。&lt;/p&gt;
+
+&lt;p&gt;これは偏見かもしれないが、時間的な人生経験が長いことがアドバンテージとされるのは、粘着質な人間関係が是とされた旧来の日本社会的な体質の上で成り立つ話だったのでは、と考えている。
+情報伝達手段が発達していない中で、人との対面でのコミュニケーションを取る機会が多かったことも一つの要素かもしれない。&lt;/p&gt;
+
+&lt;p&gt;いずれにせよ、「経験から得られるもの」とされていたものはエッセンスだけ抽出され、スキルとして規定された今、「年齢は関係ないね」となる。&lt;/p&gt;
+
+&lt;p&gt;プログラミングや外国語と同じように、後天的に鍛えることもできるし、先天的なセンスを持った若者もいる。
+そのため、もちろんナイスミドルがマネジメントしてもいいけど、 &lt;strong&gt;「ナイスミドルでないとマネジメントさせない」というのは好ましくない。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;マネジメント層をやめるべきだ&quot;&gt;マネジメント「層」をやめるべきだ&lt;/h3&gt;
+
+&lt;p&gt;マネジメントもスキルであるならば、社内でイケているとされている人間がマネジメントに従事する、というパスには違和感がある。
+マネジメント職は何かの上位職という前提になってしまっているからだ。&lt;/p&gt;
+
+&lt;p&gt;上位職の概念は厄介で、様々なものが集約されてくる。
+社内的な権力と報酬が良い例だ。&lt;/p&gt;
+
+&lt;p&gt;まず権力の話をする。マネジメント職の人間には「人をマネージする」という範囲を超えた権限を与えられているケースが多い。&lt;/p&gt;
+
+&lt;p&gt;身近な例で言うと、プロダクトマネジメントだ。
+別にプロダクトに対して何の関与もないのに、「私の承認が必要だ」と踏み込んでくるのは  &lt;strong&gt;「マネジメントの範囲が分かっていないマネジメント」&lt;/strong&gt; に他ならない。&lt;/p&gt;
+
+&lt;p&gt;これはもう少し深掘りしていくと &lt;strong&gt;「マネジメントの範囲を決めていないマネジメント業務が一律でマネジメント層に丸投げされる」&lt;/strong&gt; 、という組織的課題に昇華できるのではないだろうか。&lt;/p&gt;
+
+&lt;p&gt;マネジメントには管理する対象が存在する。それを把握して、正しく制御するための権限だけを与えるべきだと思う。&lt;/p&gt;
+
+&lt;p&gt;次に報酬の話だ。マネジメント職の方が報酬が高ければ、そちらの方が人気が出てくるだろう。
+「マネジメントしたい人はこちらへどうぞ。ちなみにエンジニアと給料は一緒だからね。」と宣言するだけで、どれだけ不毛な足の引っ張りあいが無くなることか。&lt;/p&gt;
+
+&lt;p&gt;マネジメント職を上位職と規定しないだけで、空き席待ちをするナイスミドルのストレスがどれだけ緩和されることか。&lt;/p&gt;
+
+&lt;h3 id=&quot;森と木を見てエンパワーするのが仕事&quot;&gt;森と木を見て、エンパワーするのが仕事&lt;/h3&gt;
+
+&lt;p&gt;個人の集合体がチームであり、組織である。&lt;/p&gt;
+
+&lt;p&gt;だから、マネージするのは個人だと考えている。結果的にその個人たちが作り出したチームは「状態を把握する」だけで十分だ。&lt;/p&gt;
+
+&lt;p&gt;間違っても、「チームをマネージ」し、そこから「個人をマネージする」という順序で思考してはいけない。&lt;/p&gt;
+
+&lt;p&gt;チームには実体がないから、実体は個人の方にあるから。&lt;/p&gt;
+
+&lt;p&gt;書きながら、そもそも、マネジメントという言葉自体が不適切な気がしてきた。 &lt;strong&gt;「管理する」というのはもはや本来期待すべき業務ではなくなってきている&lt;/strong&gt; と感じたからだ。&lt;/p&gt;
+
+&lt;p&gt;どう個人をエンパワーするかを考え、個人とチームを観測し、個々人をより成長させるために足りないケイパビリティを充足するかを考えるのが仕事だと思った。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;最後の方はとても雑多になってしまったけど、マネジメントのあるべき姿を考え、チームをダメにしないための方法を考え、人への接し方を考えさせられた良い一冊でした。&lt;/p&gt;
+
+&lt;p&gt;自分の中でマネジメントに対する軸となる考えを持つことは重要で、そのエッセンスを拾うことができました。&lt;/p&gt;
+
+&lt;p&gt;マネジメント。自分の観測範囲の中でも良いから、少しづつ実践を繰り返し、鍛えておきたいスキルですね。&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4822281108&amp;amp;linkId=374d5bb38701eaa66d7dbd61a6f404fc&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry><entry><title type="html">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</title><link href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="alternate" type="text/html" title="S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話" /><published>2018-05-30T00:00:00+09:00</published><updated>2018-05-30T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/glue-process-cloudwatchlogs</id><content type="html" xml:base="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/">&lt;p&gt;S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
 結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -2330,103 +2470,4 @@ or long-running computations through Colaboratory’s UI to use a local runtime.
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4873118344/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873118344&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=972efa59090adfce72f22528173f3769&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873118344&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873118344&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="colaboratory" /><category term="machine-learning" /><category term="tensorflow" /><category term="python" /><summary type="html">普段 Jupter notebook で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の Colaboratory を触ってみました。</summary></entry><entry><title type="html">「ティール組織」はこれからの経営者に読んで欲しい一冊</title><link href="https://www.soudegesu.com/book/reinventing-organizations/" rel="alternate" type="text/html" title="「ティール組織」はこれからの経営者に読んで欲しい一冊" /><published>2018-05-01T00:00:00+09:00</published><updated>2018-05-01T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/reinventing-organizations</id><content type="html" xml:base="https://www.soudegesu.com/book/reinventing-organizations/">&lt;p&gt;巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。
-簡単な書評と所感を書きたいと思います。
-以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot; id=&quot;markdown-toc-超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot;&gt;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#この本は経営者向けの本&quot; id=&quot;markdown-toc-この本は経営者向けの本&quot;&gt;この本は経営者向けの本&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4862762263/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4862762263&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=43e663f0a957755b99c435f78312862e&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4862762263&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4862762263&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&quot;&gt;超分厚い一冊には今どき組織論のエッセンスが詰まっていた&lt;/h2&gt;
-&lt;p&gt;この書籍は500ページを超える分厚めの書籍です。私は通勤電車の中で毎日これを読んでいたのですが、持ち運びには向きませんね笑。私はKindle Paperwhiteを所有しているので、Kindle版を購入すれば良かったと後悔しました。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/B00QJDOM6U/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B00QJDOM6U&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=66b7a77610b78e915e749c4b63d7cfc4&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=B00QJDOM6U&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=B00QJDOM6U&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;ただし、そのページ分量に見合うだけのエッセンスは詰まっています。
-特に今どきの組織論系の本でよく語られている内容は所々に散りばめられており、説明も一貫かつ丁寧になされているため、
-この一冊を読めば組織論に関する知識がない読者でも一から体系的に知識を抑えることができるでしょう。
-過去にリーダーシップ論、組織論、自己啓発の類を読んだことがある人は、自己の知識とマッピングされる箇所が多数あるでしょう。&lt;/p&gt;
-
-&lt;p&gt;雑な言い方をすると、&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;組織の基本概念はホラクラシー&lt;/li&gt;
-  &lt;li&gt;管理職の役割はManagement3.0&lt;/li&gt;
-  &lt;li&gt;従業員の行動原理はアンソニー・ロビンズ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;と共通する部分をいくつか感じました。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-また、本書のコンテンツはおおまかに以下のような流れにて構成されています。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;組織モデルの移り変わり&lt;/li&gt;
-  &lt;li&gt;ティールとはどのような組織か&lt;/li&gt;
-  &lt;li&gt;ティール組織に必要なもの&lt;/li&gt;
-  &lt;li&gt;ティール組織における、経営役員、管理職、従業員の役割&lt;/li&gt;
-  &lt;li&gt;ティール組織を作るには&lt;/li&gt;
-  &lt;li&gt;組織の社会的存在意義を明確にする&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;途中からは実際にティール組織として機能している会社事例を織り交ぜながら話が進んでいきます。
-どの企業も組織内の信頼関係に下支えされた経営を行っており、企業として機能していること自体に凄さを感じえませんでした。&lt;/p&gt;
-
-&lt;h2 id=&quot;この本は経営者向けの本&quot;&gt;この本は経営者向けの本&lt;/h2&gt;
-
-&lt;p&gt;一通り読んで、本書からのメッセージを一言で表現するなら &lt;strong&gt;「『個人』も『組織』も内発的な動機づけによって行動すべきだ」&lt;/strong&gt; といったところでしょう。&lt;/p&gt;
-
-&lt;p&gt;その理論を実現するための柱となる考え方は以下の3つです。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;個人は内発的動機付けによって行動を起こし、周囲と協調しつつ(コンセンサスではない)、自身で意思決定を行う&lt;/li&gt;
-  &lt;li&gt;組織(企業)は個人を活かすために心理的安全性を確保しなければならない&lt;/li&gt;
-  &lt;li&gt;組織(企業)は自分達の社会的存在意義を認識すること&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;この3つのポイントを組織に根付かせるために、ブレークダウンされた論展開がなされていくのですが、
-読めば読むほど、 &lt;strong&gt;「とても良い理論だけど、かなり地ならしが必要」&lt;/strong&gt; と感じてしまいます。&lt;/p&gt;
-
-&lt;p&gt;そして、その「地ならし」を行えるのは &lt;strong&gt;経営者だけ&lt;/strong&gt; だと悟るのです。ボトムアップ式では無理である、と。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;
-ゆえに、この本は &lt;strong&gt;「経営者向けの本である」&lt;/strong&gt; と私は考えています。
-&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;なお、「どのような企業がティール組織に向いているか」「既存の組織をティール型にするには」という点に関して、
-本書の中で筆者もきちんと触れています。&lt;/p&gt;
-
-&lt;p&gt;その項も納得する部分が多く、納得する部分が多いからこそ、読者が「うちじゃ無理かも」と思わせる。
-特に &lt;strong&gt;日系の大手企業では導入は難しい&lt;/strong&gt; と言わざるを得ません。&lt;/p&gt;
-
-&lt;p&gt;大体の企業はトップダウン式の階層構造型であり、特に意思決定や権限に対してティール組織の概ね対極に位置するモデルといえます。
-ティールを適用した場合、中間管理職の層が最も不利益を被りやすく、その不公平感から、結果的に社内の心理的安全性が失われ、導入に失敗するのではないか、と私は推察しました。&lt;/p&gt;
-
-&lt;p&gt;これが中盤以降に発覚するので、いわば「上げて落とす」ような構成になっています。&lt;/p&gt;
-
-&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
-
-&lt;p&gt;いろいろとネガティブなことも書いてしまいましたが、学ぶ所は多い書物です。
-これを読むと、一瞬、「独立して、社長やってみようかな」とすら思ってしまうほど、心清らかな組織論です。&lt;/p&gt;
-
-&lt;p&gt;従業員個人の内発的動機を最大限に活かすことをエンジンとしているので、雇われ社長ではなく、
-内発的動機を持った社長で、かつワンマンでない方にとっては心強い転ばぬ先の杖になるのではないでしょうか。&lt;/p&gt;
-
-&lt;p&gt;また、私のような一介の従業員の目線としては &lt;strong&gt;「やらされ仕事ではなく、自身の内発的動機に基づく仕事に従事したい」&lt;/strong&gt;
-という意味で、ティールな組織で働いてみたいと思わせてくれました。
-少なくとも、今後の社会人人生の次のステージに向けて、良い影響を与えてくれた良書であることは間違いありません。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4862762263&amp;amp;linkId=b694c3ce45ccea6c53975ef370c6bb7d&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。 簡単な書評と所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="colaboratory" /><category term="machine-learning" /><category term="tensorflow" /><category term="python" /><summary type="html">普段 Jupter notebook で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の Colaboratory を触ってみました。</summary></entry></feed>
