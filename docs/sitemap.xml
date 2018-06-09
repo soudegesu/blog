@@ -141,6 +141,10 @@
 <lastmod>2018-06-05T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/linux/systemd_clock/</loc>
+<lastmod>2018-06-09T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -321,6 +325,9 @@
 <loc>https://www.soudegesu.com/tags/glue/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/systemd/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
 </url>
 <url>
@@ -370,6 +377,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/engineer-life/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/categories/linux/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/page2/</loc>

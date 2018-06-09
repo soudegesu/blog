@@ -19,12 +19,12 @@
 
 
 
-<title>Docker buildコマンドのimage作成〜コンテナ起動まで - そうなんでげす</title>
+<title>Amazon Linux2(systemd)のシステム時刻を変更する - そうなんでげす</title>
 
 
 
 
-<meta name="description" content="Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。">
+<meta name="description" content="今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。">
 
 
 
@@ -33,22 +33,22 @@
 
 <meta property="og:locale" content="ja_JP">
 <meta property="og:site_name" content="そうなんでげす">
-<meta property="og:title" content="Docker buildコマンドのimage作成〜コンテナ起動まで">
+<meta property="og:title" content="Amazon Linux2(systemd)のシステム時刻を変更する">
 
 
-  <link rel="canonical" href="https://www.soudegesu.com/docker/image/build">
-  <meta property="og:url" content="https://www.soudegesu.com/docker/image/build">
+  <link rel="canonical" href="https://www.soudegesu.com/linux/systemd_clock/">
+  <meta property="og:url" content="https://www.soudegesu.com/linux/systemd_clock/">
 
 
 
-  <meta property="og:description" content="Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。">
+  <meta property="og:description" content="今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。">
 
 
 
   <meta name="twitter:site" content="@alten_manten">
-  <meta name="twitter:title" content="Docker buildコマンドのimage作成〜コンテナ起動まで">
-  <meta name="twitter:description" content="Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。">
-  <meta name="twitter:url" content="https://www.soudegesu.com/docker/image/build">
+  <meta name="twitter:title" content="Amazon Linux2(systemd)のシステム時刻を変更する">
+  <meta name="twitter:description" content="今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。">
+  <meta name="twitter:url" content="https://www.soudegesu.com/linux/systemd_clock/">
 
   
     <meta name="twitter:card" content="summary">
@@ -70,7 +70,7 @@
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2017-01-31T16:21:00+09:00">
+  <meta property="article:published_time" content="2018-06-09T00:00:00+09:00">
 
 
 
@@ -289,15 +289,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Docker buildコマンドのimage作成〜コンテナ起動まで">
-    <meta itemprop="description" content="自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。">
-    <meta itemprop="datePublished" content="January 31, 2017">
+    <meta itemprop="headline" content="Amazon Linux2(systemd)のシステム時刻を変更する">
+    <meta itemprop="description" content="今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。">
+    <meta itemprop="datePublished" content="June 09, 2018">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">Docker buildコマンドのimage作成〜コンテナ起動まで
+          <h1 class="page__title" itemprop="headline">Amazon Linux2(systemd)のシステム時刻を変更する
 </h1>
           
             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
@@ -312,112 +312,129 @@
       
 
       <section class="page__content" itemprop="text">
-        <p>自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。</p>
+        <p>今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
+システム時刻の変更に関して備忘録として残しておきます。</p>
 
-<h2 id="dockerfile-を作成する">Dockerfile を作成する</h2>
+<p>なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。</p>
 
-<p>まず、dockerのバージョンが古かったので、<a href="https://www.docker.com/products/docker#/mac">公式サイト</a>からmac用のdockerを再度ダウンロードし、アップデートしておきます。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># docker version
-Client:
- Version:      1.13.0
- API version:  1.25
- Go version:   go1.7.3
- Git commit:   49bf474
- Built:        Wed Jan 18 16:20:26 2017
- OS/Arch:      darwin/amd64
-
-Server:
- Version:      1.13.0
- API version:  1.25 (minimum version 1.12)
- Go version:   go1.7.3
- Git commit:   49bf474
- Built:        Wed Jan 18 16:20:26 2017
- OS/Arch:      linux/amd64
- Experimental: true
-
-</code></pre></div></div>
-
-<p>以下のような簡単なDockerfileを作成し、プロジェクトのルートにおいておきます。
-今回は<a href="https://github.com/docker-library/docs/tree/master/mysql">mysql公式のdocker image</a>を使用することにしましょう。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM mysql
-MAINTAINER soudegesu
-
-RUN echo "finished setup !!"
-
-</code></pre></div></div>
-
-<h2 id="dockerfile-をビルドしてイメージを作成する">Dockerfile をビルドしてイメージを作成する</h2>
-
-<p><code class="highlighter-rouge">docker build</code> コマンドを実行すると以下のようなエラーが出ました。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#docker build -t soudegesu/mysql:0.0.1 . 
-Sending build context to Docker daemon 57.86 MB
-Error response from daemon: The Dockerfile (Dockerfile) cannot be empty
-</code></pre></div></div>
-
-<p>Dockerfileが配置されているディレクトリでコマンドを実行したので、Dockerfileを勝手に認識してくれるはずだったような。。
-念のため、<code class="highlighter-rouge">-f</code> オプションを指定して、直接ファイルを指定してみたところ上手くいきました。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#docker build -f ./Dockerfile -t soudegesu/mysql:0.0.1 .
-Sending build context to Docker daemon 57.86 MB
-Step 1/3 : FROM mysql
-latest: Pulling from library/mysql
-5040bd298390: Pull complete
-(以下略)
-</code></pre></div></div>
-
-<p>本当に先程のコマンドがNGだったのか怪しいので、docker imageを削除して、もう一度トライしてみましょう。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#docker rmi soudegesu/mysql:0.0.1
-Untagged: soudegesu/mysql:0.0.1
-Deleted: sha256:5cdbd0f32baa9bd25e39532ae9e660e35c0d9e57740406536b05bb7dbfbd4226
-Deleted: sha256:b60d4e0b4ad869c06c6e874095d813c5d91990f0266897163d714b201501b577
-
-#docker build -t soudegesu/mysql:0.0.1 .
-Sending build context to Docker daemon 57.86 MB
-Step 1/3 : FROM mysql
- ---&gt; 7666f75adb6b
-Step 2/3 : MAINTAINER soudegesu
- ---&gt; Using cache
- ---&gt; ebb2015c5850
-Step 3/3 : RUN echo "finished setup !!"
-(以下略)
-</code></pre></div></div>
-
-<h2 id="コンテナを起動して確認する">コンテナを起動して確認する</h2>
-
-<p>次に <code class="highlighter-rouge">docker run</code> コマンドでコンテナを起動しましょう。 コンテナ起動後にコンテナ内で操作を行う場合に以下のオプションは良く利用されます。</p>
-<ul>
-  <li>-i：コンテナの標準入力を開きます</li>
-  <li>-t：tty（端末デバイス）を確保します</li>
+<ul id="markdown-toc">
+  <li><a href="#システムクロックを変更する" id="markdown-toc-システムクロックを変更する">システムクロックを変更する</a></li>
+  <li><a href="#ハードウェアクロックを確認する" id="markdown-toc-ハードウェアクロックを確認する">ハードウェアクロックを確認する</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#docker run -it soudegesu/mysql:0.0.1 /bin/bash
-root@08671cc122c7:/#
+<h2 id="システムクロックを変更する">システムクロックを変更する</h2>
 
+<p>システムクロックは <code class="highlighter-rouge">/etc/adjtime</code> を使ってハードウェアクロックから算出されます。
+<code class="highlighter-rouge">systemd</code> の場合、 <code class="highlighter-rouge">/etc/adjtime</code> が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat /etc/adjtime
+
+&gt; 0.0 0 0.0
+&gt; 0
+&gt; UTC
 </code></pre></div></div>
 
-<p>OSを確認してみましょう。公式のmysqlのdocker imageはMoby Linuxを使っているようですね。</p>
+<p>システムクロックを確認しましょう。 <code class="highlighter-rouge">timedatectl</code> コマンドを実行してみます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@0e512378b63d:/# cat /proc/version
-Linux version 4.9.4-moby (root@1d811a9194c4) (gcc version 5.3.0 (Alpine 5.3.0) ) #1 SMP Wed Jan 18 17:04:43 UTC 2017
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>timedatectl
+
+&gt;       Local time: Sat 2018-06-09 05:16:29 UTC
+&gt;   Universal time: Sat 2018-06-09 05:16:29 UTC
+&gt;         RTC time: Sat 2018-06-09 05:16:28
+&gt;        Time zone: n/a (UTC, +0000)
+&gt;      NTP enabled: yes
+&gt; NTP synchronized: no
+&gt;  RTC in local TZ: no
+&gt;      DST active: n/a
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">mysql</code> コマンドが生きているか確認しましょう。</p>
+<p>何もしていないので、UTCのままですね。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@08671cc122c7:/# mysql
-ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+<p>次にtimezoneを <code class="highlighter-rouge">Asia/Tokyo</code> にしてみましょう。こちらも <code class="highlighter-rouge">timedatectl</code> コマンドで設定可能です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>timedatectl set-timezone Asia/Tokyo
 </code></pre></div></div>
 
-<p>このままだとコンテナを立ち上げただけなので、mysql自体起動していません。</p>
+<p>設定がされたか確認してみましょう。 <code class="highlighter-rouge">timedatectl</code> コマンドを実行したら、 Time zoneがJSTになっていることが確認できます。</p>
 
-<p>実はdocker run する際に オプションを指定してあげる必要があるようです。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>timedatectl
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --name soudegesu -e MYSQL_ROOT_PASSWORD=soudegesu -d soudegesu/mysql:0.0.1
+&gt;       Local time: Sat 2018-06-09 14:57:45 JST
+&gt;   Universal time: Sat 2018-06-09 05:57:45 UTC
+&gt;         RTC time: Sat 2018-06-09 05:57:45
+&gt;        Time zone: Asia/Tokyo (JST, +0900)
+&gt;      NTP enabled: yes
+&gt; NTP synchronized: no
+&gt;  RTC in local TZ: no
+&gt;       DST active: n/a
 </code></pre></div></div>
 
+<p>タイムゾーンを変更すると、 <code class="highlighter-rouge">/etc/localtime</code> にその設定が反映されます。
+ファイルを見てみましょう。 <code class="highlighter-rouge">cat</code> してみましょう。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat /etc/localtime
+
+&gt; TZif2
+&gt;         ��&gt;p��K����p��-���ۭ�����݌�����~~LMTJDTJSTTZif2
+&gt;
+&gt; �����e¤p�����&gt;p������K��������p������-�����������ۭ�������������݌�����~~LMTJDTJST
+</code></pre></div></div>
+
+<p>文字化けしてしまいましたね。代わりに、 <code class="highlighter-rouge">zdump</code> コマンドを使うことで <code class="highlighter-rouge">/etc/localtime</code> が指すタイムゾーンの情報を確認してみましょう。
+これで JST になっていることを確認できました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zdump /etc/localtime
+
+&gt; /etc/localtime  Sat Jun  9 14:57:54 2018 JST
+</code></pre></div></div>
+
+<p>ちなみに <code class="highlighter-rouge">timedatectl set-time　"2018-06-09 12:00:00"</code> のように、
+直接引数に与えられた時刻に設定することができますが、個人的に使った経験はありません。</p>
+
+<h2 id="ハードウェアクロックを確認する">ハードウェアクロックを確認する</h2>
+
+<p>Linuxが起動するときにシステムクロックを設定するため、ハードウェアクロックの情報が参照されます。</p>
+
+<p>ハードウェアクロックの情報は <code class="highlighter-rouge">hwclock</code> コマンドで確認できます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hwclock --debug
+
+&gt; hwclock from util-linux 2.30.2
+&gt; Trying to open: /dev/rtc0
+&gt; Using the rtc interface to the clock.
+&gt; Last drift adjustment done at 0 seconds after 1969
+&gt; Last calibration done at 0 seconds after 1969
+&gt; Hardware clock is on UTC time
+&gt; Assuming hardware clock is kept in UTC time.
+&gt; Waiting for clock tick...
+&gt; ...got clock tick
+&gt; Time read from Hardware Clock: 2018/06/09 06:09:22
+&gt; Hw clock time : 2018/06/09 06:09:22 = 1528524562 seconds since 1969
+&gt; Time since last adjustment is 1528524562 seconds
+&gt; Calculated Hardware Clock drift is 0.000000 seconds
+&gt; 2018-06-09 15:09:21.645250+0900
+</code></pre></div></div>
+
+<p>デバッグオプションなしで、 <code class="highlighter-rouge">hwclock</code> だけ実行すると、ハードウェアに記録されている時刻が表示されます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hwclock
+
+&gt; 2018-06-09 15:09:21.645250+0900
+</code></pre></div></div>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+  <li><a href="https://wiki.archlinux.jp/index.php/%E6%99%82%E5%88%BB">時刻 archlinux</a></li>
+</ul>
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798044911&amp;linkId=ecbd4a37e5ba5b5255521397a806e73c&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4797382686&amp;linkId=72348c4f427aaabd31a6e84ed1928825&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+</div>
 
         
       </section>
@@ -438,7 +455,7 @@ ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run
     
       
       
-      <a href="https://www.soudegesu.com/tags/docker" class="page__taxonomy-item" rel="tag">docker</a>
+      <a href="https://www.soudegesu.com/tags/systemd" class="page__taxonomy-item" rel="tag">systemd</a>
     
     </span>
   </p>
@@ -459,29 +476,29 @@ ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run
     
       
       
-      <a href="https://www.soudegesu.com/categories/docker" class="page__taxonomy-item" rel="tag">docker</a>
+      <a href="https://www.soudegesu.com/categories/linux" class="page__taxonomy-item" rel="tag">linux</a>
     
     </span>
   </p>
 
 
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-01-31T16:21:00+09:00">January 31, 2017</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-06-09T00:00:00+09:00">June 09, 2018</time></p>
         
       </footer>
 
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Docker buildコマンドのimage作成〜コンテナ起動まで https://www.soudegesu.com/docker/image/build" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Amazon Linux2(systemd)のシステム時刻を変更する https://www.soudegesu.com/linux/systemd_clock/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/docker/image/build" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/linux/systemd_clock/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/docker/image/build" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/linux/systemd_clock/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/docker/image/build" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/linux/systemd_clock/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 
-  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/docker/image/build" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/linux/systemd_clock/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
 
 </section>
 
@@ -491,11 +508,11 @@ ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run
     
   <nav class="pagination">
     
-      <a href="#" class="pagination--pager disabled">Previous</a>
+      <a href="https://www.soudegesu.com/book/peopleware/" class="pagination--pager" title="「ピープルウェア」を読んでマネジメントを考える
+">Previous</a>
     
     
-      <a href="https://www.soudegesu.com/docker/docker-compose/mysql" class="pagination--pager" title="docker-composeを使ってmysql dockerコンテナを起動する
-">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
