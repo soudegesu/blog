@@ -178,4 +178,9 @@ var store = [{
         "excerpt":"今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。 なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。 システムクロックを変更する ハードウェアクロックを確認する 参考にさせていただいたサイトシステムクロックを変更する システムクロックは /etc/adjtime を使ってハードウェアクロックから算出されます。systemd の場合、 /etc/adjtime が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。 cat /etc/adjtime&gt; 0.0 0 0.0&gt; 0&gt; UTCシステムクロックを確認しましょう。 timedatectl コマンドを実行してみます。 timedatectl&gt; Local time: Sat 2018-06-09 05:16:29 UTC&gt; Universal time: Sat 2018-06-09 05:16:29 UTC&gt; RTC time: Sat 2018-06-09 05:16:28&gt; Time zone: n/a (UTC,...","categories": ["linux"],
         "tags": ["systemd"],
         "url": "https://www.soudegesu.com/linux/systemd_clock/",
-        "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"}]
+        "teaser":"https://www.soudegesu.com/assets/images/soudegesu.jpg"},{
+        "title": "Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する",
+        "excerpt":"今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。 なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。 ソフトリミットとハードリミット ログインユーザへの設定 limits.confを書き換える limits.confよりも優先されるファイル 設定値の確認方法 デーモンへの設定 全体へのデフォルト設定をする デーモンごとの設定をする まとめ 参考にさせていただいたサイトソフトリミットとハードリミット まず、最初によく聞くソフトリミットとハードリミットの確認しましょう。Linuxではユーザやプロセスごとに利用できるリソースを制限することできます。 これらには ソフトリミット と ハードリミット の2種類が存在します。 ソフトリミットはユーザの現在の設定値を指し、ハードリミットはユーザ側での変更可能なソフトリミットの上限値を意味します。 ログインユーザへの設定 limits.confを書き換える Linuxへのログインユーザへの設定は /etc/security/limits.conf ファイルにて設定がなされます。なお、これはPAM認証が適用されたログインに限られます。 Ansibleの pam_limits を使うと、このファイルに追記がされます。 cat /etc/security/limits.conf# /etc/security/limits.conf##This file sets the resource limits for the users logged in via PAM.#It...","categories": ["linux"],
+        "tags": ["systemd"],
+        "url": "https://www.soudegesu.com/linux/systemd_limits/",
+        "teaser":"https://www.soudegesu.com/assets/images/icon/linux_icon.png"}]

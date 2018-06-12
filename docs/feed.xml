@@ -1,4 +1,244 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-06-10T06:27:37+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Amazon Linux2(systemd)のシステム時刻を変更する</title><link href="https://www.soudegesu.com/linux/systemd_clock/" rel="alternate" type="text/html" title="Amazon Linux2(systemd)のシステム時刻を変更する" /><published>2018-06-09T00:00:00+09:00</published><updated>2018-06-09T00:00:00+09:00</updated><id>https://www.soudegesu.com/linux/systemd_clock</id><content type="html" xml:base="https://www.soudegesu.com/linux/systemd_clock/">&lt;p&gt;今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-06-13T07:51:41+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する</title><link href="https://www.soudegesu.com/linux/systemd_limits/" rel="alternate" type="text/html" title="Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する" /><published>2018-06-10T00:00:00+09:00</published><updated>2018-06-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/linux/systemd_limits</id><content type="html" xml:base="https://www.soudegesu.com/linux/systemd_limits/">&lt;p&gt;今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
+プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。&lt;/p&gt;
+
+&lt;p&gt;なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#ソフトリミットとハードリミット&quot; id=&quot;markdown-toc-ソフトリミットとハードリミット&quot;&gt;ソフトリミットとハードリミット&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ログインユーザへの設定&quot; id=&quot;markdown-toc-ログインユーザへの設定&quot;&gt;ログインユーザへの設定&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#limitsconfを書き換える&quot; id=&quot;markdown-toc-limitsconfを書き換える&quot;&gt;limits.confを書き換える&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#limitsconfよりも優先されるファイル&quot; id=&quot;markdown-toc-limitsconfよりも優先されるファイル&quot;&gt;limits.confよりも優先されるファイル&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#設定値の確認方法&quot; id=&quot;markdown-toc-設定値の確認方法&quot;&gt;設定値の確認方法&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#デーモンへの設定&quot; id=&quot;markdown-toc-デーモンへの設定&quot;&gt;デーモンへの設定&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#全体へのデフォルト設定をする&quot; id=&quot;markdown-toc-全体へのデフォルト設定をする&quot;&gt;全体へのデフォルト設定をする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#デーモンごとの設定をする&quot; id=&quot;markdown-toc-デーモンごとの設定をする&quot;&gt;デーモンごとの設定をする&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ソフトリミットとハードリミット&quot;&gt;ソフトリミットとハードリミット&lt;/h2&gt;
+
+&lt;p&gt;まず、最初によく聞くソフトリミットとハードリミットの確認しましょう。
+Linuxではユーザやプロセスごとに利用できるリソースを制限することできます。&lt;/p&gt;
+
+&lt;p&gt;これらには &lt;strong&gt;ソフトリミット&lt;/strong&gt; と &lt;strong&gt;ハードリミット&lt;/strong&gt; の2種類が存在します。&lt;/p&gt;
+
+&lt;p&gt;ソフトリミットはユーザの現在の設定値を指し、ハードリミットはユーザ側での変更可能なソフトリミットの上限値を意味します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ログインユーザへの設定&quot;&gt;ログインユーザへの設定&lt;/h2&gt;
+
+&lt;h3 id=&quot;limitsconfを書き換える&quot;&gt;limits.confを書き換える&lt;/h3&gt;
+
+&lt;p&gt;Linuxへのログインユーザへの設定は &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/security/limits.conf&lt;/code&gt; ファイルにて設定がなされます。
+なお、これはPAM認証が適用されたログインに限られます。&lt;/p&gt;
+
+&lt;p&gt;Ansibleの &lt;a href=&quot;https://docs.ansible.com/ansible/2.3/pam_limits_module.html&quot;&gt;pam_limits&lt;/a&gt; を使うと、このファイルに追記がされます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/security/limits.conf
+
+&lt;span class=&quot;c&quot;&gt;# /etc/security/limits.conf&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#This file sets the resource limits for the users logged in via PAM.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#It does not affect resource limits of the system services.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Also note that configuration files in /etc/security/limits.d directory,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#which are read in alphabetical order, override the settings in this&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#file in case the domain is the same or more specific.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#That means for example that setting a limit for wildcard domain here&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#can be overriden with a wildcard setting in a config file in the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#subdirectory, but a user specific setting here can be overriden only&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#with a user specific setting in the subdirectory.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Each line describes a limit for a user in the form:&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&amp;lt;domain&amp;gt;        &amp;lt;type&amp;gt;  &amp;lt;item&amp;gt;  &amp;lt;value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Where:&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&amp;lt;domain&amp;gt; can be:&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - a user name&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - a group name, with @group syntax&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - the wildcard *, for default entry&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - the wildcard %, can be also used with %group syntax,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#                 for maxlogin limit&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&amp;lt;type&amp;gt; can have the two values:&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - &quot;soft&quot; for enforcing the soft limits&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - &quot;hard&quot; for enforcing hard limits&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&amp;lt;item&amp;gt; can be one of the following:&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - core - limits the core file size (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - data - max data size (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - fsize - maximum filesize (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - memlock - max locked-in-memory address space (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - nofile - max number of open file descriptors&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - rss - max resident set size (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - stack - max stack size (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - cpu - max CPU time (MIN)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - nproc - max number of processes&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - as - address space limit (KB)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - maxlogins - max number of logins for this user&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - maxsyslogins - max number of logins on the system&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - priority - the priority to run user process with&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - locks - max number of file locks the user can hold&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - sigpending - max number of pending signals&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - msgqueue - max memory used by POSIX message queues (bytes)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - nice - max nice priority allowed to raise to values: [-20, 19]&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#        - rtprio - max realtime priority&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&amp;lt;domain&amp;gt;      &amp;lt;type&amp;gt;  &amp;lt;item&amp;gt;         &amp;lt;value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#*               soft    core            0&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#*               hard    rss             10000&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#@student        hard    nproc           20&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#@faculty        soft    nproc           20&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#@faculty        hard    nproc           50&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#ftp             hard    nproc           0&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#@student        -       maxlogins       4&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# End of file&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;limitsconfよりも優先されるファイル&quot;&gt;limits.confよりも優先されるファイル&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/security/limits.conf&lt;/code&gt; のコメント内にも記載されていますが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/security/limits.d&lt;/code&gt; ディレクトリ内のファイルを読み取り、
+デフォルト値として設定することができます。&lt;/p&gt;
+
+&lt;p&gt;Amazon Linux2（CentOS系）の場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/security/limits.d/20-nproc.conf&lt;/code&gt; がデフォルトで配備されており、
+同ファイルにプロセスのソフトリミットがデフォルトで設定されていることがわかります。&lt;/p&gt;
+
+&lt;p&gt;アクシデンタルなフォーク爆弾を防ぐために、とも書かれていますね。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/security/limits.d/20-nproc.conf
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Default limit for number of user's processes to prevent&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# accidental fork bombs.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# See rhbz #432903 for reasoning.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;          soft    nproc     4096
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; root       soft    nproc     unlimited
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;設定値の確認方法&quot;&gt;設定値の確認方法&lt;/h3&gt;
+
+&lt;p&gt;設定された項目は &lt;code class=&quot;highlighter-rouge&quot;&gt;ulimit -a&lt;/code&gt; コマンドにて一覧表示して確認可能です。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-H&lt;/code&gt; オプションでハードリミット、 &lt;code class=&quot;highlighter-rouge&quot;&gt;-S&lt;/code&gt; オプションでソフトリミットを確認できます。&lt;/p&gt;
+
+&lt;p&gt;注意点として、&lt;code class=&quot;highlighter-rouge&quot;&gt;ulimit&lt;/code&gt; で表示されるのは、カレントユーザの設定値であることです。
+別のユーザの設定値を確認したければ &lt;code class=&quot;highlighter-rouge&quot;&gt;su&lt;/code&gt; を使うなどする必要があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;ulimit&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; core file size          &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;blocks, &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; data seg size           &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; scheduling priority             &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; file size               &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;blocks, &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; pending signals                 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 3828
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; max locked memory       &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 64
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; max memory size         &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; open files                      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; pipe size            &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;512 bytes, &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 8
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; POSIX message queues     &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bytes, &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 819200
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; real-time priority              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; stack size              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 8192
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; cpu &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;               &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seconds, &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; max user processes              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 3828
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; virtual memory          &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; file locks                      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;デーモンへの設定&quot;&gt;デーモンへの設定&lt;/h2&gt;
+
+&lt;p&gt;次にサーバ上で動作させるデーモンプロセスのリソース制限をしましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wiki.archlinux.jp/index.php/Limits.conf&quot;&gt;archlinuxのlimits.confのページ&lt;/a&gt; を見ると興味深いことが書いてあります。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ノート: systemd を使っている場合 /etc/security/limits.conf の値は反映されません。/etc/systemd/system.conf, /etc/systemd/user.conf,/etc/systemd/&lt;systemd_unit&gt;/override.conf などを使ってリソースを制御することが可能です。詳しくは systemd-system.conf の man ページを見てください。&lt;/systemd_unit&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;デーモンに対する設定においては、systemd場合、 &lt;code class=&quot;highlighter-rouge&quot;&gt;limits.conf&lt;/code&gt; による設定はできないよ、ということです。&lt;/p&gt;
+
+&lt;h3 id=&quot;全体へのデフォルト設定をする&quot;&gt;全体へのデフォルト設定をする&lt;/h3&gt;
+
+&lt;p&gt;systemdにてコントロールされるプロセスのデフォルト値を変更するには &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/systemd/system.conf&lt;/code&gt; ファイルを編集します。
+例えば、プロセス数やファイルディスクリプタ数を変更するには以下のように記述をします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Manager]
+&lt;span class=&quot;nv&quot;&gt;DefaultLimitNOFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;65536
+&lt;span class=&quot;nv&quot;&gt;DefaultLimitNPROC&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;65536
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;デーモンごとの設定をする&quot;&gt;デーモンごとの設定をする&lt;/h3&gt;
+
+&lt;p&gt;本来、サービスを運用するのであれば、サービスに対して適切なリソースを割り当てるのが好ましいでしょう。&lt;/p&gt;
+
+&lt;p&gt;その場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/systemd/system/（サービス名）.service&lt;/code&gt; ファイルを作成して、 &lt;code class=&quot;highlighter-rouge&quot;&gt;[Service]&lt;/code&gt; ブロックに追加することができます。
+なお、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/systemd/system/（サービス名）.service&lt;/code&gt; が既に存在し、割当リソースだけ変更したいケースでは  &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/systemd/system/（サービス名）.service.d/override.conf&lt;/code&gt; によって上書きするのがよいでしょう。
+なお、設定値は &lt;code class=&quot;highlighter-rouge&quot;&gt;（サービス名）.service&lt;/code&gt; の記述よりも &lt;code class=&quot;highlighter-rouge&quot;&gt;override.conf&lt;/code&gt; が優先されます。&lt;/p&gt;
+
+&lt;p&gt;以下ではファイルディスクリプタの数を定義しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;Service&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+LimitNOFILE&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;40000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;その後、デーモンを再起動して&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl daemon-reload
+
+systemctl stop &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;サービス&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+systemctl start &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;サービス&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;設定が反映されているか確認しましょう。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /proc/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;プロセス番号&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/limits
+
+Limit                     Soft Limit           Hard Limit           Units
+Max cpu &lt;span class=&quot;nb&quot;&gt;time              &lt;/span&gt;unlimited            unlimited            seconds
+Max file size             unlimited            unlimited            bytes
+Max data size             unlimited            unlimited            bytes
+Max stack size            8388608              unlimited            bytes
+Max core file size        0                    unlimited            bytes
+Max resident &lt;span class=&quot;nb&quot;&gt;set          &lt;/span&gt;unlimited            unlimited            bytes
+Max processes             65536                65536                processes
+Max open files            40000                40000                files
+Max locked memory         65536                65536                bytes
+Max address space         unlimited            unlimited            bytes
+Max file locks            unlimited            unlimited            locks
+Max pending signals       29779                29779                signals
+Max msgqueue size         819200               819200               bytes
+Max nice priority         0                    0
+Max realtime priority     0                    0
+Max realtime timeout      unlimited            unlimited            us
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ファルディスクリプタ（Max open files）が40000になっていますね。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;systemdでのリソース変更を行いました。
+PAM認証でのユーザログインと、systemd上のデーモンプロセスでは設定の仕方が異なるので注意が必要です。&lt;/p&gt;
+
+&lt;p&gt;くれぐれも &lt;code class=&quot;highlighter-rouge&quot;&gt;ulimit&lt;/code&gt; だけを変更して、 「Too many open files」 でアプリケーションが死亡しないように注意してくださいね！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://codezine.jp/article/detail/4836&quot;&gt;ファイルディスクリプタについて&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://wiki.archlinux.jp/index.php/Limits.conf&quot;&gt;limits.conf&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798044911&amp;amp;linkId=ecbd4a37e5ba5b5255521397a806e73c&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4797382686&amp;amp;linkId=72348c4f427aaabd31a6e84ed1928825&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。</summary></entry><entry><title type="html">Amazon Linux2(systemd)のシステム時刻を変更する</title><link href="https://www.soudegesu.com/linux/systemd_clock/" rel="alternate" type="text/html" title="Amazon Linux2(systemd)のシステム時刻を変更する" /><published>2018-06-09T00:00:00+09:00</published><updated>2018-06-09T00:00:00+09:00</updated><id>https://www.soudegesu.com/linux/systemd_clock</id><content type="html" xml:base="https://www.soudegesu.com/linux/systemd_clock/">&lt;p&gt;今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
 システム時刻の変更に関して備忘録として残しておきます。&lt;/p&gt;
 
 &lt;p&gt;なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。&lt;/p&gt;
@@ -1914,289 +2154,4 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4873113075/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873113075&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=3e25a755976d46e27fd83f9535e099b3&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873113075&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873113075&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="engineer-life" /><summary type="html">2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。 今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。</summary></entry><entry><title type="html">Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう</title><link href="https://www.soudegesu.com/nodejs/express-sitemap-module/" rel="alternate" type="text/html" title="Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう" /><published>2018-05-03T00:00:00+09:00</published><updated>2018-05-03T00:00:00+09:00</updated><id>https://www.soudegesu.com/nodejs/express-sitemap-module</id><content type="html" xml:base="https://www.soudegesu.com/nodejs/express-sitemap-module/">&lt;p&gt;以前書いた 「&lt;a href=&quot;/aws/hosting-with-cloudfront-lambda-edge-serverless/&quot;&gt;Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう&lt;/a&gt;」 の記事で、Node.jsの &lt;a href=&quot;http://expressjs.com/ja/&quot;&gt;express&lt;/a&gt; アプリケーションを作成しました。&lt;/p&gt;
-
-&lt;p&gt;大抵、webコンテンツを作る時にメインフレームワーク以外のその他のプラグインで何を使おうか迷ってしまいます。
-今回はexpressアプリケーションのサイトマップ生成用npmモジュールを比較してみました。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#サイトマップの作成どうしよう&quot; id=&quot;markdown-toc-サイトマップの作成どうしよう&quot;&gt;サイトマップの作成どうしよう&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#２つの有力候補&quot; id=&quot;markdown-toc-２つの有力候補&quot;&gt;２つの有力候補&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#サイトマップを導入だ&quot; id=&quot;markdown-toc-サイトマップを導入だ&quot;&gt;サイトマップを導入だ!!&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#改めてやりたいことを確認&quot; id=&quot;markdown-toc-改めてやりたいことを確認&quot;&gt;改めてやりたいことを確認&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#express-sitemap-を試す&quot; id=&quot;markdown-toc-express-sitemap-を試す&quot;&gt;express-sitemap を試す&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#sitemap-を試す&quot; id=&quot;markdown-toc-sitemap-を試す&quot;&gt;sitemap を試す&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
-&lt;h3 id=&quot;サイトマップの作成どうしよう&quot;&gt;サイトマップの作成どうしよう&lt;/h3&gt;
-
-&lt;p&gt;きちんとGoogleにインデクシングしてほしいので、&lt;code class=&quot;highlighter-rouge&quot;&gt;sitemap.xml&lt;/code&gt; を作成する必要があります。&lt;/p&gt;
-
-&lt;p&gt;webページを作成するたびにサイトマップを自前で編集するのは苦行の極みなので、
-大方、webフレームワークに対応しているサイトマップジェネレータのライブラリを使うことが多いです。&lt;/p&gt;
-
-&lt;p&gt;expressでwebコンテンツを作ったのが &lt;a href=&quot;/aws/hosting-with-cloudfront-lambda-edge-serverless/&quot;&gt;以前の記事&lt;/a&gt; が初めてだったので express に対応しているサイトマップ用のnode_moduleを探す必要がありました。&lt;/p&gt;
-
-&lt;h3 id=&quot;２つの有力候補&quot;&gt;２つの有力候補&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;「express sitemap」&lt;/strong&gt; で検索したところ、2つのライブラリがnpmのサイトから名乗りを上げてきました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/express-sitemap&quot;&gt;express-sitemap&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/sitemap&quot;&gt;sitemap&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;どちらもDescriptionを読むと、expressに対応していることが分かります。
-&lt;a href=&quot;https://www.npmjs.com/package/express-sitemap&quot;&gt;express-sitemap&lt;/a&gt; と &lt;a href=&quot;https://www.npmjs.com/package/sitemap&quot;&gt;sitemap&lt;/a&gt; のどちらが自分のコンテンツに適しているか調べる必要が出てきました。&lt;/p&gt;
-
-&lt;h2 id=&quot;サイトマップを導入だ&quot;&gt;サイトマップを導入だ!!&lt;/h2&gt;
-
-&lt;h3 id=&quot;改めてやりたいことを確認&quot;&gt;改めてやりたいことを確認&lt;/h3&gt;
-
-&lt;p&gt;まず、改めてやりたいことを整理します。構成は &lt;a href=&quot;/aws/hosting-with-cloudfront-lambda-edge-serverless/&quot;&gt;以前の記事&lt;/a&gt; をベースに考えます。&lt;/p&gt;
-
-&lt;p&gt;前提として、&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;CloudfrontがHTTPSのリクエストを受け付ける&lt;/li&gt;
-  &lt;li&gt;Lambda@edge上のNode 6.10環境でexpressが動作する&lt;/li&gt;
-  &lt;li&gt;Lambda@edgeはCloudfrontのOrigin Requestのタイミングで動作し、レスポンスを返す&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3.&lt;/code&gt; のため、S3 Originは使わない&lt;/li&gt;
-  &lt;li&gt;S3を使わないので、サイトマップもexpressが動的なページとして返す&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;S3を使わない理由は &lt;strong&gt;節約&lt;/strong&gt; です!!&lt;/p&gt;
-
-&lt;p&gt;アーキテクチャの概要は以下のようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180503/architecture.png&quot; alt=&quot;architecture&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;express-sitemap-を試す&quot;&gt;express-sitemap を試す&lt;/h3&gt;
-
-&lt;p&gt;まずは、名前がそれっぽい &lt;a href=&quot;https://www.npmjs.com/package/express-sitemap&quot;&gt;express-sitemap&lt;/a&gt; から試しましょう。
-基本的な使い方はnpmのドキュメントを読みましょう。&lt;/p&gt;
-
-&lt;p&gt;以下のようなコードサンプルを試します。
-なお、URLパス中に言語を指定するタイプの &lt;code class=&quot;highlighter-rouge&quot;&gt;i18n&lt;/code&gt; 対応を想定して書いてみます。&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'express-sitemap'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'fs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i18n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'i18n'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'express'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/sitemap.xml'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Content-Type'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'text/xml'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;readFileSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'path'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'./sitemap.xml'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;utf8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i18n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getLocale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;ja|en&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;ja|en&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;alerm&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'alerm/index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/aaaa'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'alerm/index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sitemap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'www.tools.soudegesu.com'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;lastmod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2018-04-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;changefreq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'always'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;priority&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;alternatepages&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;rel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'alternate'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;hreflang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ja'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/ja/'&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;rel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'alternate'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;hreflang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'en'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/en/'&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sitemap.xml&lt;/code&gt; にアクセスすると以下のように出力されていることがわかります。&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#curl http://localhost:3000/sitemap.xml
-
-&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;urlset&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&lt;/span&gt; 
-        &lt;span class=&quot;na&quot;&gt;xmlns:xhtml=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/1999/xhtml&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com*&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/sitemap.xml&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;lastmod&amp;gt;&lt;/span&gt;2018-04-01&lt;span class=&quot;nt&quot;&gt;&amp;lt;/lastmod&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;changefreq&amp;gt;&lt;/span&gt;always&lt;span class=&quot;nt&quot;&gt;&amp;lt;/changefreq&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;priority&amp;gt;&lt;/span&gt;1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/priority&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ja&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/ja/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;en&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/en/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/$/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/alerm\/$/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;http://www.tools.soudegesu.com/aaaa&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;    
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/urlset&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;特徴としては &lt;strong&gt;定義していないURL定義はexpress-sitemapがよしなにXMLに出力してくれます&lt;/strong&gt; 。&lt;/p&gt;
-
-&lt;p&gt;一方で、&lt;strong&gt;expressがURLパターンに正規表現を使ってルーティングをしている場合には出力が微妙&lt;/strong&gt; ですね。
-自分の記憶が正しければ、 &lt;code class=&quot;highlighter-rouge&quot;&gt;loc&lt;/code&gt; ブロックは単一のURLを指定する必要があった気がしますので、
-うっかりインデクシングエラーになる可能性がありそうです。&lt;/p&gt;
-
-&lt;p&gt;具体的に言うと、以下の部分が該当します。&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/$/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/alerm\/$/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;http://www.tools.soudegesu.com/aaaa&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;sitemap-を試す&quot;&gt;sitemap を試す&lt;/h3&gt;
-
-&lt;p&gt;次に &lt;a href=&quot;https://www.npmjs.com/package/sitemap&quot;&gt;sitemap&lt;/a&gt; を試しましょう。
-コードサンプルは以下のような感じです。&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sitemap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'sitemap'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'express'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i18n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'i18n'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sitemap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createSitemap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;urls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;links&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'en'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/en/'&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ja'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/ja/'&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/en/alerm/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;links&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'en'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/en/alerm/'&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ja'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://www.tools.soudegesu.com/ja/alerm/'&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;      
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/sitemap.xml'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tickle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;XMLtoWeb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i18n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getLocale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;ja|en&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;ja|en&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;alerm&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'alerm/index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/aaaa'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'alerm/index.ejs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;以下のような &lt;code class=&quot;highlighter-rouge&quot;&gt;sitemap.xml&lt;/code&gt; が出力されました。&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#curl http://localhost:3000/sitemap.xml
-
-&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;urlset&lt;/span&gt; 
-    &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;xmlns:news=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.google.com/schemas/sitemap-news/0.9&quot;&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;xmlns:xhtml=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/1999/xhtml&quot;&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;xmlns:mobile=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.google.com/schemas/sitemap-mobile/1.0&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:image=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.google.com/schemas/sitemap-image/1.1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:video=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.google.com/schemas/sitemap-video/1.1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;en&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/en/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ja&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/ja/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;loc&amp;gt;&lt;/span&gt;https://www.tools.soudegesu.com/en/alerm/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/loc&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;en&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/en/alerm/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;xhtml:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;alternate&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;hreflang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ja&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.tools.soudegesu.com/ja/alerm/&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/urlset&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;sitemapの場合は &lt;strong&gt;定義されていないURLはよしなに出力してくれない&lt;/strong&gt; 感じですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;2つのnpmモジュールを比較しました。使ってみた結論としては、&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ライブラリ側でよしなにやってほしい、かつ、パスのルーティングルールがシンプルな場合には &lt;a href=&quot;https://www.npmjs.com/package/express-sitemap&quot;&gt;express-sitemap&lt;/a&gt; を使う&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;全て自前で定義したい場合には &lt;a href=&quot;https://www.npmjs.com/package/sitemap&quot;&gt;sitemap&lt;/a&gt; を使う&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;が良さそうです。&lt;/p&gt;
-
-&lt;p&gt;なお、 &lt;strong&gt;i18n(多言語)対応を行う場合は、いずれのモジュールでも、自前でURL定義の記載が必要でした&lt;/strong&gt; 。&lt;/p&gt;
-
-&lt;p&gt;私のコンテンツはインデックスエラーが起きてほしくないため、 &lt;a href=&quot;https://www.npmjs.com/package/sitemap&quot;&gt;sitemap&lt;/a&gt; を使うことにしました。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4873116066/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4873116066&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=613ba4b793129cc4fd454566e935627e&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4873116066&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4873116066&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="nodejs" /><category term="express" /><summary type="html">以前書いた 「Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう」 の記事で、Node.jsの express アプリケーションを作成しました。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="engineer-life" /><summary type="html">2017年のゴールデンウィーク明けから私は勤務を朝方に切り替えた。このゴールデンウィークが明けてちょうど1年が経過する。 今回は子持ちのおとっつぁんエンジニアである私が1年間朝方生活をやってみて、身の回りで起きた変化や感じたことをまとめようと思う。</summary></entry></feed>
