@@ -4,6 +4,8 @@ description: "今回はAmazon Linux から Amazon Linux2 への移行をする�
 date: 2018-06-10 00:00:00 +0900
 categories: linux
 tags: systemd
+header:
+  teaser: /assets/images/icon/linux_icon.png
 ---
 
 今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
