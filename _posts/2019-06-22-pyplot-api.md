@@ -6,6 +6,38 @@ categories: python
 tags: matplotlib
 ---
 
+`matplotlib` はpythonでデータの可視化をするときに重宝されるのですが、なかなか概念的にも難しく、初見ユーザにはなかなかつらいライブラリです。
+最近データ可視化の機会が増えたので、 `matplotlib` のドキュメントを読みつつ学んだことをまとめたいと思います。
+
+* Table Of Contents
+{:toc}
+
+## 実行環境
+
+実行環境は以下になります。
+
+* mac OS (High Sierra 10.13)
+* Python 3.6.1
+* matplotlib 2.2.2
+* jupyter 1.0.0
+* numpy 1.14.5
+* pandas 0.23.1
+
+また、今回作成したグラフは [こちら](https://github.com/soudegesu/pyplot-test) にpushしてあります。
+
+## 描画できるグラフの種類
+
+`matplotlib.pyplot` モジュールがデータのプロット（描画）を司るモジュールになります。
+
+まずは、描画可能なグラフの種類を確認してみましょう。
+
+[matplotlibのpyplotのページ](https://matplotlib.org/api/pyplot_summary.html) にAPIに関する記載があるのでそれを参考にします。
+
+## グラフのレイアウトを修正する
+
+
+## pyplotの概念
+
 
 ## まとめ
 
