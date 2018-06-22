@@ -89,6 +89,26 @@ plt.show()
 
 ![annotate]({{site.baseurl}}/assets/images/20180622/annotate.png)
 
+### 矢印を書き加える：arrow
+
+図中に任意の矢印を描画したいときに使います。 `head_width` `head_length` オプションを記入しないとただの直線として描画されます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+#head_widthとhead_lengthを入れないと矢印にならない
+ax.arrow(x=0.5, y=0.5, dx=1.0, dy=1.0, ls='--', head_width=0.1, head_length=0.1)
+
+ax.set_xlim(0.25, 1.75)
+ax.set_ylim(0.25, 1.75)
+plt.show()
+```
+
+![arrow]({{site.baseurl}}/assets/images/20180622/arrow.png)
 
 ## グラフのレイアウトを修正する
 
