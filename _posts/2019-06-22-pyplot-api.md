@@ -33,6 +33,63 @@ tags: matplotlib
 
 [matplotlibのpyplotのページ](https://matplotlib.org/api/pyplot_summary.html) にAPIに関する記載があるのでそれを参考にします。
 
+### acorr
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.random.normal(0, 10, 50)
+plt.acorr(x)
+```
+
+![acorr]({{site.baseurl}}/assets/images/20180622/acorr.png)
+
+### angle_spectrum
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.random.normal(0, 10, 50)
+plt.angle_spectrum(x)
+```
+
+![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
+
+## グラフに付加情報を加える
+
+### 特定のデータに注釈を入れる：annotate
+
+グラフ上にテキストの付加情報を追加します。「ここだよ！ここ！」と特定のデータポイントを指し示したいときに使います。
+
+気をつけるのは、 `xycoords` オプションによって、`xy` や `xytext` の振る舞いが変わること。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+t = np.arange(0.0, 5.0, 0.01)
+s = np.cos(2*np.pi*t)
+line, = ax.plot(t, s, lw=2)
+
+# xycoordsがデフォルトの'data'なので、
+# 座標(4, 1)のデータに対して座標(3, 1.5)にテキストを表示して
+# 矢印で線を引っ張る
+ax.annotate('max', xy=(4, 1), xytext=(3, 1.5),
+            arrowprops=dict(facecolor='black', shrink=0.05),
+            )
+
+ax.set_ylim(-2,2)
+plt.show()
+```
+
+![annotate]({{site.baseurl}}/assets/images/20180622/annotate.png)
+
+
 ## グラフのレイアウトを修正する
 
 
