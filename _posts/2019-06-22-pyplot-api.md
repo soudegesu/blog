@@ -272,6 +272,40 @@ plt.hexbin(x, y, gridsize=10)
 
 ![hexbin]({{site.baseurl}}/assets/images/20180622/eventplot.png)
 
+### ヒストグラム：hist/hist2d
+
+ヒストグラムを表示します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+```
+
+![hist]({{site.baseurl}}/assets/images/20180622/hist.png)
+
+2次元のヒストグラムを描画するには、 `hist2d` 関数を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+x = np.random.randn(100000)
+y = np.random.randn(100000) + 5
+
+plt.hist2d(x, y, bins=40)
+```
+
+![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
+
 ## グラフに付加情報を加える
 
 ### 特定のデータに注釈を入れる：annotate
@@ -556,6 +590,22 @@ plt.fill_betweenx(y, x1, x2)
 ```
 
 ![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
+
+### 水平に線を引く：hlines
+
+図中に水平線を引きます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+xmin = 1
+xmax =  10
+
+plt.hlines([-1, 1], xmin, xmax)
+```
 
 ## グラフのレイアウトを修正する
 
