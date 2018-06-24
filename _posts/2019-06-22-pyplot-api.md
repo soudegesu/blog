@@ -57,7 +57,7 @@ plt.angle_spectrum(x)
 
 ![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
 
-### 棒グラフ（積み上げ棒グラフ）：bar
+### 棒グラフ（積み上げ棒グラフ）：bar/barh
 
 棒グラフを描画します。 `xerr` `yerr` オプションを指定すると誤差の指定ができます。
 
@@ -97,6 +97,180 @@ plt.show()
 ```
 
 ![bar2]({{site.baseurl}}/assets/images/20180622/bar2.png)
+
+y軸からの棒グラフを作りたい場合には `barh` 関数を使えばOKです。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+width = 0.3
+xerr = (.1, .08, .1, .0, .5)
+
+plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
+```
+
+![barh]({{site.baseurl}}/assets/images/20180622/barh.png)
+
+`broken_barh` 関数を使うと、軸に足をつけない棒グラフを描画することができる。
+実際には指定された領域を矩形で描画することになる。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x =  [(1.5, 0.5)]
+y = (.5, 2.0)
+
+plt.broken_barh(x, y)
+plt.xlim(0)
+plt.ylim(0)
+```
+
+![broken_barh]({{site.baseurl}}/assets/images/20180622/broken_barh.png)
+
+### 箱ひげ図：boxplot
+
+与えられたデータ配列の箱ひげ図を描画します。（最小値、第1四分位点、中央値、第3四分位点、最大値）
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+import random
+
+a = np.array([1, 3, 0.25, 0.44, 5.88])
+plt.boxplot(a)
+```
+
+![boxplot]({{site.baseurl}}/assets/images/20180622/boxplot.png)
+
+### コヒーレンス：cohere
+
+波の可干渉性（コヒーレンス）を描画することができます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 1024
+x = np.random.randn(n)
+y = np.random.randn(n)
+
+plt.cohere(x, y, NFFT=128)
+plt.figure()
+```
+
+![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
+
+### 等高線・水平曲線：contour/contourf
+
+等高線（同じ高さの値の集まり）を描画します。
+`contour` 単体だと値がわかりにくいので、 `clabel` や `colorbar` などで情報を付与すると良いです。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contour(X, Y, Z)
+```
+
+![contour]({{site.baseurl}}/assets/images/20180622/contour.png)
+
+塗りつぶしをしたい場合には `contourf` を使います。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contourf(X, Y, Z)
+```
+
+![contourf]({{site.baseurl}}/assets/images/20180622/contourf.png)
+
+### クロススペクトル密度：csd
+
+クロススペクトル密度を描画します。
+
+```python
+from scipy import signal
+from matplotlib import pyplot as plt
+
+fs = 10e3
+N = 1e5
+amp = 20
+freq = 1234.0
+noise_power = 0.001 * fs / 2
+time = np.arange(N) / fs
+b, a = signal.butter(2, 0.25, 'low')
+x = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
+y = signal.lfilter(b, a, x)
+x += amp*np.sin(2*np.pi*freq*time)
+y += np.random.normal(scale=0.1*np.sqrt(noise_power), size=time.shape)
+
+plt.figure()
+plt.csd(x, y)
+```
+
+![csd]({{site.baseurl}}/assets/images/20180622/csd.png)
+
+### 複数データの並行描画:eventplot
+
+複数のイベントデータを並行して描画する。公式から引用すると、以下のようなユースケースがあるらしい。
+
+> This type of plot is commonly used in neuroscience for representing neural events, where it is usually called a spike raster, dot raster, or raster plot.
+
+```
+import numpy as np
+from matplotlib import pyplot as plt
+
+np.random.seed(1)
+
+data = np.random.random([6, 50])
+lineoffsets = np.array([-15, -3, 1, 1.5, 6, 10])
+linelengths = [10, 2, 1, 1, 3, 1.5]
+
+plt.figure()
+plt.eventplot(data, lineoffsets=lineoffsets,
+              linelengths=linelengths)
+```
+
+![eventplot]({{site.baseurl}}/assets/images/20180622/eventplot.png)
+
+### 六角形で描画：hexbin
+
+hexでデータを描画します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 10, 1)
+y = np.arange(1, 10, 1)
+
+plt.hexbin(x, y, gridsize=10)
+```
+
+![hexbin]({{site.baseurl}}/assets/images/20180622/eventplot.png)
 
 ## グラフに付加情報を加える
 
@@ -226,6 +400,163 @@ plt.show()
 
 ![axvspan]({{site.baseurl}}/assets/images/20180622/axvspan.png)
 
+### 風向きを表す：barbs
+
+天気図で使う風向きとその強さを表す記号を描画します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x =  (1, 2, 3, 4, 5)
+y = (1, 2, 3, 4, 5)
+u = (10,20,-30,40,-50)
+v = (10,20,30,40,50)
+
+plt.barbs(x, y, u, v)
+```
+
+![barbs]({{site.baseurl}}/assets/images/20180622/barbs.png)
+
+### 色の値の判例を表示する：colorbar
+
+色が表す値の判例を表示します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contourf(X, Y, Z)
+plt.colorbar()
+```
+
+![colorbar]({{site.baseurl}}/assets/images/20180622/colorbar.png)
+
+### 色のラベルを表示する：clabel
+
+色が表す値のラベルをグラフ上に表示します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+CS = plt.contour(X, Y, Z)
+plt.clabel(CS, inline=1, fontsize=10)
+```
+
+![clabel]({{site.baseurl}}/assets/images/20180622/clabel.png)
+
+### 誤差を棒で表す：errorbar
+
+データの誤差を棒で表します。
+`uplims` `lolims` オプションで、上下のどちらの誤差か指定することもできます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y, yerr=0.1)
+
+y = np.sin(np.arange(10.0) / 20.0) + 1
+plt.errorbar(x, y, yerr=0.1, uplims=True)
+
+y = np.sin(np.arange(10.0) / 20.0) + 2
+plt.errorbar(x, y, yerr=0.1, lolims=True)
+```
+
+![errorbar]({{site.baseurl}}/assets/images/20180622/errorbar.png)
+
+### 図中にテキストを埋め込む：figtext
+
+図中にテキストを埋め込みます。
+指定のx, yは図中の相対位置であることに注意が必要です。（座標ではありません）
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y)
+# x軸方向の中央(0.5)
+# y軸方向の1/4(0.25)の場所に
+# 文字「x」を埋め込む
+plt.figtext(0.5, 0.25, '$x$') 
+```
+
+![figtext]({{site.baseurl}}/assets/images/20180622/figtext.png)
+
+### 色を塗りつぶす:fill/fill_between/fill_betweenx
+
+グラフ上の範囲を塗りつぶして描画します。 
+`fill` ではy=0との間の色が塗りつぶされます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y = np.sin(2*np.pi*x)
+
+plt.fill(x, y)
+```
+
+![fill]({{site.baseurl}}/assets/images/20180622/fill.png)
+
+塗りつぶし範囲のyを指定するには `fill_between` 関数を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y1 = np.sin(2*np.pi*x)
+y2 = 0.5
+
+plt.fill_between(x, y1, y2)
+```
+
+![fill_between]({{site.baseurl}}/assets/images/20180622/fill_between.png)
+
+x軸に対して行う場合には `fill_betweenx` 関数を使います。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+y = np.arange(0.0, 2, 0.01)
+x1 = np.sin(2*np.pi*x)
+x2 = 0.5
+
+plt.fill_betweenx(y, x1, x2)
+```
+
+![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
+
 ## グラフのレイアウトを修正する
 
 ### グラフの位置を変更する：axes
@@ -246,6 +577,43 @@ plt.angle_spectrum(x)
 ```
 
 ![axes]({{site.baseurl}}/assets/images/20180622/axes.png)
+
+### 外枠の表示/非表示：box
+
+グラフの枠の表示/非表示を設定します。デフォルトはTrueです。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+width = 0.3
+
+plt.barh(x, y, width, align='center')
+plt.box(False)
+```
+
+![box]({{site.baseurl}}/assets/images/20180622/box.png)
+
+### 枠線を表示する：grid
+
+グラフ内の枠線を表示します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+plt.grid(linestyle='-', linewidth=1)
+```
+
+![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
 
 ## pyplotの概念
 
