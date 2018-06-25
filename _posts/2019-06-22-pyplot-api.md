@@ -306,6 +306,109 @@ plt.hist2d(x, y, bins=40)
 
 ![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
 
+### 対数を描画：loglog
+
+対数を描画します。両対数の場合には `loglog` 関数を使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+t = np.arange(0.01, 20.0, 0.01)
+plt.loglog(t, 20 * np.exp( -t / 10.0), basex=2)
+plt.grid(True)
+plt.title('loglog base 2 on x')
+plt.show()
+```
+
+![loglog]({{site.baseurl}}/assets/images/20180622/loglog.png)
+
+### 振幅スペクトラム：magnitude_spectrum
+
+信号の強さを表す振幅スペクトラムを描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.01
+Fs = 1/dt
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t/0.05)
+cnse = np.convolve(nse, r)*dt
+cnse = cnse[:len(t)]
+
+s = 0.1*np.sin(2*np.pi*t) + cnse
+
+plt.magnitude_spectrum(s, Fs=Fs)
+plt.show()
+```
+
+![magnitude_spectrum]({{site.baseurl}}/assets/images/20180622/magnitude_spectrum.png)
+
+### 行列の描画：matshow
+
+行列のデータを描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+mat = np.random.rand(10,10)
+plt.matshow(mat)
+
+plt.show()
+```
+
+![matshow]({{site.baseurl}}/assets/images/20180622/matshow.png)
+
+### 2次元配列の疑似カラー描画：pcolor/pcolormesh
+
+2次元配列のデータを擬似カラーで描画します。
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+dx, dy = 0.15, 0.05
+
+y, x = np.mgrid[slice(-3, 3 + dy, dy),
+                slice(-3, 3 + dx, dx)]
+z = (1 - x / 2. + x ** 5 + y ** 3) * np.exp(-x ** 2 - y ** 2)
+z = z[:-1, :-1]
+z_min, z_max = -np.abs(z).max(), np.abs(z).max()
+
+plt.pcolor(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
+```
+
+![pcolor]({{site.baseurl}}/assets/images/20180622/pcolor.png)
+
+メッシュデータにして、高速に描画したい場合には `pcolormesh` 関数を使うと良いそうです。
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+dx, dy = 0.15, 0.05
+
+y, x = np.mgrid[slice(-3, 3 + dy, dy),
+                slice(-3, 3 + dx, dx)]
+z = (1 - x / 2. + x ** 5 + y ** 3) * np.exp(-x ** 2 - y ** 2)
+z = z[:-1, :-1]
+z_min, z_max = -np.abs(z).max(), np.abs(z).max()
+
+plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
+```
+
+![pcolormesh]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
+
+### 位相スペクトラム：phase_spectrum
+
 ## グラフに付加情報を加える
 
 ### 特定のデータに注釈を入れる：annotate
@@ -539,14 +642,14 @@ plt.errorbar(x, y)
 # x軸方向の中央(0.5)
 # y軸方向の1/4(0.25)の場所に
 # 文字「x」を埋め込む
-plt.figtext(0.5, 0.25, '$x$') 
+plt.figtext(0.5, 0.25, '$x$')
 ```
 
 ![figtext]({{site.baseurl}}/assets/images/20180622/figtext.png)
 
 ### 色を塗りつぶす:fill/fill_between/fill_betweenx
 
-グラフ上の範囲を塗りつぶして描画します。 
+グラフ上の範囲を塗りつぶして描画します。
 `fill` ではy=0との間の色が塗りつぶされます。
 
 ```python
@@ -607,6 +710,23 @@ xmax =  10
 plt.hlines([-1, 1], xmin, xmax)
 ```
 
+### 凡例を追加する：legend
+
+グラフデータの凡例を追加します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x_data = (1, 2, 3)
+y_data = (.5, 1.5 , .8)
+
+plt.bar(x_data, y_data)
+plt.legend(['dataA'])
+```
+
+![legend]({{site.baseurl}}/assets/images/20180622/legend.png)
+
 ## グラフのレイアウトを修正する
 
 ### グラフの位置を変更する：axes
@@ -664,6 +784,47 @@ plt.grid(linestyle='-', linewidth=1)
 ```
 
 ![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
+
+### メモリの分割数を変更する：locator_params
+
+指定軸のメモリの分割数を指定できます。
+`nbins` オプションで指定時された数字通りに分割してくれるときとそうでないときがあり、
+2の乗数で指定するといい感じにスケールしてくれました。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+# x軸を8分割
+plt.locator_params(axis='x', nbins=8)
+plt.show()
+```
+
+![locator_params]({{site.baseurl}}/assets/images/20180622/locator_params.png)
+
+### マージンをとる：margins
+
+図内の点に対してマージンをとって、データを見やすい位置に調整します。
+
+```python
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4]
+y = [1, 4, 9, 6]
+
+plt.plot(x, y, 'o')
+plt.margins(0.3)
+plt.show()
+```
+
+![margins]({{site.baseurl}}/assets/images/20180622/margins.png)
+
 
 ## pyplotの概念
 
