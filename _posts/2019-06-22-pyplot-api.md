@@ -409,6 +409,135 @@ plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 
 ### 位相スペクトラム：phase_spectrum
 
+位相スペクトラムを描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.01
+Fs = 1/dt
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t/0.05)
+
+cnse = np.convolve(nse, r)*dt
+cnse = cnse[:len(t)]
+s = 0.1*np.sin(2*np.pi*t) + cnse
+
+plt.phase_spectrum(s, Fs=Fs)
+plt.show()
+```
+
+![phase_spectrum]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
+
+### 円グラフ：pie
+
+円グラフを描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、`pie` 関数にはグラフを修飾する多くのオプションがあります。
+
+```python
+from matplotlib import pyplot as plt
+from matplotlib.gridspec import GridSpec
+
+labels = 'A', 'B', 'C', 'D'
+fracs = [15, 30, 45, 10]
+
+plt.pie(fracs, labels=labels, autopct='%1.1f%%')
+plt.show()
+```
+
+![pie]({{site.baseurl}}/assets/images/20180622/pie.png)
+
+### 日付で描画する：plot_date
+
+x軸が日付データの場合には `plot_date` 関数で描画することができます。
+
+```python
+import matplotlib.pyplot as plt
+from matplotlib.dates import (DateFormatter, drange)
+import numpy as np
+import datetime
+
+np.random.seed(0)
+
+formatter = DateFormatter('%Y/%m/%d/')
+date1 = datetime.date(1970, 1, 1)
+date2 = datetime.date(2018, 4, 12)
+delta = datetime.timedelta(days=100)
+
+dates = drange(date1, date2, delta)
+s = np.random.rand(len(dates))
+
+plt.plot_date(dates, s)
+plt.show()
+```
+
+![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
+
+### 極座標グラフ：polar
+
+極座標系の円グラフを描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+
+plt.polar(theta, r)
+plt.show()
+```
+
+![polar]({{site.baseurl}}/assets/images/20180622/polar.png)
+
+### パワースペクトル密度：psd
+
+パワースペクトル密度を描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+from matplotlib import mlab as mlab
+
+np.random.seed(0)
+
+dt = 0.01
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t / 0.05)
+
+cnse = np.convolve(nse, r) * dt
+cnse = cnse[:len(t)]
+s = 0.1 * np.sin(2 * np.pi * t) + cnse
+
+plt.psd(s, 512, 1 / dt)
+plt.show()
+```
+
+![psd]({{site.baseurl}}/assets/images/20180622/psd.png)
+
+### ベクトルの描画：quiver/quiverkey
+
+ベクトルを描画します。また、 `quiverkey` 関数を使うことで、ベクトルのキーも描画することができます。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+X, Y = np.meshgrid(np.arange(0, 2 * np.pi, .2), np.arange(0, 2 * np.pi, .2))
+U = np.cos(X)
+V = np.sin(Y)
+
+Q = plt.quiver(X, Y, U, V, units='width')
+plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
+plt.show()
+```
+
+![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
+
 ## グラフに付加情報を加える
 
 ### 特定のデータに注釈を入れる：annotate
@@ -766,7 +895,7 @@ plt.box(False)
 
 ![box]({{site.baseurl}}/assets/images/20180622/box.png)
 
-### 枠線を表示する：grid
+### 枠線を表示する：grid/rgrids
 
 グラフ内の枠線を表示します。
 
@@ -784,6 +913,19 @@ plt.grid(linestyle='-', linewidth=1)
 ```
 
 ![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
+
+極座標グラフ（polar）に枠線を描画するには `rgrids` 関数を使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+plt.polar()
+plt.rgrids((0.25, 0.5, 1.0))
+plt.show()
+```
+
+![rgrids]({{site.baseurl}}/assets/images/20180622/rgrids.png)
 
 ### メモリの分割数を変更する：locator_params
 
