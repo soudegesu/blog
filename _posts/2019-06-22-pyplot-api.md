@@ -164,7 +164,7 @@ plt.figure()
 
 ![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
 
-### 等高線・水平曲線：contour/contourf
+### 等高線・水平曲線：contour/contourf/tricontour/tricontourf
 
 等高線（同じ高さの値の集まり）を描画します。
 `contour` 単体だと値がわかりにくいので、 `clabel` や `colorbar` などで情報を付与すると良いです。
@@ -206,6 +206,38 @@ plt.contourf(X, Y, Z)
 ```
 
 ![contourf]({{site.baseurl}}/assets/images/20180622/contourf.png)
+
+
+非構造な三次元データを扱う場合には `tricontour` 、 `tricontourf` を使います。
+
+```python
+import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+import numpy as np
+
+n_angles = 48
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+
+triang = tri.Triangulation(x, y)
+
+plt.gca().set_aspect('equal')
+plt.tricontourf(triang, z)
+plt.colorbar()
+plt.tricontour(triang, z, colors='k')
+```
+
+![tricontour]({{site.baseurl}}/assets/images/20180622/tricontour.png)
+
 
 ### クロススペクトル密度：csd
 
@@ -395,7 +427,7 @@ plt.show()
 
 ![matshow]({{site.baseurl}}/assets/images/20180622/matshow.png)
 
-### 2次元配列の疑似カラー描画：pcolor/pcolormesh
+### 2次元配列の疑似カラー描画：pcolor/pcolormesh/tripcolor
 
 2次元配列のデータを擬似カラーで描画します。
 
@@ -434,6 +466,36 @@ plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 ```
 
 ![pcolormesh]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
+
+`tricontour` に対する疑似カラー描画には `tripcolor` 関数を使います。
+
+```python
+import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+import numpy as np
+
+n_angles = 48
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+
+triang = tri.Triangulation(x, y)
+
+plt.gca().set_aspect('equal')
+plt.tricontourf(triang, z)
+plt.colorbar()
+plt.tripcolor(triang, z, shading='flat')
+```
+
+![tripcolor]({{site.baseurl}}/assets/images/20180622/tripcolor.png)
 
 ### 位相スペクトラム：phase_spectrum
 
@@ -1025,6 +1087,89 @@ plt.legend(['dataA'])
 
 ![legend]({{site.baseurl}}/assets/images/20180622/legend.png)
 
+### グラフにタイトルをつける：title/suptitle
+
+グラフにタイトルをつける場合には `title` 関数を使います。
+複数グラフに対するタイトルをつけたい場合には `suptitle` 関数を使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+def f(t):
+    return np.cos(2*np.pi*t)
+
+t1 = np.arange(0.0, 5.0, 0.1)
+t2 = np.arange(0.0, 2.0, 0.01)
+
+plt.subplot(121)
+plt.plot(t1, f(t1), '-')
+plt.title('subplot 1')
+plt.suptitle('Suptitle', fontsize=16)
+
+
+plt.subplot(122)
+plt.plot(t2, np.cos(2*np.pi*t2), '--')
+plt.title('subplot 2')
+
+plt.show()
+```
+
+![title]({{site.baseurl}}/assets/images/20180622/title.png)
+
+### データテーブルを表示：table
+
+グラフで描画するデータにデータテーブルを追加します。
+パッと見た感じ、テーブルを単体で描画するのはできなそうでした。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+data = [[ 66386, 174296,  75131, 577908,  32015],
+        [ 58230, 381139,  78045,  99308, 160454],
+        [ 89135,  80552, 152558, 497981, 603535],
+        [ 78415,  81858, 150656, 193263,  69638],
+        [139361, 331509, 343164, 781380,  52269]]
+columns = ('Freeze', 'Wind', 'Flood', 'Quake', 'Hail')
+rows = ['%d year' % x for x in (100, 50, 20, 10, 5)]
+
+plt.table(cellText=data,
+                      rowLabels=rows,
+                      rowColours=colors,
+                      colLabels=columns,
+                      loc='bottom')
+
+plt.show()
+```
+
+![table]({{site.baseurl}}/assets/images/20180622/table.png)
+
+### テキストを表示する：text
+
+グラフ上にテキストを描画します。 オプションを指定して、テキストを修飾することもできます。
+
+```python
+from matplotlib import pyplot as plt
+
+plt.text(0.6, 0.5, "hogehoge", size=20, rotation=20.,
+         ha="center", va="center",
+         bbox=dict(boxstyle="square",
+                   ec=(1., 0.5, 0.5),
+                   fc=(1., 0.8, 0.8),
+                   )
+         )
+
+plt.text(0.2, 0.5, "fugafuga", size=20, rotation=20.,
+         ha="center", va="center"
+         )
+
+plt.show()
+```
+
+![text]({{site.baseurl}}/assets/images/20180622/text.png)
+
+
 ## グラフのレイアウトを修正する
 
 ### グラフの位置を変更する：axes
@@ -1064,7 +1209,7 @@ plt.box(False)
 
 ![box]({{site.baseurl}}/assets/images/20180622/box.png)
 
-### 枠線を表示する：grid/rgrids
+### 枠線を表示する：grid/rgrids/thetagrids
 
 グラフ内の枠線を表示します。
 
@@ -1096,6 +1241,19 @@ plt.show()
 
 ![rgrids]({{site.baseurl}}/assets/images/20180622/rgrids.png)
 
+`rgrids` の代わりに `thetagrids` 関数で、枠線とラベルを一緒に設定することも可能です。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+plt.polar()
+plt.thetagrids(range(45,360,90), ('NE', 'NW', 'SW','SE'))
+plt.show()
+```
+
+![thetagrids]({{site.baseurl}}/assets/images/20180622/thetagrids.png)
+
 ### メモリの分割数を変更する：locator_params
 
 指定軸のメモリの分割数を指定できます。
@@ -1119,7 +1277,7 @@ plt.show()
 
 ![locator_params]({{site.baseurl}}/assets/images/20180622/locator_params.png)
 
-### マージンをとる：margins
+### マージンをとる：margins/subplots_adjust
 
 図内の点に対してマージンをとって、データを見やすい位置に調整します。
 
@@ -1135,6 +1293,51 @@ plt.show()
 ```
 
 ![margins]({{site.baseurl}}/assets/images/20180622/margins.png)
+
+`subplots` を使った複数のグラフ描画の場合には `subplots_adjust` が使えます。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+plt.subplot(211)
+plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+plt.subplot(212)
+plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+
+plt.subplots_adjust(bottom=0.3, right=0.8, top=0.9)
+plt.show()
+```
+
+![subplots_adjust]({{site.baseurl}}/assets/images/20180622/subplots_adjust.png)
+
+### レイアウトを自動調整する：tight_layout
+
+複数グラフ間のレイアウト設定から、自動で調節してくれます。
+
+```python
+from matplotlib import pyplot as plt
+import itertools
+
+fontsizes = itertools.cycle([8, 16, 24, 32])
+
+def example_plot(ax):
+    ax.plot([1, 2])
+    ax.set_xlabel('x-label', fontsize=next(fontsizes))
+    ax.set_ylabel('y-label', fontsize=next(fontsizes))
+    ax.set_title('Title', fontsize=next(fontsizes))
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
+example_plot(ax1)
+example_plot(ax2)
+example_plot(ax3)
+example_plot(ax4)
+plt.tight_layout()
+```
+
+![tight_layout]({{site.baseurl}}/assets/images/20180622/tight_layout.png)
 
 ### 複数のグラフを描画する:subplots
 
@@ -1155,8 +1358,6 @@ plt.show()
 ```
 
 ![subplots]({{site.baseurl}}/assets/images/20180622/subplots.png)
-
-## pyplotの概念
 
 
 ## まとめ
