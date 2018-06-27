@@ -306,7 +306,7 @@ plt.hist2d(x, y, bins=40)
 
 ![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
 
-### 対数を描画：loglog
+### 対数を描画：loglog/semilogx/semilogy
 
 対数を描画します。両対数の場合には `loglog` 関数を使います。
 
@@ -322,6 +322,34 @@ plt.show()
 ```
 
 ![loglog]({{site.baseurl}}/assets/images/20180622/loglog.png)
+
+x軸を10を底とする対数スケールで片対数を描画する場合には `semilogx` を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogx(t, np.sin(2*np.pi*t))
+plt.grid(True)
+```
+
+![semilogx]({{site.baseurl}}/assets/images/20180622/semilogx.png)
+
+y軸を10を底とする対数スケールで片対数を描画する場合には `semilogy` を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogy(t, np.exp(-t/5.0))
+plt.grid(True)
+```
+
+![semilogy]({{site.baseurl}}/assets/images/20180622/semilogy.png)
 
 ### 振幅スペクトラム：magnitude_spectrum
 
@@ -537,6 +565,147 @@ plt.show()
 ```
 
 ![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
+
+### 散布図：scatter
+
+散布図を描画します。 オプションでマーカーの大きさを変更できたりします。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+N = 50
+x = np.random.rand(N)
+y = np.random.rand(N)
+
+colors = np.random.rand(N)
+area = np.pi * (15 * np.random.rand(N))**2
+
+plt.scatter(x, y, s=area, c=colors, alpha=0.5)
+plt.show()
+```
+
+![scatter]({{site.baseurl}}/assets/images/20180622/scatter.png)
+
+### スペクトログラム：specgram
+
+スペクトログラムを描画します。
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.0005
+t = np.arange(0.0, 20.0, dt)
+s1 = np.sin(2 * np.pi * 100 * t)
+s2 = 2 * np.sin(2 * np.pi * 400 * t)
+
+mask = np.where(np.logical_and(t > 10, t < 12), 1.0, 0.0)
+s2 = s2 * mask
+
+nse = 0.01 * np.random.random(size=len(t))
+
+x = s1 + s2 + nse
+NFFT = 1024
+Fs = int(1.0 / dt)
+
+plt.specgram(x, NFFT=NFFT, Fs=Fs, noverlap=900)
+plt.show()
+```
+
+![specgram]({{site.baseurl}}/assets/images/20180622/specgram.png)
+
+### スパース行列：spy
+
+スパース行列（疎行列）を描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.random.randn(20, 20)
+x[5] = 0.
+x[:, 12] = 0.
+
+plt.spy(x, markersize=3)
+```
+
+![spy]({{site.baseurl}}/assets/images/20180622/spy.png)
+
+### 積み上げ折れ線グラフ：stackplot
+
+積み上げの折れ線グラフを描画します。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y1 = [1, 1, 2, 3, 5]
+y2 = [0, 4, 2, 6, 8]
+y3 = [1, 3, 5, 7, 9]
+
+plt.stackplot(x, y1, y2, y3, labels=labels)
+plt.show()
+```
+
+![stackplot]({{site.baseurl}}/assets/images/20180622/stackplot.png)
+
+### 離散データの描画：stem
+
+x軸から伸びるシーケンスとしてyの値を描画したい場合に使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0.1, 2 * np.pi, 10)
+plt.stem(x, np.cos(x), '-.')
+
+plt.show()
+```
+
+![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
+
+### ステップ応答の描画:step
+
+ステップ応答を描画します。コンピュータ信号のような離散値とかを扱うときに使います。
+
+```python
+import numpy as np
+from numpy import ma
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 7, 0.4)
+y = np.sin(x).copy() + 2.5
+
+plt.step(x, y)
+plt.scatter(x, y) #データを表す座標が見やすいようにしています
+plt.show()
+```
+
+![step]({{site.baseurl}}/assets/images/20180622/step.png)
+
+### 流線グラフ：streamplot
+
+流線を描画します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+Y, X = np.mgrid[-3:3:100j, -3:3:100j]
+U = -1 - X**2 + Y
+V = 1 + X - Y**2
+speed = np.sqrt(U*U + V*V)
+
+plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
+```
+
+![streamplot]({{site.baseurl}}/assets/images/20180622/streamplot.png)
+
 
 ## グラフに付加情報を加える
 
@@ -967,6 +1136,25 @@ plt.show()
 
 ![margins]({{site.baseurl}}/assets/images/20180622/margins.png)
 
+### 複数のグラフを描画する:subplots
+
+複数のグラフを描画する場合には、 `subplots` を使います。
+返却された `axes` 配列の要素にアクセスして、データをプロットする関数を実行することで描画が可能です。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2*np.pi, 400)
+y = np.sin(x**2)
+
+fig, axes = plt.subplots(2, 1)
+axes[0].plot(x, y)
+axes[1].scatter(x, y)
+plt.show()
+```
+
+![subplots]({{site.baseurl}}/assets/images/20180622/subplots.png)
 
 ## pyplotの概念
 
