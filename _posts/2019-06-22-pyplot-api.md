@@ -164,7 +164,7 @@ plt.figure()
 
 ![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
 
-### 等高線・水平曲線：contour/contourf/tricontour/tricontourf
+### 等高線・水平曲線：contour/contourf
 
 等高線（同じ高さの値の集まり）を描画します。
 `contour` 単体だと値がわかりにくいので、 `clabel` や `colorbar` などで情報を付与すると良いです。
@@ -207,8 +207,9 @@ plt.contourf(X, Y, Z)
 
 ![contourf]({{site.baseurl}}/assets/images/20180622/contourf.png)
 
+### 非構造三次元データ：tricontour/tricontourf
 
-非構造な三次元データを扱う場合には `tricontour` 、 `tricontourf` を使います。
+非構造三次元データを扱う場合には `tricontour` 、 `tricontourf` を使います。
 
 ```python
 import matplotlib.pyplot as plt
@@ -731,6 +732,25 @@ plt.show()
 
 ![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
 
+### 離散時間シーケンスの相互相関：xcorr
+
+離散時間シーケンスの相互相関を描画します。
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+x, y = np.random.randn(2, 100)
+plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
+
+plt.show()
+```
+
+![xcorr]({{site.baseurl}}/assets/images/20180622/xcorr.png)
+
+
 ### ステップ応答の描画:step
 
 ステップ応答を描画します。コンピュータ信号のような離散値とかを扱うときに使います。
@@ -768,6 +788,24 @@ plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 
 ![streamplot]({{site.baseurl}}/assets/images/20180622/streamplot.png)
 
+### バイオリン図：violinplot
+
+バイオリン図を描画します。
+
+```python
+import pandas as pd
+import numpy as  np
+from matplotlib import pyplot as plt
+
+fs = 10
+pos = [1, 2, 4, 5, 7, 8]
+data = [np.random.normal(0, std, size=100) for std in pos]
+
+plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
+plt.show()
+```
+
+![violinplot]({{site.baseurl}}/assets/images/20180622/violinplot.png)
 
 ## グラフに付加情報を加える
 
@@ -1054,9 +1092,9 @@ plt.fill_betweenx(y, x1, x2)
 
 ![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
 
-### 水平に線を引く：hlines
+### 水平/垂直に線を引く：hlines/vlines
 
-図中に水平線を引きます。
+図中に `hlines` で水平線を引きます。
 
 ```python
 import numpy as np
@@ -1068,7 +1106,27 @@ xmin = 1
 xmax =  10
 
 plt.hlines([-1, 1], xmin, xmax)
+plt.show()
 ```
+
+![hlines]({{site.baseurl}}/assets/images/20180622/hlines.png)
+
+図中に垂直の線を引くには `vlines` 関数を使います。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+ymin = 1
+ymax =  10
+
+plt.vlines([-1, 1], ymin, ymax)
+plt.show()
+```
+
+![vlines]({{site.baseurl}}/assets/images/20180622/vlines.png)
 
 ### 凡例を追加する：legend
 
@@ -1169,6 +1227,168 @@ plt.show()
 
 ![text]({{site.baseurl}}/assets/images/20180622/text.png)
 
+### 軸に対する描画データを増やす：twinx
+
+同一の軸に対して別のデータを描画します。
+x軸はそのままに、別のyの値を描画する場合には `twinx` 関数を使います。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twinx()
+s2 = np.sin(2 * np.pi * t)
+ax2.plot(t, s2, 'r.')
+ax2.set_ylabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+```
+
+![twinx]({{site.baseurl}}/assets/images/20180622/twinx.png)
+
+
+y軸はそのままに、別のxの値を描画する場合には `twiny` 関数を使います。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twiny()
+t2 = np.arange(10.01, 20.0, 0.01)
+s2 = np.exp(t2)
+ax2.plot(t2, s2, 'r.')
+ax2.set_xlabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+```
+
+![twiny]({{site.baseurl}}/assets/images/20180622/twiny.png)
+
+### ラベルを表示：xlabel/ylabel
+
+グラフの軸にラベルを表示します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+import matplotlib
+
+np.random.seed(0)
+
+x = np.arange(0.0, 50.0, 2.0)
+y = x ** 1.3 + np.random.rand(*x.shape) * 30.0
+s = np.random.rand(*x.shape) * 800 + 500
+
+plt.scatter(x, y, s, c="g", alpha=0.5, label="Luck")
+plt.xlabel("Label X")
+plt.ylabel("Label Y")
+plt.show()
+```
+
+![xlabel]({{site.baseurl}}/assets/images/20180622/xlabel.png)
+
+### 軸の範囲を制限する：xlim/ylim
+
+デフォルトだとデータの存在範囲に合わせてx軸/y軸の範囲が決まりますが、軸の値の範囲を指定できます。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.xlim(-2, 2)
+plt.ylim(-0.75, 0.75)
+
+plt.plot(x, np.sin(x),label="y = sinx")
+plt.show()
+```
+
+![xlim]({{site.baseurl}}/assets/images/20180622/xlim.png)
+
+### 軸のスケールを変更する：xscale/yscale
+
+軸のスケールを変更します。`linear` `log` `logit` `symlog` を指定でき、対数をとった描画等ができます。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.xscale('symlog')
+
+plt.plot(x, np.sin(x))
+plt.show()
+```
+
+![xscale]({{site.baseurl}}/assets/images/20180622/xscale.png)
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.yscale('log')
+
+plt.plot(x, np.sin(x))
+plt.show()
+```
+
+![yscale]({{site.baseurl}}/assets/images/20180622/yscale.png)
+
+
+### グラフのメモリを修正する：xtick/ytick
+
+グラフのメモリをカスタマイズするには `xtick` `ytick` 関数を使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.arange(4)
+y = [10, 20, 30, 40]
+
+plt.bar(x, y)
+plt.xticks(x, ('A', 'B', 'C', 'D'))
+plt.show()
+```
+
+![xticks]({{site.baseurl}}/assets/images/20180622/xticks.png)
+
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.arange(4)
+y = [10, 20, 30, 40]
+
+plt.bar(x, y)
+plt.yticks(y, ('10', '20', '30', '40'))
+plt.show()
+```
+
+![yticks]({{site.baseurl}}/assets/images/20180622/yticks.png)
 
 ## グラフのレイアウトを修正する
 
@@ -1209,9 +1429,9 @@ plt.box(False)
 
 ![box]({{site.baseurl}}/assets/images/20180622/box.png)
 
-### 枠線を表示する：grid/rgrids/thetagrids
+### グリッド（格子）を表示する：grid/rgrids/thetagrids/triplot
 
-グラフ内の枠線を表示します。
+グラフ内にグリッドを表示します。
 
 ```python
 import numpy as np
@@ -1228,7 +1448,7 @@ plt.grid(linestyle='-', linewidth=1)
 
 ![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
 
-極座標グラフ（polar）に枠線を描画するには `rgrids` 関数を使います。
+極座標グラフ（polar）にグリッドを描画するには `rgrids` 関数を使います。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1241,7 +1461,7 @@ plt.show()
 
 ![rgrids]({{site.baseurl}}/assets/images/20180622/rgrids.png)
 
-`rgrids` の代わりに `thetagrids` 関数で、枠線とラベルを一緒に設定することも可能です。
+`rgrids` の代わりに `thetagrids` 関数で、グリッドとラベルを一緒に設定することも可能です。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1253,6 +1473,27 @@ plt.show()
 ```
 
 ![thetagrids]({{site.baseurl}}/assets/images/20180622/thetagrids.png)
+
+非構造三次元データ （tricontour） にグリッドを描画するには `triplot` 関数を使います。
+
+```python
+import matplotlib.pyplot as plt
+import matplotlib.tri as mtri
+import numpy as np
+
+x = np.asarray([0, 1, 2, 3, 0.5, 1.5, 2.5, 1, 2, 1.5])
+y = np.asarray([0, 0, 0, 0, 1.0, 1.0, 1.0, 2, 2, 3.0])
+triangles = [[0, 1, 4], [1, 2, 5], [2, 3, 6], [1, 5, 4], [2, 6, 5], [4, 5, 7],
+             [5, 6, 8], [5, 8, 7], [7, 8, 9]]
+triang = mtri.Triangulation(x, y, triangles)
+z = np.cos(1.5 * x) * np.cos(1.5 * y)
+
+plt.tricontourf(triang, z)
+plt.triplot(triang, 'ko-')
+plt.show()
+```
+
+![triplot]({{site.baseurl}}/assets/images/20180622/triplot.png)
 
 ### メモリの分割数を変更する：locator_params
 
@@ -1359,6 +1600,22 @@ plt.show()
 
 ![subplots]({{site.baseurl}}/assets/images/20180622/subplots.png)
 
+### スケッチ風に描画する：xkcd
+
+グラフをスケッチ風にできます。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+plt.xkcd()
+
+x = np.linspace(-np.pi, np.pi, 100)
+plt.plot(x, np.sin(x),label="y = sinx")
+plt.show()
+```
+
+![xkcd]({{site.baseurl}}/assets/images/20180622/xkcd.png)
 
 ## まとめ
 
