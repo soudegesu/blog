@@ -46,7 +46,7 @@ tags: matplotlib
 
 ### 棒グラフ（積み上げ棒グラフ）：bar/barh/broken_barh
 
-棒グラフを描画します。 `xerr` `yerr` オプションを指定すると誤差の指定ができます。
+**棒グラフ** を描画します。 `xerr` `yerr` オプションを指定すると誤差の指定ができます。
 
 ```python
 import numpy as np
@@ -62,7 +62,7 @@ plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
 
 ![bar]({{site.baseurl}}/assets/images/20180622/bar.png)
 
-`bottom` オプションで積み上げておきたい初期値を設定することで、積み上げ棒グラフを描画することもできます。
+`bottom` オプションで積み上げておきたい初期値を設定することで、 **積み上げ棒グラフ** を描画することもできます。
 
 積み上げるグラフの複数の配列の要素数は同一である必要があり、`bottom` 指定を忘れると、2種類の棒グラフを重ねて描画してしまうので注意が必要です。
 
@@ -84,7 +84,7 @@ plt.show()
 
 ![bar2]({{site.baseurl}}/assets/images/20180622/bar2.png)
 
-y軸から横に伸びる棒グラフは `barh` 関数を使います。
+**y軸から横に伸びる棒グラフ** は `barh` 関数を使います。
 
 ```python
 import numpy as np
@@ -100,7 +100,7 @@ plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
 
 ![barh]({{site.baseurl}}/assets/images/20180622/barh.png)
 
-`broken_barh` 関数では、軸に足をつけない棒グラフを描画することができます。
+`broken_barh` 関数では、 **軸に足をつけない棒グラフ** を描画することができます。
 実際には指定領域を矩形描画することになります。
 
 ```python
@@ -119,7 +119,7 @@ plt.ylim(0)
 
 ### ヒストグラム：hist/hist2d
 
-ヒストグラムを表示します。
+**ヒストグラム** を表示します。
 
 ```python
 import numpy as np
@@ -135,7 +135,7 @@ plt.hist(x, 50, density=True, alpha=0.75)
 
 ![hist]({{site.baseurl}}/assets/images/20180622/hist.png)
 
-2次元のヒストグラムを描画するには、 `hist2d` 関数を使用します。
+**2次元のヒストグラム** を描画するには、 `hist2d` 関数を使用します。
 
 ```python
 import numpy as np
@@ -153,7 +153,7 @@ plt.hist2d(x, y, bins=40)
 
 ### 円グラフ：pie
 
-円グラフを描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、グラフを修飾する多くのオプションが備わっています。
+**円グラフ** を描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、グラフを修飾する多くのオプションが備わっています。
 
 ```python
 from matplotlib import pyplot as plt
@@ -170,7 +170,7 @@ plt.show()
 
 ### 散布図：scatter
 
-散布図を描画します。 マーカーの大きさはオプション指定で変更しています。
+**散布図** を描画します。 マーカーの大きさはオプション指定で変更しています。
 
 ```python
 from matplotlib import pyplot as plt
@@ -189,9 +189,25 @@ plt.show()
 
 ![scatter]({{site.baseurl}}/assets/images/20180622/scatter.png)
 
-### 積み上げ折れ線グラフ：stackplot
+### 折れ線グラフ（積み上げ折れ線グラフ）：plot/stackplot/plot_date
 
-積み上げの折れ線グラフを描画します。
+**折り線グラフ** は `plot` で描画できます。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+x = np.random.rand(100)
+
+plt.plot(x)
+plt.show()
+```
+
+![plot]({{site.baseurl}}/assets/images/20180622/plot.png)
+
+**積み上げの折れ線グラフ** を描画するには `stackplot` 関数を使います。
 
 ```python
 import numpy as np
@@ -208,9 +224,34 @@ plt.show()
 
 ![stackplot]({{site.baseurl}}/assets/images/20180622/stackplot.png)
 
+また、 **x軸が日付データの場合の折れ線グラフ** には `plot_date` 関数を用いることが可能です。
+
+```python
+import matplotlib.pyplot as plt
+from matplotlib.dates import (DateFormatter, drange)
+import numpy as np
+import datetime
+
+np.random.seed(0)
+
+formatter = DateFormatter('%Y/%m/%d/')
+date1 = datetime.date(1970, 1, 1)
+date2 = datetime.date(2018, 4, 12)
+delta = datetime.timedelta(days=100)
+
+dates = drange(date1, date2, delta)
+s = np.random.rand(len(dates))
+
+plt.plot_date(dates, s)
+plt.show()
+```
+
+![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
+
+
 ### 箱ひげ図：boxplot
 
-箱ひげ図（最小値、第1四分位点、中央値、第3四分位点、最大値）を描画します。
+**箱ひげ図** （最小値、第1四分位点、中央値、第3四分位点、最大値）を描画します。
 
 ```python
 import numpy as np
@@ -225,7 +266,7 @@ plt.boxplot(a)
 
 ### バイオリン図：violinplot
 
-バイオリン図（箱ひげ図に確率密度表示を加えたもの）を描画します。
+**バイオリン図** （箱ひげ図に確率密度表示を加えたもの）を描画します。
 
 ```python
 import pandas as pd
@@ -244,7 +285,7 @@ plt.show()
 
 ### 等高線・水平曲線：contour/contourf
 
-等高線（同じ高さの値の集まり）を描画します。
+**等高線** （同じ高さの値の集まり）を描画します。
 `contour` 単体だと値がわかりにくいので、 `clabel` や `colorbar` などで情報を付与すると良いです。
 
 ```python
@@ -265,7 +306,7 @@ plt.contour(X, Y, Z)
 
 ![contour]({{site.baseurl}}/assets/images/20180622/contour.png)
 
-領域を塗りつぶすには `contourf` を使います。
+**等高線の塗りつぶし** には `contourf` を使います。
 
 ```python
 import numpy as np
@@ -287,7 +328,7 @@ plt.contourf(X, Y, Z)
 
 ### 非構造三次元データ：tricontour/tricontourf
 
-非構造三次元データを扱う場合には `tricontour` 、 `tricontourf` を使います。
+**非構造三次元データ** を扱う場合には `tricontour` 、 `tricontourf` を使います。
 
 ```python
 import matplotlib.pyplot as plt
@@ -319,7 +360,7 @@ plt.tricontour(triang, z, colors='k')
 
 ### 極座標：polar
 
-極座標の円状グラフを描画します。
+**極座標** の円状グラフを描画します。
 
 ```python
 from matplotlib import pyplot as plt
@@ -334,36 +375,89 @@ plt.show()
 
 ![polar]({{site.baseurl}}/assets/images/20180622/polar.png)
 
-### 日付で描画する：plot_date
+### 対数：loglog/semilogx/semilogy
 
-x軸が日付データの場合には `plot_date` 関数で描画することができます。
+対数を描画します。 **両対数** の場合には `loglog` 関数を使います。
 
 ```python
-import matplotlib.pyplot as plt
-from matplotlib.dates import (DateFormatter, drange)
+from matplotlib import pyplot as plt
 import numpy as np
-import datetime
 
-np.random.seed(0)
-
-formatter = DateFormatter('%Y/%m/%d/')
-date1 = datetime.date(1970, 1, 1)
-date2 = datetime.date(2018, 4, 12)
-delta = datetime.timedelta(days=100)
-
-dates = drange(date1, date2, delta)
-s = np.random.rand(len(dates))
-
-plt.plot_date(dates, s)
+t = np.arange(0.01, 20.0, 0.01)
+plt.loglog(t, 20 * np.exp( -t / 10.0), basex=2)
+plt.grid(True)
+plt.title('loglog base 2 on x')
 plt.show()
 ```
 
-![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
+![loglog]({{site.baseurl}}/assets/images/20180622/loglog.png)
 
+**x軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogx` を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogx(t, np.sin(2*np.pi*t))
+plt.grid(True)
+```
+
+![semilogx]({{site.baseurl}}/assets/images/20180622/semilogx.png)
+
+**y軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogy` を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogy(t, np.exp(-t/5.0))
+plt.grid(True)
+```
+
+![semilogy]({{site.baseurl}}/assets/images/20180622/semilogy.png)
+
+### 行列：matshow
+
+**行列データ** を描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+mat = np.random.rand(10,10)
+plt.matshow(mat)
+
+plt.show()
+```
+
+![matshow]({{site.baseurl}}/assets/images/20180622/matshow.png)
+
+### スパース行列：spy
+
+**スパース行列（疎行列）** を描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.random.randn(20, 20)
+x[5] = 0.
+x[:, 12] = 0.
+
+plt.spy(x, markersize=3)
+```
+
+![spy]({{site.baseurl}}/assets/images/20180622/spy.png)
 
 ### コヒーレンス：cohere
 
-波の可干渉性（コヒーレンス）を描画することができます。
+**コヒーレンス（波の可干渉性）** を描画することができます。
 
 ```python
 import numpy as np
@@ -379,7 +473,44 @@ plt.figure()
 
 ![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
 
-### 自己相関：acorr
+### 離散データ：stem
+
+**x軸から伸びるシーケンスとしてyの値** を描画したい場合に使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0.1, 2 * np.pi, 10)
+plt.stem(x, np.cos(x), '-.')
+
+plt.show()
+```
+
+![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
+
+### ステップ応答：step
+
+**ステップ応答** を描画します。コンピュータ信号のような離散値とかを扱うときに使います。
+
+```python
+import numpy as np
+from numpy import ma
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 7, 0.4)
+y = np.sin(x).copy() + 2.5
+
+plt.step(x, y)
+plt.scatter(x, y) #データを表す座標が見やすいようにしています
+plt.show()
+```
+
+![step]({{site.baseurl}}/assets/images/20180622/step.png)
+
+### 自己相関・相互相関：acorr/xcorr
+
+`acorr` 関数で **自己相関** を描画することができます。
 
 ```python
 import numpy as np
@@ -391,9 +522,7 @@ plt.acorr(x)
 
 ![acorr]({{site.baseurl}}/assets/images/20180622/acorr.png)
 
-### 離散時間シーケンスの相互相関：xcorr
-
-離散時間シーケンスの相互相関を描画します。
+また、**相互相関** を描画は `xcorr` になります。
 
 ```python
 import matplotlib.pyplot as plt
@@ -409,25 +538,9 @@ plt.show()
 
 ![xcorr]({{site.baseurl}}/assets/images/20180622/xcorr.png)
 
-### 離散データ：stem
-
-x軸から伸びるシーケンスとしてyの値を描画したい場合に使います。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-x = np.linspace(0.1, 2 * np.pi, 10)
-plt.stem(x, np.cos(x), '-.')
-
-plt.show()
-```
-
-![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
-
 ### 複数イベントデータ：eventplot
 
-複数のイベントデータを並行して描画する。公式から引用すると、以下のようなユースケースがあるらしい。
+**複数のイベントデータ** を並行して描画する。公式から引用すると、以下のようなユースケースがあるらしいです。
 
 > This type of plot is commonly used in neuroscience for representing neural events, where it is usually called a spike raster, dot raster, or raster plot.
 
@@ -450,7 +563,7 @@ plt.eventplot(data, lineoffsets=lineoffsets,
 
 ### 六角形で描画：hexbin
 
-hexでデータを描画します。
+**hex** でデータを描画します。
 
 ```python
 import numpy as np
@@ -465,72 +578,9 @@ plt.hexbin(x, y, gridsize=10)
 ![hexbin]({{site.baseurl}}/assets/images/20180622/hexbin.png)
 
 
-### 対数：loglog/semilogx/semilogy
+### 疑似カラー描画：pcolor/pcolormesh/tripcolor
 
-対数を描画します。両対数の場合には `loglog` 関数を使います。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-t = np.arange(0.01, 20.0, 0.01)
-plt.loglog(t, 20 * np.exp( -t / 10.0), basex=2)
-plt.grid(True)
-plt.title('loglog base 2 on x')
-plt.show()
-```
-
-![loglog]({{site.baseurl}}/assets/images/20180622/loglog.png)
-
-x軸を10を底とする対数スケールで片対数を描画する場合には `semilogx` を使用します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-t = np.arange(0.01, 20.0, 0.01)
-
-plt.semilogx(t, np.sin(2*np.pi*t))
-plt.grid(True)
-```
-
-![semilogx]({{site.baseurl}}/assets/images/20180622/semilogx.png)
-
-y軸を10を底とする対数スケールで片対数を描画する場合には `semilogy` を使用します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-t = np.arange(0.01, 20.0, 0.01)
-
-plt.semilogy(t, np.exp(-t/5.0))
-plt.grid(True)
-```
-
-![semilogy]({{site.baseurl}}/assets/images/20180622/semilogy.png)
-
-### 行列の描画：matshow
-
-行列のデータを描画します。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-np.random.seed(0)
-
-mat = np.random.rand(10,10)
-plt.matshow(mat)
-
-plt.show()
-```
-
-![matshow]({{site.baseurl}}/assets/images/20180622/matshow.png)
-
-### 2次元配列の疑似カラー描画：pcolor/pcolormesh/tripcolor
-
-2次元配列のデータを擬似カラーで描画します。
+2次元配列のデータを **擬似カラー** で描画します。
 
 ```python
 import matplotlib.pyplot as plt
@@ -549,7 +599,7 @@ plt.pcolor(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 
 ![pcolor]({{site.baseurl}}/assets/images/20180622/pcolor.png)
 
-メッシュデータにして、高速に描画したい場合には `pcolormesh` 関数を使うと良いそうです。
+**メッシュデータを高速に描画したい** 場合には `pcolormesh` 関数を使うと良いそうです。
 
 ```python
 import matplotlib.pyplot as plt
@@ -568,7 +618,7 @@ plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 
 ![pcolormesh]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
 
-`tricontour` に対する疑似カラー描画には `tripcolor` 関数を使います。
+**`tricontour` に対する疑似カラー描画** には `tripcolor` 関数を使います。
 
 ```python
 import matplotlib.pyplot as plt
@@ -598,9 +648,9 @@ plt.tripcolor(triang, z, shading='flat')
 
 ![tripcolor]({{site.baseurl}}/assets/images/20180622/tripcolor.png)
 
-### 振幅スペクトラム：magnitude_spectrum
+### スペクトラム：magnitude_spectrum/phase_spectrum/angle_spectrum/specgram
 
-信号の強さを表す振幅スペクトラムを描画します。
+信号の強さを表す **振幅スペクトラム** は `magnitude_spectrum` で描画します。
 
 ```python
 from matplotlib import pyplot as plt
@@ -624,9 +674,7 @@ plt.show()
 
 ![magnitude_spectrum]({{site.baseurl}}/assets/images/20180622/magnitude_spectrum.png)
 
-### 位相スペクトラム：phase_spectrum
-
-位相スペクトラムを描画します。
+**位相スペクトラム** は `phase_spectrum` で描画します。
 
 ```python
 from matplotlib import pyplot as plt
@@ -650,7 +698,7 @@ plt.show()
 
 ![phase_spectrum]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
 
-### 角度スペクトラム：angle_spectrum
+**角度スペクトラム** は `angle_spectrum` で描画します。
 
 ```python
 import numpy as np
@@ -662,9 +710,7 @@ plt.angle_spectrum(x)
 
 ![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
 
-### スペクトログラム：specgram
-
-スペクトログラムを描画します。
+**スペクトログラム** は `specgram` になります。
 
 ```python
 import matplotlib.pyplot as plt
@@ -692,9 +738,9 @@ plt.show()
 
 ![specgram]({{site.baseurl}}/assets/images/20180622/specgram.png)
 
-### パワースペクトル密度：psd
+### スペクトル密度：psd/csd
 
-パワースペクトル密度を描画します。
+**パワースペクトル密度** は `psd` で描画します。
 
 ```python
 from matplotlib import pyplot as plt
@@ -718,9 +764,7 @@ plt.show()
 
 ![psd]({{site.baseurl}}/assets/images/20180622/psd.png)
 
-### クロススペクトル密度：csd
-
-クロススペクトル密度を描画します。
+**クロススペクトル密度** は `csd` で描画します。
 
 ```python
 from scipy import signal
@@ -744,10 +788,9 @@ plt.csd(x, y)
 
 ![csd]({{site.baseurl}}/assets/images/20180622/csd.png)
 
+### ベクトル：quiver/quiverkey
 
-### ベクトルの描画：quiver/quiverkey
-
-ベクトルを描画します。また、 `quiverkey` 関数を使うことで、ベクトルのキーも描画することができます。
+**ベクトル** を描画します。また、 `quiverkey` 関数を使うことで、**ベクトルのキー** も描画することができます。
 
 ```python
 from matplotlib import pyplot as plt
@@ -764,47 +807,9 @@ plt.show()
 
 ![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
 
-
-### スパース行列：spy
-
-スパース行列（疎行列）を描画します。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-x = np.random.randn(20, 20)
-x[5] = 0.
-x[:, 12] = 0.
-
-plt.spy(x, markersize=3)
-```
-
-![spy]({{site.baseurl}}/assets/images/20180622/spy.png)
-
-
-### ステップ応答の描画:step
-
-ステップ応答を描画します。コンピュータ信号のような離散値とかを扱うときに使います。
-
-```python
-import numpy as np
-from numpy import ma
-import matplotlib.pyplot as plt
-
-x = np.arange(1, 7, 0.4)
-y = np.sin(x).copy() + 2.5
-
-plt.step(x, y)
-plt.scatter(x, y) #データを表す座標が見やすいようにしています
-plt.show()
-```
-
-![step]({{site.baseurl}}/assets/images/20180622/step.png)
-
 ### 流線グラフ：streamplot
 
-流線を描画します。
+**流線** を描画します。
 
 ```python
 import numpy as np
@@ -822,346 +827,13 @@ plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 
 ## グラフに付加情報を加える
 
-### 特定のデータに注釈を入れる：annotate
+グラフに付加情報を加えることで、プロットされたデータの理解を補助することができます。
+以下ではグラフに付加情報を加える関数を調べてみました。
 
-グラフ上にテキストの付加情報を追加します。「ここだよ！ここ！」と特定のデータポイントを指し示したいときに使います。
+### グラフのタイトル：title/suptitle
 
-気をつけるのは、 `xycoords` オプションによって、`xy` や `xytext` の振る舞いが変わること。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-t = np.arange(0.0, 5.0, 0.01)
-s = np.cos(2*np.pi*t)
-line, = ax.plot(t, s, lw=2)
-
-# xycoordsがデフォルトの'data'なので、
-# 座標(4, 1)のデータに対して座標(3, 1.5)にテキストを表示して
-# 矢印で線を引っ張る
-ax.annotate('max', xy=(4, 1), xytext=(3, 1.5),
-            arrowprops=dict(facecolor='black', shrink=0.05),
-            )
-
-ax.set_ylim(-2,2)
-plt.show()
-```
-
-![annotate]({{site.baseurl}}/assets/images/20180622/annotate.png)
-
-### 矢印（直線）を書き加える：arrow
-
-図中に任意の矢印を描画したいときに使います。 `head_width` `head_length` オプションを記入しないとただの直線として描画されます。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-#head_widthとhead_lengthを入れないと矢印にならない
-ax.arrow(x=0.5, y=0.5, dx=1.0, dy=1.0, ls='--', head_width=0.1, head_length=0.1)
-
-ax.set_xlim(0.25, 1.75)
-ax.set_ylim(0.25, 1.75)
-plt.show()
-```
-
-![arrow]({{site.baseurl}}/assets/images/20180622/arrow.png)
-
-### x軸と平行の線を引く：axhline
-
-x軸に対して平行線を引きます。しきい値を直線で表すことができます。
-また、 `xmin` `xmax` オプションで、直線を引く区間を指定できるのが便利です。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-plt.axhline(y=.5, xmin=0.25, xmax=0.75)
-plt.show()
-```
-
-![axhline]({{site.baseurl}}/assets/images/20180622/axhline.png)
-
-### x軸と垂直（y軸と平行）の線を引く：
-
-x軸に対して垂直の線を引くことが出来ます。オプションの概念は `axhline` と同様です。
-
-```python
-# axvline sample
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-plt.axvline(x=.5, ymin=0.25, ymax=0.75, color='r', linewidth=4)
-plt.show()
-```
-
-![axvline]({{site.baseurl}}/assets/images/20180622/axvline.png)
-
-### x軸と平行の矩形を描画する：axhspan
-
-x軸と平行の矩形（四角形）を描画することができます。
-y軸の範囲を表現したいときに使います。
-`xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axvspan` と変わりません。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-# yが1.25〜1.55までを一律で塗りつぶし
-plt.axhspan(1.25, 1.55, facecolor='g', alpha=0.5)
-plt.show()
-```
-
-![axhspan]({{site.baseurl}}/assets/images/20180622/axhspan.png)
-
-### 矩形を描画する：axvspan
-
-y軸と平行の矩形（四角形）を描画することができます。
-x軸の範囲を表現したいときに使います。
-`xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axhspan` と変わりません。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
-plt.show()
-```
-
-![axvspan]({{site.baseurl}}/assets/images/20180622/axvspan.png)
-
-### 風向きを表す：barbs
-
-天気図で使う風向きとその強さを表す記号を描画します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-x =  (1, 2, 3, 4, 5)
-y = (1, 2, 3, 4, 5)
-u = (10,20,-30,40,-50)
-v = (10,20,30,40,50)
-
-plt.barbs(x, y, u, v)
-```
-
-![barbs]({{site.baseurl}}/assets/images/20180622/barbs.png)
-
-### 色の値の判例を表示する：colorbar
-
-色が表す値の判例を表示します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-delta = 0.025
-x = np.arange(-4.0, 3.0, delta)
-y = np.arange(-2.0, 2.0, delta)
-X, Y = np.meshgrid(x, y)
-Z1 = np.exp(-X**2 - Y**2)
-Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
-Z = (Z1 - Z2) * 2
-
-plt.figure()
-plt.contourf(X, Y, Z)
-plt.colorbar()
-```
-
-![colorbar]({{site.baseurl}}/assets/images/20180622/colorbar.png)
-
-### 色のラベルを表示する：clabel
-
-色が表す値のラベルをグラフ上に表示します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-delta = 0.025
-x = np.arange(-4.0, 3.0, delta)
-y = np.arange(-2.0, 2.0, delta)
-X, Y = np.meshgrid(x, y)
-Z1 = np.exp(-X**2 - Y**2)
-Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
-Z = (Z1 - Z2) * 2
-
-plt.figure()
-CS = plt.contour(X, Y, Z)
-plt.clabel(CS, inline=1, fontsize=10)
-```
-
-![clabel]({{site.baseurl}}/assets/images/20180622/clabel.png)
-
-### 誤差を棒で表す：errorbar
-
-データの誤差を棒で表します。
-`uplims` `lolims` オプションで、上下のどちらの誤差か指定することもできます。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure(0)
-x = np.arange(10.0)
-y = np.sin(np.arange(10.0) / 20.0)
-
-plt.errorbar(x, y, yerr=0.1)
-
-y = np.sin(np.arange(10.0) / 20.0) + 1
-plt.errorbar(x, y, yerr=0.1, uplims=True)
-
-y = np.sin(np.arange(10.0) / 20.0) + 2
-plt.errorbar(x, y, yerr=0.1, lolims=True)
-```
-
-![errorbar]({{site.baseurl}}/assets/images/20180622/errorbar.png)
-
-### 図中にテキストを埋め込む：figtext
-
-図中にテキストを埋め込みます。
-指定のx, yは図中の相対位置であることに注意が必要です。（座標ではありません）
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-fig = plt.figure(0)
-x = np.arange(10.0)
-y = np.sin(np.arange(10.0) / 20.0)
-
-plt.errorbar(x, y)
-# x軸方向の中央(0.5)
-# y軸方向の1/4(0.25)の場所に
-# 文字「x」を埋め込む
-plt.figtext(0.5, 0.25, '$x$')
-```
-
-![figtext]({{site.baseurl}}/assets/images/20180622/figtext.png)
-
-### 色を塗りつぶす:fill/fill_between/fill_betweenx
-
-グラフ上の範囲を塗りつぶして描画します。
-`fill` ではy=0との間の色が塗りつぶされます。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = np.arange(0.0, 2, 0.01)
-y = np.sin(2*np.pi*x)
-
-plt.fill(x, y)
-```
-
-![fill]({{site.baseurl}}/assets/images/20180622/fill.png)
-
-塗りつぶし範囲のyを指定するには `fill_between` 関数を使用します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = np.arange(0.0, 2, 0.01)
-y1 = np.sin(2*np.pi*x)
-y2 = 0.5
-
-plt.fill_between(x, y1, y2)
-```
-
-![fill_between]({{site.baseurl}}/assets/images/20180622/fill_between.png)
-
-x軸に対して行う場合には `fill_betweenx` 関数を使います。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-y = np.arange(0.0, 2, 0.01)
-x1 = np.sin(2*np.pi*x)
-x2 = 0.5
-
-plt.fill_betweenx(y, x1, x2)
-```
-
-![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
-
-### 水平/垂直に線を引く：hlines/vlines
-
-図中に `hlines` で水平線を引きます。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-np.random.seed(0)
-
-xmin = 1
-xmax =  10
-
-plt.hlines([-1, 1], xmin, xmax)
-plt.show()
-```
-
-![hlines]({{site.baseurl}}/assets/images/20180622/hlines.png)
-
-図中に垂直の線を引くには `vlines` 関数を使います。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-np.random.seed(0)
-
-ymin = 1
-ymax =  10
-
-plt.vlines([-1, 1], ymin, ymax)
-plt.show()
-```
-
-![vlines]({{site.baseurl}}/assets/images/20180622/vlines.png)
-
-### 凡例を追加する：legend
-
-グラフデータの凡例を追加します。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-x_data = (1, 2, 3)
-y_data = (.5, 1.5 , .8)
-
-plt.bar(x_data, y_data)
-plt.legend(['dataA'])
-```
-
-![legend]({{site.baseurl}}/assets/images/20180622/legend.png)
-
-### グラフにタイトルをつける：title/suptitle
-
-グラフにタイトルをつける場合には `title` 関数を使います。
-複数グラフに対するタイトルをつけたい場合には `suptitle` 関数を使います。
+グラフに **タイトルをつける** には `title` 関数を使います。
+**複数グラフにタイトルをつける** には `suptitle` 関数を使います。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1188,116 +860,47 @@ plt.show()
 
 ![title]({{site.baseurl}}/assets/images/20180622/title.png)
 
-### データテーブルを表示：table
+### 凡例の追加：legend/colorbar
 
-グラフで描画するデータにデータテーブルを追加します。
-パッと見た感じ、テーブルを単体で描画するのはできなそうでした。
+**グラフデータの凡例** を追加します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x_data = (1, 2, 3)
+y_data = (.5, 1.5 , .8)
+
+plt.bar(x_data, y_data)
+plt.legend(['dataA'])
+```
+
+![legend]({{site.baseurl}}/assets/images/20180622/legend.png)
+
+等高線（`contour`）に対する、 **色が表す値の凡例** は `colorbar` 関数で表示します。
 
 ```python
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
-data = [[ 66386, 174296,  75131, 577908,  32015],
-        [ 58230, 381139,  78045,  99308, 160454],
-        [ 89135,  80552, 152558, 497981, 603535],
-        [ 78415,  81858, 150656, 193263,  69638],
-        [139361, 331509, 343164, 781380,  52269]]
-columns = ('Freeze', 'Wind', 'Flood', 'Quake', 'Hail')
-rows = ['%d year' % x for x in (100, 50, 20, 10, 5)]
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
 
-plt.table(cellText=data,
-                      rowLabels=rows,
-                      rowColours=colors,
-                      colLabels=columns,
-                      loc='bottom')
-
-plt.show()
+plt.figure()
+plt.contourf(X, Y, Z)
+plt.colorbar()
 ```
 
-![table]({{site.baseurl}}/assets/images/20180622/table.png)
+![colorbar]({{site.baseurl}}/assets/images/20180622/colorbar.png)
 
-### テキストを表示する：text
+### ラベルの表示：xlabel/ylabel/clabel
 
-グラフ上にテキストを描画します。 オプションを指定して、テキストを修飾することもできます。
-
-```python
-from matplotlib import pyplot as plt
-
-plt.text(0.6, 0.5, "hogehoge", size=20, rotation=20.,
-         ha="center", va="center",
-         bbox=dict(boxstyle="square",
-                   ec=(1., 0.5, 0.5),
-                   fc=(1., 0.8, 0.8),
-                   )
-         )
-
-plt.text(0.2, 0.5, "fugafuga", size=20, rotation=20.,
-         ha="center", va="center"
-         )
-
-plt.show()
-```
-
-![text]({{site.baseurl}}/assets/images/20180622/text.png)
-
-### 軸に対する描画データを増やす：twinx
-
-同一の軸に対して別のデータを描画します。
-x軸はそのままに、別のyの値を描画する場合には `twinx` 関数を使います。
-
-```python
-import numpy as np
-from matplotlib import pyplot as plt
-
-fig, ax1 = plt.subplots()
-t = np.arange(0.01, 10.0, 0.01)
-s1 = np.exp(t)
-ax1.plot(t, s1, 'b-')
-ax1.set_xlabel('time (s)')
-ax1.set_ylabel('exp', color='b')
-ax1.tick_params('y', colors='b')
-
-ax2 = ax1.twinx()
-s2 = np.sin(2 * np.pi * t)
-ax2.plot(t, s2, 'r.')
-ax2.set_ylabel('sin', color='r')
-ax2.tick_params('y', colors='r')
-
-plt.show()
-```
-
-![twinx]({{site.baseurl}}/assets/images/20180622/twinx.png)
-
-
-y軸はそのままに、別のxの値を描画する場合には `twiny` 関数を使います。
-
-```python
-import numpy as np
-from matplotlib import pyplot as plt
-
-fig, ax1 = plt.subplots()
-t = np.arange(0.01, 10.0, 0.01)
-s1 = np.exp(t)
-ax1.plot(t, s1, 'b-')
-ax1.set_xlabel('time (s)')
-ax1.set_ylabel('exp', color='b')
-ax1.tick_params('y', colors='b')
-
-ax2 = ax1.twiny()
-t2 = np.arange(10.01, 20.0, 0.01)
-s2 = np.exp(t2)
-ax2.plot(t2, s2, 'r.')
-ax2.set_xlabel('sin', color='r')
-ax2.tick_params('y', colors='r')
-
-plt.show()
-```
-
-![twiny]({{site.baseurl}}/assets/images/20180622/twiny.png)
-
-### ラベルを表示：xlabel/ylabel
-
-グラフの軸にラベルを表示します。
+グラフの軸に **ラベル** を表示します。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1318,9 +921,30 @@ plt.show()
 
 ![xlabel]({{site.baseurl}}/assets/images/20180622/xlabel.png)
 
-### 軸の範囲を制限する：xlim/ylim
+等高線（`contour`）に対しては `clabel` 関数で **色が表す値のラベル** を表示します。
 
-デフォルトだとデータの存在範囲に合わせてx軸/y軸の範囲が決まりますが、軸の値の範囲を指定できます。
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+CS = plt.contour(X, Y, Z)
+plt.clabel(CS, inline=1, fontsize=10)
+```
+
+![clabel]({{site.baseurl}}/assets/images/20180622/clabel.png)
+
+### 軸の描画範囲を制限：xlim/ylim
+
+デフォルトだとデータの範囲に合わせてx軸/y軸の範囲が決まりますが、 **軸の値の範囲** を変更できます。
 
 ```python
 import numpy as np
@@ -1337,9 +961,9 @@ plt.show()
 
 ![xlim]({{site.baseurl}}/assets/images/20180622/xlim.png)
 
-### 軸のスケールを変更する：xscale/yscale
+### 軸のスケールの変更：xscale/yscale
 
-軸のスケールを変更します。`linear` `log` `logit` `symlog` を指定でき、対数をとった描画等ができます。
+**軸のスケール** を変更します。`linear` `log` `logit` `symlog` を指定でき、対数をとった描画等ができます。
 
 ```python
 import numpy as np
@@ -1370,9 +994,9 @@ plt.show()
 ![yscale]({{site.baseurl}}/assets/images/20180622/yscale.png)
 
 
-### グラフのメモリを修正する：xtick/ytick
+### 目盛りの変更：xticks/yticks
 
-グラフのメモリをカスタマイズするには `xtick` `ytick` 関数を使います。
+**目盛り** をカスタマイズするには `xticks` `yticks` 関数を使います。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1388,7 +1012,6 @@ plt.show()
 
 ![xticks]({{site.baseurl}}/assets/images/20180622/xticks.png)
 
-
 ```python
 from matplotlib import pyplot as plt
 import numpy as np
@@ -1403,14 +1026,394 @@ plt.show()
 
 ![yticks]({{site.baseurl}}/assets/images/20180622/yticks.png)
 
-## グラフのレイアウトを修正する
+### 表（テーブル）の表示：table
 
-### グラフの位置を変更する：axes
-
-グラフの位置を修正し、複数のグラフを重ね合わせるときなどに使用します。
+描画データの **表（テーブル）** を表示します。
+パッと見た感じ、表単体で描画するのはできなそうでした。
 
 ```python
-# sample axes
+import numpy as np
+from matplotlib import pyplot as plt
+
+data = [[ 66386, 174296,  75131, 577908,  32015],
+        [ 58230, 381139,  78045,  99308, 160454],
+        [ 89135,  80552, 152558, 497981, 603535],
+        [ 78415,  81858, 150656, 193263,  69638],
+        [139361, 331509, 343164, 781380,  52269]]
+columns = ('Freeze', 'Wind', 'Flood', 'Quake', 'Hail')
+rows = ['%d year' % x for x in (100, 50, 20, 10, 5)]
+
+plt.table(cellText=data,
+                      rowLabels=rows,
+                      rowColours=colors,
+                      colLabels=columns,
+                      loc='bottom')
+
+plt.show()
+```
+
+![table]({{site.baseurl}}/assets/images/20180622/table.png)
+
+### 軸に対する描画データの追加：twinx/twiny
+
+同一の軸に対して別のデータを描画します。
+**x軸はそのままに、別のyの値を描画する** には `twinx` 関数を使います。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twinx()
+s2 = np.sin(2 * np.pi * t)
+ax2.plot(t, s2, 'r.')
+ax2.set_ylabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+```
+
+![twinx]({{site.baseurl}}/assets/images/20180622/twinx.png)
+
+
+**y軸はそのままに、別のxの値を描画する** には `twiny` 関数を使います。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twiny()
+t2 = np.arange(10.01, 20.0, 0.01)
+s2 = np.exp(t2)
+ax2.plot(t2, s2, 'r.')
+ax2.set_xlabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+```
+
+![twiny]({{site.baseurl}}/assets/images/20180622/twiny.png)
+
+### 注釈の追加：annotate
+
+**注釈を追加** します。特定のデータポイントを指し示すときに使います。
+
+`xycoords` オプションによって、`xy` や `xytext` の振る舞いが変わる点に注意が必要です。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+t = np.arange(0.0, 5.0, 0.01)
+s = np.cos(2*np.pi*t)
+line, = ax.plot(t, s, lw=2)
+
+# xycoordsがデフォルトの'data'なので、
+# 座標(4, 1)のデータに対して座標(3, 1.5)にテキストを表示して
+# 矢印で線を引っ張る
+ax.annotate('max', xy=(4, 1), xytext=(3, 1.5),
+            arrowprops=dict(facecolor='black', shrink=0.05),
+            )
+
+ax.set_ylim(-2,2)
+plt.show()
+```
+
+![annotate]({{site.baseurl}}/assets/images/20180622/annotate.png)
+
+### 矢印（直線）の追加：arrow
+
+**矢印を描画** します。 `head_width` `head_length` オプションを記入しないとただの直線として描画されます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+#head_widthとhead_lengthを入れないと矢印にならない
+ax.arrow(x=0.5, y=0.5, dx=1.0, dy=1.0, ls='--', head_width=0.1, head_length=0.1)
+
+ax.set_xlim(0.25, 1.75)
+ax.set_ylim(0.25, 1.75)
+plt.show()
+```
+
+![arrow]({{site.baseurl}}/assets/images/20180622/arrow.png)
+
+### 平行・垂直の線を引く：axhline/axvline/hlines/vlines
+
+`axhline` 関数は **x軸に対する平行線** を引きます。
+また、 `xmin` `xmax` オプションで、直線を引く区間を指定できるのが便利です。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axhline(y=.5, xmin=0.25, xmax=0.75)
+plt.show()
+```
+
+![axhline]({{site.baseurl}}/assets/images/20180622/axhline.png)
+
+同様に **x軸に対する平行線を複数引く** には `hlines` 関数が便利です。
+指定された `xmin` や `xmax` は複数の線全てに適用されます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+xmin = 1
+xmax =  10
+
+plt.hlines([-1, 1], xmin, xmax)
+plt.show()
+```
+
+![hlines]({{site.baseurl}}/assets/images/20180622/hlines.png)
+
+`axvline`関数は **x軸に対する垂直の線** を引くことが出来ます。オプションの概念は `axhline` と同様です。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axvline(x=.5, ymin=0.25, ymax=0.75, color='r', linewidth=4)
+plt.show()
+```
+
+![axvline]({{site.baseurl}}/assets/images/20180622/axvline.png)
+
+同様に **x軸に対する垂直の線を複数引く** には `vlines` 関数が便利です。
+指定された `ymin` や `xmax` は複数の線全てに適用されます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+ymin = 1
+ymax =  10
+
+plt.vlines([-1, 1], ymin, ymax)
+plt.show()
+```
+
+![vlines]({{site.baseurl}}/assets/images/20180622/vlines.png)
+
+### 矩形の描画：axhspan/axvspan
+
+`axhspan` 関数では **x軸と平行の矩形（四角形）** を描画することができます。
+y軸の範囲を表現したいときに使います。
+`xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axvspan` と変わりません。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# yが1.25〜1.55までを一律で塗りつぶし
+plt.axhspan(1.25, 1.55, facecolor='g', alpha=0.5)
+plt.show()
+```
+
+![axhspan]({{site.baseurl}}/assets/images/20180622/axhspan.png)
+
+`axvspan` 関数では **y軸と平行の矩形（四角形）** を描画することができます。
+x軸の範囲を表現したいときに使います。
+`xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axhspan` と変わりません。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
+plt.show()
+```
+
+![axvspan]({{site.baseurl}}/assets/images/20180622/axvspan.png)
+
+### 誤差の表示：errorbar
+
+**データの誤差** を棒で表します。
+`uplims` `lolims` オプションで、上下のどちらの誤差か指定することもできます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y, yerr=0.1)
+
+y = np.sin(np.arange(10.0) / 20.0) + 1
+plt.errorbar(x, y, yerr=0.1, uplims=True)
+
+y = np.sin(np.arange(10.0) / 20.0) + 2
+plt.errorbar(x, y, yerr=0.1, lolims=True)
+```
+
+![errorbar]({{site.baseurl}}/assets/images/20180622/errorbar.png)
+
+### テキストの追加：text/figtext
+
+`text` 関数はグラフ上に **テキストを追加** します。 オプション指定で修飾することもできます。
+
+描画位置の指定は座標系に対して行います。
+
+```python
+from matplotlib import pyplot as plt
+
+plt.text(0.6, 0.5, "hogehoge", size=20, rotation=20.,
+         ha="center", va="center",
+         bbox=dict(boxstyle="square",
+                   ec=(1., 0.5, 0.5),
+                   fc=(1., 0.8, 0.8),
+                   )
+         )
+
+plt.text(0.2, 0.5, "fugafuga", size=20, rotation=20.,
+         ha="center", va="center"
+         )
+
+plt.show()
+```
+
+![text]({{site.baseurl}}/assets/images/20180622/text.png)
+
+同様に **テキストを追加する** 関数で `figtext` が存在します。
+
+描画位置の指定は図に対する相対位置であることに注意が必要です。（座標に依存しません）
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y)
+# x軸方向の中央(0.5)
+# y軸方向の1/4(0.25)の場所に
+# 文字「x」を埋め込む
+plt.figtext(0.5, 0.25, '$x$')
+```
+
+![figtext]({{site.baseurl}}/assets/images/20180622/figtext.png)
+
+### 範囲の塗りつぶし：fill/fill_between/fill_betweenx
+
+グラフ上の **範囲を色で塗りつぶして** 描画します。
+`fill` ではy=0との間の色が塗りつぶされます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y = np.sin(2*np.pi*x)
+
+#0〜y or y〜0の間を塗りつぶす
+plt.fill(x, y)
+```
+
+![fill]({{site.baseurl}}/assets/images/20180622/fill.png)
+
+**塗りつぶし範囲のyを指定する** には `fill_between` 関数を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y1 = np.sin(2*np.pi*x)
+y2 = 0.5
+
+#y1〜y2の間を塗りつぶす
+plt.fill_between(x, y1, y2)
+```
+
+![fill_between]({{site.baseurl}}/assets/images/20180622/fill_between.png)
+
+**x軸に対して塗りつぶし範囲を指定する** には `fill_betweenx` 関数を使います。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+y = np.arange(0.0, 2, 0.01)
+x1 = np.sin(2*np.pi*x)
+x2 = 0.5
+
+#x1〜x2の範囲を塗りつぶす
+plt.fill_betweenx(y, x1, x2)
+```
+
+![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
+
+### 風向きの追加：barbs
+
+**天気図で使う風向きとその強さ** を表す記号を描画します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x =  (1, 2, 3, 4, 5)
+y = (1, 2, 3, 4, 5)
+u = (10,20,-30,40,-50)
+v = (10,20,30,40,50)
+
+plt.barbs(x, y, u, v)
+```
+
+![barbs]({{site.baseurl}}/assets/images/20180622/barbs.png)
+
+## グラフのレイアウトを修正する
+
+図を見やすくするために、グラフのレイアウトを微調整します。
+
+### グラフの位置変更：axes
+
+**グラフの位置を変更** します。 **複数のグラフを重ね合わせる** ときなどに使用します。
+
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -1426,7 +1429,7 @@ plt.angle_spectrum(x)
 
 ### 外枠の表示/非表示：box
 
-グラフの枠の表示/非表示を設定します。デフォルトはTrueです。
+グラフの **枠の表示/非表示** を設定します。デフォルトではTrue（表示する）です。
 
 ```python
 import numpy as np
@@ -1442,9 +1445,9 @@ plt.box(False)
 
 ![box]({{site.baseurl}}/assets/images/20180622/box.png)
 
-### グリッド（格子）を表示する：grid/rgrids/thetagrids/triplot
+### グリッド（格子）の表示：grid/rgrids/thetagrids/triplot
 
-グラフ内にグリッドを表示します。
+グラフ内に **グリッドを表示** します。
 
 ```python
 import numpy as np
@@ -1461,7 +1464,7 @@ plt.grid(linestyle='-', linewidth=1)
 
 ![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
 
-極座標グラフ（polar）にグリッドを描画するには `rgrids` 関数を使います。
+**極座標グラフ（polar）にグリッドを表示** するには `rgrids` 関数を使います。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1474,7 +1477,7 @@ plt.show()
 
 ![rgrids]({{site.baseurl}}/assets/images/20180622/rgrids.png)
 
-`rgrids` の代わりに `thetagrids` 関数で、グリッドとラベルを一緒に設定することも可能です。
+`rgrids` の代わりに `thetagrids` 関数で、**グリッドとラベルを一緒に設定** することも可能です。
 
 ```python
 from matplotlib import pyplot as plt
@@ -1487,7 +1490,7 @@ plt.show()
 
 ![thetagrids]({{site.baseurl}}/assets/images/20180622/thetagrids.png)
 
-非構造三次元データ （tricontour） にグリッドを描画するには `triplot` 関数を使います。
+**非構造三次元データ （tricontour） にグリッドを表示** するには `triplot` 関数を使います。
 
 ```python
 import matplotlib.pyplot as plt
@@ -1508,11 +1511,11 @@ plt.show()
 
 ![triplot]({{site.baseurl}}/assets/images/20180622/triplot.png)
 
-### メモリの分割数を変更する：locator_params
+### 目盛りの分割数を変更：locator_params
 
-指定軸のメモリの分割数を指定できます。
-`nbins` オプションで指定時された数字通りに分割してくれるときとそうでないときがあり、
-2の乗数で指定するといい感じにスケールしてくれました。
+指定軸の **目盛りの分割数** を指定できます。
+`nbins` オプションは2の乗数で指定するといい感じにスケールしてくれます。
+指定された数字通りに分割してくれるときとそうでないときがあり。
 
 ```python
 import numpy as np
@@ -1531,7 +1534,7 @@ plt.show()
 
 ![locator_params]({{site.baseurl}}/assets/images/20180622/locator_params.png)
 
-### マージンをとる：margins/subplots_adjust
+### マージンの追加：margins/subplots_adjust
 
 図内の点に対してマージンをとって、データを見やすい位置に調整します。
 
@@ -1567,7 +1570,7 @@ plt.show()
 
 ![subplots_adjust]({{site.baseurl}}/assets/images/20180622/subplots_adjust.png)
 
-### レイアウトを自動調整する：tight_layout
+### レイアウトの自動調整：tight_layout
 
 複数グラフ間のレイアウト設定から、自動で調節してくれます。
 
@@ -1593,7 +1596,7 @@ plt.tight_layout()
 
 ![tight_layout]({{site.baseurl}}/assets/images/20180622/tight_layout.png)
 
-### 複数のグラフを描画する:subplots
+### 複数グラフの描画:subplots
 
 複数のグラフを描画する場合には、 `subplots` を使います。
 返却された `axes` 配列の要素にアクセスして、データをプロットする関数を実行することで描画が可能です。
@@ -1613,9 +1616,9 @@ plt.show()
 
 ![subplots]({{site.baseurl}}/assets/images/20180622/subplots.png)
 
-### スケッチ風に描画する：xkcd
+### テイストを手書き風に変更：xkcd
 
-グラフをスケッチ風にできます。
+グラフを手書き風にできます。
 
 ```python
 import numpy as np
