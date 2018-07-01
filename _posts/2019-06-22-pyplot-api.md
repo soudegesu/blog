@@ -1,13 +1,13 @@
 ---
-title: "matplotlibのpyplotを理解する"
+title: "matplotlibのpyplot APIを試してみる"
 description: ""
 date: 2018-06-22 00:00:00 +0900
 categories: python
 tags: matplotlib
 ---
 
-`matplotlib` はpythonでデータの可視化をするときに重宝されるのですが、なかなか概念的にも難しく、初見ユーザにはなかなかつらいライブラリです。
-最近データ可視化の機会が増えたので、 `matplotlib` のドキュメントを読みつつ学んだことをまとめたいと思います。
+`matplotlib` はpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。
+今回は `matplotlib` のドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試してみました。
 
 * Table Of Contents
 {:toc}
@@ -25,39 +25,26 @@ tags: matplotlib
 
 また、今回作成したグラフは [こちら](https://github.com/soudegesu/pyplot-test) にpushしてあります。
 
-## 描画できるグラフの種類
+## pyplotの思想を理解する
+
+グラフ描画を始める前にpyplotの思想を理解しました。
+
+いきなりSample Garallyから行くと凝ったグラフが出てきて理解が追いつかなくなるので注意が必要です。
+
+少し探しにくいですが、公式の [Usage GuideのGeneral Conceptsの項](https://matplotlib.org/tutorials/introductory/usage.html) にpyplotの概念の説明があるので一読しました。
+
+## プロットできるデータの種類
 
 `matplotlib.pyplot` モジュールがデータのプロット（描画）を司るモジュールになります。
 
-まずは、描画可能なグラフの種類を確認してみましょう。
+[matplotlibのpyplotのページ](https://matplotlib.org/api/pyplot_summary.html) に提供しているAPIの一覧記載があるのでそれを参考に試していきます。
 
-[matplotlibのpyplotのページ](https://matplotlib.org/api/pyplot_summary.html) にAPIに関する記載があるのでそれを参考にします。
+ここでは、大きくわけて以下2種類を取り扱います。
 
-### acorr
+* グラフの種類を指定する関数（棒グラフや円グラフなど）
+* 渡されたデータに対して、特定の演算結果を描画する関数（スペクトル計算など）
 
-```python
-import numpy as np
-from matplotlib import pyplot as plt
-
-x = np.random.normal(0, 10, 50)
-plt.acorr(x)
-```
-
-![acorr]({{site.baseurl}}/assets/images/20180622/acorr.png)
-
-### angle_spectrum
-
-```python
-import numpy as np
-from matplotlib import pyplot as plt
-
-x = np.random.normal(0, 10, 50)
-plt.angle_spectrum(x)
-```
-
-![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
-
-### 棒グラフ（積み上げ棒グラフ）：bar/barh
+### 棒グラフ（積み上げ棒グラフ）：bar/barh/broken_barh
 
 棒グラフを描画します。 `xerr` `yerr` オプションを指定すると誤差の指定ができます。
 
@@ -75,10 +62,9 @@ plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
 
 ![bar]({{site.baseurl}}/assets/images/20180622/bar.png)
 
-積み上げ棒グラフを作りたい場合には、`bottom` オプションで積み上げておきたい値を加算する必要があります。
+`bottom` オプションで積み上げておきたい初期値を設定することで、積み上げ棒グラフを描画することもできます。
 
-`bottom` 指定がないと、棒グラフを重ねて描画してしまうので注意が必要なのと、
-重ねるグラフ同士の配列の要素数は同じである必要があります。
+積み上げるグラフの複数の配列の要素数は同一である必要があり、`bottom` 指定を忘れると、2種類の棒グラフを重ねて描画してしまうので注意が必要です。
 
 ```python
 import numpy as np
@@ -98,7 +84,7 @@ plt.show()
 
 ![bar2]({{site.baseurl}}/assets/images/20180622/bar2.png)
 
-y軸からの棒グラフを作りたい場合には `barh` 関数を使えばOKです。
+y軸から横に伸びる棒グラフは `barh` 関数を使います。
 
 ```python
 import numpy as np
@@ -114,8 +100,8 @@ plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
 
 ![barh]({{site.baseurl}}/assets/images/20180622/barh.png)
 
-`broken_barh` 関数を使うと、軸に足をつけない棒グラフを描画することができる。
-実際には指定された領域を矩形で描画することになる。
+`broken_barh` 関数では、軸に足をつけない棒グラフを描画することができます。
+実際には指定領域を矩形描画することになります。
 
 ```python
 import numpy as np
@@ -131,9 +117,100 @@ plt.ylim(0)
 
 ![broken_barh]({{site.baseurl}}/assets/images/20180622/broken_barh.png)
 
+### ヒストグラム：hist/hist2d
+
+ヒストグラムを表示します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+```
+
+![hist]({{site.baseurl}}/assets/images/20180622/hist.png)
+
+2次元のヒストグラムを描画するには、 `hist2d` 関数を使用します。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+x = np.random.randn(100000)
+y = np.random.randn(100000) + 5
+
+plt.hist2d(x, y, bins=40)
+```
+
+![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
+
+### 円グラフ：pie
+
+円グラフを描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、グラフを修飾する多くのオプションが備わっています。
+
+```python
+from matplotlib import pyplot as plt
+from matplotlib.gridspec import GridSpec
+
+labels = 'A', 'B', 'C', 'D'
+fracs = [15, 30, 45, 10]
+
+plt.pie(fracs, labels=labels, autopct='%1.1f%%')
+plt.show()
+```
+
+![pie]({{site.baseurl}}/assets/images/20180622/pie.png)
+
+### 散布図：scatter
+
+散布図を描画します。 マーカーの大きさはオプション指定で変更しています。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+N = 50
+x = np.random.rand(N)
+y = np.random.rand(N)
+
+colors = np.random.rand(N)
+area = np.pi * (15 * np.random.rand(N))**2
+
+plt.scatter(x, y, s=area, c=colors, alpha=0.5)
+plt.show()
+```
+
+![scatter]({{site.baseurl}}/assets/images/20180622/scatter.png)
+
+### 積み上げ折れ線グラフ：stackplot
+
+積み上げの折れ線グラフを描画します。
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y1 = [1, 1, 2, 3, 5]
+y2 = [0, 4, 2, 6, 8]
+y3 = [1, 3, 5, 7, 9]
+
+plt.stackplot(x, y1, y2, y3, labels=labels)
+plt.show()
+```
+
+![stackplot]({{site.baseurl}}/assets/images/20180622/stackplot.png)
+
 ### 箱ひげ図：boxplot
 
-与えられたデータ配列の箱ひげ図を描画します。（最小値、第1四分位点、中央値、第3四分位点、最大値）
+箱ひげ図（最小値、第1四分位点、中央値、第3四分位点、最大値）を描画します。
 
 ```python
 import numpy as np
@@ -146,23 +223,24 @@ plt.boxplot(a)
 
 ![boxplot]({{site.baseurl}}/assets/images/20180622/boxplot.png)
 
-### コヒーレンス：cohere
+### バイオリン図：violinplot
 
-波の可干渉性（コヒーレンス）を描画することができます。
+バイオリン図（箱ひげ図に確率密度表示を加えたもの）を描画します。
 
 ```python
-import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as  np
+from matplotlib import pyplot as plt
 
-n = 1024
-x = np.random.randn(n)
-y = np.random.randn(n)
+fs = 10
+pos = [1, 2, 4, 5, 7, 8]
+data = [np.random.normal(0, std, size=100) for std in pos]
 
-plt.cohere(x, y, NFFT=128)
-plt.figure()
+plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
+plt.show()
 ```
 
-![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
+![violinplot]({{site.baseurl}}/assets/images/20180622/violinplot.png)
 
 ### 等高線・水平曲線：contour/contourf
 
@@ -187,7 +265,7 @@ plt.contour(X, Y, Z)
 
 ![contour]({{site.baseurl}}/assets/images/20180622/contour.png)
 
-塗りつぶしをしたい場合には `contourf` を使います。
+領域を塗りつぶすには `contourf` を使います。
 
 ```python
 import numpy as np
@@ -239,34 +317,115 @@ plt.tricontour(triang, z, colors='k')
 
 ![tricontour]({{site.baseurl}}/assets/images/20180622/tricontour.png)
 
+### 極座標：polar
 
-### クロススペクトル密度：csd
-
-クロススペクトル密度を描画します。
+極座標の円状グラフを描画します。
 
 ```python
-from scipy import signal
 from matplotlib import pyplot as plt
+import numpy as np
 
-fs = 10e3
-N = 1e5
-amp = 20
-freq = 1234.0
-noise_power = 0.001 * fs / 2
-time = np.arange(N) / fs
-b, a = signal.butter(2, 0.25, 'low')
-x = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
-y = signal.lfilter(b, a, x)
-x += amp*np.sin(2*np.pi*freq*time)
-y += np.random.normal(scale=0.1*np.sqrt(noise_power), size=time.shape)
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
 
-plt.figure()
-plt.csd(x, y)
+plt.polar(theta, r)
+plt.show()
 ```
 
-![csd]({{site.baseurl}}/assets/images/20180622/csd.png)
+![polar]({{site.baseurl}}/assets/images/20180622/polar.png)
 
-### 複数データの並行描画:eventplot
+### 日付で描画する：plot_date
+
+x軸が日付データの場合には `plot_date` 関数で描画することができます。
+
+```python
+import matplotlib.pyplot as plt
+from matplotlib.dates import (DateFormatter, drange)
+import numpy as np
+import datetime
+
+np.random.seed(0)
+
+formatter = DateFormatter('%Y/%m/%d/')
+date1 = datetime.date(1970, 1, 1)
+date2 = datetime.date(2018, 4, 12)
+delta = datetime.timedelta(days=100)
+
+dates = drange(date1, date2, delta)
+s = np.random.rand(len(dates))
+
+plt.plot_date(dates, s)
+plt.show()
+```
+
+![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
+
+
+### コヒーレンス：cohere
+
+波の可干渉性（コヒーレンス）を描画することができます。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 1024
+x = np.random.randn(n)
+y = np.random.randn(n)
+
+plt.cohere(x, y, NFFT=128)
+plt.figure()
+```
+
+![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
+
+### 自己相関：acorr
+
+```python
+import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.random.normal(0, 10, 50)
+plt.acorr(x)
+```
+
+![acorr]({{site.baseurl}}/assets/images/20180622/acorr.png)
+
+### 離散時間シーケンスの相互相関：xcorr
+
+離散時間シーケンスの相互相関を描画します。
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+x, y = np.random.randn(2, 100)
+plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
+
+plt.show()
+```
+
+![xcorr]({{site.baseurl}}/assets/images/20180622/xcorr.png)
+
+### 離散データ：stem
+
+x軸から伸びるシーケンスとしてyの値を描画したい場合に使います。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0.1, 2 * np.pi, 10)
+plt.stem(x, np.cos(x), '-.')
+
+plt.show()
+```
+
+![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
+
+### 複数イベントデータ：eventplot
 
 複数のイベントデータを並行して描画する。公式から引用すると、以下のようなユースケースがあるらしい。
 
@@ -303,43 +462,10 @@ y = np.arange(1, 10, 1)
 plt.hexbin(x, y, gridsize=10)
 ```
 
-![hexbin]({{site.baseurl}}/assets/images/20180622/eventplot.png)
+![hexbin]({{site.baseurl}}/assets/images/20180622/hexbin.png)
 
-### ヒストグラム：hist/hist2d
 
-ヒストグラムを表示します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-np.random.seed(0)
-
-mu, sigma = 100, 15
-x = mu + sigma * np.random.randn(100)
-
-plt.hist(x, 50, density=True, alpha=0.75)
-```
-
-![hist]({{site.baseurl}}/assets/images/20180622/hist.png)
-
-2次元のヒストグラムを描画するには、 `hist2d` 関数を使用します。
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-np.random.seed(0)
-
-x = np.random.randn(100000)
-y = np.random.randn(100000) + 5
-
-plt.hist2d(x, y, bins=40)
-```
-
-![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
-
-### 対数を描画：loglog/semilogx/semilogy
+### 対数：loglog/semilogx/semilogy
 
 対数を描画します。両対数の場合には `loglog` 関数を使います。
 
@@ -383,32 +509,6 @@ plt.grid(True)
 ```
 
 ![semilogy]({{site.baseurl}}/assets/images/20180622/semilogy.png)
-
-### 振幅スペクトラム：magnitude_spectrum
-
-信号の強さを表す振幅スペクトラムを描画します。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-np.random.seed(0)
-
-dt = 0.01
-Fs = 1/dt
-t = np.arange(0, 10, dt)
-nse = np.random.randn(len(t))
-r = np.exp(-t/0.05)
-cnse = np.convolve(nse, r)*dt
-cnse = cnse[:len(t)]
-
-s = 0.1*np.sin(2*np.pi*t) + cnse
-
-plt.magnitude_spectrum(s, Fs=Fs)
-plt.show()
-```
-
-![magnitude_spectrum]({{site.baseurl}}/assets/images/20180622/magnitude_spectrum.png)
 
 ### 行列の描画：matshow
 
@@ -498,6 +598,32 @@ plt.tripcolor(triang, z, shading='flat')
 
 ![tripcolor]({{site.baseurl}}/assets/images/20180622/tripcolor.png)
 
+### 振幅スペクトラム：magnitude_spectrum
+
+信号の強さを表す振幅スペクトラムを描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.01
+Fs = 1/dt
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t/0.05)
+cnse = np.convolve(nse, r)*dt
+cnse = cnse[:len(t)]
+
+s = 0.1*np.sin(2*np.pi*t) + cnse
+
+plt.magnitude_spectrum(s, Fs=Fs)
+plt.show()
+```
+
+![magnitude_spectrum]({{site.baseurl}}/assets/images/20180622/magnitude_spectrum.png)
+
 ### 位相スペクトラム：phase_spectrum
 
 位相スペクトラムを描画します。
@@ -524,131 +650,17 @@ plt.show()
 
 ![phase_spectrum]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
 
-### 円グラフ：pie
-
-円グラフを描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、`pie` 関数にはグラフを修飾する多くのオプションがあります。
+### 角度スペクトラム：angle_spectrum
 
 ```python
-from matplotlib import pyplot as plt
-from matplotlib.gridspec import GridSpec
-
-labels = 'A', 'B', 'C', 'D'
-fracs = [15, 30, 45, 10]
-
-plt.pie(fracs, labels=labels, autopct='%1.1f%%')
-plt.show()
-```
-
-![pie]({{site.baseurl}}/assets/images/20180622/pie.png)
-
-### 日付で描画する：plot_date
-
-x軸が日付データの場合には `plot_date` 関数で描画することができます。
-
-```python
-import matplotlib.pyplot as plt
-from matplotlib.dates import (DateFormatter, drange)
 import numpy as np
-import datetime
-
-np.random.seed(0)
-
-formatter = DateFormatter('%Y/%m/%d/')
-date1 = datetime.date(1970, 1, 1)
-date2 = datetime.date(2018, 4, 12)
-delta = datetime.timedelta(days=100)
-
-dates = drange(date1, date2, delta)
-s = np.random.rand(len(dates))
-
-plt.plot_date(dates, s)
-plt.show()
-```
-
-![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
-
-### 極座標グラフ：polar
-
-極座標系の円グラフを描画します。
-
-```python
 from matplotlib import pyplot as plt
-import numpy as np
 
-r = np.arange(0, 2, 0.01)
-theta = 2 * np.pi * r
-
-plt.polar(theta, r)
-plt.show()
+x = np.random.normal(0, 10, 50)
+plt.angle_spectrum(x)
 ```
 
-![polar]({{site.baseurl}}/assets/images/20180622/polar.png)
-
-### パワースペクトル密度：psd
-
-パワースペクトル密度を描画します。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-from matplotlib import mlab as mlab
-
-np.random.seed(0)
-
-dt = 0.01
-t = np.arange(0, 10, dt)
-nse = np.random.randn(len(t))
-r = np.exp(-t / 0.05)
-
-cnse = np.convolve(nse, r) * dt
-cnse = cnse[:len(t)]
-s = 0.1 * np.sin(2 * np.pi * t) + cnse
-
-plt.psd(s, 512, 1 / dt)
-plt.show()
-```
-
-![psd]({{site.baseurl}}/assets/images/20180622/psd.png)
-
-### ベクトルの描画：quiver/quiverkey
-
-ベクトルを描画します。また、 `quiverkey` 関数を使うことで、ベクトルのキーも描画することができます。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-X, Y = np.meshgrid(np.arange(0, 2 * np.pi, .2), np.arange(0, 2 * np.pi, .2))
-U = np.cos(X)
-V = np.sin(Y)
-
-Q = plt.quiver(X, Y, U, V, units='width')
-plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
-plt.show()
-```
-
-![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
-
-### 散布図：scatter
-
-散布図を描画します。 オプションでマーカーの大きさを変更できたりします。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-N = 50
-x = np.random.rand(N)
-y = np.random.rand(N)
-
-colors = np.random.rand(N)
-area = np.pi * (15 * np.random.rand(N))**2
-
-plt.scatter(x, y, s=area, c=colors, alpha=0.5)
-plt.show()
-```
-
-![scatter]({{site.baseurl}}/assets/images/20180622/scatter.png)
+![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
 
 ### スペクトログラム：specgram
 
@@ -680,6 +692,79 @@ plt.show()
 
 ![specgram]({{site.baseurl}}/assets/images/20180622/specgram.png)
 
+### パワースペクトル密度：psd
+
+パワースペクトル密度を描画します。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+from matplotlib import mlab as mlab
+
+np.random.seed(0)
+
+dt = 0.01
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t / 0.05)
+
+cnse = np.convolve(nse, r) * dt
+cnse = cnse[:len(t)]
+s = 0.1 * np.sin(2 * np.pi * t) + cnse
+
+plt.psd(s, 512, 1 / dt)
+plt.show()
+```
+
+![psd]({{site.baseurl}}/assets/images/20180622/psd.png)
+
+### クロススペクトル密度：csd
+
+クロススペクトル密度を描画します。
+
+```python
+from scipy import signal
+from matplotlib import pyplot as plt
+
+fs = 10e3
+N = 1e5
+amp = 20
+freq = 1234.0
+noise_power = 0.001 * fs / 2
+time = np.arange(N) / fs
+b, a = signal.butter(2, 0.25, 'low')
+x = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
+y = signal.lfilter(b, a, x)
+x += amp*np.sin(2*np.pi*freq*time)
+y += np.random.normal(scale=0.1*np.sqrt(noise_power), size=time.shape)
+
+plt.figure()
+plt.csd(x, y)
+```
+
+![csd]({{site.baseurl}}/assets/images/20180622/csd.png)
+
+
+### ベクトルの描画：quiver/quiverkey
+
+ベクトルを描画します。また、 `quiverkey` 関数を使うことで、ベクトルのキーも描画することができます。
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+X, Y = np.meshgrid(np.arange(0, 2 * np.pi, .2), np.arange(0, 2 * np.pi, .2))
+U = np.cos(X)
+V = np.sin(Y)
+
+Q = plt.quiver(X, Y, U, V, units='width')
+plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
+plt.show()
+```
+
+![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
+
+
 ### スパース行列：spy
 
 スパース行列（疎行列）を描画します。
@@ -696,59 +781,6 @@ plt.spy(x, markersize=3)
 ```
 
 ![spy]({{site.baseurl}}/assets/images/20180622/spy.png)
-
-### 積み上げ折れ線グラフ：stackplot
-
-積み上げの折れ線グラフを描画します。
-
-```python
-import numpy as np
-from matplotlib import pyplot as plt
-
-x = [1, 2, 3, 4, 5]
-y1 = [1, 1, 2, 3, 5]
-y2 = [0, 4, 2, 6, 8]
-y3 = [1, 3, 5, 7, 9]
-
-plt.stackplot(x, y1, y2, y3, labels=labels)
-plt.show()
-```
-
-![stackplot]({{site.baseurl}}/assets/images/20180622/stackplot.png)
-
-### 離散データの描画：stem
-
-x軸から伸びるシーケンスとしてyの値を描画したい場合に使います。
-
-```python
-from matplotlib import pyplot as plt
-import numpy as np
-
-x = np.linspace(0.1, 2 * np.pi, 10)
-plt.stem(x, np.cos(x), '-.')
-
-plt.show()
-```
-
-![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
-
-### 離散時間シーケンスの相互相関：xcorr
-
-離散時間シーケンスの相互相関を描画します。
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-np.random.seed(0)
-
-x, y = np.random.randn(2, 100)
-plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
-
-plt.show()
-```
-
-![xcorr]({{site.baseurl}}/assets/images/20180622/xcorr.png)
 
 
 ### ステップ応答の描画:step
@@ -787,25 +819,6 @@ plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 ```
 
 ![streamplot]({{site.baseurl}}/assets/images/20180622/streamplot.png)
-
-### バイオリン図：violinplot
-
-バイオリン図を描画します。
-
-```python
-import pandas as pd
-import numpy as  np
-from matplotlib import pyplot as plt
-
-fs = 10
-pos = [1, 2, 4, 5, 7, 8]
-data = [np.random.normal(0, std, size=100) for std in pos]
-
-plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
-plt.show()
-```
-
-![violinplot]({{site.baseurl}}/assets/images/20180622/violinplot.png)
 
 ## グラフに付加情報を加える
 
