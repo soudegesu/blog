@@ -1,13 +1,18 @@
 ---
-title: "matplotlibのpyplot APIを試してみる"
-description: ""
+title: "matplotlibのpyplot APIをいろいろ試す"
+description: "matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。"
 date: 2018-06-22 00:00:00 +0900
 categories: python
 tags: matplotlib
+header:
+  teaser: /assets/images/icon/python_icon.png
 ---
 
-`matplotlib` はpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。
-今回は `matplotlib` のドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試してみました。
+matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。
+
+たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。
+
+今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。
 
 * Table Of Contents
 {:toc}
@@ -31,7 +36,7 @@ tags: matplotlib
 
 いきなりSample Garallyから行くと凝ったグラフが出てきて理解が追いつかなくなるので注意が必要です。
 
-少し探しにくいですが、公式の [Usage GuideのGeneral Conceptsの項](https://matplotlib.org/tutorials/introductory/usage.html) にpyplotの概念の説明があるので一読しました。
+探しにくいですが、公式の [Usage GuideのGeneral Conceptsの項](https://matplotlib.org/tutorials/introductory/usage.html) にpyplotの概念の説明があるので一読しました。
 
 ## プロットできるデータの種類
 
@@ -1635,6 +1640,12 @@ plt.show()
 
 ## まとめ
 
+matplotlibのAPI一覧からいろいろ試してみました。
+
+API名からは用途のイメージがわかないものもあり、試してみて「へぇ、こんなのあるんだ」というのも多かったです。
+また、指定オプションも多く組み込まれているので、一つのAPIでもデータの表現方法に幅が出ます。
+
+通常利用する分には概ねの十分な範囲をカバーできていると考えています。
 
 ## 参考にさせていただいたサイト
 * [The Pyplot API ; Matplotlib 2.2.2 documentation](https://matplotlib.org/api/pyplot_summary.html)
