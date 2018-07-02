@@ -1,16 +1,33 @@
 ---
-title: "AWS BatchとGlue CrawlerでAthenaのスキーマを作成する"
-description: ""
+title: "AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する"
+description: "以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話でGlueを少し触ってみたのですが、今回はAWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。"
 date: 2018-07-02 00:00:00 +0900
 categories: aws
-tags: aws batch glue athena
+tags: aws batch glue stepfunctions athena
 header:
   teaser: /assets/images/icon/glue_icon.png
 ---
 
+以前、 [S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話](/aws/glue-process-cloudwatchlogs/) でGlueを少し触ってみたのですが、今回はAWS Batchで前処理をしてGlue Crawlerを使ってAthenaのスキーマを自動生成しました、という話をしようと思います。
 
 * Table Of Contents
 {:toc}
+
+## モチベーション：データの検索を容易にしたい
+
+## 実装してみる
+
+### アーキテクチャ概要
+
+### バケットの作成
+
+### ECSの実装
+
+### AWS Batchの実装
+
+### Glue Crawlerの設定
+
+### 確認してみる
 
 
 ## まとめ
