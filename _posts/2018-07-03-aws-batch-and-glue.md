@@ -86,25 +86,26 @@ RUN pip install -r /opt/requirements.txt
 #### コンピューティング環境の設定
 
 AWS Batchから起動させるコンピューティング環境の設定をします。
-これはAWS batchから起動するECSインスタンスの
-Terraformで書くとざっくり以下のようになります。
+これはAWS batchから起動するECSインスタンスの設定です。
+
+Terraformで書くとざっくり以下のようになります。適宜必要な設定にします。
 
 ```
 resource "aws_batch_compute_environment" "etl" {
     compute_environment_name = "etl"
     compute_resources {
-        instance_role = "arn:aws:iam::${var.account_id}:instance-profile/ecsInstanceRole"
+        instance_role = "${ECSインスタンスのRole}"
         instance_type = [
-            "c5.large",
+            ${EC2インスタンスタイプ}"
         ]
         max_vcpus = 16
         min_vcpus = 2
         desired_vcpus = 2
-        security_group_ids = "${var.pre_etl_batch_security_groups}"
-        subnets = "${var.pre_etl_batch_subnet_ids}"
+        security_group_ids = ["${SecurityGroupのID}"]
+        subnets = ["${SubnetのID}"]
         type = "EC2"
     }
-    service_role = "arn:aws:iam::${var.account_id}:role/service-role/AWSBatchServiceRole"
+    service_role = "arn:aws:iam::${アカウント番号}:role/service-role/AWSBatchServiceRole"
     type = "MANAGED"
 }
 ```
