@@ -36,10 +36,27 @@ PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機�
 
 ![architecture]({{site.baseurl}}/assets/images/20180702/architecture.png)
 
+大まかな処理の流れを説明すると
+
+1. S3バケットにファイルが置かれる
+2. Object Put EventでLambdaが起動し、StepFunctionsを実行
+3. StepfunctionsがAWS Batchのステートメントを管理
+  1. AWS Batchの実行
+  2. Batch Jobのステータス確認
+4. AWS Batchで起動されるECSで前処理を実施し、成果物をS3にPUT
+5. Glue CrawlerがS3のファイルからAthenaスキーマを自動生成
+
 なお、図中の赤枠部分はクラスメソッドさんの 「[AWS Step Functionsでジョブ・ステータス・ポーリングを実装する](https://dev.classmethod.jp/cloud/aws/aws-step-functions-job-status-polling-cloudformation/)」 を参考に実装していますので、
 説明は割愛します。
 
 ### バケットの作成
+
+まずは図中のS3バケットを2つ作成します。用途としては以下です。
+
+* 整形前データ置き場
+  * aaaa
+    * aaaaa
+* 整形後データ置き場（Glue Crawlerが参照するバケット）
 
 ### ECSの実装
 
