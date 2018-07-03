@@ -54,13 +54,65 @@ PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機�
 まずは図中のS3バケットを2つ作成します。用途としては以下です。
 
 * 整形前データ置き場
-  * aaaa
-    * aaaaa
 * 整形後データ置き場（Glue Crawlerが参照するバケット）
 
-### ECSの実装
-
 ### AWS Batchの実装
+
+前処理のためのAWS Batchの実装をしましょう。
+Batchと言いつつも、内部的にはECSを使った処理になるため、ECSに対する一定の理解が必要になります。
+
+#### ECRの作成
+
+まずは、AWS Batchで実行させるECSコンテナのDockerイメージをECRにPushします。
+
+今回は前処理をPython 3.6で実行させたいので、 `python:3.6.5-alpine` のイメージを使います。
+
+Dockerfileは以下のようにしました。 コンテナ内の `/opt/etl` 配下にpythonプログラムを置くイメージです。
+
+```
+FROM python:3.6.5-alpine
+
+MAINTAINER soudegesu
+
+COPY ./etl /opt/etl
+COPY ./requirements.txt /opt/requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r /opt/requirements.txt
+```
+
+ビルドしたdocker imageをECRにpushすればOKです。
+
+#### コンピューティング環境の設定
+
+AWS Batchから起動させるコンピューティング環境の設定をします。
+これはAWS batchから起動するECSインスタンスの
+Terraformで書くとざっくり以下のようになります。
+
+```
+resource "aws_batch_compute_environment" "etl" {
+    compute_environment_name = "etl"
+    compute_resources {
+        instance_role = "arn:aws:iam::${var.account_id}:instance-profile/ecsInstanceRole"
+        instance_type = [
+            "c5.large",
+        ]
+        max_vcpus = 16
+        min_vcpus = 2
+        desired_vcpus = 2
+        security_group_ids = "${var.pre_etl_batch_security_groups}"
+        subnets = "${var.pre_etl_batch_subnet_ids}"
+        type = "EC2"
+    }
+    service_role = "arn:aws:iam::${var.account_id}:role/service-role/AWSBatchServiceRole"
+    type = "MANAGED"
+}
+```
+
+#### バッチのジョブ定義
+
+#### ジョブキューの作成
+
 
 ### Glue Crawlerの設定
 
