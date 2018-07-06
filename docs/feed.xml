@@ -1,4 +1,341 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-02T09:14:53+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">matplotlibのpyplot APIをいろいろ試す</title><link href="https://www.soudegesu.com/python/pyplot-api/" rel="alternate" type="text/html" title="matplotlibのpyplot APIをいろいろ試す" /><published>2018-06-22T00:00:00+09:00</published><updated>2018-06-22T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/pyplot-api</id><content type="html" xml:base="https://www.soudegesu.com/python/pyplot-api/">&lt;p&gt;matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-06T09:53:25+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</title><link href="https://www.soudegesu.com/aws/aws-batch-and-glue/" rel="alternate" type="text/html" title="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する" /><published>2018-07-02T00:00:00+09:00</published><updated>2018-07-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/aws-batch-and-glue</id><content type="html" xml:base="https://www.soudegesu.com/aws/aws-batch-and-glue/">&lt;p&gt;以前、 &lt;a href=&quot;/aws/glue-process-cloudwatchlogs/&quot;&gt;S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話&lt;/a&gt; でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーションデータを容易に検索したい&quot; id=&quot;markdown-toc-モチベーションデータを容易に検索したい&quot;&gt;モチベーション：データを容易に検索したい&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#やってみる&quot; id=&quot;markdown-toc-やってみる&quot;&gt;やってみる&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#アーキテクチャ概要&quot; id=&quot;markdown-toc-アーキテクチャ概要&quot;&gt;アーキテクチャ概要&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#バケットの作成&quot; id=&quot;markdown-toc-バケットの作成&quot;&gt;バケットの作成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#aws-batchの実装&quot; id=&quot;markdown-toc-aws-batchの実装&quot;&gt;AWS Batchの実装&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#ecrの作成&quot; id=&quot;markdown-toc-ecrの作成&quot;&gt;ECRの作成&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#コンピューティング環境の設定&quot; id=&quot;markdown-toc-コンピューティング環境の設定&quot;&gt;コンピューティング環境の設定&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ジョブキューの作成&quot; id=&quot;markdown-toc-ジョブキューの作成&quot;&gt;ジョブキューの作成&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#バッチのジョブ定義&quot; id=&quot;markdown-toc-バッチのジョブ定義&quot;&gt;バッチのジョブ定義&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ジョブを実行するlambdaの実装&quot; id=&quot;markdown-toc-ジョブを実行するlambdaの実装&quot;&gt;ジョブを実行するLambdaの実装&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#glue-crawlerからathenaのスキーマを作成する&quot; id=&quot;markdown-toc-glue-crawlerからathenaのスキーマを作成する&quot;&gt;Glue CrawlerからAthenaのスキーマを作成する&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーションデータを容易に検索したい&quot;&gt;モチベーション：データを容易に検索したい&lt;/h2&gt;
+
+&lt;p&gt;PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機械学習関係の処理を普段使っていない人でも、
+何らかのシステム開発に携わっているのであれば、システムが垂れ流すデータを見て、それを「いい感じに見たいなー」と思うことは良くあります。&lt;/p&gt;
+
+&lt;p&gt;今回は一般的なWeb APIのシステムにおいて、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;障害の調査をより簡易にしたい&lt;/li&gt;
+  &lt;li&gt;リクエストの傾向を把握したい&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;といったモチベーションがあり、実装してみることにしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.tableau.com/ja-jp&quot;&gt;Tableau&lt;/a&gt; や &lt;a href=&quot;https://redash.io/&quot;&gt;Redash&lt;/a&gt; といった所謂BIツールで可視化してもいいのですが、
+今回のケースでは検索を簡単にすれば十分なので、 &lt;strong&gt;Athenaで検索できること&lt;/strong&gt; をゴールに設定しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;やってみる&quot;&gt;やってみる&lt;/h2&gt;
+
+&lt;h3 id=&quot;アーキテクチャ概要&quot;&gt;アーキテクチャ概要&lt;/h3&gt;
+
+&lt;p&gt;さっそくやってみましょう。下図のようなアーキテクチャを構築しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180702/architecture.png&quot; alt=&quot;architecture&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;大まかな処理の流れを説明すると&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;S3バケットにファイルが置かれる&lt;/li&gt;
+  &lt;li&gt;Object Put EventでLambdaが起動し、StepFunctionsを実行&lt;/li&gt;
+  &lt;li&gt;StepfunctionsがAWS Batchのステートメントを管理&lt;/li&gt;
+  &lt;li&gt;AWS Batchの実行&lt;/li&gt;
+  &lt;li&gt;Batch Jobのステータス確認&lt;/li&gt;
+  &lt;li&gt;AWS Batchで起動されるECSで前処理を実施し、成果物をS3にPUT&lt;/li&gt;
+  &lt;li&gt;Glue CrawlerがS3のファイルからAthenaスキーマを自動生成&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;なお、図中の赤枠部分はクラスメソッドさんの 「&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/aws-step-functions-job-status-polling-cloudformation/&quot;&gt;AWS Step Functionsでジョブ・ステータス・ポーリングを実装する&lt;/a&gt;」 を参考に実装していますので、
+説明は割愛します。&lt;/p&gt;
+
+&lt;h3 id=&quot;バケットの作成&quot;&gt;バケットの作成&lt;/h3&gt;
+
+&lt;p&gt;まずは図中のS3バケットを2つ作成します。用途としては以下です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;整形前データ置き場&lt;/li&gt;
+  &lt;li&gt;整形後データ置き場（Glue Crawlerが参照するバケット）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;aws-batchの実装&quot;&gt;AWS Batchの実装&lt;/h3&gt;
+
+&lt;p&gt;前処理を行うAWS Batchの実装をしましょう。
+Batchと言いつつも、内部的にはECSが起動して処理を行うため、AWS Batchの設定にはECSに対する一定の理解も必要です。&lt;/p&gt;
+
+&lt;h4 id=&quot;ecrの作成&quot;&gt;ECRの作成&lt;/h4&gt;
+
+&lt;p&gt;まずは、AWS Batchで実行させるECSコンテナのDockerイメージをECRにPushします。&lt;/p&gt;
+
+&lt;p&gt;今回は前処理をPython 3.6で実行させたいので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;python:3.6.5-alpine&lt;/code&gt; のイメージを使ってDockerfileを作成します。
+コンテナ内の &lt;code class=&quot;highlighter-rouge&quot;&gt;/opt/etl&lt;/code&gt; 配下にpythonプログラムを置くイメージです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM python:3.6.5-alpine
+
+MAINTAINER soudegesu
+
+COPY ./etl /opt/etl
+COPY ./requirements.txt /opt/requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r /opt/requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ビルドしたdocker imageをECRにpushすればOKです。&lt;/p&gt;
+
+&lt;h4 id=&quot;コンピューティング環境の設定&quot;&gt;コンピューティング環境の設定&lt;/h4&gt;
+
+&lt;p&gt;AWS Batchから起動させるコンピューティング環境の設定をします。
+これはAWS batchから起動するECSインスタンスの設定です。&lt;/p&gt;
+
+&lt;p&gt;Terraformで設定例を書くと以下のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_batch_compute_environment&quot; &quot;etl&quot; {
+    compute_environment_name = &quot;etl&quot;
+    compute_resources {
+        instance_role = &quot;${ECSインスタンスのRole}&quot;
+        instance_type = [
+            ${EC2インスタンスタイプ}&quot;
+        ]
+        max_vcpus = 16
+        min_vcpus = 2
+        desired_vcpus = 2
+        security_group_ids = [&quot;${SecurityGroupのID}&quot;]
+        subnets = [&quot;${SubnetのID}&quot;]
+        type = &quot;EC2&quot;
+    }
+    service_role = &quot;arn:aws:iam::${アカウント番号}:role/service-role/AWSBatchServiceRole&quot;
+    type = &quot;MANAGED&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;ジョブキューの作成&quot;&gt;ジョブキューの作成&lt;/h4&gt;
+
+&lt;p&gt;次にジョブキューの設定を行います。キューに格納されたジョブの実行の優先順位や、実行時のコンピューティングリソースの紐付けを定義しておきます。&lt;/p&gt;
+
+&lt;p&gt;Terraformで設定例を書くと以下のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_batch_job_queue&quot; &quot;etl&quot; {
+    name = &quot;etl&quot;
+    state = &quot;ENABLED&quot;
+    priority = 1
+    compute_environments = [
+        &quot;${aws_batch_compute_environment.etl.arn}&quot;
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;バッチのジョブ定義&quot;&gt;バッチのジョブ定義&lt;/h4&gt;
+
+&lt;p&gt;次に実行するジョブの定義をします。&lt;/p&gt;
+
+&lt;p&gt;ジョブと言っても、ECSのタスク定義の情報に加えて、コンテナ起動後に実行するコマンドを書いたりします。&lt;/p&gt;
+
+&lt;p&gt;Terraformで設定例を書くと以下のようになります。&lt;/p&gt;
+
+&lt;p&gt;コンテナ内で任意のプログラムを実行する場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;command&lt;/code&gt; プロパティ部に設定を行います。
+引数部分に &lt;code class=&quot;highlighter-rouge&quot;&gt;Ref::&lt;/code&gt; という見慣れないものがありますが、これは後述します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_batch_job_definition&quot; &quot;etl&quot; {
+    name = &quot;etl&quot;
+    type = &quot;container&quot;
+    container_properties = &amp;lt;&amp;lt;EOF
+{
+    &quot;command&quot;: [&quot;python&quot;,
+        &quot;/opt/etl/main.py&quot;,
+        &quot;-b&quot;,
+        &quot;Ref::bucket&quot;,
+        &quot;-k&quot;,
+        &quot;Ref::objKey&quot;
+    ],
+    &quot;environment&quot;: [
+         {
+            &quot;name&quot;: &quot;TMP&quot;,
+            &quot;value&quot;: &quot;/tmp&quot;
+         },
+         {
+            &quot;name&quot;: &quot;UPLOAD_BUCKET&quot;,
+            &quot;value&quot;: &quot;${バケット名}&quot;
+         }
+    ],
+    &quot;image&quot;: &quot;${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/etl:${var.image_tag}&quot;,
+    &quot;memory&quot;: 1024,
+    &quot;vcpus&quot;: 2,
+    &quot;ulimits&quot;: [
+      {
+        &quot;hardLimit&quot;: 1024,
+        &quot;name&quot;: &quot;nofile&quot;,
+        &quot;softLimit&quot;: 1024
+      }
+    ]
+}
+EOF
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なお、ここで実行される &lt;code class=&quot;highlighter-rouge&quot;&gt;main.py&lt;/code&gt; の処理概要は以下になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;基データのあるバケットからデータを取得する&lt;/li&gt;
+  &lt;li&gt;データレコードは &lt;strong&gt;JSONフォーマット&lt;/strong&gt; に加工する&lt;/li&gt;
+  &lt;li&gt;ETL済みデータのあるバケットへアップロードする
+    &lt;ul&gt;
+      &lt;li&gt;S3バケットに &lt;strong&gt;Hiveフォーマット（ &lt;code class=&quot;highlighter-rouge&quot;&gt;dt=yyyy-MM-dd-HH-mm&lt;/code&gt; ） でパーティション（フォルダ）を作成&lt;/strong&gt; する&lt;/li&gt;
+      &lt;li&gt;ファイルは &lt;code class=&quot;highlighter-rouge&quot;&gt;.gz&lt;/code&gt; でアップロードする&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;ジョブを実行するlambdaの実装&quot;&gt;ジョブを実行するLambdaの実装&lt;/h4&gt;
+
+&lt;p&gt;AWS Batchのジョブを実行するだけのサンプルコードを書きます。&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;json&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;boto3&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;logging&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setLevel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INFO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;lambda_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;job_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'JOB_NAME'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;job_queue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'JOB_QUEUE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;job_definition&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'JOB_DEFINITION'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bucket_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'BUCKET_NAME'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;obj_key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'OBJECT_KEY'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'bucket'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bucket_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'objKey'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj_key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;batch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;boto3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'batch'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;batch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;submit_job&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jobQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jobName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jobDefinition&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;jobId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'jobId'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;'jobId'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jobId&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Error submitting Batch Job'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;要点としては &lt;code class=&quot;highlighter-rouge&quot;&gt;submit_job&lt;/code&gt; 関数の &lt;code class=&quot;highlighter-rouge&quot;&gt;parameters&lt;/code&gt; 引数で渡されたデータが、
+先程のバッチジョブ定義の &lt;code class=&quot;highlighter-rouge&quot;&gt;Ref::&lt;/code&gt; を置換することで、動的なデータの受け渡しを実現しています。&lt;/p&gt;
+
+&lt;p&gt;（今回のケースで言えば &lt;code class=&quot;highlighter-rouge&quot;&gt;bucket&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;objKey&lt;/code&gt; が置換されます）&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;python&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/opt/etl/main.py&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Ref::bucket&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-k&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Ref::objKey&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ここまで来れば、ETL済みのバケットへ以下のような構成でデータがアップロードされているはずです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180702/hive.png&quot; alt=&quot;hive&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;glue-crawlerからathenaのスキーマを作成する&quot;&gt;Glue CrawlerからAthenaのスキーマを作成する&lt;/h3&gt;
+
+&lt;p&gt;GlueのCrawlerはデータソースに任意のデータベースやS3を指定することができ、
+そのデータからAthenaのスキーマを自動生成してくれる機能を持っています。&lt;/p&gt;
+
+&lt;p&gt;Terraform AWS Providerが2018/06にGlue Crawlerに対応したこともあり、Terraformで書いてみましょう。&lt;/p&gt;
+
+&lt;p&gt;まずはデータベースの設定です。これはAthenaのデータベースになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_glue_catalog_database&quot; &quot;sample&quot; {
+    name = &quot;${データベース名}&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次にCrawlerの設定です。&lt;/p&gt;
+
+&lt;p&gt;今回のユースケースであれば &lt;code class=&quot;highlighter-rouge&quot;&gt;role&lt;/code&gt; は最低限 &lt;code class=&quot;highlighter-rouge&quot;&gt;AWSGlueServiceRole&lt;/code&gt; がついていれば問題ありません。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;schedule&lt;/code&gt; にてCrawlerが対象のS3のパスを見に行くスケジュールの指定ができますし、
+スキーマ変更があった場合の振る舞いを定義（今回は「データが無くなっていたら削除する」に指定）できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_glue_crawler&quot; &quot;sample&quot; {
+    database_name = &quot;${aws_glue_catalog_database.sample.name}&quot;
+    name = &quot;${Crawler名}&quot;
+    role = &quot;${Glue用のRole}&quot;
+
+    s3_target {
+        path = &quot;${S3バケットのパス}&quot;
+    }
+
+    schedule = &quot;cron(0 21 * * ? *)&quot;
+
+    schema_change_policy = {
+        delete_behavior = &quot;DELETE_FROM_DATABASE&quot;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Crawlerを実行すると、「Databases」 &amp;gt; 「Tables」 の中にいくつかデータテーブルができていることがわかります。
+これがAthenaのテーブルとリンクします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180702/glue_console.png&quot; alt=&quot;glue_console&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;作成されたテーブルの詳細を見てみると、&lt;code class=&quot;highlighter-rouge&quot;&gt;Classification&lt;/code&gt; の部分が &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; となっています。
+パーティション内のデータをJSON形式のデータと認識してスキーマを定義してくれたということです。&lt;/p&gt;
+
+&lt;p&gt;ネストされたJSONプロパティは &lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt; として定義されていることもわかります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180702/table_detail.png&quot; alt=&quot;table_detail&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;なお、コンソールからテーブルを選択して、「Action」 &amp;gt; 「View data」 を選択すると、Athenaコンソールの紐づいているデータベースへ画面遷移します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180702/table_detail.png&quot; alt=&quot;table_detail&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ここまで来れば、後は普通にクエリを書けるようになりますね。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はAWS Batchと AWS Glueを用いてAthenaのスキーマを生成するまでを行いました。
+AWS BatchはStepFunctionsと組み合わせて利用することで、バッチ処理結果に伴うハンドリングができるので、堅めの処理をしたいときにはいいかもしれません。&lt;/p&gt;
+
+&lt;p&gt;今回のユースケースに限って言えば、AWS BatchではなくFargateの方が適切だったようにも思えます。（2018/7にFargateが東京リージョンに来ました）&lt;/p&gt;
+
+&lt;p&gt;予めGlueのCrawlerは、前処理でS3パーティションやデータ構造を工夫してあげるだけで、データカタログ（Athenaのスキーマ）を勝手に作ってくれるので大変便利です。&lt;/p&gt;
+
+&lt;p&gt;今回は、データカタログを作るまでで終わりますが、そこからGlue本来のSparkへの処理に繋げることもできますし、SageMakerでパーティションのS3バケットを覗き込ませることもできるでしょう。&lt;/p&gt;
+
+&lt;p&gt;Glueの採用事例が更に増えていくことに期待ですね！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/aws-step-functions-job-status-polling-cloudformation/&quot;&gt;AWS Step Functionsでジョブ・ステータス・ポーリングを実装する&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-aws-batch&quot;&gt;AWS Black Belt Online Seminar 2017 AWS Batch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/job_definition_parameters.html&quot;&gt;ジョブ定義のパラメータ - AWS Batch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e31b0f9652aedc2ee6735408ac519d5e&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4774196479&amp;amp;linkId=c178f192d7778c77187b44c226c4e071&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="batch" /><category term="glue" /><category term="stepfunctions" /><category term="athena" /><summary type="html">以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話 でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。</summary></entry><entry><title type="html">matplotlibのpyplot APIをいろいろ試す</title><link href="https://www.soudegesu.com/python/pyplot-api/" rel="alternate" type="text/html" title="matplotlibのpyplot APIをいろいろ試す" /><published>2018-06-22T00:00:00+09:00</published><updated>2018-06-22T00:00:00+09:00</updated><id>https://www.soudegesu.com/python/pyplot-api</id><content type="html" xml:base="https://www.soudegesu.com/python/pyplot-api/">&lt;p&gt;matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。&lt;/p&gt;
 
 &lt;p&gt;たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。&lt;/p&gt;
 
@@ -3057,442 +3394,4 @@ IT企業の経営者が「事業が失敗したところで死ぬわけじゃな
 &lt;div style=&quot;text-align: center&quot;&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4532192161&amp;amp;linkId=b7ee298049b596b0b64c1d72c3b60d8b&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
 &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">「 歴史からの発想　停滞と拘束からいかに脱するか 」を読みました。 たまたまamazonサーフィンしていたら見つけた本なのですが、タイトルが気になったので買ってみました。 人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry><entry><title type="html">Spring Bootを1.5から2へマイグレーションするステップとポイント</title><link href="https://www.soudegesu.com/java/migrate-springboot-1-to-2/" rel="alternate" type="text/html" title="Spring Bootを1.5から2へマイグレーションするステップとポイント" /><published>2018-05-11T00:00:00+09:00</published><updated>2018-05-11T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/migrate-springboot-1-to-2</id><content type="html" xml:base="https://www.soudegesu.com/java/migrate-springboot-1-to-2/">&lt;p&gt;Spring Bootの2がリリースされたので、&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt;
-を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。&lt;/p&gt;
-
-&lt;p&gt;spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っている。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180511/springboot.png&quot; alt=&quot;springboot&quot; /&gt;&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#これからのjava時代に備えて&quot; id=&quot;markdown-toc-これからのjava時代に備えて&quot;&gt;これからのJava時代に備えて&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#2019年1月までにspring-boot2への以降を&quot; id=&quot;markdown-toc-2019年1月までにspring-boot2への以降を&quot;&gt;2019年1月までにSpring Boot2への以降を&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#マイグレーションに必要な事前準備&quot; id=&quot;markdown-toc-マイグレーションに必要な事前準備&quot;&gt;マイグレーションに必要な事前準備&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#いざマイグレーション&quot; id=&quot;markdown-toc-いざマイグレーション&quot;&gt;いざマイグレーション!!&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#buildgradleの変更&quot; id=&quot;markdown-toc-buildgradleの変更&quot;&gt;build.gradleの変更&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#applicationyaml-の修正&quot; id=&quot;markdown-toc-applicationyaml-の修正&quot;&gt;application.yaml の修正&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#コンパイルエラーやwarningを解決していく&quot; id=&quot;markdown-toc-コンパイルエラーやwarningを解決していく&quot;&gt;コンパイルエラーやwarningを解決していく&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#実行時エラーを解決する&quot; id=&quot;markdown-toc-実行時エラーを解決する&quot;&gt;実行時エラーを解決する&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#メトリックの取得設定を変えるspringboot-actuator&quot; id=&quot;markdown-toc-メトリックの取得設定を変えるspringboot-actuator&quot;&gt;メトリックの取得設定を変える（springboot-actuator）&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#以前は一発で取れた&quot; id=&quot;markdown-toc-以前は一発で取れた&quot;&gt;以前は一発で取れた&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#これからはメトリック毎に取得する&quot; id=&quot;markdown-toc-これからはメトリック毎に取得する&quot;&gt;これからはメトリック毎に取得する&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#micrometer-registry-datadog-を入れる&quot; id=&quot;markdown-toc-micrometer-registry-datadog-を入れる&quot;&gt;micrometer-registry-datadog を入れる&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#まさかにec2amazonlinuxデプロイで落とし穴&quot; id=&quot;markdown-toc-まさかにec2amazonlinuxデプロイで落とし穴&quot;&gt;まさかにEC2（AmazonLinux）デプロイで落とし穴&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#とどめの負荷テスト&quot; id=&quot;markdown-toc-とどめの負荷テスト&quot;&gt;とどめの負荷テスト&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
-&lt;h3 id=&quot;これからのjava時代に備えて&quot;&gt;これからのJava時代に備えて&lt;/h3&gt;
-
-&lt;p&gt;Spring Bootの &lt;code class=&quot;highlighter-rouge&quot;&gt;1.5.9&lt;/code&gt; を使っていたのだけど、2018/05時点において、公式からは &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above&quot;&gt;Spring Boot 1.5のJava9サポート予定はない&lt;/a&gt; ことが公表されている。&lt;/p&gt;
-
-&lt;p&gt;以前、&lt;a href=&quot;/java/java9-modularity/&quot;&gt;JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ&lt;/a&gt; を書いた時には
-Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応しておらず(&lt;strong&gt;複数ライブラリ間でのパッケージ重複問題&lt;/strong&gt;)、完全移行を断念した経緯があった。&lt;/p&gt;
-
-&lt;p&gt;その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを一応確認しておいたので、
- &lt;strong&gt;Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある&lt;/strong&gt; し、 Spring Boot使いは &lt;strong&gt;既にJavaのマイグレーション準備期間に突入した&lt;/strong&gt; のだ。&lt;/p&gt;
-
-&lt;h3 id=&quot;2019年1月までにspring-boot2への以降を&quot;&gt;2019年1月までにSpring Boot2への以降を&lt;/h3&gt;
-
-&lt;p&gt;「いつまでに何をしないといけないか？」、つまり、スケジュール感の算段を立てる必要がありそうだ。&lt;/p&gt;
-
-&lt;p&gt;まずは、 &lt;a href=&quot;http://www.oracle.com/technetwork/jp/java/eol-135779-ja.html&quot;&gt;Oracleの公式&lt;/a&gt; でJavaのロードマップを確認しよう。&lt;/p&gt;
-
-&lt;p&gt;Javaに関して抑えておきたいのは2点&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Java11は &lt;code class=&quot;highlighter-rouge&quot;&gt;2018/09&lt;/code&gt; から利用可能&lt;/li&gt;
-  &lt;li&gt;Java8は &lt;code class=&quot;highlighter-rouge&quot;&gt;2019/01&lt;/code&gt; にサポートが切れる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;次に &lt;a href=&quot;https://github.com/spring-projects/spring-boot/milestones&quot;&gt;Spring Bootのロードマップ&lt;/a&gt; も確認しておく。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180511/springboot-milestones.png&quot; alt=&quot;springboot-milestone&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Spring Bootの場合には&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.0.2&lt;/code&gt; のリリースは2018/05予定&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.1.0.RC1&lt;/code&gt; のリリースが2018/09予定&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2.1.0.RC2&lt;/code&gt; 以降は未定&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;がポイントだ。&lt;/p&gt;
-
-&lt;p&gt;結論として、&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;2018/09までに &lt;code class=&quot;highlighter-rouge&quot;&gt;sprignboot 2.0.x&lt;/code&gt; にマイグレーションする&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;2019/01までに &lt;code class=&quot;highlighter-rouge&quot;&gt;Java 11&lt;/code&gt; にマイグレーションする&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;という段取りで進めていくとスムーズだと考えている。&lt;/p&gt;
-
-&lt;h2 id=&quot;マイグレーションに必要な事前準備&quot;&gt;マイグレーションに必要な事前準備&lt;/h2&gt;
-
-&lt;p&gt;いきなりマイグレーション作業をすると破綻するので、事前準備が必要だ。&lt;/p&gt;
-
-&lt;p&gt;具体的に言うと &lt;strong&gt;テストコード&lt;/strong&gt; と &lt;strong&gt;メトリック取得の仕組み&lt;/strong&gt; の2つが必要になる。&lt;/p&gt;
-
-&lt;p&gt;テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;単体テスト&lt;/li&gt;
-  &lt;li&gt;結合テスト&lt;/li&gt;
-  &lt;li&gt;負荷テスト&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;メトリック取得の仕組みはなんでも良いが、私は &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt; を使っている。&lt;/p&gt;
-
-&lt;p&gt;プロジェクトによっては、結合テストと負荷テストまで手が届いていないかもしれないが、今回のようなマイグレーションには欠かせないので作っておこう。&lt;/p&gt;
-
-&lt;p&gt;外側から見たシステムの振る舞いやパフォーマンスに影響がないかを確認する必要があるからだ。&lt;/p&gt;
-
-&lt;p&gt;なお、負荷テストではbefore/afterの比較ができないと意味がないので、既存のシステムでさばけるパフォーマンスは一度計測しておく。&lt;/p&gt;
-
-&lt;p&gt;とりあえず私の場合は既にメンテンナスされている資産があるので、それを使うことにする。&lt;/p&gt;
-
-&lt;h2 id=&quot;いざマイグレーション&quot;&gt;いざマイグレーション!!&lt;/h2&gt;
-
-&lt;h3 id=&quot;環境情報&quot;&gt;環境情報&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Java
-    &lt;ul&gt;
-      &lt;li&gt;1.8.0_152&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Gradle
-    &lt;ul&gt;
-      &lt;li&gt;4.4&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;マイグレーション対象のSpring Bootモジュール
-    &lt;ul&gt;
-      &lt;li&gt;spring-boot-starter-web&lt;/li&gt;
-      &lt;li&gt;spring-boot-starter-data-jpa&lt;/li&gt;
-      &lt;li&gt;spring-boot-starter-actuator&lt;/li&gt;
-      &lt;li&gt;spring-boot-configuration-processor&lt;/li&gt;
-      &lt;li&gt;spring-boot-starter-thymeleaf&lt;/li&gt;
-      &lt;li&gt;spring-boot-gradle-plugin(ビルド用)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;buildgradleの変更&quot;&gt;build.gradleの変更&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Spring Bootをバージョンアップ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;記事を書いている時点での最新 &lt;code class=&quot;highlighter-rouge&quot;&gt;2.0.1.RELEASE&lt;/code&gt; に変更する。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bootRepackage&lt;/code&gt; タスクを削除&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/&quot;&gt;Spring Boot Gradle Plugin&lt;/a&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;bootRepackage&lt;/code&gt; タスクが廃止になったため削除した。 &lt;code class=&quot;highlighter-rouge&quot;&gt;public static void main(String[] args)&lt;/code&gt; を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも &lt;code class=&quot;highlighter-rouge&quot;&gt;mainClassName&lt;/code&gt; の記述は必須ではない。&lt;/p&gt;
-
-&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// 削除&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//bootRepackage {&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    mainClass = 'com.soudegesu.demo.app.Application'&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    executable = true&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;applicationyaml-の修正&quot;&gt;application.yaml の修正&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; を修正する。設定項目は使っているモジュールに依存するので、詳細は触れないが、
-私の場合には主に &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-actuator&lt;/code&gt; の設定変更が発生した。
-&lt;strong&gt;yaml構造の変更&lt;/strong&gt; と &lt;strong&gt;actuator endpointの公開設定&lt;/strong&gt; と &lt;strong&gt;メトリック取得方法指定&lt;/strong&gt; といったところ。&lt;/p&gt;
-
-&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;management&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;endpoints&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;exposure&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;info,health,metrics,httptrace,threaddump,heapdump&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;metrics&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;datadog&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;api-key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(APIのキー)&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;30s&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;false&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ポート番号&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;コンパイルエラーやwarningを解決していく&quot;&gt;コンパイルエラーやwarningを解決していく&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; を編集して依存関係を更新すると、コンパイルエラーやwarningが出てくるので、それを適宜直していく。&lt;/p&gt;
-
-&lt;p&gt;パッケージやクラスに変更があり、それに合わせてIFも修正する必要があった。
-ざっくり以下に置き換えている。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;変更前&lt;/td&gt;
-      &lt;td&gt;変更後&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-  &lt;tfoot&gt;
-    &lt;tr&gt;
-      &lt;td&gt;org.springframework.boot.autoconfigure.web.ErrorAttributes&lt;/td&gt;
-      &lt;td&gt;org.springframework.boot.web.servlet.error.ErrorAttributes&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;org.springframework.web.context.request.RequestAttributes&lt;/td&gt;
-      &lt;td&gt;org.springframework.web.context.request.WebRequest&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter&lt;/td&gt;
-      &lt;td&gt;org.springframework.web.servlet.config.annotation.WebMvcConfigurer&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tfoot&gt;
-&lt;/table&gt;
-
-&lt;p&gt;少し面倒だったのは &lt;a href=&quot;https://projects.spring.io/spring-data-jpa/&quot;&gt;spring-data-jpa&lt;/a&gt; の
-&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;findOne&lt;/code&gt; が削除されたため、 implementしているクラス側で &lt;code class=&quot;highlighter-rouge&quot;&gt;findByXX&lt;/code&gt; を自前定義してあげた。&lt;/p&gt;
-
-&lt;p&gt;コンパイルエラーが治ったら、単体テストを実行し、クラスレベルのデグレードが起きないことを確認した。&lt;/p&gt;
-
-&lt;h2 id=&quot;実行時エラーを解決する&quot;&gt;実行時エラーを解決する&lt;/h2&gt;
-
-&lt;p&gt;次に、マイグレーション済みのSpring Bootアプリケーションを起動できるようになったら、ローカルで結合テストを流して、振る舞いに変化がないかをチェックする。&lt;/p&gt;
-
-&lt;p&gt;エラーがやはり出た。&lt;/p&gt;
-
-&lt;p&gt;DBへのINSERTが伴うリクエストの処理にて、 &lt;a href=&quot;https://projects.spring.io/spring-data-jpa/&quot;&gt;spring-data-jpa&lt;/a&gt; がエラーを吐き出している。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
-(中略)
-Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
-
-  Query is: select next_val as id_val from hibernate_sequence for update
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに &lt;code class=&quot;highlighter-rouge&quot;&gt;@GeneratedValue(strategy= GenerationType.AUTO)&lt;/code&gt; アノテーションを付与しているのだが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate_sequence&lt;/code&gt; を使ったID生成を試みてしまっているようだ。&lt;/p&gt;
-
-&lt;p&gt;確認してみたところ、デフォルトの挙動が変わっているようだ。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Id generator&lt;/p&gt;
-
-  &lt;p&gt;The spring.jpa.hibernate.use-new-id-generator-mappings property is now true by default to align with the default behaviour of Hibernate. If you need to temporarily restore this now deprecated behaviour, set the property to false.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;そのため、 &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.jpa.hibernate.use-new-id-generator-mappings: false&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;application.yaml&lt;/code&gt; に追加してあげる。&lt;/p&gt;
-
-&lt;h3 id=&quot;メトリックの取得設定を変えるspringboot-actuator&quot;&gt;メトリックの取得設定を変える（springboot-actuator）&lt;/h3&gt;
-
-&lt;p&gt;正直これが一番めんどくさかった。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html&quot;&gt;springboot-actuator&lt;/a&gt; を使用しているのだが、
-バージョンアップに伴い大きく以下の変更が入っている。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;メトリック毎にエンドポイントが分割された&lt;/strong&gt;
-    &lt;ul&gt;
-      &lt;li&gt;一発で取得できなくなった&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;取得できるメトリック名に後方互換がなくなった&lt;/strong&gt;
-    &lt;ul&gt;
-      &lt;li&gt;諸事情で後方互換性を持たせたい時には自前実装が必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;メトリック拡張のロジックに修正が必要になった&lt;/strong&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;http://metrics.dropwizard.io/4.0.0/&quot;&gt;dropwizard metrics&lt;/a&gt; でメトリック拡張してた場合も改修必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;springboot-actuator のメトリックをシステム監視に利用しているプロダクトは辛い。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;もう少し具体的に説明しておく。&lt;/p&gt;
-
-&lt;h4 id=&quot;以前は一発で取れた&quot;&gt;以前は一発で取れた&lt;/h4&gt;
-
-&lt;p&gt;以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
-拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mem&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;485331&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mem.free&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;253058&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;processors&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;instance.uptime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;312097&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uptime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;338799&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;systemload.average&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.69384765625&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;419840&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.init&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;131072&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;166781&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;heap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1864192&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;66648&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.init&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2496&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65492&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonheap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.peak&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;177&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.daemon&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;155&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads.totalStarted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;243&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;threads&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;158&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9613&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes.loaded&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9613&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;classes.unloaded&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_scavenge.count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_scavenge.time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;373&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_marksweep.count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gc.ps_marksweep.time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;388&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;〜(中略)〜&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpsessions.max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpsessions.active&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;datasource.primary.active&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;datasource.primary.usage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;これからはメトリック毎に取得する&quot;&gt;これからはメトリック毎に取得する&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics&lt;/code&gt; を参考に取得可能なメトリックを確認して
-(この時点でメトリック名に互換性がないことがわかる)&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;names&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http.server.requests&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.buffer.memory.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.memory.used&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.gc.memory.allocated&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.memory.committed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jdbc.connections.min&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.created&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.expired&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hikaricp.connections.usage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.global.request.max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(中略)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.threads.busy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.global.request&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hikaricp.connections.creation&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jvm.gc.memory.promoted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.rejected&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.alive.max&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics/(メトリック名)&lt;/code&gt; でリクエストをしてあげなければならない。&lt;/p&gt;
-
-&lt;p&gt;例えば以下のようになる。&lt;/p&gt;
-
-&lt;p&gt;パス: &lt;code class=&quot;highlighter-rouge&quot;&gt;/actuator/metrics/tomcat.sessions.created&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tomcat.sessions.created&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;measurements&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;statistic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;COUNT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;availableTags&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結構変わってしまったではないか。。&lt;/p&gt;
-
-&lt;h4 id=&quot;micrometer-registry-datadog-を入れる&quot;&gt;micrometer-registry-datadog を入れる&lt;/h4&gt;
-
-&lt;p&gt;たまたま &lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt; を導入していたため、
-簡易な解決策として、micrometer-registry-datadog にメトリックを打ち上げてもらうことにした。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; に依存モジュールを追加&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'io.micrometer'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'micrometer-registry-datadog'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'1.0.3'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;まさかにec2amazonlinuxデプロイで落とし穴&quot;&gt;まさかにEC2（AmazonLinux）デプロイで落とし穴&lt;/h3&gt;
-
-&lt;p&gt;ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に &lt;code class=&quot;highlighter-rouge&quot;&gt;jar&lt;/code&gt; をデプロイする時に落とし穴に遭遇した。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt; コマンド起動時に&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;invalid file &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bad magic number&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Exec format error
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;のようなエラーメッセージが出て起動できなくなってしまったのだ。&lt;/p&gt;
-
-&lt;p&gt;しかし、 &lt;code class=&quot;highlighter-rouge&quot;&gt;java -jar&lt;/code&gt; コマンドでは起動できる。&lt;/p&gt;
-
-&lt;p&gt;これには &lt;code class=&quot;highlighter-rouge&quot;&gt;bootJar&lt;/code&gt; タスク実行時に起動スクリプトを含めることで対応した。&lt;/p&gt;
-
-&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;bootJar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;launchScript&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;とどめの負荷テスト&quot;&gt;とどめの負荷テスト&lt;/h2&gt;
-
-&lt;p&gt;最後に環境にデプロイして、負荷試験を行う。
-プロダクトによって指標は異なると思うので、私は以下の2種類だけ実施した。（人によって言い方が変わるので注意）&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ストレステスト
-    &lt;ul&gt;
-      &lt;li&gt;サービス需要予測とそれ以上の瞬間最大風速を計測&lt;/li&gt;
-      &lt;li&gt;できれば3点計測する&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ロングランテスト
-    &lt;ul&gt;
-      &lt;li&gt;長期間実施してサーバリソースが枯渇しないか、周辺のコンポーネントに迷惑かけないか計測&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これらをdatadog上で大きな変化がないことを確認して、終了。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;今回はSpring Boot 1.5のプロジェクトを 2.0にマイグレーションしてみました。&lt;/p&gt;
-
-&lt;p&gt;大きな流れをまとめると&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;テストコード準備する&lt;/li&gt;
-  &lt;li&gt;マイグレ前のアプリケーションのパフォーマンスを計測しておく&lt;/li&gt;
-  &lt;li&gt;ライブラリを差し替える&lt;/li&gt;
-  &lt;li&gt;単体テストを動かしながら、コンパイルエラーを取り除く&lt;/li&gt;
-  &lt;li&gt;結合テストを動かしながら、実行時エラーを取り除く&lt;/li&gt;
-  &lt;li&gt;サーバにデプロイする&lt;/li&gt;
-  &lt;li&gt;負荷テストして、パフォーマンスが大きく変わっていないことを確認&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;負荷テスト含めて実施したため、全体としての所要時間はかかりました（1人でやって1.5weekくらい）が、コードのマイグレーション作業自体はそこまで時間がかかりませんでした。これは &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt; の内容が以前よりも充実したことが寄与していると思う。&lt;/p&gt;
-
-&lt;p&gt;強いて言うと、 &lt;code class=&quot;highlighter-rouge&quot;&gt;springboot-actuator&lt;/code&gt; のメトリック変更がコード以外の部分に波及したのは厄介でした。&lt;/p&gt;
-
-&lt;p&gt;2.x自体もリリースされて日が浅いので、事故っても損害が少ないプロダクトから適用していきたいですね。&lt;/p&gt;
-
-&lt;p&gt;そして、来るべきJava 11に早めに備えておきたい！&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide&quot;&gt;Spring Boot 2.0 Migration Guide&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-Java-9-and-above&quot;&gt;Spring Boot with Java 9 and above&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">Spring Bootの2がリリースされたので、Spring Boot 2.0 Migration Guide を参考に既存のSpring Boot 1.5のプロジェクトをマイグレーションしてみた。行なったときの段取りとポイントを簡単にまとめました。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">「 歴史からの発想　停滞と拘束からいかに脱するか 」を読みました。 たまたまamazonサーフィンしていたら見つけた本なのですが、タイトルが気になったので買ってみました。 人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>
