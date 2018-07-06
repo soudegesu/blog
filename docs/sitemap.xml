@@ -153,6 +153,10 @@
 <lastmod>2018-06-22T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/aws/aws-batch-and-glue/</loc>
+<lastmod>2018-07-02T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -337,6 +341,15 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/matplotlib/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/batch/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/stepfunctions/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/athena/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>

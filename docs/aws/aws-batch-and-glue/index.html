@@ -1,0 +1,1137 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="ja" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する - そうなんでげす</title>
+
+
+
+
+<meta name="description" content="以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話でGlueを少し触ってみたのですが、今回はAWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。">
+
+
+
+
+<meta name="author" content="soudegesu">
+
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="そうなんでげす">
+<meta property="og:title" content="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する">
+
+
+  <link rel="canonical" href="https://www.soudegesu.com/aws/aws-batch-and-glue/">
+  <meta property="og:url" content="https://www.soudegesu.com/aws/aws-batch-and-glue/">
+
+
+
+  <meta property="og:description" content="以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話でGlueを少し触ってみたのですが、今回はAWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。">
+
+
+
+  <meta name="twitter:site" content="@alten_manten">
+  <meta name="twitter:title" content="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する">
+  <meta name="twitter:description" content="以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話でGlueを少し触ってみたのですが、今回はAWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。">
+  <meta name="twitter:url" content="https://www.soudegesu.com/aws/aws-batch-and-glue/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/glue_icon.png">
+    
+  
+
+  
+    <meta name="twitter:creator" content="@alten_manten">
+  
+
+
+
+
+
+  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/glue_icon.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-07-02T00:00:00+09:00">
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "https://www.soudegesu.com",
+      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+    }
+  </script>
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "soudegsu",
+      "url" : "https://www.soudegesu.com",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する">
+    <meta itemprop="description" content="以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話 でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。">
+    <meta itemprop="datePublished" content="July 02, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>以前、 <a href="/aws/glue-process-cloudwatchlogs/">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</a> でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#モチベーションデータを容易に検索したい" id="markdown-toc-モチベーションデータを容易に検索したい">モチベーション：データを容易に検索したい</a></li>
+  <li><a href="#やってみる" id="markdown-toc-やってみる">やってみる</a>    <ul>
+      <li><a href="#アーキテクチャ概要" id="markdown-toc-アーキテクチャ概要">アーキテクチャ概要</a></li>
+      <li><a href="#バケットの作成" id="markdown-toc-バケットの作成">バケットの作成</a></li>
+      <li><a href="#aws-batchの実装" id="markdown-toc-aws-batchの実装">AWS Batchの実装</a>        <ul>
+          <li><a href="#ecrの作成" id="markdown-toc-ecrの作成">ECRの作成</a></li>
+          <li><a href="#コンピューティング環境の設定" id="markdown-toc-コンピューティング環境の設定">コンピューティング環境の設定</a></li>
+          <li><a href="#ジョブキューの作成" id="markdown-toc-ジョブキューの作成">ジョブキューの作成</a></li>
+          <li><a href="#バッチのジョブ定義" id="markdown-toc-バッチのジョブ定義">バッチのジョブ定義</a></li>
+          <li><a href="#ジョブを実行するlambdaの実装" id="markdown-toc-ジョブを実行するlambdaの実装">ジョブを実行するLambdaの実装</a></li>
+        </ul>
+      </li>
+      <li><a href="#glue-crawlerからathenaのスキーマを作成する" id="markdown-toc-glue-crawlerからathenaのスキーマを作成する">Glue CrawlerからAthenaのスキーマを作成する</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="モチベーションデータを容易に検索したい">モチベーション：データを容易に検索したい</h2>
+
+<p>PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機械学習関係の処理を普段使っていない人でも、
+何らかのシステム開発に携わっているのであれば、システムが垂れ流すデータを見て、それを「いい感じに見たいなー」と思うことは良くあります。</p>
+
+<p>今回は一般的なWeb APIのシステムにおいて、</p>
+
+<ul>
+  <li>障害の調査をより簡易にしたい</li>
+  <li>リクエストの傾向を把握したい</li>
+</ul>
+
+<p>といったモチベーションがあり、実装してみることにしました。</p>
+
+<p><a href="https://www.tableau.com/ja-jp">Tableau</a> や <a href="https://redash.io/">Redash</a> といった所謂BIツールで可視化してもいいのですが、
+今回のケースでは検索を簡単にすれば十分なので、 <strong>Athenaで検索できること</strong> をゴールに設定しました。</p>
+
+<h2 id="やってみる">やってみる</h2>
+
+<h3 id="アーキテクチャ概要">アーキテクチャ概要</h3>
+
+<p>さっそくやってみましょう。下図のようなアーキテクチャを構築しました。</p>
+
+<p><img src="/assets/images/20180702/architecture.png" alt="architecture" /></p>
+
+<p>大まかな処理の流れを説明すると</p>
+
+<ol>
+  <li>S3バケットにファイルが置かれる</li>
+  <li>Object Put EventでLambdaが起動し、StepFunctionsを実行</li>
+  <li>StepfunctionsがAWS Batchのステートメントを管理</li>
+  <li>AWS Batchの実行</li>
+  <li>Batch Jobのステータス確認</li>
+  <li>AWS Batchで起動されるECSで前処理を実施し、成果物をS3にPUT</li>
+  <li>Glue CrawlerがS3のファイルからAthenaスキーマを自動生成</li>
+</ol>
+
+<p>なお、図中の赤枠部分はクラスメソッドさんの 「<a href="https://dev.classmethod.jp/cloud/aws/aws-step-functions-job-status-polling-cloudformation/">AWS Step Functionsでジョブ・ステータス・ポーリングを実装する</a>」 を参考に実装していますので、
+説明は割愛します。</p>
+
+<h3 id="バケットの作成">バケットの作成</h3>
+
+<p>まずは図中のS3バケットを2つ作成します。用途としては以下です。</p>
+
+<ul>
+  <li>整形前データ置き場</li>
+  <li>整形後データ置き場（Glue Crawlerが参照するバケット）</li>
+</ul>
+
+<h3 id="aws-batchの実装">AWS Batchの実装</h3>
+
+<p>前処理を行うAWS Batchの実装をしましょう。
+Batchと言いつつも、内部的にはECSが起動して処理を行うため、AWS Batchの設定にはECSに対する一定の理解も必要です。</p>
+
+<h4 id="ecrの作成">ECRの作成</h4>
+
+<p>まずは、AWS Batchで実行させるECSコンテナのDockerイメージをECRにPushします。</p>
+
+<p>今回は前処理をPython 3.6で実行させたいので、 <code class="highlighter-rouge">python:3.6.5-alpine</code> のイメージを使ってDockerfileを作成します。
+コンテナ内の <code class="highlighter-rouge">/opt/etl</code> 配下にpythonプログラムを置くイメージです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM python:3.6.5-alpine
+
+MAINTAINER soudegesu
+
+COPY ./etl /opt/etl
+COPY ./requirements.txt /opt/requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r /opt/requirements.txt
+</code></pre></div></div>
+
+<p>ビルドしたdocker imageをECRにpushすればOKです。</p>
+
+<h4 id="コンピューティング環境の設定">コンピューティング環境の設定</h4>
+
+<p>AWS Batchから起動させるコンピューティング環境の設定をします。
+これはAWS batchから起動するECSインスタンスの設定です。</p>
+
+<p>Terraformで設定例を書くと以下のようになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_batch_compute_environment" "etl" {
+    compute_environment_name = "etl"
+    compute_resources {
+        instance_role = "${ECSインスタンスのRole}"
+        instance_type = [
+            ${EC2インスタンスタイプ}"
+        ]
+        max_vcpus = 16
+        min_vcpus = 2
+        desired_vcpus = 2
+        security_group_ids = ["${SecurityGroupのID}"]
+        subnets = ["${SubnetのID}"]
+        type = "EC2"
+    }
+    service_role = "arn:aws:iam::${アカウント番号}:role/service-role/AWSBatchServiceRole"
+    type = "MANAGED"
+}
+</code></pre></div></div>
+
+<h4 id="ジョブキューの作成">ジョブキューの作成</h4>
+
+<p>次にジョブキューの設定を行います。キューに格納されたジョブの実行の優先順位や、実行時のコンピューティングリソースの紐付けを定義しておきます。</p>
+
+<p>Terraformで設定例を書くと以下のようになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_batch_job_queue" "etl" {
+    name = "etl"
+    state = "ENABLED"
+    priority = 1
+    compute_environments = [
+        "${aws_batch_compute_environment.etl.arn}"
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="バッチのジョブ定義">バッチのジョブ定義</h4>
+
+<p>次に実行するジョブの定義をします。</p>
+
+<p>ジョブと言っても、ECSのタスク定義の情報に加えて、コンテナ起動後に実行するコマンドを書いたりします。</p>
+
+<p>Terraformで設定例を書くと以下のようになります。</p>
+
+<p>コンテナ内で任意のプログラムを実行する場合には <code class="highlighter-rouge">command</code> プロパティ部に設定を行います。
+引数部分に <code class="highlighter-rouge">Ref::</code> という見慣れないものがありますが、これは後述します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_batch_job_definition" "etl" {
+    name = "etl"
+    type = "container"
+    container_properties = &lt;&lt;EOF
+{
+    "command": ["python",
+        "/opt/etl/main.py",
+        "-b",
+        "Ref::bucket",
+        "-k",
+        "Ref::objKey"
+    ],
+    "environment": [
+         {
+            "name": "TMP",
+            "value": "/tmp"
+         },
+         {
+            "name": "UPLOAD_BUCKET",
+            "value": "${バケット名}"
+         }
+    ],
+    "image": "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/etl:${var.image_tag}",
+    "memory": 1024,
+    "vcpus": 2,
+    "ulimits": [
+      {
+        "hardLimit": 1024,
+        "name": "nofile",
+        "softLimit": 1024
+      }
+    ]
+}
+EOF
+
+}
+</code></pre></div></div>
+
+<p>なお、ここで実行される <code class="highlighter-rouge">main.py</code> の処理概要は以下になります。</p>
+
+<ol>
+  <li>基データのあるバケットからデータを取得する</li>
+  <li>データレコードは <strong>JSONフォーマット</strong> に加工する</li>
+  <li>ETL済みデータのあるバケットへアップロードする
+    <ul>
+      <li>S3バケットに <strong>Hiveフォーマット（ <code class="highlighter-rouge">dt=yyyy-MM-dd-HH-mm</code> ） でパーティション（フォルダ）を作成</strong> する</li>
+      <li>ファイルは <code class="highlighter-rouge">.gz</code> でアップロードする</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="ジョブを実行するlambdaの実装">ジョブを実行するLambdaの実装</h4>
+
+<p>AWS Batchのジョブを実行するだけのサンプルコードを書きます。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+
+    <span class="n">job_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'JOB_NAME'</span><span class="p">]</span>
+    <span class="n">job_queue</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'JOB_QUEUE'</span><span class="p">]</span>
+    <span class="n">job_definition</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'JOB_DEFINITION'</span><span class="p">]</span>
+    <span class="n">bucket_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'BUCKET_NAME'</span><span class="p">]</span>
+    <span class="n">obj_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OBJECT_KEY'</span><span class="p">]</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'bucket'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">),</span>
+        <span class="s">'objKey'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj_key</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'batch'</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">submit_job</span><span class="p">(</span><span class="n">jobQueue</span><span class="o">=</span><span class="n">job_queue</span><span class="p">,</span> <span class="n">jobName</span><span class="o">=</span><span class="n">job_name</span><span class="p">,</span> <span class="n">jobDefinition</span><span class="o">=</span><span class="n">job_definition</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="n">jobId</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">'jobId'</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'jobId'</span><span class="p">:</span> <span class="n">jobId</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="nb">Exception</span><span class="p">(</span><span class="s">'Error submitting Batch Job'</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>要点としては <code class="highlighter-rouge">submit_job</code> 関数の <code class="highlighter-rouge">parameters</code> 引数で渡されたデータが、
+先程のバッチジョブ定義の <code class="highlighter-rouge">Ref::</code> を置換することで、動的なデータの受け渡しを実現しています。</p>
+
+<p>（今回のケースで言えば <code class="highlighter-rouge">bucket</code> と <code class="highlighter-rouge">objKey</code> が置換されます）</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="s2">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"/opt/etl/main.py"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"-b"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Ref::bucket"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"-k"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Ref::objKey"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+</span></code></pre></div></div>
+
+<p>ここまで来れば、ETL済みのバケットへ以下のような構成でデータがアップロードされているはずです。</p>
+
+<p><img src="/assets/images/20180702/hive.png" alt="hive" /></p>
+
+<h3 id="glue-crawlerからathenaのスキーマを作成する">Glue CrawlerからAthenaのスキーマを作成する</h3>
+
+<p>GlueのCrawlerはデータソースに任意のデータベースやS3を指定することができ、
+そのデータからAthenaのスキーマを自動生成してくれる機能を持っています。</p>
+
+<p>Terraform AWS Providerが2018/06にGlue Crawlerに対応したこともあり、Terraformで書いてみましょう。</p>
+
+<p>まずはデータベースの設定です。これはAthenaのデータベースになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_glue_catalog_database" "sample" {
+    name = "${データベース名}"
+}
+</code></pre></div></div>
+
+<p>次にCrawlerの設定です。</p>
+
+<p>今回のユースケースであれば <code class="highlighter-rouge">role</code> は最低限 <code class="highlighter-rouge">AWSGlueServiceRole</code> がついていれば問題ありません。</p>
+
+<p><code class="highlighter-rouge">schedule</code> にてCrawlerが対象のS3のパスを見に行くスケジュールの指定ができますし、
+スキーマ変更があった場合の振る舞いを定義（今回は「データが無くなっていたら削除する」に指定）できます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_glue_crawler" "sample" {
+    database_name = "${aws_glue_catalog_database.sample.name}"
+    name = "${Crawler名}"
+    role = "${Glue用のRole}"
+
+    s3_target {
+        path = "${S3バケットのパス}"
+    }
+
+    schedule = "cron(0 21 * * ? *)"
+
+    schema_change_policy = {
+        delete_behavior = "DELETE_FROM_DATABASE"
+    }
+}
+</code></pre></div></div>
+
+<p>Crawlerを実行すると、「Databases」 &gt; 「Tables」 の中にいくつかデータテーブルができていることがわかります。
+これがAthenaのテーブルとリンクします。</p>
+
+<p><img src="/assets/images/20180702/glue_console.png" alt="glue_console" /></p>
+
+<p>作成されたテーブルの詳細を見てみると、<code class="highlighter-rouge">Classification</code> の部分が <code class="highlighter-rouge">json</code> となっています。
+パーティション内のデータをJSON形式のデータと認識してスキーマを定義してくれたということです。</p>
+
+<p>ネストされたJSONプロパティは <code class="highlighter-rouge">struct</code> として定義されていることもわかります。</p>
+
+<p><img src="/assets/images/20180702/table_detail.png" alt="table_detail" /></p>
+
+<p>なお、コンソールからテーブルを選択して、「Action」 &gt; 「View data」 を選択すると、Athenaコンソールの紐づいているデータベースへ画面遷移します。</p>
+
+<p><img src="/assets/images/20180702/table_detail.png" alt="table_detail" /></p>
+
+<p>ここまで来れば、後は普通にクエリを書けるようになりますね。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回はAWS Batchと AWS Glueを用いてAthenaのスキーマを生成するまでを行いました。
+AWS BatchはStepFunctionsと組み合わせて利用することで、バッチ処理結果に伴うハンドリングができるので、堅めの処理をしたいときにはいいかもしれません。</p>
+
+<p>今回のユースケースに限って言えば、AWS BatchではなくFargateの方が適切だったようにも思えます。（2018/7にFargateが東京リージョンに来ました）</p>
+
+<p>予めGlueのCrawlerは、前処理でS3パーティションやデータ構造を工夫してあげるだけで、データカタログ（Athenaのスキーマ）を勝手に作ってくれるので大変便利です。</p>
+
+<p>今回は、データカタログを作るまでで終わりますが、そこからGlue本来のSparkへの処理に繋げることもできますし、SageMakerでパーティションのS3バケットを覗き込ませることもできるでしょう。</p>
+
+<p>Glueの採用事例が更に増えていくことに期待ですね！</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+  <li><a href="https://dev.classmethod.jp/cloud/aws/aws-step-functions-job-status-polling-cloudformation/">AWS Step Functionsでジョブ・ステータス・ポーリングを実装する</a></li>
+  <li><a href="https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-aws-batch">AWS Black Belt Online Seminar 2017 AWS Batch</a></li>
+  <li><a href="https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/job_definition_parameters.html">ジョブ定義のパラメータ - AWS Batch</a></li>
+</ul>
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798155160&amp;linkId=e31b0f9652aedc2ee6735408ac519d5e&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4774196479&amp;linkId=c178f192d7778c77187b44c226c4e071&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/athena" class="page__taxonomy-item" rel="tag">athena</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/batch" class="page__taxonomy-item" rel="tag">batch</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/glue" class="page__taxonomy-item" rel="tag">glue</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/stepfunctions" class="page__taxonomy-item" rel="tag">stepfunctions</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/categories/aws" class="page__taxonomy-item" rel="tag">aws</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-07-02T00:00:00+09:00">July 02, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する https://www.soudegesu.com/aws/aws-batch-and-glue/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/aws/aws-batch-and-glue/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/aws/aws-batch-and-glue/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/aws/aws-batch-and-glue/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/aws/aws-batch-and-glue/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+    </div>
+
+    
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/python/pyplot-api/" class="pagination--pager" title="matplotlibのpyplot APIをいろいろ試す
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+
+  </article>
+  
+  
+  <div class="page__related">
+    <h2 class="page__related-title">関連記事</h2>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="permalink">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
+結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/casperjs-on-lambda/" rel="permalink">AWS LambdaでCasperJSを実行してファイルアップロードを自動化する
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
+APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/s3-cross-account/" rel="permalink">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
+設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
+しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
+共有された側ではS3バケットの...</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="permalink">AWS LambdaのコードをTerraformでデプロイする
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
+AWS Lambdaは Cloud9 がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。
+ブラウザエディタは そのままwebにつながる というのが最大の強みですが、まだまだ手元のリポジトリでコード...</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/aws/hosting-with-cloudfront-lambda-edge-serverless/" rel="permalink">Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">このブログ自体は github-pages と cloudflare を使って無料でホスティングをしているのですが、稀に 「動的なwebコンテンツを提供したい」 と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。
+
+</p>
+  </article>
+</div>
+
+          
+          
+            
+    </div>      
+  </div>
+  
+
+  
+
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
