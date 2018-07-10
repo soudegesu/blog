@@ -157,6 +157,10 @@
 <lastmod>2018-07-02T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/aws/amazonlinux2-docker/</loc>
+<lastmod>2018-07-10T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -350,6 +354,12 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/tags/athena/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/ec2/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/amazonlinux/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>

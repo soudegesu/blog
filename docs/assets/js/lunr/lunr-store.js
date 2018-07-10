@@ -193,4 +193,9 @@ var store = [{
         "excerpt":"以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話 でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。 モチベーション：データを容易に検索したい やってみる アーキテクチャ概要 バケットの作成 AWS Batchの実装 ECRの作成 コンピューティング環境の設定 ジョブキューの作成 バッチのジョブ定義 ジョブを実行するLambdaの実装 Glue CrawlerからAthenaのスキーマを作成する まとめ 参考にさせていただいたサイトモチベーション：データを容易に検索したい PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機械学習関係の処理を普段使っていない人でも、何らかのシステム開発に携わっているのであれば、システムが垂れ流すデータを見て、それを「いい感じに見たいなー」と思うことは良くあります。 今回は一般的なWeb APIのシステムにおいて、 障害の調査をより簡易にしたい リクエストの傾向を把握したいといったモチベーションがあり、実装してみることにしました。 Tableau や Redash といった所謂BIツールで可視化してもいいのですが、今回のケースでは検索を簡単にすれば十分なので、 Athenaで検索できること をゴールに設定しました。 やってみる アーキテクチャ概要 さっそくやってみましょう。下図のようなアーキテクチャを構築しました。 大まかな処理の流れを説明すると S3バケットにファイルが置かれる Object Put EventでLambdaが起動し、StepFunctionsを実行 StepfunctionsがAWS Batchのステートメントを管理 AWS Batchの実行 Batch Jobのステータス確認 AWS Batchで起動されるECSで前処理を実施し、成果物をS3にPUT...","categories": ["aws"],
         "tags": ["aws","batch","glue","stepfunctions","athena"],
         "url": "https://www.soudegesu.com/aws/aws-batch-and-glue/",
-        "teaser":"https://www.soudegesu.com/assets/images/icon/glue_icon.png"}]
+        "teaser":"https://www.soudegesu.com/assets/images/icon/glue_icon.png"},{
+        "title": "Amazon Linux2にdockerをインストールする",
+        "excerpt":"AMIをAmazon Linux2に変更したのですが、 yum install docker でdockerがインストールできなくなってしまったので対処方法を調査しました。 モチベーション Amazon Linux2にDockerがインストールできなくなっている！ Extras Library で docker をインストールする 参考にさせていただいたサイトモチベーション Amazon Linux2にDockerがインストールできなくなっている！ Amazon LinuxからAmazon Linux2にアップデートしたのですが、2018/06に Amazon Linux 2 LTS Candidate が発表されたあたりから、packerのジョブがエラーで止まるようになってしまいました。 内容を確認してみると、Ansible の yum install docker の部分で落ちていることがわかりました。 詳細は確認していませんが、yumの設定が変わったのかもしれません。 yum search docker をしても docker が見つかりませんでした。 Extras Library で docker をインストールする 調査をしたところ、案外簡単に答えが見つかりました。 Amazon Linux2から Extras Library が導入され、一部のライブラリは...","categories": ["aws"],
+        "tags": ["aws","ec2","amazonlinux","docker"],
+        "url": "https://www.soudegesu.com/aws/amazonlinux2-docker/",
+        "teaser":"https://www.soudegesu.com/assets/images/icon/ec2_icon.png"}]
