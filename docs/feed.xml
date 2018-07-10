@@ -1,4 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-09T08:27:36+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</title><link href="https://www.soudegesu.com/aws/aws-batch-and-glue/" rel="alternate" type="text/html" title="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する" /><published>2018-07-02T00:00:00+09:00</published><updated>2018-07-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/aws-batch-and-glue</id><content type="html" xml:base="https://www.soudegesu.com/aws/aws-batch-and-glue/">&lt;p&gt;以前、 &lt;a href=&quot;/aws/glue-process-cloudwatchlogs/&quot;&gt;S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話&lt;/a&gt; でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-11T08:54:01+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Amazon Linux2にdockerをインストールする</title><link href="https://www.soudegesu.com/aws/amazonlinux2-docker/" rel="alternate" type="text/html" title="Amazon Linux2にdockerをインストールする" /><published>2018-07-10T00:00:00+09:00</published><updated>2018-07-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/amazonlinux2-docker</id><content type="html" xml:base="https://www.soudegesu.com/aws/amazonlinux2-docker/">&lt;p&gt;AMIをAmazon Linux2に変更したのですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;yum install docker&lt;/code&gt; でdockerがインストールできなくなってしまったので対処方法を調査しました。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#amazon-linux2にdockerがインストールできなくなっている&quot; id=&quot;markdown-toc-amazon-linux2にdockerがインストールできなくなっている&quot;&gt;Amazon Linux2にDockerがインストールできなくなっている！&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#extras-library-で-docker-をインストールする&quot; id=&quot;markdown-toc-extras-library-で-docker-をインストールする&quot;&gt;Extras Library で docker をインストールする&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+
+&lt;h3 id=&quot;amazon-linux2にdockerがインストールできなくなっている&quot;&gt;Amazon Linux2にDockerがインストールできなくなっている！&lt;/h3&gt;
+
+&lt;p&gt;Amazon LinuxからAmazon Linux2にアップデートしたのですが、
+2018/06に &lt;a href=&quot;https://aws.amazon.com/jp/amazon-linux-2/&quot;&gt;Amazon Linux 2 LTS Candidate&lt;/a&gt; が発表されたあたりから、
+packerのジョブがエラーで止まるようになってしまいました。&lt;/p&gt;
+
+&lt;p&gt;内容を確認してみると、Ansible の &lt;code class=&quot;highlighter-rouge&quot;&gt;yum install docker&lt;/code&gt; の部分で落ちていることがわかりました。&lt;/p&gt;
+
+&lt;p&gt;詳細は確認していませんが、yumの設定が変わったのかもしれません。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;yum search docker&lt;/code&gt; をしても docker が見つかりませんでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;extras-library-で-docker-をインストールする&quot;&gt;Extras Library で docker をインストールする&lt;/h2&gt;
+
+&lt;p&gt;調査をしたところ、案外簡単に答えが見つかりました。&lt;/p&gt;
+
+&lt;p&gt;Amazon Linux2から &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/amazon-linux-ami-basics.html#extras-library&quot;&gt;Extras Library&lt;/a&gt; が導入され、
+一部のライブラリは Extras Library 経由にてインストールができるようになっているようです。&lt;/p&gt;
+
+&lt;p&gt;どのようなライブラリがインストールできるか確認してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;amazon-linux-extras list
+
+  0  ansible2                 available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  1  emacs                    available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;25.3 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  2  memcached1.5             available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.5.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  3  nginx1.12                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.12.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  4  postgresql9.6            available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9.6.6  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9.6.8 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  5  python3                  available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.6.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  6  redis4.0                 available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4.0.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  7  R3.4                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.4.3 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  8  rust1                    available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.22.1  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.26.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  9  vim                      available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 10  golang1.9                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.9.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 11  ruby2.4                  available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.2  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.4 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 12  nano                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.9.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 13  php7.2                   available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.4  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 14  lamp-mariadb10.2-php7.2  available  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.4  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 15  libreoffice              available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5.0.6.2_15 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 16  gimp                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.8.22 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 17  docker                   available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;17.12.1  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;18.03.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 18  mate-desktop1.x          available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.19.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.20.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 19  GraphicsMagick1.3        available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.3.29 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 20  tomcat8.5                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8.5.31 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; が含まれていますね。&lt;/p&gt;
+
+&lt;p&gt;早速インストールを試してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;amazon-linux-extras install docker
+
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;中略&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+インストール:
+  docker.x86_64 0:18.03.1ce-3.amzn2
+
+依存性関連をインストールしました:
+  libtool-ltdl.x86_64 0:2.4.2-22.2.amzn2.0.1
+
+完了しました!
+  0  ansible2                 available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  1  emacs                    available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;25.3 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  2  memcached1.5             available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.5.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  3  nginx1.12                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.12.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  4  postgresql9.6            available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9.6.6  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9.6.8 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  5  python3                  available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.6.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  6  redis4.0                 available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4.0.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  7  R3.4                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.4.3 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  8  rust1                    available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.22.1  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.26.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  9  vim                      available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 10  golang1.9                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.9.2 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 11  ruby2.4                  available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.2  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.4.4 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 12  nano                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.9.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 13  php7.2                   available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.4  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7.2.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 14  lamp-mariadb10.2-php7.2  available  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.4  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.2.10_7.2.5 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 15  libreoffice              available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5.0.6.2_15 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 16  gimp                     available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2.8.22 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 17  &lt;span class=&quot;nv&quot;&gt;docker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;latest            enabled    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;17.12.1  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;18.03.1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 18  mate-desktop1.x          available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.19.0  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.20.0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 19  GraphicsMagick1.3        available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.3.29 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ 20  tomcat8.5                available  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8.5.31 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実運用の際にはバージョン固定や &lt;code class=&quot;highlighter-rouge&quot;&gt;-y&lt;/code&gt; オプションを入れたりします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;amazon-linux-extras install &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;docker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;18.03.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extras Library に関する説明は &lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/how-to-work-with-amazon-linux2-amazon-linux-extras/&quot;&gt;クラスメソッドさんがまとめてくれている&lt;/a&gt; ので、こちらを参考にすると良いでしょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/amazon-linux-ami-basics.html#extras-library&quot;&gt;Extras Library&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.classmethod.jp/cloud/aws/how-to-work-with-amazon-linux2-amazon-linux-extras/&quot;&gt;Amazon Linux 2のExtras Library(amazon-linux-extras)を使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e31b0f9652aedc2ee6735408ac519d5e&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4774196479&amp;amp;linkId=c178f192d7778c77187b44c226c4e071&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="ec2" /><category term="amazonlinux" /><category term="docker" /><summary type="html">AMIをAmazon Linux2に変更したのですが、 yum install docker でdockerがインストールできなくなってしまったので対処方法を調査しました。</summary></entry><entry><title type="html">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</title><link href="https://www.soudegesu.com/aws/aws-batch-and-glue/" rel="alternate" type="text/html" title="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する" /><published>2018-07-02T00:00:00+09:00</published><updated>2018-07-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/aws-batch-and-glue</id><content type="html" xml:base="https://www.soudegesu.com/aws/aws-batch-and-glue/">&lt;p&gt;以前、 &lt;a href=&quot;/aws/glue-process-cloudwatchlogs/&quot;&gt;S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話&lt;/a&gt; でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#モチベーションデータを容易に検索したい&quot; id=&quot;markdown-toc-モチベーションデータを容易に検索したい&quot;&gt;モチベーション：データを容易に検索したい&lt;/a&gt;&lt;/li&gt;
@@ -3294,104 +3412,4 @@ Javaアプリケーションのメトリック取得がいい感じだったの�
 &lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://micrometer.io/docs/registry/datadog&quot;&gt;Micrometer Datadog&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント 」 にて、 Datadogに対してメトリックを送信するの仕組みを micrometer-registry-datadog に変更したのですが、 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。</summary></entry><entry><title type="html">「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった</title><link href="https://www.soudegesu.com/book/idea-from-history/" rel="alternate" type="text/html" title="「歴史からの発想 停滞と拘束からいかに脱するか」は組織を歴史の側面から見た面白い一冊だった" /><published>2018-05-13T00:00:00+09:00</published><updated>2018-05-13T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/idea-from-history</id><content type="html" xml:base="https://www.soudegesu.com/book/idea-from-history/">&lt;p&gt;「 &lt;a href=&quot;https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4532192161&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=5513b5e79762b891cc2f9498116b17fa&quot;&gt;歴史からの発想　停滞と拘束からいかに脱するか&lt;/a&gt; 」を読みました。
-たまたまamazonサーフィンしていたら見つけた本なのですが、タイトルが気になったので買ってみました。
-人通り読み終えたので、所感を書きたいと思います。
-以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4532192161&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=5513b5e79762b891cc2f9498116b17fa&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=4532192161&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=4532192161&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#歴史は繰り返すし繰り返さない要素もある&quot; id=&quot;markdown-toc-歴史は繰り返すし繰り返さない要素もある&quot;&gt;歴史は繰り返すし、繰り返さない要素もある&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#歴史書物との付き合い方も提示してくれる&quot; id=&quot;markdown-toc-歴史書物との付き合い方も提示してくれる&quot;&gt;歴史書物との付き合い方も提示してくれる&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#戦国時代こそ正解のない世界&quot; id=&quot;markdown-toc-戦国時代こそ正解のない世界&quot;&gt;戦国時代こそ正解のない世界&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#死生観が経済発展の源&quot; id=&quot;markdown-toc-死生観が経済発展の源&quot;&gt;死生観が経済発展の源&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#時代を支えた組織のパターン&quot; id=&quot;markdown-toc-時代を支えた組織のパターン&quot;&gt;時代を支えた組織のパターン&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#最後に&quot; id=&quot;markdown-toc-最後に&quot;&gt;最後に&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;歴史は繰り返すし繰り返さない要素もある&quot;&gt;歴史は繰り返すし、繰り返さない要素もある&lt;/h2&gt;
-
-&lt;p&gt;という筆者の歴史に対する見解、バランス感覚にとても腹落ち感がありました。&lt;/p&gt;
-
-&lt;p&gt;そもそも「歴史は繰り返す」は &lt;strong&gt;異なる状況でも相似た事件が起き、その類似性の範囲の中で政治や経営の参考になる部分がある&lt;/strong&gt; という意味であると示唆されていて、
-本書は &lt;strong&gt;組織と人類学の観点で「歴史の類似性」を活用し、日本社会がどうして停滞気味なのかを批評しており&lt;/strong&gt;、 歴史素人であっても歴史の類似性から学びを抽象化しやすい情報粒度と断面から説明してくれます。&lt;/p&gt;
-
-&lt;p&gt;「愚者は経験から学び、賢者は歴史から学ぶ」も、基は鉄血宰相 &lt;a href=&quot;https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%83%E3%83%88%E3%83%BC%E3%83%BB%E3%83%95%E3%82%A9%E3%83%B3%E3%83%BB%E3%83%93%E3%82%B9%E3%83%9E%E3%83%AB%E3%82%AF&quot;&gt;ビスマルク&lt;/a&gt; が言ったとされる言葉ですが、&lt;/p&gt;
-
-&lt;p&gt;これも先の史感の上で成り立つ、一種のパタン・ランゲージのようなものだな、と感じました。&lt;/p&gt;
-
-&lt;h2 id=&quot;歴史書物との付き合い方も提示してくれる&quot;&gt;歴史書物との付き合い方も提示してくれる&lt;/h2&gt;
-
-&lt;p&gt;特徴の一つを挙げると、本の序盤で「歴史を取り上げた書物との付き合い方（バランスのとり方）」を提示してくれている点です。&lt;/p&gt;
-
-&lt;p&gt;今まで、歴史モノを読む場合のメリットとデメリットは意識したことがなかったため、いい意味で「熱くなりすぎず、冷めすぎず」文章と対峙することができました。&lt;/p&gt;
-
-&lt;p&gt;と同時に、その項を読むことで、「歴史をテーマにした書物は情報に書き手のバイアスが入りやすいな」と印象を持ちました。&lt;/p&gt;
-
-&lt;p&gt;時間軸が圧倒的に圧縮されていて、情報の解像度が粗くなってしまうから、書き手は一本の線（ストーリー）にするために情報の補足をする。&lt;/p&gt;
-
-&lt;p&gt;なので、一見客観的な事実が書かれそうなモノも、案外そうでもないのかもしれない、と。&lt;/p&gt;
-
-&lt;p&gt;今回読んだ本以外にも、戦国をテーマにした別の書物を読むことで、「あたらずとも遠からず」な歴史感を得られるようにしたいと思わせてくれました。&lt;/p&gt;
-
-&lt;h2 id=&quot;戦国時代こそ正解のない世界&quot;&gt;戦国時代こそ正解のない世界&lt;/h2&gt;
-
-&lt;h3 id=&quot;死生観が経済発展の源&quot;&gt;死生観が経済発展の源&lt;/h3&gt;
-
-&lt;p&gt;筆者曰く、戦国時代は経済成長が著しい時代帯の1つだそうです。&lt;/p&gt;
-
-&lt;p&gt;戦国時代だから、というよりも、 &lt;strong&gt;「当時の人間の死生感」が経済成長のエンジンになっているらしい&lt;/strong&gt;、という主張は現代の社会課題に対しても適用可能な分野が多いでしょう。
-いつの時代も組織があり、人間がいるわけであるから、死生観から来る人間の行動の違いはあると思いますし。&lt;/p&gt;
-
-&lt;h3 id=&quot;時代を支えた組織のパターン&quot;&gt;時代を支えた組織のパターン&lt;/h3&gt;
-
-&lt;p&gt;本書の主題にあたる部分は、織田信長、豊臣秀吉、石田三成、チンギス・ハン。タイプの異なる武将達が取った組織のパターンをなぞらえて解説が進んでいきます。&lt;/p&gt;
-
-&lt;p&gt;マクロな面では組織のフォーメーションの組み方、ミクロな面では人心掌握のために行なった個別施策や、思想のスタンスにも言及されていて、
-外的要因といった背景にも触れています。&lt;/p&gt;
-
-&lt;p&gt;特徴的なのは、いずれもトップダウン型の組織ではあるものの、微妙に違う点。言うならば、 &lt;strong&gt;「一般化できそうで、できない」&lt;/strong&gt; 。
-一概に成功パターンを規定できない、のが成功パターンなのか、と思ってしまう。&lt;/p&gt;
-
-&lt;p&gt;過去に紹介した書籍 &lt;a href=&quot;https://amzn.to/2wECaDt&quot;&gt;ティール組織&lt;/a&gt; では組織形態の変遷に触れていますが、
-そこで表現される過去の組織のパターンをより具体化させて亜種化したような組織たちだ。&lt;/p&gt;
-
-&lt;p&gt;壮大なネタバレは控えたいので詳細には書きませんが、各組織の要は以下だと理解しました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;既成概念の破壊、自由経済と才能による登用&lt;/li&gt;
-  &lt;li&gt;女房役の存在と権威と権限の分離&lt;/li&gt;
-  &lt;li&gt;辣腕家による扇動&lt;/li&gt;
-  &lt;li&gt;思想の徹底とビジョン&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;少し驚いたのは &lt;strong&gt;チンギス・ハンが取り上げられていた&lt;/strong&gt; こと。&lt;/p&gt;
-
-&lt;p&gt;確かに「戦国時代と言えば戦国だけど。。」と懐疑的な見方で読み進めましたが、緻密で大胆で徹底された組織の束ね方はその他の武将のそれに勝っていました。&lt;/p&gt;
-
-&lt;p&gt;本書から学んだチンギス・ハンの付け焼き刃な知識を妻にドヤ顔で披露したところ、「大陸をあれだけ征服したんだから当たり前でしょ」と一蹴されました笑。&lt;/p&gt;
-
-&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
-
-&lt;p&gt;経済発展著しかった戦国時代を取り上げ、その成長を成し得た組織パターンを本書では学ぶことができます。&lt;/p&gt;
-
-&lt;p&gt;これからも、社会、組織の中の個人として生きていく上で、&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;どのような特徴を持ち、何を成すことを得意としているか、足りない場合にはそれを補ってくれる人物はいるか&lt;/strong&gt;
-という目線を自分にも、他者にも向けることで、組織の力を最大化する努力が必要であることを理解できましたし、&lt;/p&gt;
-
-&lt;p&gt;また、武将毎にそれぞれ人間性が異なりますが、共通して、徹底したビジョンを持つというのは、今も昔も変わらないものだな、とも思いました。&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-IT企業の経営者が「事業が失敗したところで死ぬわけじゃないし」とインタビューで言ったりしているのも、
-一種の死生観というか、恐怖の境界線がサラリーマンとは少し違うからなのかなぁ、等、自身の思考力をより高めるためのエッセンスも含む良い本だと言えるでしょう。&lt;/p&gt;
-
-&lt;div style=&quot;text-align: center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4532192161&amp;amp;linkId=b7ee298049b596b0b64c1d72c3b60d8b&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><category term="組織論" /><summary type="html">「 歴史からの発想　停滞と拘束からいかに脱するか 」を読みました。 たまたまamazonサーフィンしていたら見つけた本なのですが、タイトルが気になったので買ってみました。 人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント 」 にて、 Datadogに対してメトリックを送信するの仕組みを micrometer-registry-datadog に変更したのですが、 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。</summary></entry></feed>
