@@ -33,16 +33,62 @@ Javaアプリケーションの場合、RubyやPythonなどのスクリプト言
 2. アプリケーションのビルド
 3. Dockerイメージのビルド
 
-`3` がDockerfileに定義を記載する処理なので、この部分をGradleやMavenの定義ファイルに移動できれば、管理対象ファイルを減らすことができます。
+`3` がDockerfile内に処理が定義されるので、この部分をGradleやMavenの定義ファイルに移動できれば、管理対象ファイルを減らすことができます。
 
 ## やってみる
 
+### ゴール設定
+
+今回は以下の2つをゴールにします。
+
+1. jibでSpringbootのアプリケーションのDockerイメージを作成する
+2. 作成したDockerイメージをAWS ECRにPushする
+
+### 環境の準備
+
+以下のような環境で試しています。
+
+* MacOSX
+* Java SE: `1.8.0_152`
+* Gradle: `4.8.1`
+    * jib-gradle-plugin: `0.9.6`
 
 
-## 参考にさせていただいたサイト
+### build.gradleの編集
 
-* [Extras Library](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/amazon-linux-ami-basics.html#extras-library)
-* [Amazon Linux 2のExtras Library(amazon-linux-extras)を使ってみた](https://dev.classmethod.jp/cloud/aws/how-to-work-with-amazon-linux2-amazon-linux-extras/)
+まずは、 `build.gradle` を編集しましょう。
+
+### Dockerイメージのビルド
+まずは、Docker imageのビルドをしましょう。
+
+```bash
+./gradlew jibDockerBuild
+```
+
+
+```bash
+docker images
+
+> jib-test                    unspecified         155f1b17a8bc        48 years ago        119MB
+
+```
+
+```bash
+docker run -p 8080:8080 -it 155f1b17a8bc /bin/bash
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.3.RELEASE)
+
+2018-07-18 00:34:52.773  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : Starting MainApplication on 1b3277472466 with PID 1 (/app/classes started by root in /)
+2018-07-18 00:34:52.780  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : No active profile set, falling back to default profiles: default
+(以下略)
+```
+
 
 <div align="center">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117763&linkId=79c46472dbb03ff135ffc54e14dbc065&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
