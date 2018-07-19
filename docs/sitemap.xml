@@ -161,6 +161,10 @@
 <lastmod>2018-07-10T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/java/build-docker-image-with-jib/</loc>
+<lastmod>2018-07-17T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -362,6 +366,9 @@
 <loc>https://www.soudegesu.com/tags/amazonlinux/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/jib/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
 </url>
 <url>
@@ -423,5 +430,8 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/page4/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/page5/</loc>
 </url>
 </urlset>
