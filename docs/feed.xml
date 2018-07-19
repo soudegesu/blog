@@ -1,4 +1,251 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-11T09:00:07+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Amazon Linux2にdockerをインストールする</title><link href="https://www.soudegesu.com/aws/amazonlinux2-docker/" rel="alternate" type="text/html" title="Amazon Linux2にdockerをインストールする" /><published>2018-07-10T00:00:00+09:00</published><updated>2018-07-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/amazonlinux2-docker</id><content type="html" xml:base="https://www.soudegesu.com/aws/amazonlinux2-docker/">&lt;p&gt;AMIをAmazon Linux2に変更したのですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;yum install docker&lt;/code&gt; でdockerがインストールできなくなってしまったので対処方法を調査しました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-19T10:31:01+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">jibを使ってJavaアプリケーションのDockerイメージをビルドする</title><link href="https://www.soudegesu.com/java/build-docker-image-with-jib/" rel="alternate" type="text/html" title="jibを使ってJavaアプリケーションのDockerイメージをビルドする" /><published>2018-07-17T00:00:00+09:00</published><updated>2018-07-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/build-docker-image-with-jib</id><content type="html" xml:base="https://www.soudegesu.com/java/build-docker-image-with-jib/">&lt;p&gt;実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
+今回は &lt;a href=&quot;https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin&quot;&gt;Jib&lt;/a&gt; を使ったDockerfileイメージのビルドを紹介します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180717/jib.png&quot; alt=&quot;jib&quot; /&gt;&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#アプリケーションのビルドとdockerイメージのビルドをいい感じに統合したい&quot; id=&quot;markdown-toc-アプリケーションのビルドとdockerイメージのビルドをいい感じに統合したい&quot;&gt;アプリケーションのビルドとDockerイメージのビルドをいい感じに統合したい&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#jibとは&quot; id=&quot;markdown-toc-jibとは&quot;&gt;jibとは&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#やってみる&quot; id=&quot;markdown-toc-やってみる&quot;&gt;やってみる&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ゴール設定&quot; id=&quot;markdown-toc-ゴール設定&quot;&gt;ゴール設定&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#環境の準備&quot; id=&quot;markdown-toc-環境の準備&quot;&gt;環境の準備&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#buildgradleの編集&quot; id=&quot;markdown-toc-buildgradleの編集&quot;&gt;build.gradleの編集&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#dockerイメージのビルド&quot; id=&quot;markdown-toc-dockerイメージのビルド&quot;&gt;Dockerイメージのビルド&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#プロセスを見てみる&quot; id=&quot;markdown-toc-プロセスを見てみる&quot;&gt;プロセスを見てみる&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#dockerイメージのaws-ecrへのpush&quot; id=&quot;markdown-toc-dockerイメージのaws-ecrへのpush&quot;&gt;DockerイメージのAWS ECRへのpush&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+
+&lt;h3 id=&quot;アプリケーションのビルドとdockerイメージのビルドをいい感じに統合したい&quot;&gt;アプリケーションのビルドとDockerイメージのビルドをいい感じに統合したい&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;最終的な実行可能なDockerイメージを作成するために、定義ファイルを複数管理する&lt;/strong&gt; というのはまどろっこしいです。
+可能であれば1つにしたいです。その場の解として2つになってしまうことはありますけど。&lt;/p&gt;
+
+&lt;p&gt;ビルド定義が複数あるということは、複数のビルドコマンドを実行する必要があり、つまり、ビルドの順序を意識する必要があるということです。&lt;/p&gt;
+
+&lt;p&gt;Javaアプリケーションの場合、RubyやPythonなどのスクリプト言語と異なり、アプリケーションのビルドという前工程があり、
+その後、Dockerfile内の &lt;code class=&quot;highlighter-rouge&quot;&gt;COPY&lt;/code&gt; コマンドにて、ビルド成果物をコンテナ内にコピーすることで、ようやくDockerイメージを作成できるわけです。&lt;/p&gt;
+
+&lt;p&gt;ビルドにおける一連の流れを、列挙すると以下のようになります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;依存モジュールの解決とインストール&lt;/li&gt;
+  &lt;li&gt;アプリケーションのビルド&lt;/li&gt;
+  &lt;li&gt;Dockerイメージのビルド&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt; の部分をGradleやMavenの定義ファイルに移動できれば、管理対象ファイルを減らすことができるので画期的ですよね。&lt;/p&gt;
+
+&lt;h3 id=&quot;jibとは&quot;&gt;jibとは&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin&quot;&gt;jib&lt;/a&gt; は Google のエンジニアが実装した JavaアプリケーションのためのOCI(Docker)イメージビルドツールです。&lt;/p&gt;
+
+&lt;p&gt;MavenやGradleのプラグインが提供されていて、従来のJavaアプリケーションのビルド定義ファイル（ &lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; ）中にOCIイメージのビルド定義、リポジトリへのpush処理を集約できます。&lt;/p&gt;
+
+&lt;p&gt;jibではプロダクトの目的として以下の3つを謳っているのですが、dockerデーモンを起動しなくてもイメージが焼けるのは個人的には嬉しいです。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;・Fast - Deploy your changes fast. Jib separates your application into multiple layers, splitting dependencies from classes. Now you don’t have to wait for Docker to rebuild your entire Java application - just deploy the layers that changed.&lt;/p&gt;
+
+  &lt;p&gt;・Reproducible - Rebuilding your container image with the same contents always generates the same image. Never trigger an unnecessary update again.&lt;/p&gt;
+
+  &lt;p&gt;・Daemonless - Reduce your CLI dependencies. Build your Docker image from within Maven or Gradle and push to any registry of your choice. No more writing Dockerfiles and calling docker build/push.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;やってみる&quot;&gt;やってみる&lt;/h2&gt;
+
+&lt;h3 id=&quot;ゴール設定&quot;&gt;ゴール設定&lt;/h3&gt;
+
+&lt;p&gt;今回は以下の2つをゴールにします。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;jibでSpringbootのアプリケーションのDockerイメージを作成する&lt;/li&gt;
+  &lt;li&gt;作成したDockerイメージをAWS ECRにpushする&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;環境の準備&quot;&gt;環境の準備&lt;/h3&gt;
+
+&lt;p&gt;以下のような環境で試しています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MacOSX&lt;/li&gt;
+  &lt;li&gt;Java SE: &lt;code class=&quot;highlighter-rouge&quot;&gt;1.8.0_152&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Gradle: &lt;code class=&quot;highlighter-rouge&quot;&gt;4.8.1&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;jib-gradle-plugin: &lt;code class=&quot;highlighter-rouge&quot;&gt;0.9.6&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;buildgradleの編集&quot;&gt;build.gradleの編集&lt;/h3&gt;
+
+&lt;p&gt;まずは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; を編集しましょう。以下のような感じで &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; を編集します。&lt;/p&gt;
+
+&lt;div class=&quot;language-gradle highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;buildscript&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;repositories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;maven&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'http://repo.spring.io/plugins-release'&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;maven&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://plugins.gradle.org/m2/&quot;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;classpath&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.6&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;classpath&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.springframework.boot'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'spring-boot-gradle-plugin'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.3.RELEASE&quot;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'java'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'idea'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'eclipse'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.springframework.boot'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'com.google.cloud.tools.jib'&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sourceCompatibility&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.8&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;targetCompatibility&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.8&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compileJava&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compileTestJava&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]*.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;encoding&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'UTF-8'&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;repositories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;mavenCentral&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;jib&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'openjdk:alpine'&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getProperty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'aws.accountid'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;.dkr.ecr.&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getProperty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'aws.region'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;.amazonaws.com/jib-test&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;credHelper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ecr-login'&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;jvmFlags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-Xms512m'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Xms1g'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Xmx1g'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Xss10m'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-XX:MaxMetaspaceSize=1g'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mainClass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'com.soudegesu.example.MainApplication'&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'8080'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'OCI'&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;verSpringboot&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2.0.3.RELEASE'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.springframework.boot'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'spring-boot-starter-web'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;verSpringboot&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;dockerイメージのビルド&quot;&gt;Dockerイメージのビルド&lt;/h3&gt;
+
+&lt;p&gt;まずは、Dockerイメージのビルドをしてみましょう。
+イメージのビルドには不要ですが、ビルドが失敗するので実行引数にプロファイルを指定します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./gradlew jibDockerBuild &lt;span class=&quot;nt&quot;&gt;-Paws&lt;/span&gt;.accountid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;アカウントID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Paws&lt;/span&gt;.region&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;のリージョン&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;完成したイメージを確認します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker images
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; jib-test                    unspecified         155f1b17a8bc        48 years ago        119MB
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;「CREATED」が &lt;strong&gt;48 years ago&lt;/strong&gt; なのが少し気になりますが、そのうち改善されるでしょう。（きっと）&lt;/p&gt;
+
+&lt;p&gt;作成したイメージからコンテナをローカルで起動してみます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8080:8080 &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; 155f1b17a8bc
+
+  &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;   ____          _            __ _ _
+ /&lt;span class=&quot;se&quot;&gt;\\&lt;/span&gt; / ___&lt;span class=&quot;s1&quot;&gt;'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '&lt;/span&gt;_ | &lt;span class=&quot;s1&quot;&gt;'_| | '&lt;/span&gt;_ &lt;span class=&quot;se&quot;&gt;\/&lt;/span&gt; _&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; | &lt;span class=&quot;se&quot;&gt;\ \ \ \&lt;/span&gt;
+ &lt;span class=&quot;se&quot;&gt;\\&lt;/span&gt;/  ___&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;| |_&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;| | | | | &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;_| |  &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.3.RELEASE)
+
+2018-07-18 00:34:52.773  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : Starting MainApplication on 1b3277472466 with PID 1 (/app/classes started by root in /)
+2018-07-18 00:34:52.780  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : No active profile set, falling back to default profiles: default
+(以下略)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;プロセスを見てみる&quot;&gt;プロセスを見てみる&lt;/h3&gt;
+
+&lt;p&gt;springbootで実装したアプリケーションをイメージに入れたわけですが、特に executable-jar を作るタスクを実行したわけではありません。
+dockerコンテナの中に入って、プロセスを確認してみましょう。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps ax | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;java
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; java &lt;span class=&quot;nt&quot;&gt;-Xms512m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xms1g&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xmx1g&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xss10m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-XX&lt;/span&gt;:MaxMetaspaceSize&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1g &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; /app/libs/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;:/app/resources/:/app/classes/ com.soudegesu.example.MainApplication
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なるほど。 &lt;code class=&quot;highlighter-rouge&quot;&gt;/app&lt;/code&gt; の各ディレクトリ配下にクラスパスを通して、指定されたMainクラスを実行しているのですね。&lt;/p&gt;
+
+&lt;p&gt;言われてみれば、別にfat-jarは必須じゃないので、これでも良い気がします。&lt;/p&gt;
+
+&lt;h3 id=&quot;dockerイメージのaws-ecrへのpush&quot;&gt;DockerイメージのAWS ECRへのpush&lt;/h3&gt;
+
+&lt;p&gt;次にAWS ECRにビルドしたイメージをpushしてみましょう。&lt;/p&gt;
+
+&lt;p&gt;事前に &lt;a href=&quot;https://github.com/awslabs/amazon-ecr-credential-helper&quot;&gt;amazon-ecr-credential-helper&lt;/a&gt; をインストールする必要があります。&lt;/p&gt;
+
+&lt;p&gt;以下コマンドを実行してみます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./gradlew jib &lt;span class=&quot;nt&quot;&gt;-Paws&lt;/span&gt;.accountid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;アカウントID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Paws&lt;/span&gt;.region&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;のリージョン&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--stacktrace&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Containerizing application to &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;アカウントID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.dkr.ecr.&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;のリージョン&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.amazonaws.com/jib-test...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Retrieving registry credentials &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;アカウントID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.dkr.&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;のリージョン&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.amazonaws.com...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Getting base image openjdk:alpine...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Building dependencies layer...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Building resources layer...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Building classes layer...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Retrieving registry credentials &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;registry.hub.docker.com...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Finalizing...
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Container entrypoint &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;java, &lt;span class=&quot;nt&quot;&gt;-Xms512m&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;-Xms1g&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;-Xmx1g&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;-Xss10m&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;-XX&lt;/span&gt;:MaxMetaspaceSize&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1g, &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt;, /app/libs/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;:/app/resources/:/app/classes/, &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; com.soudegesu.example.MainApplication]
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Built and pushed image as &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;アカウントID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.dkr.&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;のリージョン&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.amazonaws.com/jib-test
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Deprecated Gradle features were used &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this build, making it incompatible with Gradle 5.0.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; See https://docs.gradle.org/4.8/userguide/command_line_interface.html#sec:command_line_warnings
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; BUILD SUCCESSFUL &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;22s
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 2 actionable tasks: 1 executed, 1 up-to-date
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;イメージをAWSコンソール上から確認してみましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180717/ecr_repo.png&quot; alt=&quot;ecr_repo&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;すばらしい！&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はjibを触ってみました。まだメジャーバージョン1には到達していないので、機能的に不足しているところもあるかもしれませんが、Dockerイメージのビルドとpushが簡単にできるので、今後の動向には注目したいところです。&lt;/p&gt;
+
+&lt;p&gt;Javaのプロセスを確認したところ、クラスパスを通したアプリケーション起動をしていました。Java 9以降で導入されているModule Pathを使った場合のアプリケーション起動なども実装されていくと、更に実用性が上がるかもしれませんね。&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4873117763&amp;amp;linkId=79c46472dbb03ff135ffc54e14dbc065&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=B0191B5FE4&amp;amp;linkId=f8b67e42a31b772b2c59912c2eb6d869&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155373&amp;amp;linkId=769a9339f83ab25e7baa1540833975b8&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798136433&amp;amp;linkId=17aac70d0b700057a0ce1b0c64de44f7&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="docker" /><category term="gradle" /><category term="jib" /><summary type="html">実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。 今回は Jib を使ったDockerfileイメージのビルドを紹介します。</summary></entry><entry><title type="html">Amazon Linux2にdockerをインストールする</title><link href="https://www.soudegesu.com/aws/amazonlinux2-docker/" rel="alternate" type="text/html" title="Amazon Linux2にdockerをインストールする" /><published>2018-07-10T00:00:00+09:00</published><updated>2018-07-10T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/amazonlinux2-docker</id><content type="html" xml:base="https://www.soudegesu.com/aws/amazonlinux2-docker/">&lt;p&gt;AMIをAmazon Linux2に変更したのですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;yum install docker&lt;/code&gt; でdockerがインストールできなくなってしまったので対処方法を調査しました。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
@@ -3166,250 +3413,4 @@ HCLからポリシードキュメント（JSON）を生成するために、微�
 &lt;div align=&quot;center&quot;&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=B06XKHGJHP&amp;amp;linkId=a3a59917979f77c73643421d8d843a47&quot;&gt;&lt;/iframe&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=4844339265&amp;amp;linkId=81ad40d815fd96079a683238ffb6a249&quot;&gt;&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="terraform" /><category term="s3" /><category term="iam" /><summary type="html">インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。</summary></entry><entry><title type="html">micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった</title><link href="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/" rel="alternate" type="text/html" title="micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった" /><published>2018-05-17T00:00:00+09:00</published><updated>2018-05-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/datadog-with-springboot-micrometer</id><content type="html" xml:base="https://www.soudegesu.com/java/datadog-with-springboot-micrometer/">&lt;p&gt;以前書いた「 &lt;a href=&quot;/java/migrate-springboot-1-to-2/&quot;&gt;Spring Bootを1.5から2へマイグレーションするステップとポイント&lt;/a&gt; 」 にて、
-&lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt;に対してメトリックを送信するの仕組みを &lt;a href=&quot;https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog&quot;&gt;micrometer-registry-datadog&lt;/a&gt; に変更したのですが、
-Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/micrometer.png&quot; alt=&quot;micrometer&quot; /&gt;&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#micrometerって何&quot; id=&quot;markdown-toc-micrometerって何&quot;&gt;Micrometerって何&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot; id=&quot;markdown-toc-spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot;&gt;Spring Boot アプリケーションに micrometer-registry-datadog を設定する&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#buildgradleの修正&quot; id=&quot;markdown-toc-buildgradleの修正&quot;&gt;build.gradleの修正&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#applicationyamlの修正&quot; id=&quot;markdown-toc-applicationyamlの修正&quot;&gt;application.yamlの修正&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#メトリックに情報を付与する&quot; id=&quot;markdown-toc-メトリックに情報を付与する&quot;&gt;メトリックに情報を付与する&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#datadog上でjvmのメトリックを見てみよう&quot; id=&quot;markdown-toc-datadog上でjvmのメトリックを見てみよう&quot;&gt;Datadog上でJVMのメトリックを見てみよう&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#jvmの使用メモリ&quot; id=&quot;markdown-toc-jvmの使用メモリ&quot;&gt;JVMの使用メモリ&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#全体の使用量&quot; id=&quot;markdown-toc-全体の使用量&quot;&gt;全体の使用量&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ヒープ領域のみ&quot; id=&quot;markdown-toc-ヒープ領域のみ&quot;&gt;ヒープ領域のみ&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#survivor領域&quot; id=&quot;markdown-toc-survivor領域&quot;&gt;Survivor領域&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#領域毎にグループ化する&quot; id=&quot;markdown-toc-領域毎にグループ化する&quot;&gt;領域毎にグループ化する&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#jvmメトリックの構成&quot; id=&quot;markdown-toc-jvmメトリックの構成&quot;&gt;JVMメトリックの構成&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#micrometer-registry-datadog使用時の注意点&quot; id=&quot;markdown-toc-micrometer-registry-datadog使用時の注意点&quot;&gt;micrometer-registry-datadog使用時の注意点&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot; id=&quot;markdown-toc-datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot;&gt;Datadogへのメトリック送信に失敗した場合にはWARNログが出力される&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;micrometerって何&quot;&gt;Micrometerって何&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt; はJVM上で動くアプリケーションのメトリックを取得するためのライブラリです。&lt;/p&gt;
-
-&lt;p&gt;各種モニタリングツールとの連携が可能で、2018/05時点では以下のモニタリングツールに対応しています。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/Netflix/atlas/wiki&quot;&gt;Atlas&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/&quot;&gt;Datadog&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://ganglia.sourceforge.net/&quot;&gt;Ganglia&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://graphiteapp.org/&quot;&gt;Graphite&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.influxdata.com/&quot;&gt;Influx&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html&quot;&gt;JMX&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://newrelic.com/&quot;&gt;New Relic&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://prometheus.io/&quot;&gt;Prometheus&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://signalfx.com/&quot;&gt;SignalFx&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/etsy/statsd&quot;&gt;StatsD&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.wavefront.com/&quot;&gt;Wavefront&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これらのモニタリングツールと対になるライブラリを使用することで、取得したメトリックを容易に送ることができるのです。&lt;/p&gt;
-
-&lt;h2 id=&quot;spring-boot-アプリケーションに-micrometer-registry-datadog-を設定する&quot;&gt;Spring Boot アプリケーションに micrometer-registry-datadog を設定する&lt;/h2&gt;
-
-&lt;p&gt;Spring Bootに &lt;a href=&quot;https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog&quot;&gt;micrometer-registry-datadog&lt;/a&gt; を入れて、 Datadogにメトリックを溜め込んでみましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;buildgradleの修正&quot;&gt;build.gradleの修正&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; の依存関係に micrometer-registry-datadog を追加します。
-なお、Micrometer自体は &lt;code class=&quot;highlighter-rouge&quot;&gt;spring-boot-starter-actuator&lt;/code&gt; に含まれています。&lt;/p&gt;
-
-&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.springframework.boot'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'spring-boot-starter-actuator'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2.0.1.RELEASE'&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'io.micrometer'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'micrometer-registry-datadog'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'1.0.3'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;applicationyamlの修正&quot;&gt;application.yamlの修正&lt;/h3&gt;
-
-&lt;p&gt;application.yaml に設定を追加します。
-公式ドキュメントだと指定可能なプロパティが全て列挙されていないので、
-&lt;code class=&quot;highlighter-rouge&quot;&gt;io.micrometer.datadog.DatadogConfig&lt;/code&gt; クラスの中を見ることで確認できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;management&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;metrics&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;datadog&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;api-key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;${datadogのAPIキー}&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;15s&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# メトリックの収集間隔&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;メトリックに情報を付与する&quot;&gt;メトリックに情報を付与する&lt;/h3&gt;
-
-&lt;p&gt;こちらは必須ではありません。&lt;/p&gt;
-
-&lt;p&gt;Datadog上でタグを使ってメトリックを横断的にフィルタできると嬉しいケースがあるので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;commonTags&lt;/code&gt; を使って、ホスト名やモニターグループを設定すると良いと思います。&lt;/p&gt;
-
-&lt;p&gt;また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.&lt;/code&gt; のprefixを付与しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;nd&quot;&gt;@Bean&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeterRegistryCustomizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MeterRegistry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;customizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;meterFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeterFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
-                            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Meter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Meter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;spring.&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
-                            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-                        &lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;
-                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;monitoring_group&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;system_component_a&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commonTags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InetAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getLocalHost&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHostName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
-            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UnknownHostException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;LOGGER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fail to resolve hostname.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;datadog上でjvmのメトリックを見てみよう&quot;&gt;Datadog上でJVMのメトリックを見てみよう&lt;/h2&gt;
-
-&lt;p&gt;さて本題です。アプリケーションを起動し、Datadog上でメトリックを確認してみましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;jvmの使用メモリ&quot;&gt;JVMの使用メモリ&lt;/h3&gt;
-
-&lt;h4 id=&quot;全体の使用量&quot;&gt;全体の使用量&lt;/h4&gt;
-
-&lt;p&gt;JVMの使用メモリ量は &lt;code class=&quot;highlighter-rouge&quot;&gt;jvm.memory.used&lt;/code&gt; のメトリックで確認できます。 (先程 &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.&lt;/code&gt; のprefixをつけているので、下の図では &lt;code class=&quot;highlighter-rouge&quot;&gt;spring.jvm.memory.used&lt;/code&gt;)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/used_memory.png&quot; alt=&quot;used_memory&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ヒープ領域のみ&quot;&gt;ヒープ領域のみ&lt;/h4&gt;
-
-&lt;p&gt;次に &lt;code class=&quot;highlighter-rouge&quot;&gt;area:heap&lt;/code&gt; を指定すると、ヒープ領域のみに絞りこむことができます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/heap_only.png&quot; alt=&quot;heap_only&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;survivor領域&quot;&gt;Survivor領域&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;id:ps_survivor_space&lt;/code&gt; を追加すると、 ヒープの中のさらにSurvivor領域のみにも絞り込めます。これは嬉しい。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/survivor_only.png&quot; alt=&quot;survivor_only&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;領域毎にグループ化する&quot;&gt;領域毎にグループ化する&lt;/h4&gt;
-
-&lt;p&gt;もちろん、 &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; をfromではなく、グルーピングで使用すると、Heap領域に対する各領域の状態が確認できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180517/heap_group_by_id.png&quot; alt=&quot;heap_group_by_id&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;jvmメトリックの構成&quot;&gt;JVMメトリックの構成&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jvm.memory.used&lt;/code&gt; メトリックの構造をまとめると以下。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;metric&lt;/th&gt;
-      &lt;th&gt;area&lt;/th&gt;
-      &lt;th&gt;id&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;jvm.memory.used&lt;/td&gt;
-      &lt;td&gt;heap&lt;/td&gt;
-      &lt;td&gt;ps_eden_space&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;ps_old_gen&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;ps_survivor_space&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;nonheap&lt;/td&gt;
-      &lt;td&gt;metaspace&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;code_cache&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;cmpressed_class_space&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;他にも、例えば、 バッファメモリもそれぞれDirect BufferとMapped Bufferでメトリックが取れたりする。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;metric&lt;/th&gt;
-      &lt;th&gt;id&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;jvm.buffer.memory.used&lt;/td&gt;
-      &lt;td&gt;direct&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;mapped&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;micrometer-registry-datadog使用時の注意点&quot;&gt;micrometer-registry-datadog使用時の注意点&lt;/h2&gt;
-
-&lt;h3 id=&quot;datadogへのメトリック送信に失敗した場合にはwarnログが出力される&quot;&gt;Datadogへのメトリック送信に失敗した場合にはWARNログが出力される&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;micrometer-registry-datadog&lt;/code&gt; がバックグラウンドで定期的にメトリックを打ち上げてくれますが、
-通信に失敗した場合には &lt;code class=&quot;highlighter-rouge&quot;&gt;WARN&lt;/code&gt; レベルのログが出力されます。&lt;/p&gt;
-
-&lt;p&gt;そのため、 &lt;strong&gt;アプリケーションのログ監視をしている場合には、影響がないか確認しておきましょう&lt;/strong&gt; 。&lt;/p&gt;
-
-&lt;p&gt;参考までに、エラーは以下のような感じで出ていました。&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;failed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;send&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metrics&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SocketTimeoutException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;socketConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Native&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;doConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;350&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connectToAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;206&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractPlainSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;188&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SocksSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SocksSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;392&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Socket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Socket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;589&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ssl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SSLSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SSLSocketImpl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;673&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NetworkClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;doConnect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NetworkClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;175&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;openServer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;463&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;openServer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;558&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;264&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;New&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpsClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;367&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AbstractDelegateHttpsURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewHttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AbstractDelegateHttpsURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;191&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;以下略&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;micrometer-registry-datadog&lt;/code&gt; を使用すると、取得したいメトリックの情報が構造化されて、フィルタリングがしやすくなりました。
-特にJVMのメモリのメトリックは以前よりも直感的になった印象があります。&lt;/p&gt;
-
-&lt;p&gt;今回のMicrometerに限らず、 Application Performance Monitoring 界隈のライブラリが様々出回ってきたので、この方面も学習していきたいですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://micrometer.io/docs/registry/datadog&quot;&gt;Micrometer Datadog&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>soudegesu</name></author><category term="springboot" /><category term="datadog" /><summary type="html">以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント 」 にて、 Datadogに対してメトリックを送信するの仕組みを micrometer-registry-datadog に変更したのですが、 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="terraform" /><category term="s3" /><category term="iam" /><summary type="html">インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。</summary></entry></feed>
