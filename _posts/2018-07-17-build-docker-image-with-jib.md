@@ -3,7 +3,7 @@ title: "jibを使ってJavaアプリケーションのDockerイメージをビ�
 description: ""
 date: 2018-07-17 00:00:00 +0900
 categories: java
-tags: docker gradle
+tags: docker gradle jib
 ---
 
 実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
