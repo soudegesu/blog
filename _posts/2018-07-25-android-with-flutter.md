@@ -1,0 +1,91 @@
+---
+title: "FlutterのAndroid開発環境を構築する"
+description: ""
+date: 2018-07-25 00:00:00 +0900
+categories: android
+tags: flutter dart
+header:
+  teaser: /assets/images/icon/flutter_icon.png
+---
+
+[gizmodoの記事](https://www.gizmodo.jp/2018/07/fuchsia-5years.html) で、[Google Fuchsia](https://ja.wikipedia.org/wiki/Google_Fuchsia) の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない [Flutter](https://flutter.io/) の環境構築をしてみます。
+
+![flutter](/assets/images/20180725/flutter.png)
+
+* Table Of Contents
+{:toc}
+
+## モチベーション
+
+### Web系エンジニアがモバイルをアプリを作るかもしれなくなった
+
+**「君はコード書けるから、アプリのプロトタイプを作ってもらおうかな」** というオーダーを頂戴しました。
+そもそも私はWeb系のエンジニアで、近年はサーバサイドを中心に仕事をしていたので、Javascriptは2013年頃からあまり積極的に書いていませんでした。
+（スポットで簡易な管理コンソールにようなものは実装していましたが。。）
+
+この「あなたSEなんだから、Fax直せるでしょ？」の某Web広告を彷彿とさせる依頼を契機にアプリ開発の門を叩くことになったのです。
+
+### React-NativeかFlutterか
+
+先も書いた通り、私は過去Javascriptでの開発経験があるので、React-Nativeを使う選択肢もあります。
+
+一方で、つい最近、[gizmodoの記事](https://www.gizmodo.jp/2018/07/fuchsia-5years.html) で Google の新OSである Fuchsia の話と、
+それと付随して [Flutter](https://flutter.io/) が紹介されていました。
+
+今回実装するのもアプリのプロトタイプのようですし、せっかくだから実験台になってもらおう、となったわけです。
+
+## 環境構築
+### Flutterのインストール
+
+* SDKのダウンロード
+
+私のマシンはMac OSXなので [Flutter公式のMacOSのセットアップ](https://flutter.io/setup-macos/) ページを参考にセットアップを進めます。
+セットアップページに行くと、Flutter SDKのarchiveが手に入るので、それをダウンロードします。2018/07での最新バージョンは `v0.5.1-beta` でした。
+
+ちなみに、HomebrewのFlutterを探すと、 `v0.3.1` がヒットするので少し古いです。
+
+* zipの解凍
+
+ダウンロード終了後に任意のフォルダで解凍します。
+
+```
+cd ~/
+unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip
+```
+
+unzipされていく過程を眺めていると、 `creating: flutter/packages/fuchsia_remote_debug_protocol/` といった `Fuchsia` との関連を匂わせるソースも入っていますね。少しだけテンションが上がりました。
+
+* パスを通す
+
+毎度 exportコマンドを実行するのも面倒なので、 `~/.zshrc` ファイルに記載をして、`source` コマンドで再読込させます。
+
+```vim
+export FLUTTER="${HOME}/flutter/bin"
+export PATH="${FLUTTER}:$PATH"
+```
+
+* 動作確認
+
+`flutter` コマンドの確認をします。
+
+```bash
+flutter --version
+
+> Flutter 0.5.1 • channel beta • https://github.com/flutter/flutter.git
+> Framework • revision c7ea3ca377 (8 weeks ago) • 2018-05-29 21:07:33 +0200
+> Engine • revision 1ed25ca7b7
+> Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
+```
+
+## 参考にさせていただいたサイト
+* [Flutter](https://flutter.io)
+* [Google Fuchsia](https://ja.wikipedia.org/wiki/Google_Fuchsia)
+* [【追記あり】Googleの新OS｢Fuchsia｣がAndroidを5年後に置き換えるかも](https://www.gizmodo.jp/2018/07/fuchsia-5years.html)
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4048915118&linkId=bbd8ab09e1853c0025cee79f27f3adff&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4774198552&linkId=c9a21af23359162955dce78777edebe9&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4774188174&linkId=ef4bacdf0606f740e9024096feae3373"></iframe>
+</div>
