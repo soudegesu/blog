@@ -1,5 +1,5 @@
 ---
-title: "Flutterでモバイルアプリケーションの（Android/iOS）開発環境を構築する"
+title: "Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する"
 description: "gizmodoの記事で、の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない Flutter の環境構築をしてみます。"
 date: 2018-07-25 00:00:00 +0900
 categories: dart
