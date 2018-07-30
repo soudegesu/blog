@@ -77,6 +77,54 @@ flutter --version
 > Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
 ```
 
+flutterのバージョンが低いと、warningでバージョンアップが促されました。親切設計です。
+
+```bash
+  ╔════════════════════════════════════════════════════════════════════════════╗
+  ║ WARNING: your installation of Flutter is 61 days old.                      ║
+  ║                                                                            ║
+  ║ To update to the latest version, run "flutter upgrade".                    ║
+  ╚════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Flutterの依存ツールをチェックする
+
+Flutterが依存するツールの状況を確認します。 `flutter doctor` の実行結果を基に不足分を足していきます。
+
+```bash
+flutter doctor
+
+> Doctor summary (to see all details, run flutter doctor -v):
+> [✓] Flutter (Channel beta, v0.5.1, on Mac OS X 10.13.2 17C88, locale ja-JP)
+> [!] Android toolchain - develop for Android devices (Android SDK 26.0.2)
+>     ! Some Android licenses not accepted.  To resolve this, run: flutter doctor --android-licenses
+> [!] iOS toolchain - develop for iOS devices (Xcode 9.2)
+>     ✗ Missing Xcode dependency: Python module "six".
+>       Install via 'pip install six' or 'sudo easy_install six'.
+>     ✗ libimobiledevice and ideviceinstaller are not installed. To install, run:
+>         brew install --HEAD libimobiledevice
+>         brew install ideviceinstaller
+>     ✗ ios-deploy not installed. To install:
+>         brew install ios-deploy
+>     ✗ CocoaPods not installed.
+>         CocoaPods is used to retrieve the iOS platform side's plugin code that responds to your plugin usage on the Dart side.
+>         Without resolving iOS dependencies with CocoaPods, plugins will not work on iOS.
+>         For more info, see https://flutter.io/platform-plugins
+>       To install:
+>         brew install cocoapods
+>         pod setup
+> [✓] Android Studio (version 3.0)
+>     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+>     ✗ Dart plugin not installed; this adds Dart specific functionality.
+> [!] IntelliJ IDEA Ultimate Edition (version 2017.3)
+>     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+>     ✗ Dart plugin not installed; this adds Dart specific functionality.
+> [!] VS Code (version 1.25.0)
+> [!] Connected devices
+>     ! No devices available
+```
+
+
 ## 参考にさせていただいたサイト
 * [Flutter](https://flutter.io)
 * [Google Fuchsia](https://ja.wikipedia.org/wiki/Google_Fuchsia)
