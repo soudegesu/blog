@@ -1,4 +1,219 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-19T10:31:01+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">jibを使ってJavaアプリケーションのDockerイメージをビルドする</title><link href="https://www.soudegesu.com/java/build-docker-image-with-jib/" rel="alternate" type="text/html" title="jibを使ってJavaアプリケーションのDockerイメージをビルドする" /><published>2018-07-17T00:00:00+09:00</published><updated>2018-07-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/build-docker-image-with-jib</id><content type="html" xml:base="https://www.soudegesu.com/java/build-docker-image-with-jib/">&lt;p&gt;実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-07-31T08:07:48+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</title><link href="https://www.soudegesu.com/dart/android-with-flutter/" rel="alternate" type="text/html" title="Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する" /><published>2018-07-25T00:00:00+09:00</published><updated>2018-07-25T00:00:00+09:00</updated><id>https://www.soudegesu.com/dart/android-with-flutter</id><content type="html" xml:base="https://www.soudegesu.com/dart/android-with-flutter/">&lt;p&gt;&lt;a href=&quot;https://www.gizmodo.jp/2018/07/fuchsia-5years.html&quot;&gt;gizmodoの記事&lt;/a&gt; で、&lt;a href=&quot;https://ja.wikipedia.org/wiki/Google_Fuchsia&quot;&gt;Google Fuchsia&lt;/a&gt; の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない &lt;a href=&quot;https://flutter.io/&quot;&gt;Flutter&lt;/a&gt; の環境構築をしてみます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180725/flutter.png&quot; alt=&quot;flutter&quot; /&gt;&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#web系エンジニアがモバイルをアプリを作ることになった&quot; id=&quot;markdown-toc-web系エンジニアがモバイルをアプリを作ることになった&quot;&gt;Web系エンジニアがモバイルをアプリを作ることになった&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#react-nativeかflutterか&quot; id=&quot;markdown-toc-react-nativeかflutterか&quot;&gt;React-NativeかFlutterか&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#環境構築&quot; id=&quot;markdown-toc-環境構築&quot;&gt;環境構築&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#flutterのインストール&quot; id=&quot;markdown-toc-flutterのインストール&quot;&gt;Flutterのインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#flutterの依存ツールをチェックする&quot; id=&quot;markdown-toc-flutterの依存ツールをチェックする&quot;&gt;Flutterの依存ツールをチェックする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#プロジェクトの初期化&quot; id=&quot;markdown-toc-プロジェクトの初期化&quot;&gt;プロジェクトの初期化&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#サンプルアプリケーションの起動&quot; id=&quot;markdown-toc-サンプルアプリケーションの起動&quot;&gt;サンプルアプリケーションの起動&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
+
+&lt;h3 id=&quot;web系エンジニアがモバイルをアプリを作ることになった&quot;&gt;Web系エンジニアがモバイルをアプリを作ることになった&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;「君はコード書けるから、アプリのプロトタイプを作ってもらおうかな」&lt;/strong&gt; というオーダーを頂戴しました。
+そもそも私はWeb系のエンジニアで、近年はサーバサイドを中心に仕事をしていたので、Javascriptは2013年頃からあまり積極的に書いていませんでした。
+（スポットで簡易な管理コンソールにようなものは実装していましたが。。）&lt;/p&gt;
+
+&lt;p&gt;この「あなたSEなんだから、Fax直せるでしょ？」の某Web広告を彷彿とさせる依頼が契機となり、アプリ開発の門を叩くことになったのです。&lt;/p&gt;
+
+&lt;h3 id=&quot;react-nativeかflutterか&quot;&gt;React-NativeかFlutterか&lt;/h3&gt;
+
+&lt;p&gt;先も書いた通り、私は過去Javascriptでの開発経験があるので、React-Nativeを使う選択肢もあります。&lt;/p&gt;
+
+&lt;p&gt;一方で、つい最近、&lt;a href=&quot;https://www.gizmodo.jp/2018/07/fuchsia-5years.html&quot;&gt;gizmodoの記事&lt;/a&gt; で Google の新OSである Fuchsia の話と、
+それと付随して &lt;a href=&quot;https://flutter.io/&quot;&gt;Flutter&lt;/a&gt; が紹介されていました。&lt;/p&gt;
+
+&lt;p&gt;今回実装するのもアプリのプロトタイプのようですし、せっかくだから実験台になってもらおう、となったわけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;環境構築&quot;&gt;環境構築&lt;/h2&gt;
+&lt;h3 id=&quot;flutterのインストール&quot;&gt;Flutterのインストール&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;SDKのダウンロード&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;私のマシンはMac OSXなので &lt;a href=&quot;https://flutter.io/setup-macos/&quot;&gt;Flutter公式のMacOSのセットアップ&lt;/a&gt; ページを参考にセットアップを進めます。
+セットアップページに行くと、Flutter SDKのarchiveが手に入るので、それをダウンロードします。2018/07での最新バージョンは &lt;code class=&quot;highlighter-rouge&quot;&gt;v0.5.1-beta&lt;/code&gt; でした。&lt;/p&gt;
+
+&lt;p&gt;ちなみに、HomebrewのFlutterを探すと、 古いバージョン（ &lt;code class=&quot;highlighter-rouge&quot;&gt;v0.3.1&lt;/code&gt; ）がヒットするので Homebrew 経由でのインストールはオススメしません。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;zipの解凍&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ダウンロード終了後に任意のフォルダで解凍します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd ~/
+unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;unzipされていく過程を眺めていると、 &lt;code class=&quot;highlighter-rouge&quot;&gt;creating: flutter/packages/fuchsia_remote_debug_protocol/&lt;/code&gt; といった &lt;code class=&quot;highlighter-rouge&quot;&gt;Fuchsia&lt;/code&gt; との関連を匂わせるソースも入っていますね。少しだけテンションが上がりました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;パスを通す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;毎度 exportコマンドを実行するのも面倒なので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.zshrc&lt;/code&gt; ファイルに記載をして、&lt;code class=&quot;highlighter-rouge&quot;&gt;source&lt;/code&gt; コマンドで再読込させます。&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export FLUTTER&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;${HOME}/flutter/bin&quot;&lt;/span&gt;
+export PATH&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;${FLUTTER}:$PATH&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;動作確認&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;flutter&lt;/code&gt; コマンドの確認をします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flutter &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Flutter 0.5.1 • channel beta • https://github.com/flutter/flutter.git
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Framework • revision c7ea3ca377 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8 weeks ago&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; • 2018-05-29 21:07:33 +0200
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Engine • revision 1ed25ca7b7
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;低いバージョンのflutterを使っていると、このタイミングでバージョンアップが促されます。親切設計です。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ╔════════════════════════════════════════════════════════════════════════════╗
+  ║ WARNING: your installation of Flutter is 61 days old.                      ║
+  ║                                                                            ║
+  ║ To update to the latest version, run &lt;span class=&quot;s2&quot;&gt;&quot;flutter upgrade&quot;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;                    ║
+  ╚════════════════════════════════════════════════════════════════════════════╝
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;flutterの依存ツールをチェックする&quot;&gt;Flutterの依存ツールをチェックする&lt;/h3&gt;
+
+&lt;p&gt;Flutterが依存するツールの状況を確認しましょう。 &lt;code class=&quot;highlighter-rouge&quot;&gt;flutter doctor&lt;/code&gt; の実行結果を確認しながら不足しているツールをインストールしていきます。&lt;/p&gt;
+
+&lt;p&gt;コマンドサンプルも付随しているので、インストールに手間取ることはありませんでした。
+インストールするモジュールの容量が大きくて時間がかかります。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flutter doctor
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Doctor summary &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;to see all details, run flutter doctor &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;✓] Flutter &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Channel beta, v0.5.1, on Mac OS X 10.13.2 17C88, locale ja-JP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[!]&lt;/span&gt; Android toolchain - develop &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Android devices &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Android SDK 26.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; Some Android licenses not accepted.  To resolve this, run: flutter doctor &lt;span class=&quot;nt&quot;&gt;--android-licenses&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[!]&lt;/span&gt; iOS toolchain - develop &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;iOS devices &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Xcode 9.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ✗ Missing Xcode dependency: Python module &lt;span class=&quot;s2&quot;&gt;&quot;six&quot;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;       Install via &lt;span class=&quot;s1&quot;&gt;'pip install six'&lt;/span&gt; or &lt;span class=&quot;s1&quot;&gt;'sudo easy_install six'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ✗ libimobiledevice and ideviceinstaller are not installed. To install, run:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;         brew install &lt;span class=&quot;nt&quot;&gt;--HEAD&lt;/span&gt; libimobiledevice
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;         brew install ideviceinstaller
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ✗ ios-deploy not installed. To install:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;         brew install ios-deploy
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;     ✗ CocoaPods not installed.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;         CocoaPods is used to retrieve the iOS platform side&lt;span class=&quot;s1&quot;&gt;'s plugin code that responds to your plugin usage on the Dart side.
+&amp;gt;         Without resolving iOS dependencies with CocoaPods, plugins will not work on iOS.
+&amp;gt;         For more info, see https://flutter.io/platform-plugins
+&amp;gt;       To install:
+&amp;gt;         brew install cocoapods
+&amp;gt;         pod setup
+&amp;gt; [✓] Android Studio (version 3.0)
+&amp;gt;     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+&amp;gt;     ✗ Dart plugin not installed; this adds Dart specific functionality.
+&amp;gt; [!] IntelliJ IDEA Ultimate Edition (version 2017.3)
+&amp;gt;     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+&amp;gt;     ✗ Dart plugin not installed; this adds Dart specific functionality.
+&amp;gt; [!] VS Code (version 1.25.0)
+&amp;gt; [!] Connected devices
+&amp;gt;     ! No devices available
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;プロジェクトの初期化&quot;&gt;プロジェクトの初期化&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;flutter&lt;/code&gt; のプロジェクトの初期化を行います。今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;sample&lt;/code&gt; という名前のプロジェクトにします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flutter create sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;こんな感じでプロジェクトツリーが生成されました。 &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/main.dart&lt;/code&gt; がメインとなるdartのコードっぽいですね。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;android&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;ios&lt;/code&gt; のディレクトリ配下は、各プラットフォームのアプリのディレクトリ構造になっていました。&lt;/p&gt;
+
+&lt;p&gt;ネイティブコードでも拡張できるんでしょね、おそらく。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+├── README.md
+├── android
+│   ├── app
+│   ├── build.gradle
+│   ├── gradle
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── local.properties
+│   └── settings.gradle
+├── build
+│   ├── android-profile
+│   ├── app
+│   ├── app.dill
+│   └── frontend_server.d
+├── ios
+│   ├── Flutter
+│   ├── Runner
+│   ├── Runner.xcodeproj
+│   └── Runner.xcworkspace
+├── lib
+│   └── main.dart
+├── pubspec.lock
+├── pubspec.yaml
+├── sample.iml
+├── sample_android.iml
+└── &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+    └── widget_test.dart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;サンプルアプリケーションの起動&quot;&gt;サンプルアプリケーションの起動&lt;/h3&gt;
+
+&lt;p&gt;作成したプロジェクトをVisual Studio Codeで開きます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lib/main.dart&lt;/code&gt; ファイルを開いて、 デバッグを選択（&lt;code class=&quot;highlighter-rouge&quot;&gt;F5&lt;/code&gt; キー）を押すと、エミュレータを選択できます。
+とりあえず、iOS Simulator にします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180725/launch_app.png&quot; alt=&quot;flutter&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;暫く待つと（数分待ちました。。）エミュレータが起動し、アプリが立ち上がります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180725/demo.png&quot; alt=&quot;demo&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;これで開発環境は構築できました！&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はFlutterの環境構築までを行いました。
+最初はコマンドラインでやっていたのですが、IDEにプラグインをインストールした方が開発が捗るのでオススメします。
+Dartのコードはまだ書けていませんが、Javascriptでオブジェクト指向プログラミングをやったことがあれば、ついていけそうな気はします。
+次は &lt;a href=&quot;https://flutter.io/get-started/codelab/&quot;&gt;Write Your First Flutter App&lt;/a&gt; で簡単なデモアプリを作ってみようと思います！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://flutter.io&quot;&gt;Flutter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ja.wikipedia.org/wiki/Google_Fuchsia&quot;&gt;Google Fuchsia&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gizmodo.jp/2018/07/fuchsia-5years.html&quot;&gt;【追記あり】Googleの新OS｢Fuchsia｣がAndroidを5年後に置き換えるかも&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4048915118&amp;amp;linkId=bbd8ab09e1853c0025cee79f27f3adff&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4774198552&amp;amp;linkId=c9a21af23359162955dce78777edebe9&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=4774188174&amp;amp;linkId=ef4bacdf0606f740e9024096feae3373&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="flutter" /><category term="android" /><category term="ios" /><category term="dart" /><summary type="html">gizmodoの記事 で、Google Fuchsia の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない Flutter の環境構築をしてみます。</summary></entry><entry><title type="html">jibを使ってJavaアプリケーションのDockerイメージをビルドする</title><link href="https://www.soudegesu.com/java/build-docker-image-with-jib/" rel="alternate" type="text/html" title="jibを使ってJavaアプリケーションのDockerイメージをビルドする" /><published>2018-07-17T00:00:00+09:00</published><updated>2018-07-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/build-docker-image-with-jib</id><content type="html" xml:base="https://www.soudegesu.com/java/build-docker-image-with-jib/">&lt;p&gt;実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
 今回は &lt;a href=&quot;https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin&quot;&gt;Jib&lt;/a&gt; を使ったDockerfileイメージのビルドを紹介します。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/20180717/jib.png&quot; alt=&quot;jib&quot; /&gt;&lt;/p&gt;
@@ -3287,130 +3502,4 @@ Waitを外出ししているため、 &lt;strong&gt;Lambdaの実行時間制限�
 &lt;div align=&quot;center&quot;&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e91e78f505e53d2986a0635db4aad1ce&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
     &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="s3" /><category term="cloudwatchlogs" /><category term="stepfunction" /><category term="lambda" /><summary type="html">CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。 しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。</summary></entry><entry><title type="html">TerraformでS3のバケットポリシーを書く方法</title><link href="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/" rel="alternate" type="text/html" title="TerraformでS3のバケットポリシーを書く方法" /><published>2018-05-21T00:00:00+09:00</published><updated>2018-05-21T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/s3bucket-policy-with-terraform</id><content type="html" xml:base="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/">&lt;p&gt;インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt; も例外ではないのですが、S3バケットのポリシー設定の所でふと気付いたので書いておきます。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#terraform公式のs3のバケットポリシーが&quot; id=&quot;markdown-toc-terraform公式のs3のバケットポリシーが&quot;&gt;Terraform公式のS3のバケットポリシーが…&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot; id=&quot;markdown-toc-iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot;&gt;IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;terraform公式のs3のバケットポリシーが&quot;&gt;Terraform公式のS3のバケットポリシーが…&lt;/h2&gt;
-
-&lt;p&gt;Terraform公式の &lt;a href=&quot;https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html&quot;&gt;aws_s3_bucket_policy&lt;/a&gt;
-のリソースは &lt;code class=&quot;highlighter-rouge&quot;&gt;policy&lt;/code&gt; の部分がヒアドキュメントで書かれています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
-  bucket = &quot;my_tf_test_bucket&quot;
-}
-
-resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
-  bucket = &quot;${aws_s3_bucket.b.id}&quot;
-  policy =&amp;lt;&amp;lt;POLICY
-{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Id&quot;: &quot;MYBUCKETPOLICY&quot;,
-  &quot;Statement&quot;: [
-    {
-      &quot;Sid&quot;: &quot;IPAllow&quot;,
-      &quot;Effect&quot;: &quot;Deny&quot;,
-      &quot;Principal&quot;: &quot;*&quot;,
-      &quot;Action&quot;: &quot;s3:*&quot;,
-      &quot;Resource&quot;: &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;,
-      &quot;Condition&quot;: {
-         &quot;IpAddress&quot;: {&quot;aws:SourceIp&quot;: &quot;8.8.8.8/32&quot;}
-      }
-    }
-  ]
-}
-POLICY
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。&lt;/p&gt;
-
-&lt;h2 id=&quot;iamポリシードキュメントのデータソースaws_iam_policy_documentを使う&quot;&gt;IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う&lt;/h2&gt;
-
-&lt;p&gt;結論から言うと、 &lt;a href=&quot;https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html&quot;&gt;aws_iam_policy_document&lt;/a&gt;
-のデータソースを使用することができます。&lt;/p&gt;
-
-&lt;p&gt;データソース名から 「IAMにしか適用できないのでは？」 と思うかもしれませんが、結局はポリシードキュメントなので使えます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
-  bucket = &quot;my_tf_test_bucket&quot;
-}
-
-resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
-  bucket = &quot;${aws_s3_bucket.b.id}&quot;
-  policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;
-}
-
-data &quot;aws_iam_policy_document&quot; &quot;bucket_policy_document&quot; {
-
-    statement {
-        sid = &quot;IPAllow&quot;
-        effect = &quot;Deny&quot;
-        principals {
-            type = &quot;*&quot;
-            identifiers = [&quot;*&quot;]
-        }
-        actions = [
-            &quot;s3:*&quot;
-        ]
-        resources = [
-            &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;
-        ]
-        condition {
-            test = &quot;IpAddress&quot;
-            variable = &quot;aws:SourceIp&quot;
-            values = [
-              &quot;8.8.8.8/32&quot;
-            ]
-        }
-    }
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ポイントは &lt;code class=&quot;highlighter-rouge&quot;&gt;policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;&lt;/code&gt; の所です。&lt;/p&gt;
-
-&lt;p&gt;データソースをJSON文字列にしてくれます。&lt;/p&gt;
-
-&lt;p&gt;AWS公式の &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_elements_condition_operators.html&quot;&gt;IAM JSON ポリシーエレメント: 条件演算子&lt;/a&gt; にもある通り、
-&lt;code class=&quot;highlighter-rouge&quot;&gt;IpAddress&lt;/code&gt; も条件演算子のひとつとして定義されているので、ちゃんと &lt;code class=&quot;highlighter-rouge&quot;&gt;condition&lt;/code&gt; ブロックで使えます。&lt;/p&gt;
-
-&lt;p&gt;強いてクセを挙げるとしたら、&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;Principal&quot;: &quot;*&quot;,
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;を表現するために&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;principals {
-    type = &quot;*&quot;
-    identifiers = [&quot;*&quot;]
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;と記述しないといけない所でしょうか。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;S3バケットのポリシードキュメントも &lt;code class=&quot;highlighter-rouge&quot;&gt;aws_iam_policy_document&lt;/code&gt; を使えば、Terraformのコードとして管理できます。
-HCLからポリシードキュメント（JSON）を生成するために、微妙に書き方が違う部分がありますが、それは普段通りTerraformの公式を読めばなんとかなるでしょう。
-さらばヒアドキュメント！！&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html&quot;&gt;Terraform - Data Source:aws_iam_policy_document&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html&quot;&gt;Terraform - Data Source: aws_s3_bucket_policy&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;div align=&quot;center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=B06XKHGJHP&amp;amp;linkId=a3a59917979f77c73643421d8d843a47&quot;&gt;&lt;/iframe&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=4844339265&amp;amp;linkId=81ad40d815fd96079a683238ffb6a249&quot;&gt;&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="terraform" /><category term="s3" /><category term="iam" /><summary type="html">インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="s3" /><category term="cloudwatchlogs" /><category term="stepfunction" /><category term="lambda" /><summary type="html">CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。 しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。</summary></entry></feed>
