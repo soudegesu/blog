@@ -1,9 +1,9 @@
 ---
-title: "FlutterのAndroid開発環境を構築する"
-description: ""
+title: "Flutterでモバイルアプリケーションの（Android/iOS）開発環境を構築する"
+description: "gizmodoの記事で、の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない Flutter の環境構築をしてみます。"
 date: 2018-07-25 00:00:00 +0900
-categories: android
-tags: flutter dart
+categories: dart
+tags: flutter android ios dart
 header:
   teaser: /assets/images/icon/flutter_icon.png
 ---
@@ -17,13 +17,13 @@ header:
 
 ## モチベーション
 
-### Web系エンジニアがモバイルをアプリを作るかもしれなくなった
+### Web系エンジニアがモバイルをアプリを作ることになった
 
 **「君はコード書けるから、アプリのプロトタイプを作ってもらおうかな」** というオーダーを頂戴しました。
 そもそも私はWeb系のエンジニアで、近年はサーバサイドを中心に仕事をしていたので、Javascriptは2013年頃からあまり積極的に書いていませんでした。
 （スポットで簡易な管理コンソールにようなものは実装していましたが。。）
 
-この「あなたSEなんだから、Fax直せるでしょ？」の某Web広告を彷彿とさせる依頼を契機にアプリ開発の門を叩くことになったのです。
+この「あなたSEなんだから、Fax直せるでしょ？」の某Web広告を彷彿とさせる依頼が契機となり、アプリ開発の門を叩くことになったのです。
 
 ### React-NativeかFlutterか
 
@@ -42,7 +42,7 @@ header:
 私のマシンはMac OSXなので [Flutter公式のMacOSのセットアップ](https://flutter.io/setup-macos/) ページを参考にセットアップを進めます。
 セットアップページに行くと、Flutter SDKのarchiveが手に入るので、それをダウンロードします。2018/07での最新バージョンは `v0.5.1-beta` でした。
 
-ちなみに、HomebrewのFlutterを探すと、 `v0.3.1` がヒットするので少し古いです。
+ちなみに、HomebrewのFlutterを探すと、 古いバージョン（ `v0.3.1` ）がヒットするので Homebrew 経由でのインストールはオススメしません。
 
 * zipの解凍
 
@@ -77,7 +77,7 @@ flutter --version
 > Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
 ```
 
-flutterのバージョンが低いと、warningでバージョンアップが促されました。親切設計です。
+低いバージョンのflutterを使っていると、このタイミングでバージョンアップが促されます。親切設計です。
 
 ```bash
   ╔════════════════════════════════════════════════════════════════════════════╗
@@ -89,7 +89,10 @@ flutterのバージョンが低いと、warningでバージョンアップが促
 
 ### Flutterの依存ツールをチェックする
 
-Flutterが依存するツールの状況を確認します。 `flutter doctor` の実行結果を基に不足分を足していきます。
+Flutterが依存するツールの状況を確認しましょう。 `flutter doctor` の実行結果を確認しながら不足しているツールをインストールしていきます。
+
+コマンドサンプルも付随しているので、インストールに手間取ることはありませんでした。
+インストールするモジュールの容量が大きくて時間がかかります。
 
 ```bash
 flutter doctor
@@ -124,6 +127,73 @@ flutter doctor
 >     ! No devices available
 ```
 
+### プロジェクトの初期化
+
+`flutter` のプロジェクトの初期化を行います。今回は `sample` という名前のプロジェクトにします。
+
+```bash
+flutter create sample
+```
+
+こんな感じでプロジェクトツリーが生成されました。 `lib/main.dart` がメインとなるdartのコードっぽいですね。
+
+`android` や `ios` のディレクトリ配下は、各プラットフォームのアプリのディレクトリ構造になっていました。
+
+ネイティブコードでも拡張できるんでしょね、おそらく。
+
+```bash
+.
+├── README.md
+├── android
+│   ├── app
+│   ├── build.gradle
+│   ├── gradle
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── local.properties
+│   └── settings.gradle
+├── build
+│   ├── android-profile
+│   ├── app
+│   ├── app.dill
+│   └── frontend_server.d
+├── ios
+│   ├── Flutter
+│   ├── Runner
+│   ├── Runner.xcodeproj
+│   └── Runner.xcworkspace
+├── lib
+│   └── main.dart
+├── pubspec.lock
+├── pubspec.yaml
+├── sample.iml
+├── sample_android.iml
+└── test
+    └── widget_test.dart
+```
+
+### サンプルアプリケーションの起動
+
+作成したプロジェクトをVisual Studio Codeで開きます。
+
+`lib/main.dart` ファイルを開いて、 デバッグを選択（`F5` キー）を押すと、エミュレータを選択できます。
+とりあえず、iOS Simulator にします。
+
+![flutter](/assets/images/20180725/launch_app.png)
+
+暫く待つと（数分待ちました。。）エミュレータが起動し、アプリが立ち上がります。
+
+![demo](/assets/images/20180725/demo.png)
+
+これで開発環境は構築できました！
+
+## まとめ
+
+今回はFlutterの環境構築までを行いました。
+最初はコマンドラインでやっていたのですが、IDEにプラグインをインストールした方が開発が捗るのでオススメします。
+Dartのコードはまだ書けていませんが、Javascriptでオブジェクト指向プログラミングをやったことがあれば、ついていけそうな気はします。
+次は [Write Your First Flutter App](https://flutter.io/get-started/codelab/) で簡単なデモアプリを作ってみようと思います！
 
 ## 参考にさせていただいたサイト
 * [Flutter](https://flutter.io)
