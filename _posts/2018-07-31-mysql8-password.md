@@ -1,5 +1,5 @@
 ---
-title: "MySQL8 の RootユーザのパスワードをAnsibleで変更する"
+title: "MySQL 8のRootユーザのパスワードをAnsibleで変更する"
 description: ""
 date: 2018-07-31 00:00:00 +0900
 categories: mysql
@@ -8,8 +8,22 @@ header:
   teaser: /assets/images/icon/mysql_icon.png
 ---
 
+[MySQL](https://www.mysql.com/jp/) のメジャーバージョン `8` が 2018/4 にリリースされました。
+今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。
+
 * Table Of Contents
 {:toc}
+
+## モチベーション
+### MySQL8のAMIを作りたい
+
+普段、AWSを利用する上ではRDSを使うことが多いので、MySQL5.x系を選択することになります。
+今回はMySQL8を使った研修を社内で実施するため、MySQL8のAMIを作る必要がありました。
+
+### MySQL5.6で動いていたplaybookが動かない...だと!?
+
+## やってみる
+###
 
 
 ## 参考にさせていただいたサイト
