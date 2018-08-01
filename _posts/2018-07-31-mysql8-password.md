@@ -1,6 +1,6 @@
 ---
 title: "MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）"
-description: ""
+description: "MySQLのメジャーバージョン8が2018/4 にリリースされました。今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。"
 date: 2018-07-31 00:00:00 +0900
 categories: mysql
 tags: mysql ansible packer
