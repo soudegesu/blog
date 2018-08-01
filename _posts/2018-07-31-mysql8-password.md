@@ -1,5 +1,5 @@
 ---
-title: "MySQL 8のRootユーザのパスワードをAnsibleで変更する"
+title: "MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）"
 description: ""
 date: 2018-07-31 00:00:00 +0900
 categories: mysql
@@ -14,22 +14,221 @@ header:
 * Table Of Contents
 {:toc}
 
-## モチベーション
-### MySQL8のAMIを作りたい
+## MySQL8のAMIを作りたい
 
 普段、AWSを利用する上ではRDSを使うことが多いので、MySQL5.x系を選択することになります。
 今回はMySQL8を使った研修を社内で実施するため、MySQL8のAMIを作る必要がありました。
 
-### MySQL5.6で動いていたplaybookが動かない...だと!?
+## 環境情報
 
-## やってみる
-###
+今回は以下のような環境で実施しています。
 
+* CentOS 7
+* Ansible 2.6.1
+* Packer 1.1.3
+
+## playbookのサンプル
+
+先に結論を書きます。
+ansible playbookのサンプルは以下のようになりました。
+
+なお、今回はメインのタスク定義の部分だけとし、その他の部分やPackerは冗長になるので割愛しています。
+
+```yml
+---
+{% raw %}- name: download epel-release
+  yum:
+    name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+    state: present
+- name: delete mariadb
+  yum:
+    name: mariadb-libs
+    state: removed
+- name: install mysql
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mysql-community-devel*
+    - mysql-community-server*
+    - MySQL-python
+- name: copy my.cnf
+  copy:
+    src: ../files/etc/my.cnf
+    dest: /etc/my.cnf
+    mode: 0644
+- name: enable mysql
+  systemd:
+    name: mysqld
+    state: restarted
+    enabled: yes
+- name: get root password
+  shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+  register: root_password
+- name: update expired root user password
+  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"
+- name: create mysql client user
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql.root.password }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    host: '%'
+  with_items:
+    - "{{ mysql.users }}"{% endraw %}
+```
+
+## ポイント解説
+
+上から順番にポイントを解説していきます。
+
+### mariadb-libsを削除する
+
+CentOS 7にデフォルトでインストールされている mariadbのモジュールは削除しましょう。
+MySQLインストール時にモジュールの競合を起こしてうまくいきません。
+
+```yml
+- name: delete mariadb
+  yum:
+    name: mariadb-libs
+    state: removed
+```
+
+### MySQL-pythonをインストールする
+
+ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-python をプロビジョニング対象のサーバにインストールする** 必要があります。
+
+なお、 `MySQL-python` はPython2上でしか動作しない点も注意してください。
+
+```yml
+{% raw %}
+- name: install mysql
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mysql-community-devel*
+    - mysql-community-server*
+    - MySQL-python # これ
+{% endraw %}
+```
+
+### MySQLのデフォルト認証プラグインの変更
+
+MySQL8からセキュリティ強化の目的で、デフォルトの認証プラグインが変更されています。
+詳しくは [ここ](https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password) を読んでください。
+
+そのため、以前の認証プラグインに変更するために `my.cnf` を修正する必要があります。
+
+以下のように **default-authentication-plugin=mysql_native_password** を追記した `my.cnf` を準備し、
+
+```
+[mysqld]
+default-authentication-plugin=mysql_native_password
+```
+
+`/etc/my.cnf` にコピーしてあげます。
+
+```yml
+- name: copy my.cnf
+  copy:
+    src: ../files/etc/my.cnf
+    dest: /etc/my.cnf
+    mode: 0644
+```
+
+変更を反映するために、`mysqld` を再起動してあげます。
+
+```yml
+- name: enable mysql
+  systemd:
+    name: mysqld
+    state: restarted
+    enabled: yes
+```
+
+### ログファイルからrootのパスワードを取得して初期化する
+
+これがめんどくさいところでした。
+
+MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり出力します。
+
+初期パスワードをログファイルから抽出して変数に登録した後( `register` )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。
+
+```yml
+{% raw %}
+- name: get root password
+  shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+  register: root_password # これで一回変数登録
+- name: update expired root user password
+  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"
+{% endraw %}
+```
+
+**なぜ `mysql_user` ではなく `command` モジュールを使うの？** と思うことでしょう。
+
+例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。
+
+```yml
+{% raw %}
+-  mysql_user:
+    login_user: root
+    login_password: "{{ root_password }}"
+    name: root
+    password: "{{ sometinng new password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    host: '%'
+{% endraw %}
+```
+
+実はこれだと、以下のようなエラーが発生します。
+
+```bash
+unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials
+```
+
+こちらは [Ansible の isuue](https://github.com/ansible/ansible/issues/41116) にも報告がされていました。
+
+そのため、少し邪道感はありますが、issueがfixするまでは、mysqlコマンドを直接発行して変更をする、という手段をとります。
+
+### データベース接続するユーザを作成する
+
+アプリケーションから接続する時に使うmysqlのユーザを作成します。
+操作するユーザ(`login_user`) を `root` とし、更新済みのパスワードで接続( `login_password` )します。
+
+これはMySQL自体の話ですが、 `host` は接続元のホストを適切に設定してください。今回は研修用途のどうでもいいサーバなので `%` としています。
+逆に `host` が未設定だと、localhostからの接続しか許可されません。
+
+```yml
+{% raw %}
+- name: create mysql client user
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql.root.password }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    host: '%' # hostを設定しないと、localhostからの接続しか受け付けない
+  with_items:
+    - "{{ mysql.users }}"
+{% endraw %}
+```
+
+## まとめ
+
+今回は MySQL8初期化のplaybookのはまりポイントを紹介しました。
+文書化すると案外簡素になりましたが、MySQL8による変更点と、Ansibleそのものの振る舞いとを切り分けをしたこともあり、実作業はなかなか時間がかかっています。
+Packer+Ansibleのデバッグ効率を上げるために、ローカルのVagrantに対して実施していましたがもっと作業スピードを上げたいところです。
 
 ## 参考にさせていただいたサイト
+
+* [Github](https://github.com/ansible/ansible)
 
 <div align="center">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4844333933&linkId=3e53647e05f4ccbeb0c6cf501ef74f65&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
     </iframe>
-    <a target="_blank"  href="https://www.amazon.co.jp/gp/search/ref=as_li_qf_sp_sr_il?ie=UTF8&tag=soudegesu-22&keywords=mysql&index=aps&camp=247&creative=1211&linkCode=ur2&linkId=abeaa8cf1ec5b592f60147b92dd70005"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4798111139&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=ur2&o=9&camp=247" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
