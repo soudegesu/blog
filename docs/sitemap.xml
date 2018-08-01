@@ -169,6 +169,10 @@
 <lastmod>2018-07-25T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/mysql/mysql8-password/</loc>
+<lastmod>2018-07-31T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -385,6 +389,15 @@
 <loc>https://www.soudegesu.com/tags/dart/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/mysql/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/ansible/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/tags/packer/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
 </url>
 <url>
@@ -440,6 +453,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/dart/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/categories/mysql/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/page2/</loc>

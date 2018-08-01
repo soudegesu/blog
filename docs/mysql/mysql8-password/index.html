@@ -1,0 +1,970 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="ja" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか） - そうなんでげす</title>
+
+
+
+
+<meta name="description" content="MySQLのメジャーバージョン8が2018/4 にリリースされました。今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。">
+
+
+
+
+<meta name="author" content="soudegesu">
+
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="そうなんでげす">
+<meta property="og:title" content="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）">
+
+
+  <link rel="canonical" href="https://www.soudegesu.com/mysql/mysql8-password/">
+  <meta property="og:url" content="https://www.soudegesu.com/mysql/mysql8-password/">
+
+
+
+  <meta property="og:description" content="MySQLのメジャーバージョン8が2018/4 にリリースされました。今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。">
+
+
+
+  <meta name="twitter:site" content="@alten_manten">
+  <meta name="twitter:title" content="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）">
+  <meta name="twitter:description" content="MySQLのメジャーバージョン8が2018/4 にリリースされました。今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。">
+  <meta name="twitter:url" content="https://www.soudegesu.com/mysql/mysql8-password/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/mysql_icon.png">
+    
+  
+
+  
+    <meta name="twitter:creator" content="@alten_manten">
+  
+
+
+
+
+
+  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/mysql_icon.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-07-31T00:00:00+09:00">
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "https://www.soudegesu.com",
+      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+    }
+  </script>
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "soudegsu",
+      "url" : "https://www.soudegesu.com",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+
+  <!-- under_profile -->
+<div align="center">
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="2594359046"
+     data-ad-format="auto"></ins>
+</div>
+
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）">
+    <meta itemprop="description" content="MySQL のメジャーバージョン 8 が 2018/4 にリリースされました。今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。">
+    <meta itemprop="datePublished" content="July 31, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p><a href="https://www.mysql.com/jp/">MySQL</a> のメジャーバージョン <code class="highlighter-rouge">8</code> が 2018/4 にリリースされました。
+今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#mysql8のamiを作りたい" id="markdown-toc-mysql8のamiを作りたい">MySQL8のAMIを作りたい</a></li>
+  <li><a href="#環境情報" id="markdown-toc-環境情報">環境情報</a></li>
+  <li><a href="#playbookのサンプル" id="markdown-toc-playbookのサンプル">playbookのサンプル</a></li>
+  <li><a href="#ポイント解説" id="markdown-toc-ポイント解説">ポイント解説</a>    <ul>
+      <li><a href="#mariadb-libsを削除する" id="markdown-toc-mariadb-libsを削除する">mariadb-libsを削除する</a></li>
+      <li><a href="#mysql-pythonをインストールする" id="markdown-toc-mysql-pythonをインストールする">MySQL-pythonをインストールする</a></li>
+      <li><a href="#mysqlのデフォルト認証プラグインの変更" id="markdown-toc-mysqlのデフォルト認証プラグインの変更">MySQLのデフォルト認証プラグインの変更</a></li>
+      <li><a href="#ログファイルからrootのパスワードを取得して初期化する" id="markdown-toc-ログファイルからrootのパスワードを取得して初期化する">ログファイルからrootのパスワードを取得して初期化する</a></li>
+      <li><a href="#データベース接続するユーザを作成する" id="markdown-toc-データベース接続するユーザを作成する">データベース接続するユーザを作成する</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="mysql8のamiを作りたい">MySQL8のAMIを作りたい</h2>
+
+<p>普段、AWSを利用する上ではRDSを使うことが多いので、MySQL5.x系を選択することになります。
+今回はMySQL8を使った研修を社内で実施するため、MySQL8のAMIを作る必要がありました。</p>
+
+<h2 id="環境情報">環境情報</h2>
+
+<p>今回は以下のような環境で実施しています。</p>
+
+<ul>
+  <li>CentOS 7</li>
+  <li>Ansible 2.6.1</li>
+  <li>Packer 1.1.3</li>
+</ul>
+
+<h2 id="playbookのサンプル">playbookのサンプル</h2>
+
+<p>先に結論を書きます。
+ansible playbookのサンプルは以下のようになりました。</p>
+
+<p>なお、今回はメインのタスク定義の部分だけとし、その他の部分やPackerは冗長になるので割愛しています。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">download epel-release</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">delete mariadb</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-libs</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">removed</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">install mysql</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+  <span class="na">with_items</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mysql-community-devel*</span>
+    <span class="pi">-</span> <span class="s">mysql-community-server*</span>
+    <span class="pi">-</span> <span class="s">MySQL-python</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">copy my.cnf</span>
+  <span class="na">copy</span><span class="pi">:</span>
+    <span class="na">src</span><span class="pi">:</span> <span class="s">../files/etc/my.cnf</span>
+    <span class="na">dest</span><span class="pi">:</span> <span class="s">/etc/my.cnf</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">0644</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">enable mysql</span>
+  <span class="na">systemd</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">mysqld</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">restarted</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="s">yes</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">get root password</span>
+  <span class="na">shell</span><span class="pi">:</span> <span class="s2">"</span><span class="s">grep</span><span class="nv"> </span><span class="s">'A</span><span class="nv"> </span><span class="s">temporary</span><span class="nv"> </span><span class="s">password</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">generated</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">root@localhost'</span><span class="nv"> </span><span class="s">/var/log/mysqld.log</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">awk</span><span class="nv"> </span><span class="s">-F</span><span class="nv"> </span><span class="s">'</span><span class="nv"> </span><span class="s">'</span><span class="nv"> </span><span class="s">'{print</span><span class="nv"> </span><span class="s">$(NF)}'"</span>
+  <span class="na">register</span><span class="pi">:</span> <span class="s">root_password</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">update expired root user password</span>
+  <span class="na">command</span><span class="pi">:</span> <span class="s">mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">create mysql client user</span>
+  <span class="na">mysql_user</span><span class="pi">:</span>
+    <span class="na">login_user</span><span class="pi">:</span> <span class="s">root</span>
+    <span class="na">login_password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">mysql.root.password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item.name</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item.password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">priv</span><span class="pi">:</span> <span class="s1">'</span><span class="s">*.*:ALL,GRANT'</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+    <span class="na">host</span><span class="pi">:</span> <span class="s1">'</span><span class="s">%'</span>
+  <span class="na">with_items</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">mysql.users</span><span class="nv"> </span><span class="s">}}"</span>
+</code></pre></div></div>
+
+<h2 id="ポイント解説">ポイント解説</h2>
+
+<p>上から順番にポイントを解説していきます。</p>
+
+<h3 id="mariadb-libsを削除する">mariadb-libsを削除する</h3>
+
+<p>CentOS 7にデフォルトでインストールされている mariadbのモジュールは削除しましょう。
+MySQLインストール時にモジュールの競合を起こしてうまくいきません。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">delete mariadb</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-libs</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">removed</span>
+</code></pre></div></div>
+
+<h3 id="mysql-pythonをインストールする">MySQL-pythonをインストールする</h3>
+
+<p>ansibleで <code class="highlighter-rouge">mysql_user</code> モジュールを使いたい場合には <strong>MySQL-python をプロビジョニング対象のサーバにインストールする</strong> 必要があります。</p>
+
+<p>なお、 <code class="highlighter-rouge">MySQL-python</code> はPython2上でしか動作しない点も注意してください。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">install mysql</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+  <span class="na">with_items</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mysql-community-devel*</span>
+    <span class="pi">-</span> <span class="s">mysql-community-server*</span>
+    <span class="pi">-</span> <span class="s">MySQL-python</span> <span class="c1"># これ</span>
+
+</code></pre></div></div>
+
+<h3 id="mysqlのデフォルト認証プラグインの変更">MySQLのデフォルト認証プラグインの変更</h3>
+
+<p>MySQL8からセキュリティ強化の目的で、デフォルトの認証プラグインが変更されています。
+詳しくは <a href="https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password">ここ</a> を読んでください。</p>
+
+<p>そのため、以前の認証プラグインに変更するために <code class="highlighter-rouge">my.cnf</code> を修正する必要があります。</p>
+
+<p>以下のように <strong>default-authentication-plugin=mysql_native_password</strong> を追記した <code class="highlighter-rouge">my.cnf</code> を準備し、</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[mysqld]
+default-authentication-plugin=mysql_native_password
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">/etc/my.cnf</code> にコピーしてあげます。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">copy my.cnf</span>
+  <span class="na">copy</span><span class="pi">:</span>
+    <span class="na">src</span><span class="pi">:</span> <span class="s">../files/etc/my.cnf</span>
+    <span class="na">dest</span><span class="pi">:</span> <span class="s">/etc/my.cnf</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">0644</span>
+</code></pre></div></div>
+
+<p>変更を反映するために、<code class="highlighter-rouge">mysqld</code> を再起動してあげます。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">enable mysql</span>
+  <span class="na">systemd</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">mysqld</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">restarted</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="s">yes</span>
+</code></pre></div></div>
+
+<h3 id="ログファイルからrootのパスワードを取得して初期化する">ログファイルからrootのパスワードを取得して初期化する</h3>
+
+<p>これがめんどくさいところでした。</p>
+
+<p>MySQL8はrootの初期パスワードを <code class="highlighter-rouge">/var/log/mysqld.log</code> にこっそり出力します。</p>
+
+<p>初期パスワードをログファイルから抽出して変数に登録した後( <code class="highlighter-rouge">register</code> )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">get root password</span>
+  <span class="na">shell</span><span class="pi">:</span> <span class="s2">"</span><span class="s">grep</span><span class="nv"> </span><span class="s">'A</span><span class="nv"> </span><span class="s">temporary</span><span class="nv"> </span><span class="s">password</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">generated</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">root@localhost'</span><span class="nv"> </span><span class="s">/var/log/mysqld.log</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">awk</span><span class="nv"> </span><span class="s">-F</span><span class="nv"> </span><span class="s">'</span><span class="nv"> </span><span class="s">'</span><span class="nv"> </span><span class="s">'{print</span><span class="nv"> </span><span class="s">$(NF)}'"</span>
+  <span class="na">register</span><span class="pi">:</span> <span class="s">root_password</span> <span class="c1"># これで一回変数登録</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">update expired root user password</span>
+  <span class="na">command</span><span class="pi">:</span> <span class="s">mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"</span>
+
+</code></pre></div></div>
+
+<p><strong>なぜ <code class="highlighter-rouge">mysql_user</code> ではなく <code class="highlighter-rouge">command</code> モジュールを使うの？</strong> と思うことでしょう。</p>
+
+<p>例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="pi">-</span>  <span class="na">mysql_user</span><span class="pi">:</span>
+    <span class="na">login_user</span><span class="pi">:</span> <span class="s">root</span>
+    <span class="na">login_password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">root_password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">root</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">sometinng</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">priv</span><span class="pi">:</span> <span class="s1">'</span><span class="s">*.*:ALL,GRANT'</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+    <span class="na">host</span><span class="pi">:</span> <span class="s1">'</span><span class="s">%'</span>
+
+</code></pre></div></div>
+
+<p>実はこれだと、以下のようなエラーが発生します。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials
+</code></pre></div></div>
+
+<p>こちらは <a href="https://github.com/ansible/ansible/issues/41116">Ansible の isuue</a> にも報告がされていました。</p>
+
+<p>そのため、少し邪道感はありますが、issueがfixするまでは、mysqlコマンドを直接発行して変更をする、という手段をとります。</p>
+
+<h3 id="データベース接続するユーザを作成する">データベース接続するユーザを作成する</h3>
+
+<p>アプリケーションから接続する時に使うmysqlのユーザを作成します。
+操作するユーザ(<code class="highlighter-rouge">login_user</code>) を <code class="highlighter-rouge">root</code> とし、更新済みのパスワードで接続( <code class="highlighter-rouge">login_password</code> )します。</p>
+
+<p>これはMySQL自体の話ですが、 <code class="highlighter-rouge">host</code> は接続元のホストを適切に設定してください。今回は研修用途のどうでもいいサーバなので <code class="highlighter-rouge">%</code> としています。
+逆に <code class="highlighter-rouge">host</code> が未設定だと、localhostからの接続しか許可されません。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">create mysql client user</span>
+  <span class="na">mysql_user</span><span class="pi">:</span>
+    <span class="na">login_user</span><span class="pi">:</span> <span class="s">root</span>
+    <span class="na">login_password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">mysql.root.password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item.name</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item.password</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">priv</span><span class="pi">:</span> <span class="s1">'</span><span class="s">*.*:ALL,GRANT'</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+    <span class="na">host</span><span class="pi">:</span> <span class="s1">'</span><span class="s">%'</span> <span class="c1"># hostを設定しないと、localhostからの接続しか受け付けない</span>
+  <span class="na">with_items</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">mysql.users</span><span class="nv"> </span><span class="s">}}"</span>
+
+</code></pre></div></div>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回は MySQL8初期化のplaybookのはまりポイントを紹介しました。
+文書化すると案外簡素になりましたが、MySQL8による変更点と、Ansibleそのものの振る舞いとを切り分けをしたこともあり、実作業はなかなか時間がかかっています。
+Packer+Ansibleのデバッグ効率を上げるために、ローカルのVagrantに対して実施していましたがもっと作業スピードを上げたいところです。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+  <li><a href="https://github.com/ansible/ansible">Github</a></li>
+</ul>
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4844333933&amp;linkId=3e53647e05f4ccbeb0c6cf501ef74f65&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+    </iframe>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/ansible" class="page__taxonomy-item" rel="tag">ansible</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/mysql" class="page__taxonomy-item" rel="tag">mysql</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/packer" class="page__taxonomy-item" rel="tag">packer</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/categories/mysql" class="page__taxonomy-item" rel="tag">mysql</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-07-31T00:00:00+09:00">July 31, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか） https://www.soudegesu.com/mysql/mysql8-password/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/mysql/mysql8-password/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/mysql/mysql8-password/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/mysql/mysql8-password/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/mysql/mysql8-password/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+    </div>
+
+    
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/dart/android-with-flutter/" class="pagination--pager" title="Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+
+  </article>
+  
+  
+  <div class="page__related">
+    <h2 class="page__related-title">関連記事</h2>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+    </div>      
+  </div>
+  
+
+  
+
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277"></amp-auto-ads>
+
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+<script async custom-element="amp-auto-ads"src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>
