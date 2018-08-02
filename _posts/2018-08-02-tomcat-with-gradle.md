@@ -8,13 +8,86 @@ header:
   teaser: /assets/images/icon/gradle_icon.png
 ---
 
+
 * Table Of Contents
 {:toc}
+
+## ローカル環境でTomcatを動かそう
+
+最近はもっぱらSpring Bootを使うのですが、とある事情により、素のTomcat上でwarアプリケーションを動作させる必要が出てきました。
+
+ローカル環境で開発を行う上では、IDEもIntelliJを使うようになり、Tomcat pluginが最初からバンドルされてもいません。
+
+今回は実装したアプリケーションをローカル環境のTomcat上で動かすための方法を調査してみました。
+
+## 環境情報
+
+以下の環境にて方法を模索してみます。
+
+* Gradle 4.8
+* Tomcat 9
+
+## gradle-tomcat-plugin を使う
+
+割とすぐに答えが見つかりました。
+
+ビルドツールにGradleを使っている場合には、[gradle-tomcat-plugin](https://github.com/bmuschko/gradle-tomcat-plugin) を使うことで、Gradle経由でTomcatの起動ができます。
+
+```groovy
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'com.bmuschko', name:'gradle-tomcat-plugin', version:'2.5'
+    }
+}
+
+ext {
+    tomcatVersion = '9.0.10'
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'com.bmuschko.tomcat'
+
+sourceSets {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1'
+    compile group: 'org.apache.taglibs', name: 'taglibs-standard-impl', version: '1.2.5'
+
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: "org.eclipse.jdt.core.compiler", module: "ecj"
+    }
+}
+
+tomcat {
+    httpProtocol = 'org.apache.coyote.http11.Http11Nio2Protocol'
+    ajpProtocol  = 'org.apache.coyote.ajp.AjpNio2Protocol'
+    contextPath = 'soudegesu'
+}
+
+```
 
 
 ## 参考にさせていただいたサイト
 
-*
+* [gradle-tomcat-plugin](https://github.com/bmuschko/gradle-tomcat-plugin)
 
 <div align="center">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=477418909X&linkId=2e0f8e2eea11a37ff8b7c8371fa3b4ae"></iframe>
