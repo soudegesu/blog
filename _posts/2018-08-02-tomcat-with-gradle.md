@@ -84,6 +84,9 @@ tomcat {
 
 ```
 
+```bash
+./gardlew tomcatRun
+```
 
 ## 参考にさせていただいたサイト
 
