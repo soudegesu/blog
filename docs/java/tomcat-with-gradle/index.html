@@ -1,0 +1,941 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="ja" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する - そうなんでげす</title>
+
+
+
+
+<meta name="description" content="最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。">
+
+
+
+
+<meta name="author" content="soudegesu">
+
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="そうなんでげす">
+<meta property="og:title" content="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する">
+
+
+  <link rel="canonical" href="https://www.soudegesu.com/java/tomcat-with-gradle/">
+  <meta property="og:url" content="https://www.soudegesu.com/java/tomcat-with-gradle/">
+
+
+
+  <meta property="og:description" content="最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。">
+
+
+
+  <meta name="twitter:site" content="@alten_manten">
+  <meta name="twitter:title" content="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する">
+  <meta name="twitter:description" content="最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。">
+  <meta name="twitter:url" content="https://www.soudegesu.com/java/tomcat-with-gradle/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/gradle_icon.png">
+    
+  
+
+  
+    <meta name="twitter:creator" content="@alten_manten">
+  
+
+
+
+
+
+  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/gradle_icon.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-08-02T00:00:00+09:00">
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "https://www.soudegesu.com",
+      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
+    }
+  </script>
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "soudegsu",
+      "url" : "https://www.soudegesu.com",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
+          
+        </ul>
+        <button><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">soudegesu</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software Engineer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/soudegesu" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+
+  <!-- under_profile -->
+<div align="center">
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="2594359046"
+     data-ad-format="auto"></ins>
+</div>
+
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する">
+    <meta itemprop="description" content="最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。">
+    <meta itemprop="datePublished" content="August 02, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p>最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。
+ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#ローカル環境でtomcatを動かそう" id="markdown-toc-ローカル環境でtomcatを動かそう">ローカル環境でTomcatを動かそう</a></li>
+  <li><a href="#環境情報" id="markdown-toc-環境情報">環境情報</a></li>
+  <li><a href="#gradle-tomcat-plugin-を使う" id="markdown-toc-gradle-tomcat-plugin-を使う">gradle-tomcat-plugin を使う</a></li>
+  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul>
+
+<h2 id="ローカル環境でtomcatを動かそう">ローカル環境でTomcatを動かそう</h2>
+
+<p>最近はもっぱらSpring Bootを使うのですが、とある事情により、素のTomcat上でwarアプリケーションを動作させる必要が出てきました。</p>
+
+<p>ローカル環境で開発を行う上では、IDEもIntelliJを使うようになり、IntelliJにはTomcat pluginも最初からバンドルされていません。</p>
+
+<p>昔使っていたEclipseやSpring Tool Suite にはTomcatのアイコンがあって、それをポチってアプリケーションを起動させていました。懐かしい。</p>
+
+<p>IntelliJにプラグインをインストールするのも方法論としてはアリですが、今回のユースケースのためだけにIDEを拡張するのも嫌なので、別の方法を模索したかったのです。</p>
+
+<h2 id="環境情報">環境情報</h2>
+
+<p>以下の環境にて方法を模索してみます。</p>
+
+<ul>
+  <li>Gradle 4.8</li>
+  <li>Tomcat 9</li>
+</ul>
+
+<h2 id="gradle-tomcat-plugin-を使う">gradle-tomcat-plugin を使う</h2>
+
+<p>割とすぐに答えが見つかりました。</p>
+
+<p>ビルドツールにGradleを使っている場合には、<a href="https://github.com/bmuschko/gradle-tomcat-plugin">gradle-tomcat-plugin</a> を使うことで、Gradle経由でTomcatの起動ができそうです。</p>
+
+<p>今回試したサンプルコードは <a href="https://github.com/soudegesu/tomcat-gradle-plugin-test">こちら</a> において置くとして、肝心の <code class="highlighter-rouge">build.gradle</code> だけ貼り付けておきます。</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buildscript</span> <span class="o">{</span>
+    <span class="n">repositories</span> <span class="o">{</span>
+        <span class="n">mavenCentral</span><span class="o">()</span>
+        <span class="n">jcenter</span><span class="o">()</span>
+    <span class="o">}</span>
+    <span class="n">dependencies</span> <span class="o">{</span>
+        <span class="n">classpath</span> <span class="nl">group:</span> <span class="s1">'com.bmuschko'</span><span class="o">,</span> <span class="nl">name:</span><span class="s1">'gradle-tomcat-plugin'</span><span class="o">,</span> <span class="nl">version:</span><span class="s1">'2.5'</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">ext</span> <span class="o">{</span>
+    <span class="n">tomcatVersion</span> <span class="o">=</span> <span class="s1">'9.0.10'</span>
+<span class="o">}</span>
+
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'eclipse'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'idea'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'java'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'com.bmuschko.tomcat'</span>
+
+<span class="n">sourceSets</span> <span class="o">{</span>
+    <span class="n">sourceCompatibility</span> <span class="o">=</span> <span class="mf">1.8</span>
+    <span class="n">targetCompatibility</span> <span class="o">=</span> <span class="mf">1.8</span>
+
+    <span class="o">[</span><span class="n">compileJava</span><span class="o">,</span> <span class="n">compileTestJava</span><span class="o">]*.</span><span class="na">options</span><span class="o">*.</span><span class="na">encoding</span> <span class="o">=</span> <span class="s1">'UTF-8'</span>
+<span class="o">}</span>
+
+<span class="n">repositories</span> <span class="o">{</span>
+    <span class="n">mavenCentral</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">providedCompile</span> <span class="nl">group:</span> <span class="s1">'javax.servlet'</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">'javax.servlet-api'</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">'4.0.1'</span>
+    <span class="n">providedCompile</span> <span class="nl">group:</span> <span class="s1">'javax.servlet.jsp'</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">'javax.servlet.jsp-api'</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">'2.3.1'</span>
+    <span class="n">compile</span> <span class="nl">group:</span> <span class="s1">'org.apache.taglibs'</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">'taglibs-standard-impl'</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">'1.2.5'</span>
+
+    <span class="n">tomcat</span> <span class="s2">"org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"</span>
+    <span class="n">tomcat</span> <span class="s2">"org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6"</span>
+    <span class="n">tomcat</span><span class="o">(</span><span class="s2">"org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">exclude</span> <span class="nl">group:</span> <span class="s2">"org.eclipse.jdt.core.compiler"</span><span class="o">,</span> <span class="nl">module:</span> <span class="s2">"ecj"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">tomcat</span> <span class="o">{</span>
+    <span class="n">httpProtocol</span> <span class="o">=</span> <span class="s1">'org.apache.coyote.http11.Http11Nio2Protocol'</span>
+    <span class="n">ajpProtocol</span>  <span class="o">=</span> <span class="s1">'org.apache.coyote.ajp.AjpNio2Protocol'</span>
+    <span class="n">contextPath</span> <span class="o">=</span> <span class="s1">'soudegesu'</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>tomcat 9を使うときのみ <code class="highlighter-rouge">tomcat-embed-logging-juli</code> のバージョンが <code class="highlighter-rouge">tomcat-embed-core</code> と同じにできない所が留意点でしょうか。
+まだ、artifactがpublishされていないようですね。</p>
+
+<p><code class="highlighter-rouge">tomcat</code> のブロックにはコンテキストパスをはじめ、様々なTomcatのオプションを指定できます。
+ローカルで開発する分には</p>
+
+<p>アプリケーションは <code class="highlighter-rouge">./gradlew</code> で起動できます。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew tomcatRun
+</code></pre></div></div>
+
+<p>サンプルアプリケーションが動いているか確認しましょう。問題なさそうですね。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8080/soudegesu/sample
+
+&lt;<span class="o">!</span>DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Sample&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+Sample <span class="o">!!!</span>
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+
+<p>Tomcatを停止するときは以下でした。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew tomcatStop
+</code></pre></div></div>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>GradleでTomcatを使った開発したいときには <code class="highlighter-rouge">gradle-tomcat-plugin</code> を使うと簡単に導入できることがわかりました。
+IDEにプラグインを入れると他のJavaプロジェクトを実装する際にも影響が出てしまいますが、 Graldeプラグインとして利用することで影響範囲がプロジェクト内に留められるので魅力的です。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+  <li><a href="https://github.com/bmuschko/gradle-tomcat-plugin">gradle-tomcat-plugin</a></li>
+</ul>
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=soudegesu-22&amp;o=9&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=477418909X&amp;linkId=2e0f8e2eea11a37ff8b7c8371fa3b4ae"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798136433&amp;linkId=e75591d1acf6e9adf2f590ee3d445997&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=B079Z1PG6C&amp;linkId=21883e76b1b88cdf1ed54d705db98713&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+</iframe>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/gradle" class="page__taxonomy-item" rel="tag">gradle</a><span class="sep">, </span>
+    
+      
+      
+      <a href="https://www.soudegesu.com/tags/tomcat" class="page__taxonomy-item" rel="tag">tomcat</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://www.soudegesu.com/categories/java" class="page__taxonomy-item" rel="tag">java</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-08-02T00:00:00+09:00">August 02, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する https://www.soudegesu.com/java/tomcat-with-gradle/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/java/tomcat-with-gradle/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/java/tomcat-with-gradle/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/java/tomcat-with-gradle/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+
+  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/java/tomcat-with-gradle/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
+
+</section>
+
+
+    </div>
+
+    
+  <nav class="pagination">
+    
+      <a href="https://www.soudegesu.com/mysql/mysql8-password/" class="pagination--pager" title="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    
+      <div class="page__comments">
+  
+  
+    <h4 class="page__comments-title">Comments</h4>
+    <section id="disqus_thread"></section>
+  
+</div>
+
+    
+
+  </article>
+  
+  
+  <div class="page__related">
+    <h2 class="page__related-title">関連記事</h2>
+    
+    
+    
+
+    <div class="grid__wrapper">
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/java/build-docker-image-with-jib/" rel="permalink">jibを使ってJavaアプリケーションのDockerイメージをビルドする
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
+今回は Jib を使ったDockerfileイメージのビルドを紹介します。
+
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+
+          
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://www.soudegesu.com/java/java9-modularity/" rel="permalink">JavaプロジェクトをModule System(Java9のProject Jigsaw)にマイグレーションするステップ
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+          
+          
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+        
+        
+  
+        
+      
+    </div>      
+  </div>
+  
+
+  
+
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277"></amp-auto-ads>
+
+      </footer>
+    </div>
+
+    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92599175-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+<script async custom-element="amp-auto-ads"src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'soudegesu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+  </body>
+</html>

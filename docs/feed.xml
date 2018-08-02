@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-01T09:52:12+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</title><link href="https://www.soudegesu.com/mysql/mysql8-password/" rel="alternate" type="text/html" title="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）" /><published>2018-07-31T00:00:00+09:00</published><updated>2018-07-31T00:00:00+09:00</updated><id>https://www.soudegesu.com/mysql/mysql8-password</id><content type="html" xml:base="https://www.soudegesu.com/mysql/mysql8-password/">&lt;p&gt;&lt;a href=&quot;https://www.mysql.com/jp/&quot;&gt;MySQL&lt;/a&gt; のメジャーバージョン &lt;code class=&quot;highlighter-rouge&quot;&gt;8&lt;/code&gt; が 2018/4 にリリースされました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-03T08:16:41+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</title><link href="https://www.soudegesu.com/java/tomcat-with-gradle/" rel="alternate" type="text/html" title="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する" /><published>2018-08-02T00:00:00+09:00</published><updated>2018-08-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/tomcat-with-gradle</id><content type="html" xml:base="https://www.soudegesu.com/java/tomcat-with-gradle/">&lt;p&gt;最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。
+ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#ローカル環境でtomcatを動かそう&quot; id=&quot;markdown-toc-ローカル環境でtomcatを動かそう&quot;&gt;ローカル環境でTomcatを動かそう&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#環境情報&quot; id=&quot;markdown-toc-環境情報&quot;&gt;環境情報&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gradle-tomcat-plugin-を使う&quot; id=&quot;markdown-toc-gradle-tomcat-plugin-を使う&quot;&gt;gradle-tomcat-plugin を使う&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ローカル環境でtomcatを動かそう&quot;&gt;ローカル環境でTomcatを動かそう&lt;/h2&gt;
+
+&lt;p&gt;最近はもっぱらSpring Bootを使うのですが、とある事情により、素のTomcat上でwarアプリケーションを動作させる必要が出てきました。&lt;/p&gt;
+
+&lt;p&gt;ローカル環境で開発を行う上では、IDEもIntelliJを使うようになり、IntelliJにはTomcat pluginも最初からバンドルされていません。&lt;/p&gt;
+
+&lt;p&gt;昔使っていたEclipseやSpring Tool Suite にはTomcatのアイコンがあって、それをポチってアプリケーションを起動させていました。懐かしい。&lt;/p&gt;
+
+&lt;p&gt;IntelliJにプラグインをインストールするのも方法論としてはアリですが、今回のユースケースのためだけにIDEを拡張するのも嫌なので、別の方法を模索したかったのです。&lt;/p&gt;
+
+&lt;h2 id=&quot;環境情報&quot;&gt;環境情報&lt;/h2&gt;
+
+&lt;p&gt;以下の環境にて方法を模索してみます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Gradle 4.8&lt;/li&gt;
+  &lt;li&gt;Tomcat 9&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;gradle-tomcat-plugin-を使う&quot;&gt;gradle-tomcat-plugin を使う&lt;/h2&gt;
+
+&lt;p&gt;割とすぐに答えが見つかりました。&lt;/p&gt;
+
+&lt;p&gt;ビルドツールにGradleを使っている場合には、&lt;a href=&quot;https://github.com/bmuschko/gradle-tomcat-plugin&quot;&gt;gradle-tomcat-plugin&lt;/a&gt; を使うことで、Gradle経由でTomcatの起動ができそうです。&lt;/p&gt;
+
+&lt;p&gt;今回試したサンプルコードは &lt;a href=&quot;https://github.com/soudegesu/tomcat-gradle-plugin-test&quot;&gt;こちら&lt;/a&gt; において置くとして、肝心の &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; だけ貼り付けておきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;buildscript&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;repositories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mavenCentral&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;jcenter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;classpath&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'com.bmuschko'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'gradle-tomcat-plugin'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'2.5'&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;tomcatVersion&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'9.0.10'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'eclipse'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'idea'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'java'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'com.bmuschko.tomcat'&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sourceSets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sourceCompatibility&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.8&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;targetCompatibility&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.8&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;compileJava&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compileTestJava&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]*.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;encoding&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'UTF-8'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;repositories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;mavenCentral&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;providedCompile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'javax.servlet'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'javax.servlet-api'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'4.0.1'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;providedCompile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'javax.servlet.jsp'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'javax.servlet.jsp-api'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2.3.1'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.apache.taglibs'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'taglibs-standard-impl'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'1.2.5'&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;tomcat&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}&quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;tomcat&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6&quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;tomcat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;exclude&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;group:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;org.eclipse.jdt.core.compiler&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;module:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ecj&quot;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;tomcat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;httpProtocol&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.apache.coyote.http11.Http11Nio2Protocol'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ajpProtocol&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.apache.coyote.ajp.AjpNio2Protocol'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;contextPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'soudegesu'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;tomcat 9を使うときのみ &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat-embed-logging-juli&lt;/code&gt; のバージョンが &lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat-embed-core&lt;/code&gt; と同じにできない所が留意点でしょうか。
+まだ、artifactがpublishされていないようですね。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tomcat&lt;/code&gt; のブロックにはコンテキストパスをはじめ、様々なTomcatのオプションを指定できます。
+ローカルで開発する分には&lt;/p&gt;
+
+&lt;p&gt;アプリケーションは &lt;code class=&quot;highlighter-rouge&quot;&gt;./gradlew&lt;/code&gt; で起動できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./gradlew tomcatRun
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;サンプルアプリケーションが動いているか確認しましょう。問題なさそうですね。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl http://localhost:8080/soudegesu/sample
+
+&amp;lt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;DOCTYPE html&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;title&amp;gt;Sample&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+Sample &lt;span class=&quot;o&quot;&gt;!!!&lt;/span&gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Tomcatを停止するときは以下でした。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./gradlew tomcatStop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;GradleでTomcatを使った開発したいときには &lt;code class=&quot;highlighter-rouge&quot;&gt;gradle-tomcat-plugin&lt;/code&gt; を使うと簡単に導入できることがわかりました。
+IDEにプラグインを入れると他のJavaプロジェクトを実装する際にも影響が出てしまいますが、 Graldeプラグインとして利用することで影響範囲がプロジェクト内に留められるので魅力的です。&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/bmuschko/gradle-tomcat-plugin&quot;&gt;gradle-tomcat-plugin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;amp;bc1=000000&amp;amp;IS2=1&amp;amp;bg1=FFFFFF&amp;amp;fc1=000000&amp;amp;lc1=0000FF&amp;amp;t=soudegesu-22&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as4&amp;amp;m=amazon&amp;amp;f=ifr&amp;amp;ref=as_ss_li_til&amp;amp;asins=477418909X&amp;amp;linkId=2e0f8e2eea11a37ff8b7c8371fa3b4ae&quot;&gt;&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798136433&amp;amp;linkId=e75591d1acf6e9adf2f590ee3d445997&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=B079Z1PG6C&amp;amp;linkId=21883e76b1b88cdf1ed54d705db98713&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="tomcat" /><category term="gradle" /><summary type="html">最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。 ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。</summary></entry><entry><title type="html">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</title><link href="https://www.soudegesu.com/mysql/mysql8-password/" rel="alternate" type="text/html" title="MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）" /><published>2018-07-31T00:00:00+09:00</published><updated>2018-07-31T00:00:00+09:00</updated><id>https://www.soudegesu.com/mysql/mysql8-password</id><content type="html" xml:base="https://www.soudegesu.com/mysql/mysql8-password/">&lt;p&gt;&lt;a href=&quot;https://www.mysql.com/jp/&quot;&gt;MySQL&lt;/a&gt; のメジャーバージョン &lt;code class=&quot;highlighter-rouge&quot;&gt;8&lt;/code&gt; が 2018/4 にリリースされました。
 今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -3281,120 +3417,4 @@ PAM認証でのユーザログインと、systemd上のデーモンプロセス�
 &lt;div align=&quot;center&quot;&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4822281108&amp;amp;linkId=374d5bb38701eaa66d7dbd61a6f404fc&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
 &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry><entry><title type="html">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</title><link href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="alternate" type="text/html" title="S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話" /><published>2018-05-30T00:00:00+09:00</published><updated>2018-05-30T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/glue-process-cloudwatchlogs</id><content type="html" xml:base="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/">&lt;p&gt;S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
-結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#モチベーション&quot; id=&quot;markdown-toc-モチベーション&quot;&gt;モチベーション&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#s3のファイルをetlしたい&quot; id=&quot;markdown-toc-s3のファイルをetlしたい&quot;&gt;S3のファイルをETLしたい&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#etlといえばglue&quot; id=&quot;markdown-toc-etlといえばglue&quot;&gt;ETLといえばGlue&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#やってみよう&quot; id=&quot;markdown-toc-やってみよう&quot;&gt;やってみよう&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#基データのログフォーマット&quot; id=&quot;markdown-toc-基データのログフォーマット&quot;&gt;基データのログフォーマット&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#crawlerの設定でつまずく&quot; id=&quot;markdown-toc-crawlerの設定でつまずく&quot;&gt;Crawlerの設定でつまずく&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ログフォーマットが変わっている&quot; id=&quot;markdown-toc-ログフォーマットが変わっている&quot;&gt;ログフォーマットが変わっている？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#grokも模索してみたが&quot; id=&quot;markdown-toc-grokも模索してみたが&quot;&gt;Grokも模索してみたが。。&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#サポートにも相談してみたが&quot; id=&quot;markdown-toc-サポートにも相談してみたが&quot;&gt;サポートにも相談してみたが。。&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;モチベーション&quot;&gt;モチベーション&lt;/h2&gt;
-
-&lt;h3 id=&quot;s3のファイルをetlしたい&quot;&gt;S3のファイルをETLしたい&lt;/h3&gt;
-
-&lt;p&gt;「 &lt;a href=&quot;/aws/export-cloudwatchlogs-to-s3/&quot;&gt;Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする&lt;/a&gt; 」 の記事にて、
-CloudWatch LogsのログストリームをS3へエクスポートしました。&lt;/p&gt;
-
-&lt;p&gt;次のステップとしては、データ分析しやすいようにETLしようというわけです。&lt;/p&gt;
-
-&lt;h3 id=&quot;etlといえばglue&quot;&gt;ETLといえばGlue&lt;/h3&gt;
-
-&lt;p&gt;AWS上でETL処理を行うのであれば、聞いたことがあるのはやはり &lt;a href=&quot;https://aws.amazon.com/jp/glue/&quot;&gt;AWS Glue&lt;/a&gt; でしょう。&lt;/p&gt;
-
-&lt;p&gt;Apache Sparkをベースとしており、せっかくだから使ってみたかったわけです。&lt;/p&gt;
-
-&lt;h2 id=&quot;やってみよう&quot;&gt;やってみよう&lt;/h2&gt;
-
-&lt;p&gt;以下のような構成で処理させようと考えていました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/architecture.png&quot; alt=&quot;architecture&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;基データのログフォーマット&quot;&gt;基データのログフォーマット&lt;/h3&gt;
-
-&lt;p&gt;CloudWatch LogsはログデータがJSONフォーマットになっていると、
-JSON pathのような検索ができたり、ログを展開したときにpretty printしてくれるのでよく使ってしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/cloudwatch_logs.png&quot; alt=&quot;cloudwatch_logs&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;今回処理させたいデータも、この &lt;strong&gt;JSONフォーマットのログをCloudWatch Logsのエクスポート機能でS3にファイル出力したもの&lt;/strong&gt; です。&lt;/p&gt;
-
-&lt;h3 id=&quot;crawlerの設定でつまずく&quot;&gt;Crawlerの設定でつまずく&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/&quot;&gt;AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する&lt;/a&gt; にも記載がありますが、
-Glueには &lt;strong&gt;Crawler&lt;/strong&gt; という設定があり、指定したデータソースの更新を確認し、データカタログを &lt;strong&gt;よしなに作ってくれる機能&lt;/strong&gt; があります。&lt;/p&gt;
-
-&lt;p&gt;ただ、どう「よしなに」作ってくれるかというと、 &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/glue/latest/dg/add-classifier.html&quot;&gt;公式ドキュメント&lt;/a&gt;
-記載の通り、テキストのフォーマット毎に指定のロジックがあり、それに準じて処理するデータ形式を判断しているようです。&lt;/p&gt;
-
-&lt;p&gt;これを見て &lt;strong&gt;「よっしゃ、いい感じにJSONになるのね」&lt;/strong&gt; と早合点して、ポチポチ設定を進めていったのが問題でした。&lt;/p&gt;
-
-&lt;h3 id=&quot;ログフォーマットが変わっている&quot;&gt;ログフォーマットが変わっている？&lt;/h3&gt;
-
-&lt;p&gt;Crawlerが S3バケットのファイルからデータカタログを作成してくれたわけですが、以下のように 「&lt;a href=&quot;http://amzn.github.io/ion-docs/&quot;&gt;ion&lt;/a&gt; でした」
-という結果が出てきました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/ion.png&quot; alt=&quot;ion&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;「あれ？jsonではないの？」&lt;/p&gt;
-
-&lt;p&gt;そう思って、S3上の .gz ファイルの中身を見てみると以下のような形式になっていました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2018-05-27T00:00:00.107Z {ログのJSON文字列}
-2018-05-27T00:01:36.107Z {ログのJSON文字列}
-(以下略)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;CloudWatch Logsからログデータをエクスポートすると、タイムスタンプ情報も出力されてしまい、 JSON形式でなくなっていた&lt;/strong&gt; わけですね。&lt;/p&gt;
-
-&lt;h3 id=&quot;grokも模索してみたが&quot;&gt;Grokも模索してみたが。。&lt;/h3&gt;
-
-&lt;p&gt;Crawlerがログファイルを分類するために、自前の &lt;a href=&quot;https://docs.aws.amazon.com/ja_jp/glue/latest/dg/custom-classifier.html&quot;&gt;カスタム分類子&lt;/a&gt; を設定することもできます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/20180530/crawler_classifier.png&quot; alt=&quot;crawler_classifier&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Grok&lt;/li&gt;
-  &lt;li&gt;XML&lt;/li&gt;
-  &lt;li&gt;JSON&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;の3つが定義されているのですが、XMLとJSONはすでにテキスト形式がそのフォーマットに加工されている必要があるので、使えそうにありません。
-よく Log Stash などで使われる &lt;strong&gt;Grok形式&lt;/strong&gt; が一番カスタマイズ性が高いのですが、この設定を用いても
-要素が可変になるJSONを処理することはできませんでした。&lt;/p&gt;
-
-&lt;h3 id=&quot;サポートにも相談してみたが&quot;&gt;サポートにも相談してみたが。。&lt;/h3&gt;
-
-&lt;p&gt;「私のGlueの設定が悪いのかも」と一縷の望みを託して、AWSのサポートにも聞いてみたのですが、「Glue単体で今回のログフォーマットは処理できない」と回答をいただきました。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;GlueのCrawlerでいい感じにデータカタログを作るのに失敗しました。&lt;/p&gt;
-
-&lt;p&gt;デフォルトの分類子、または、自前で定義したカスタム分類子によってGlueのCrawlerはデータカタログを作成してくれます。
-しかし、すべてのフォーマットに対して柔軟に処理できるわけではないので、フォーマットによってはGlueが処理しやすいように前段で自前ETLを挟んであげる必要がありそうです。&lt;/p&gt;
-
-&lt;p&gt;特に今回のような、 &lt;strong&gt;CloudWatch LogsのログがJSON形式で、エクスポート機能でS3に外出ししたファイル（ログの一部がJSON形式）&lt;/strong&gt; の場合には相性が悪いということがわかりました。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/&quot;&gt;AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e91e78f505e53d2986a0635db4aad1ce&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-    &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="s3" /><category term="cloudwatchlogs" /><category term="glue" /><summary type="html">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。 結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>
