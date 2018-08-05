@@ -11,6 +11,22 @@ header:
 * Table Of Contents
 {:toc}
 
+## GCPを使ってみることにした
+
+仕事でGCPのサービスの利用を検討することになり、事前に試してみようと言うので
+
+
+## Google Cloud SDK をインストールする
+
+まずは Google Cloud SDK をインストールしましょう。私は普段遣いのPCがMacOSですので、MacOS向けのバイナリでのセットアップを行います。
+
+手順は [Quickstart for macOS](https://cloud.google.com/sdk/docs/quickstart-macos) に記載されているので、
+そちらを参考にいただければ問題なくインストールできると思います。
+
+```bash
+brew tap caskroom/cask
+brew cask install google-cloud-sdk
+```
 
 ## まとめ
 
