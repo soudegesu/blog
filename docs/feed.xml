@@ -1,4 +1,212 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-03T08:16:41+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</title><link href="https://www.soudegesu.com/java/tomcat-with-gradle/" rel="alternate" type="text/html" title="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する" /><published>2018-08-02T00:00:00+09:00</published><updated>2018-08-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/tomcat-with-gradle</id><content type="html" xml:base="https://www.soudegesu.com/java/tomcat-with-gradle/">&lt;p&gt;最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-07T08:38:06+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Google Cloud SDKをセットアップする</title><link href="https://www.soudegesu.com/gcp/gcp-command/" rel="alternate" type="text/html" title="Google Cloud SDKをセットアップする" /><published>2018-08-05T00:00:00+09:00</published><updated>2018-08-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/gcp/gcp-command</id><content type="html" xml:base="https://www.soudegesu.com/gcp/gcp-command/">&lt;p&gt;普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#まずはcliでしょ&quot; id=&quot;markdown-toc-まずはcliでしょ&quot;&gt;まずはCLIでしょ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#google-cloud-sdk-をインストールする&quot; id=&quot;markdown-toc-google-cloud-sdk-をインストールする&quot;&gt;Google Cloud SDK をインストールする&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#動作確認自然言語apiを試してみる&quot; id=&quot;markdown-toc-動作確認自然言語apiを試してみる&quot;&gt;動作確認：自然言語APIを試してみる&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まずはcliでしょ&quot;&gt;まずはCLIでしょ&lt;/h2&gt;
+
+&lt;p&gt;仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。
+APIとして提供されている機能もあるのでCLIから実行できた方が嬉しいだろう、という考えもあり、まずはCLIで &lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud&lt;/code&gt; コマンドが使えるようにまでしたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;google-cloud-sdk-をインストールする&quot;&gt;Google Cloud SDK をインストールする&lt;/h2&gt;
+
+&lt;p&gt;まずは Google Cloud SDK をインストールしましょう。私は普段遣いのPCがMacOSですので、MacOS向けのバイナリでのセットアップを行います。&lt;/p&gt;
+
+&lt;p&gt;手順は &lt;a href=&quot;https://cloud.google.com/sdk/docs/quickstart-macos&quot;&gt;Quickstart for macOS&lt;/a&gt; に記載されているので、
+そちらを参考にいただければ問題なくインストールでいきます。&lt;/p&gt;
+
+&lt;p&gt;ただ、リンク先ではtarballを解凍する手段になるので、 今回は Homebrew を使っています。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew tap caskroom/cask
+brew cask install google-cloud-sdk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud init&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud&lt;/code&gt; の設定を初期化します。ここからは対話形式で設定が続きます。&lt;/p&gt;
+
+&lt;p&gt;ログイン済みのGoogleアカウントがデフォルト設定の選択肢として提案されます。&lt;/p&gt;
+
+&lt;p&gt;今回は新規で作成するので &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; を選択します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gcloud init
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Welcome! This &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;will take you through the configuration of gcloud.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Settings from your current configuration &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;default] are:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; core:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   account: xxxxxxxxxxxx@xxxx.xxx
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   disable_usage_reporting: &lt;span class=&quot;s1&quot;&gt;'True'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Pick configuration to use:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1] Re-initialize this configuration &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;default] with new settings
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2] Create a new configuration
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Please enter your numeric choice:
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;設定名称を要求されるので、入力します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Enter configuration name. Names start with a lower &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; letter and
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; contain only lower &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; letters a-z, digits 0-9, and hyphens &lt;span class=&quot;s1&quot;&gt;'-'&lt;/span&gt;:
+設定名称を入力する
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;設定が進むと、紐付けるGoogleアカウントを指定します。
+今回は新規で紐付けるので &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; にします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Your current configuration has been &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to: &lt;span class=&quot;o&quot;&gt;[(&lt;/span&gt;設定名称&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; You can skip diagnostics next &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;by using the following flag:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   gcloud init &lt;span class=&quot;nt&quot;&gt;--skip-diagnostics&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Network diagnostic detects and fixes &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;network connection issues.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Checking network connection...done.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Reachability Check passed.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Network diagnostic &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1/1 checks&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; passed.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Choose the account you would like to use to perform operations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; this configuration:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1] xxxxxx@xxxx.xxx
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2] Log &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;with a new account
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Please enter your numeric choice:
+
+2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ブラウザが起動し、Googleアカウントの認証が要求されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180805/sign_in_google.png&quot; alt=&quot;sign_in_google&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;利用規約を確認し許可します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/20180805/allow.png&quot; alt=&quot;allow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; を選択します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; You are logged &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;as: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;xxxxxxxxxxx@xxxxx.xxx].
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Pick cloud project to use:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1] xxxxxxxxxx
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2] Create a new project
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Please enter numeric choice or text value &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;must exactly match list
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; item&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Compute Engineのデフォルトのリージョンの設定有無が聞かれます。とりあえず &lt;code class=&quot;highlighter-rouge&quot;&gt;Y&lt;/code&gt; にします。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Your current project has been &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;xxxxxxxx].
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Do you want to configure a default Compute Region and Zone? &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Y/n&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;?
+Y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;リージョン番号のリストの入力を求められるので、日本のある &lt;code class=&quot;highlighter-rouge&quot;&gt;32&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;33&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;34&lt;/code&gt; のいずれかで選択しておきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Which Google Compute Engine zone would you like to use as project
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; default?
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; If you &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;not specify a zone via a &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;line flag &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;working
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; with Compute Engine resources, the default is assumed.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1] us-east1-b
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2] us-east1-c
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;3] us-east1-d
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;中略&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;32] asia-northeast1-b
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;33] asia-northeast1-c
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;34] asia-northeast1-a
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;中略&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Did not print &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;3] options.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Too many options &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;53]. Enter &lt;span class=&quot;s2&quot;&gt;&quot;list&quot;&lt;/span&gt; at prompt to print choices fully.
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Please enter numeric choice or text value &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;must exactly match list
+32
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これで一通り設定が完了しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;動作確認自然言語apiを試してみる&quot;&gt;動作確認：自然言語APIを試してみる&lt;/h2&gt;
+
+&lt;p&gt;セットアップはできたので、CLIで自然言語APIを試してみます。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gcloud ml language analyze-syntax &lt;span class=&quot;nt&quot;&gt;--language&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ja-JP &lt;span class=&quot;nt&quot;&gt;--content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;権限がないと言われるので、CLI経由でAPIを使う権限を設定します。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; API &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;language.googleapis.com] not enabled on project &lt;span class=&quot;o&quot;&gt;[(&lt;/span&gt;プロジェクト番号&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Would you like to &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;and retry &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;this will take a few minutes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;?
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;y/N&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;?
+y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;レスポンスが返ってきました。分かってはいましたが &lt;code class=&quot;highlighter-rouge&quot;&gt;analyze-syntax&lt;/code&gt; の自然言語APIは可視化してあげないとつらいですね笑。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;language&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;ja-JP&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;sentences&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;text&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;beginOffset&quot;&lt;/span&gt;: 0,
+        &lt;span class=&quot;s2&quot;&gt;&quot;content&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;5b50&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4f9b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;304c&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;5acc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3044&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306a&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;91ce&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;83dc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3068&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;304b3&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;7a2e&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;985e&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;304f&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3089&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3044&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;53d6&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;76bf&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4e57&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;305b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3066&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30011&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;500b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3060&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3051&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;6b8b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3059&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4ee3&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;308f&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;308a&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;6b8b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;308a&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306f&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;5168&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;90e8&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30ad&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30ec&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30a4&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;98df&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3079&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;308b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30eb&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30fc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;30eb&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;306b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3057&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3066&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;308b&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;3002&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;tokens&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;dependencyEdge&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;headTokenIndex&quot;&lt;/span&gt;: 11,
+        &lt;span class=&quot;s2&quot;&gt;&quot;label&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;NSUBJ&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;lemma&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;5b50&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4f9b&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;partOfSpeech&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;aspect&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;ASPECT_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;case&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;CASE_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;form&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;FORM_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;gender&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;GENDER_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;mood&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;MOOD_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;number&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;NUMBER_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;person&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;PERSON_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;proper&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;NOT_PROPER&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;reciprocity&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;RECIPROCITY_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;tag&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;NOUN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;tense&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;TENSE_UNKNOWN&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;voice&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;VOICE_UNKNOWN&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;text&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;beginOffset&quot;&lt;/span&gt;: 0,
+        &lt;span class=&quot;s2&quot;&gt;&quot;content&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;5b50&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4f9b&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;中略&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はGoogle Cloud SDKが実行可能になるまでのセットアップ手順を書きました。
+これからGCPもいろいろ触ってみたいと思います！&lt;/p&gt;
+
+&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cloud.google.com/sdk/docs/quickstart-macos&quot;&gt;Quickstart for macOS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4822257908&amp;amp;linkId=96562e30fee0c86028881bf8ff961412&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798137146&amp;amp;linkId=8519a36037ae78c56c57df76fd8e0342&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155373&amp;amp;linkId=18c7903300574449f8b95d74c97a5a8f&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4865941053&amp;amp;linkId=7d7b23bc20001ccbcc6f87feb17d24b4&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="gcp" /><summary type="html">普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。</summary></entry><entry><title type="html">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</title><link href="https://www.soudegesu.com/java/tomcat-with-gradle/" rel="alternate" type="text/html" title="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する" /><published>2018-08-02T00:00:00+09:00</published><updated>2018-08-02T00:00:00+09:00</updated><id>https://www.soudegesu.com/java/tomcat-with-gradle</id><content type="html" xml:base="https://www.soudegesu.com/java/tomcat-with-gradle/">&lt;p&gt;最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。
 ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -3277,144 +3485,4 @@ PAM認証でのユーザログインと、systemd上のデーモンプロセス�
 &lt;/iframe&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4797382686&amp;amp;linkId=72348c4f427aaabd31a6e84ed1928825&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
 &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 システム時刻の変更に関して備忘録として残しておきます。</summary></entry><entry><title type="html">「ピープルウェア」を読んでマネジメントを考える</title><link href="https://www.soudegesu.com/book/peopleware/" rel="alternate" type="text/html" title="「ピープルウェア」を読んでマネジメントを考える" /><published>2018-06-05T00:00:00+09:00</published><updated>2018-06-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/book/peopleware</id><content type="html" xml:base="https://www.soudegesu.com/book/peopleware/">&lt;p&gt;今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。
-以降の内容は &lt;strong&gt;若干のネタバレを含みます&lt;/strong&gt; ので、本をまだ読まれていない方は、先に本を読むことをオススメします。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#人間同士のコラボレーションの重要性を説いた本&quot; id=&quot;markdown-toc-人間同士のコラボレーションの重要性を説いた本&quot;&gt;人間同士のコラボレーションの重要性を説いた本&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#チーミングに関する話&quot; id=&quot;markdown-toc-チーミングに関する話&quot;&gt;チーミングに関する話&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#成功するチームのメンバー構成&quot; id=&quot;markdown-toc-成功するチームのメンバー構成&quot;&gt;成功するチームのメンバー構成&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#チームにマイナスをもたらす人物の危険性を考慮する&quot; id=&quot;markdown-toc-チームにマイナスをもたらす人物の危険性を考慮する&quot;&gt;チームにマイナスをもたらす人物の危険性を考慮する&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#マネジメント層の役割について&quot; id=&quot;markdown-toc-マネジメント層の役割について&quot;&gt;マネジメント層の役割について&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#マネジメントはナイスミドルがやるべきなのか&quot; id=&quot;markdown-toc-マネジメントはナイスミドルがやるべきなのか&quot;&gt;マネジメントはナイスミドルがやるべきなのか&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#マネジメント層をやめるべきだ&quot; id=&quot;markdown-toc-マネジメント層をやめるべきだ&quot;&gt;マネジメント「層」をやめるべきだ&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#森と木を見てエンパワーするのが仕事&quot; id=&quot;markdown-toc-森と木を見てエンパワーするのが仕事&quot;&gt;森と木を見て、エンパワーするのが仕事&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-&lt;a target=&quot;_blank&quot; href=&quot;https://www.amazon.co.jp/gp/product/B00I96CJWO/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B00I96CJWO&amp;amp;linkCode=as2&amp;amp;tag=soudegesu-22&amp;amp;linkId=6ae02fcebb6f0d35b7626bba2e51f880&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;MarketPlace=JP&amp;amp;ASIN=B00I96CJWO&amp;amp;ServiceVersion=20070822&amp;amp;ID=AsinImage&amp;amp;WS=1&amp;amp;Format=_SL250_&amp;amp;tag=soudegesu-22&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;amp;l=am2&amp;amp;o=9&amp;amp;a=B00I96CJWO&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;人間同士のコラボレーションの重要性を説いた本&quot;&gt;人間同士のコラボレーションの重要性を説いた本&lt;/h2&gt;
-
-&lt;p&gt;本書はソフトウェア開発における &lt;strong&gt;「人の問題」&lt;/strong&gt; にフォーカスした書籍である。&lt;/p&gt;
-
-&lt;p&gt;以下はエンジニア間の会話でもよく引き合いに出るフレーズだが、これの出処は本書である。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;実際のところ、ソフトウェア開発上の問題の多くは、技術的というよりも社会学的なものである。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;人間がもたらす現場あるあるな残念事例も紹介されてくるのだが、基本的なスタンスとしては
-&lt;strong&gt;チームやプロジェクトを失敗に導く方法と、それが引き起こす問題やリスクの指摘&lt;/strong&gt; をしてくれる。
-一方で、課題への対処については、直接的な解決策の提示は少ない。
-事例ベースでの成功したパターンの紹介とそれに対する解説が記載される程度だ。&lt;/p&gt;
-
-&lt;p&gt;人間的な問題は要素が複雑であり一般化するのは難しいことから、解決策は状況に応じて現場で考えねばならない、ということかもしれない。&lt;/p&gt;
-
-&lt;h2 id=&quot;チーミングに関する話&quot;&gt;チーミングに関する話&lt;/h2&gt;
-&lt;p&gt;本書ではチーミングについても触れている。
-単に良いチームを作り・維持するための話だけではなく、やはり課題・リスク中心の話題（これが原因で生産性が落ちている、等）が多かった気がする。&lt;/p&gt;
-
-&lt;h3 id=&quot;成功するチームのメンバー構成&quot;&gt;成功するチームのメンバー構成&lt;/h3&gt;
-
-&lt;p&gt;最近では &lt;a href=&quot;https://bizhint.jp/keyword/101187&quot;&gt;心理的安全性&lt;/a&gt; という言葉が良く取り上げられるが、チームも一概に成功する「構成」はないのであろう。&lt;/p&gt;
-
-&lt;p&gt;個々が特定分野のプロフェッショナルとして自立し、チームで必要なケイパビリティを充足するようなチームは聞いたことがある。&lt;/p&gt;
-
-&lt;p&gt;一方、本書ではチームメンバー間の活性化を得意とする「触媒」としての役割を持ったメンバーが所属している構成のチームを紹介している。
-&lt;strong&gt;個人単体としての成果は低い（ほとんど無いに等しい）が、チームメンバーの成果に寄与する人&lt;/strong&gt; なわけであるから、触媒という表現は的を得ている。&lt;/p&gt;
-
-&lt;p&gt;今思えば、私自身も触媒的な役割をするメンバーがいるチームで仕事をしたことがあるが、あの時は雰囲気も良く、アウトプットもあり、「最高のチームだ」と感じることができた。&lt;/p&gt;
-
-&lt;p&gt;過去に &lt;a href=&quot;http://okutta.blog.jp/archives/18749840.html&quot;&gt;エンジニアのモチベーションを上げるために応援専門の女子を採用する中国企業&lt;/a&gt; の話題が
-一時期バズった（軽く問題扱いすらされた）けど、解像度を粗くすれば、これも触媒としての役割を持ったチームカテゴリに分類されるような気がした。&lt;/p&gt;
-
-&lt;h3 id=&quot;チームにマイナスをもたらす人物の危険性を考慮する&quot;&gt;チームにマイナスをもたらす人物の危険性を考慮する&lt;/h3&gt;
-
-&lt;p&gt;成熟したチームを作り上げるのは時間もかかるし、必要な要素がたくさんある。
-それに対し、チームを崩壊させるだけなら、いくつも手段はあるし、それらの中のいくつかを行使するだけだし、手間もかからない。&lt;/p&gt;
-
-&lt;p&gt;とりわけ、 &lt;strong&gt;「微妙なメンバーをチームに招き入れる」&lt;/strong&gt; のは最大のリスクであろう。&lt;/p&gt;
-
-&lt;p&gt;組織の活動を停滞させる原因はたった一人の人間であった、というのも私自身経験もしている。いわば、「プロのトラブルメーカー」だ。&lt;/p&gt;
-
-&lt;p&gt;どこかの外資系企業の人事担当者の話を見聞きしたことがあるが、&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;優秀な人間を逃すリスク　＜　変な人間を会社に入れないリスク&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;が優先されると聞いた。&lt;/p&gt;
-
-&lt;p&gt;だから、入り口を狭くする、と。&lt;/p&gt;
-
-&lt;h2 id=&quot;マネジメント層の役割について&quot;&gt;マネジメント層の役割について&lt;/h2&gt;
-
-&lt;p&gt;本書は人間のコラボレーションの話であるから、マネジメント層の話に触れないわけにはいくまい。
-マネジメント層がチームの邪魔をしないのはもちろん、どうやってチームをエンパワーするか、というヒントが本書には含まれていた。&lt;/p&gt;
-
-&lt;h3 id=&quot;マネジメントはナイスミドルがやるべきなのか&quot;&gt;マネジメントはナイスミドルがやるべきなのか&lt;/h3&gt;
-
-&lt;p&gt;この手の本を読んでいると、より一層 &lt;strong&gt;「マネジメントという仕事の重要性」&lt;/strong&gt; を感じるわけだが、
-現状の（少なくとも私の観測範囲の中の）マネジメント層は &lt;strong&gt;ナイスミドルより上&lt;/strong&gt; の年齢層が担っているケースが多い。これは問題ではないだろうか。&lt;/p&gt;
-
-&lt;p&gt;これは偏見かもしれないが、時間的な人生経験が長いことがアドバンテージとされるのは、粘着質な人間関係が是とされた旧来の日本社会的な体質の上で成り立つ話だったのでは、と考えている。
-情報伝達手段が発達していない中で、人との対面でのコミュニケーションを取る機会が多かったことも一つの要素かもしれない。&lt;/p&gt;
-
-&lt;p&gt;いずれにせよ、「経験から得られるもの」とされていたものはエッセンスだけ抽出され、スキルとして規定された今、「年齢は関係ないね」となる。&lt;/p&gt;
-
-&lt;p&gt;プログラミングや外国語と同じように、後天的に鍛えることもできるし、先天的なセンスを持った若者もいる。
-そのため、もちろんナイスミドルがマネジメントしてもいいけど、 &lt;strong&gt;「ナイスミドルでないとマネジメントさせない」というのは好ましくない。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;マネジメント層をやめるべきだ&quot;&gt;マネジメント「層」をやめるべきだ&lt;/h3&gt;
-
-&lt;p&gt;マネジメントもスキルであるならば、社内でイケているとされている人間がマネジメントに従事する、というパスには違和感がある。
-マネジメント職は何かの上位職という前提になってしまっているからだ。&lt;/p&gt;
-
-&lt;p&gt;上位職の概念は厄介で、様々なものが集約されてくる。
-社内的な権力と報酬が良い例だ。&lt;/p&gt;
-
-&lt;p&gt;まず権力の話をする。マネジメント職の人間には「人をマネージする」という範囲を超えた権限を与えられているケースが多い。&lt;/p&gt;
-
-&lt;p&gt;身近な例で言うと、プロダクトマネジメントだ。
-別にプロダクトに対して何の関与もないのに、「私の承認が必要だ」と踏み込んでくるのは  &lt;strong&gt;「マネジメントの範囲が分かっていないマネジメント」&lt;/strong&gt; に他ならない。&lt;/p&gt;
-
-&lt;p&gt;これはもう少し深掘りしていくと &lt;strong&gt;「マネジメントの範囲を決めていないマネジメント業務が一律でマネジメント層に丸投げされる」&lt;/strong&gt; 、という組織的課題に昇華できるのではないだろうか。&lt;/p&gt;
-
-&lt;p&gt;マネジメントには管理する対象が存在する。それを把握して、正しく制御するための権限だけを与えるべきだと思う。&lt;/p&gt;
-
-&lt;p&gt;次に報酬の話だ。マネジメント職の方が報酬が高ければ、そちらの方が人気が出てくるだろう。
-「マネジメントしたい人はこちらへどうぞ。ちなみにエンジニアと給料は一緒だからね。」と宣言するだけで、どれだけ不毛な足の引っ張りあいが無くなることか。&lt;/p&gt;
-
-&lt;p&gt;マネジメント職を上位職と規定しないだけで、空き席待ちをするナイスミドルのストレスがどれだけ緩和されることか。&lt;/p&gt;
-
-&lt;h3 id=&quot;森と木を見てエンパワーするのが仕事&quot;&gt;森と木を見て、エンパワーするのが仕事&lt;/h3&gt;
-
-&lt;p&gt;個人の集合体がチームであり、組織である。&lt;/p&gt;
-
-&lt;p&gt;だから、マネージするのは個人だと考えている。結果的にその個人たちが作り出したチームは「状態を把握する」だけで十分だ。&lt;/p&gt;
-
-&lt;p&gt;間違っても、「チームをマネージ」し、そこから「個人をマネージする」という順序で思考してはいけない。&lt;/p&gt;
-
-&lt;p&gt;チームには実体がないから、実体は個人の方にあるから。&lt;/p&gt;
-
-&lt;p&gt;書きながら、そもそも、マネジメントという言葉自体が不適切な気がしてきた。 &lt;strong&gt;「管理する」というのはもはや本来期待すべき業務ではなくなってきている&lt;/strong&gt; と感じたからだ。&lt;/p&gt;
-
-&lt;p&gt;どう個人をエンパワーするかを考え、個人とチームを観測し、個々人をより成長させるために足りないケイパビリティを充足するかを考えるのが仕事だと思った。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;最後の方はとても雑多になってしまったけど、マネジメントのあるべき姿を考え、チームをダメにしないための方法を考え、人への接し方を考えさせられた良い一冊でした。&lt;/p&gt;
-
-&lt;p&gt;自分の中でマネジメントに対する軸となる考えを持つことは重要で、そのエッセンスを拾うことができました。&lt;/p&gt;
-
-&lt;p&gt;マネジメント。自分の観測範囲の中でも良いから、少しづつ実践を繰り返し、鍛えておきたいスキルですね。&lt;/p&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4822281108&amp;amp;linkId=374d5bb38701eaa66d7dbd61a6f404fc&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="book" /><summary type="html">今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。 以降の内容は 若干のネタバレを含みます ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 システム時刻の変更に関して備忘録として残しておきます。</summary></entry></feed>

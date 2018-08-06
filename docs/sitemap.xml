@@ -177,6 +177,10 @@
 <lastmod>2018-08-02T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>https://www.soudegesu.com/gcp/gcp-command/</loc>
+<lastmod>2018-08-05T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/</loc>
 </url>
 <url>
@@ -405,6 +409,9 @@
 <loc>https://www.soudegesu.com/tags/tomcat/</loc>
 </url>
 <url>
+<loc>https://www.soudegesu.com/tags/gcp/</loc>
+</url>
+<url>
 <loc>https://www.soudegesu.com/categories/docker/</loc>
 </url>
 <url>
@@ -463,6 +470,9 @@
 </url>
 <url>
 <loc>https://www.soudegesu.com/categories/mysql/</loc>
+</url>
+<url>
+<loc>https://www.soudegesu.com/categories/gcp/</loc>
 </url>
 <url>
 <loc>https://www.soudegesu.com/page2/</loc>
