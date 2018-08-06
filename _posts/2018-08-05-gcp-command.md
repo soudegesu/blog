@@ -1,6 +1,6 @@
 ---
-title: "Google Cloud "
-description: ""
+title: "Google Cloud SDKをセットアップする"
+description: "仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。"
 date: 2018-08-05 00:00:00 +0900
 categories: gcp
 tags: gcp
@@ -8,13 +8,15 @@ header:
   teaser: /assets/images/icon/google_cloud_icon.png
 ---
 
+普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。
+
 * Table Of Contents
 {:toc}
 
-## GCPを使ってみることにした
+## まずはCLIでしょ
 
-仕事でGCPのサービスの利用を検討することになり、事前に試してみようと言うので
-
+仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。
+APIとして提供されている機能もあるのでCLIから実行できた方が嬉しいだろう、という考えもあり、まずはCLIで `gcloud` コマンドが使えるようにまでしたいと思います。
 
 ## Google Cloud SDK をインストールする
 
@@ -23,62 +25,68 @@ header:
 手順は [Quickstart for macOS](https://cloud.google.com/sdk/docs/quickstart-macos) に記載されているので、
 そちらを参考にいただければ問題なくインストールでいきます。
 
-ただ、上記ではtarballを解凍する手段になるので、 今回は Homebrew を使っています。
+ただ、リンク先ではtarballを解凍する手段になるので、 今回は Homebrew を使っています。
 
 ```bash
 brew tap caskroom/cask
 brew cask install google-cloud-sdk
 ```
 
-設定を初期化します。ブラウザでgmailでログイン済みの場合には、デフォルトの設定が読み込まれます。
+`gcloud init` で `gcloud` の設定を初期化します。ここからは対話形式で設定が続きます。
+
+ログイン済みのGoogleアカウントがデフォルト設定の選択肢として提案されます。
+
 今回は新規で作成するので `2` を選択します。
 
 ```bash
 gcloud init
 
-Welcome! This command will take you through the configuration of gcloud.
-
-Settings from your current configuration [default] are:
-core:
-  account: xxxxxxxxxxxx@xxxx.xxx
-  disable_usage_reporting: 'True'
-
-Pick configuration to use:
- [1] Re-initialize this configuration [default] with new settings
- [2] Create a new configuration
-Please enter your numeric choice:
+> Welcome! This command will take you through the configuration of gcloud.
+>
+> Settings from your current configuration [default] are:
+> core:
+>   account: xxxxxxxxxxxx@xxxx.xxx
+>   disable_usage_reporting: 'True'
+>
+> Pick configuration to use:
+>  [1] Re-initialize this configuration [default] with new settings
+>  [2] Create a new configuration
+> Please enter your numeric choice:
 
 ```
 
 設定名称を要求されるので、入力します。
 
 ```bash
-Enter configuration name. Names start with a lower case letter and
-contain only lower case letters a-z, digits 0-9, and hyphens '-':
+> Enter configuration name. Names start with a lower case letter and
+> contain only lower case letters a-z, digits 0-9, and hyphens '-':
+設定名称を入力する
 ```
 
 設定が進むと、紐付けるGoogleアカウントを指定します。
 今回は新規で紐付けるので `2` にします。
 
 ```bash
-Your current configuration has been set to: [(設定名称)]
+> Your current configuration has been set to: [(設定名称)]
+>
+> You can skip diagnostics next time by using the following flag:
+>   gcloud init --skip-diagnostics
+>
+> Network diagnostic detects and fixes local network connection issues.
+> Checking network connection...done.
+> Reachability Check passed.
+> Network diagnostic (1/1 checks) passed.
+>
+> Choose the account you would like to use to perform operations for
+> this configuration:
+>  [1] xxxxxx@xxxx.xxx
+>  [2] Log in with a new account
+> Please enter your numeric choice:
 
-You can skip diagnostics next time by using the following flag:
-  gcloud init --skip-diagnostics
-
-Network diagnostic detects and fixes local network connection issues.
-Checking network connection...done.
-Reachability Check passed.
-Network diagnostic (1/1 checks) passed.
-
-Choose the account you would like to use to perform operations for
-this configuration:
- [1] xxxxxx@xxxx.xxx
- [2] Log in with a new account
-Please enter your numeric choice:
+2
 ```
 
-すると、ブラウザが起動し、googleアカウントの認証が要求されます。
+ブラウザが起動し、Googleアカウントの認証が要求されます。
 
 ![sign_in_google](/assets/images/20180805/sign_in_google.png)
 
@@ -89,48 +97,52 @@ Please enter your numeric choice:
 認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので `1` を選択します。
 
 ```bash
-You are logged in as: [xxxxxxxxxxx@xxxxx.xxx].
-
-Pick cloud project to use:
- [1] xxxxxxxxxx
- [2] Create a new project
-Please enter numeric choice or text value (must exactly match list
-item):
+> You are logged in as: [xxxxxxxxxxx@xxxxx.xxx].
+>
+> Pick cloud project to use:
+> [1] xxxxxxxxxx
+> [2] Create a new project
+>Please enter numeric choice or text value (must exactly match list
+> item):
+>
+1
 ```
 
 Compute Engineのデフォルトのリージョンの設定有無が聞かれます。とりあえず `Y` にします。
 
 ```bash
-Your current project has been set to: [xxxxxxxx].
-
-Do you want to configure a default Compute Region and Zone? (Y/n)?
+> Your current project has been set to: [xxxxxxxx].
+>
+> Do you want to configure a default Compute Region and Zone? (Y/n)?
+Y
 ```
 
 リージョン番号のリストの入力を求められるので、日本のある `32`, `33`, `34` のいずれかで選択しておきます。
 
 ```bash
-Which Google Compute Engine zone would you like to use as project
-default?
-If you do not specify a zone via a command line flag while working
-with Compute Engine resources, the default is assumed.
- [1] us-east1-b
- [2] us-east1-c
- [3] us-east1-d
- (中略)
- [32] asia-northeast1-b
- [33] asia-northeast1-c
- [34] asia-northeast1-a
- (中略)
-Did not print [3] options.
-Too many options [53]. Enter "list" at prompt to print choices fully.
-Please enter numeric choice or text value (must exactly match list
+> Which Google Compute Engine zone would you like to use as project
+> default?
+> If you do not specify a zone via a command line flag while working
+> with Compute Engine resources, the default is assumed.
+> [1] us-east1-b
+> [2] us-east1-c
+> [3] us-east1-d
+> (中略)
+> [32] asia-northeast1-b
+> [33] asia-northeast1-c
+> [34] asia-northeast1-a
+> (中略)
+> Did not print [3] options.
+> Too many options [53]. Enter "list" at prompt to print choices fully.
+> Please enter numeric choice or text value (must exactly match list
+32
 ```
 
-設定が完了しました。
+これで一通り設定が完了しました。
 
-## 自然言語APIを試してみる
+## 動作確認：自然言語APIを試してみる
 
-CLIで自然言語APIを試してみます。解釈するテキストは過去に私がツイートした文章を適当に拾って放り込みます。
+セットアップはできたので、CLIで自然言語APIを試してみます。
 
 ```bash
 gcloud ml language analyze-syntax --language=ja-JP --content='子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'
@@ -139,12 +151,15 @@ gcloud ml language analyze-syntax --language=ja-JP --content='子供が嫌いな
 権限がないと言われるので、CLI経由でAPIを使う権限を設定します。
 
 ```bash
-API [language.googleapis.com] not enabled on project [(プロジェクト番号)].
-Would you like to enable and retry (this will take a few minutes)?
-(y/N)?
+> API [language.googleapis.com] not enabled on project [(プロジェクト番号)].
+> Would you like to enable and retry (this will take a few minutes)?
+> (y/N)?
+y
 ```
 
-```
+レスポンスが返ってきました。分かってはいましたが `analyze-syntax` の自然言語APIは可視化してあげないとつらいですね笑。
+
+```bash
 {
   "language": "ja-JP",
   "sentences": [
@@ -181,763 +196,15 @@ Would you like to enable and retry (this will take a few minutes)?
         "content": "\u5b50\u4f9b"
       }
     },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 0,
-        "label": "PRT"
-      },
-      "lemma": "\u304c",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "NOMINATIVE",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 6,
-        "content": "\u304c"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 4,
-        "label": "AMOD"
-      },
-      "lemma": "\u5acc\u3044\u3060",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "ADJ",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 9,
-        "content": "\u5acc\u3044"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 2,
-        "label": "AUX"
-      },
-      "lemma": "\u3060",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "ADNOMIAL",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 15,
-        "content": "\u306a"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 11,
-        "label": "NSUBJ"
-      },
-      "lemma": "\u91ce\u83dc",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 18,
-        "content": "\u91ce\u83dc"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 4,
-        "label": "CC"
-      },
-      "lemma": "\u3068\u304b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 24,
-        "content": "\u3068\u304b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 7,
-        "label": "NUM"
-      },
-      "lemma": "3",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NUM",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 30,
-        "content": "3"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 4,
-        "label": "CONJ"
-      },
-      "lemma": "\u7a2e\u985e",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 31,
-        "content": "\u7a2e\u985e"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 4,
-        "label": "PRT"
-      },
-      "lemma": "\u304f\u3089\u3044",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 37,
-        "content": "\u304f\u3089\u3044"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 11,
-        "label": "ADVPHMOD"
-      },
-      "lemma": "\u53d6\u76bf",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 46,
-        "content": "\u53d6\u76bf"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 9,
-        "label": "PRT"
-      },
-      "lemma": "\u306b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "ADVERBIAL",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 52,
-        "content": "\u306b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "ADVCL"
-      },
-      "lemma": "\u4e57\u305b\u308b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "GERUND",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 55,
-        "content": "\u4e57\u305b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 11,
-        "label": "PRT"
-      },
-      "lemma": "\u3066",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 61,
-        "content": "\u3066"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "P"
-      },
-      "lemma": "\u3001",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PUNCT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 64,
-        "content": "\u3001"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 17,
-        "label": "NPADVMOD"
-      },
-      "lemma": "1",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NUM",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 67,
-        "content": "1"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 14,
-        "label": "SNUM"
-      },
-      "lemma": "\u500b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "AFFIX",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 68,
-        "content": "\u500b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 14,
-        "label": "PRT"
-      },
-      "lemma": "\u3060\u3051",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 71,
-        "content": "\u3060\u3051"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 18,
-        "label": "RCMOD"
-      },
-      "lemma": "\u6b8b\u3059",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "ADNOMIAL",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 77,
-        "content": "\u6b8b\u3059"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "ADVPHMOD"
-      },
-      "lemma": "\u4ee3\u308f\u308a",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 83,
-        "content": "\u4ee3\u308f\u308a"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 18,
-        "label": "PRT"
-      },
-      "lemma": "\u306b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "ADVERBIAL",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 92,
-        "content": "\u306b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "NSUBJ"
-      },
-      "lemma": "\u6b8b\u308a",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 95,
-        "content": "\u6b8b\u308a"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 20,
-        "label": "PRT"
-      },
-      "lemma": "\u306f",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 101,
-        "content": "\u306f"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 25,
-        "label": "ADVMOD"
-      },
-      "lemma": "\u5168\u90e8",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "ADV",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 104,
-        "content": "\u5168\u90e8"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 25,
-        "label": "ADVMOD"
-      },
-      "lemma": "\u30ad\u30ec\u30a4",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "ADJ",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 110,
-        "content": "\u30ad\u30ec\u30a4"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 23,
-        "label": "AUX"
-      },
-      "lemma": "\u306b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "ADVERBIAL",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 119,
-        "content": "\u306b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 26,
-        "label": "RCMOD"
-      },
-      "lemma": "\u98df\u3079\u308b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "ADNOMIAL",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 122,
-        "content": "\u98df\u3079\u308b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "ATTR"
-      },
-      "lemma": "\u30eb\u30fc\u30eb",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "NOUN",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 131,
-        "content": "\u30eb\u30fc\u30eb"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 26,
-        "label": "PRT"
-      },
-      "lemma": "\u306b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "COMPLEMENTIVE",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PRT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 140,
-        "content": "\u306b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "ROOT"
-      },
-      "lemma": "\u3059\u308b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "GERUND",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 143,
-        "content": "\u3057"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "AUXVV"
-      },
-      "lemma": "\u3066\u308b",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FINAL_ENDING",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "VERB",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 146,
-        "content": "\u3066\u308b"
-      }
-    },
-    {
-      "dependencyEdge": {
-        "headTokenIndex": 28,
-        "label": "P"
-      },
-      "lemma": "\u3002",
-      "partOfSpeech": {
-        "aspect": "ASPECT_UNKNOWN",
-        "case": "CASE_UNKNOWN",
-        "form": "FORM_UNKNOWN",
-        "gender": "GENDER_UNKNOWN",
-        "mood": "MOOD_UNKNOWN",
-        "number": "NUMBER_UNKNOWN",
-        "person": "PERSON_UNKNOWN",
-        "proper": "NOT_PROPER",
-        "reciprocity": "RECIPROCITY_UNKNOWN",
-        "tag": "PUNCT",
-        "tense": "TENSE_UNKNOWN",
-        "voice": "VOICE_UNKNOWN"
-      },
-      "text": {
-        "beginOffset": 152,
-        "content": "\u3002"
-      }
-    }
+    (中略)
   ]
 }
 ```
 
-
 ## まとめ
 
+今回はGoogle Cloud SDKが実行可能になるまでのセットアップ手順を書きました。
+これからGCPもいろいろ触ってみたいと思います！
 
 ## 参考にさせていただいたサイト
 
