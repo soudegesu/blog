@@ -227,5 +227,5 @@ var store = [{
         "title": "AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！",
         "excerpt":"様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。 作成したリポジトリ Vagrantを使ってローカル環境でデバッグできるようにしておく Vagrantfileの準備 Null BuilderでVagrantに対してプロビジョニングする Vagrantのスナップショット機能を使う Ansibleの後にServerSpecで検査する provisionerは ansible や shell-local を使う 設定ファイルは、roleごと、環境ごとに準備する プラットフォームに依存するPacker template 環境に依存する設定ファイル Ansible Role（システムコンポーネント）に依存する設定ファイル 実行コマンドは別ファイルでラップしておく まとめ作成したリポジトリ はじめに、作成したリポジトリを以下に晒しておきます。 soudegesu/my_packer_best_practiceまた、前提条件は以下とします。 作成対象はAMI（Amazon Machine Image） プロビジョニングには Packer と Ansible を使う インスタンスのテストには Sererspec を使うPackerやAnsible、Sererspec自体の解説は割愛します。 Vagrantを使ってローカル環境でデバッグできるようにしておく Ansible Playbookの書き始めの頃は、可能であればローカル環境上に Vagrant と Virtual Box を使ってインスタンスを起動して、それに対してプロビジョニングするようにしました。 記述したAnsible PlaybookをいきなりAWS環境上のEC2へプロビジョニングをすることはやめました。それは、プロビジョニング以外の処理（インスタンスの起動/停止処理）もあって、デバッグに時間がかかるためです。 Vagrantfileの準備 まずは、以下のような Vagrantfile を準備します。とりあえず...","categories": ["aws"],
         "tags": ["aws","packer"],
-        "url": "https://www.soudegesu.com/aws/my-packer-structure/",
+        "url": "https://www.soudegesu.com/aws/my-packer-best-practice/",
         "teaser":"https://www.soudegesu.com/assets/images/icon/packer_icon.png"}]
