@@ -1,4 +1,339 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-07T08:38:06+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">Google Cloud SDKをセットアップする</title><link href="https://www.soudegesu.com/gcp/gcp-command/" rel="alternate" type="text/html" title="Google Cloud SDKをセットアップする" /><published>2018-08-05T00:00:00+09:00</published><updated>2018-08-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/gcp/gcp-command</id><content type="html" xml:base="https://www.soudegesu.com/gcp/gcp-command/">&lt;p&gt;普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.soudegesu.com/" rel="alternate" type="text/html" /><updated>2018-08-19T08:43:32+09:00</updated><id>https://www.soudegesu.com/</id><title type="html">そうなんでげす</title><subtitle>soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。</subtitle><author><name>soudegesu</name></author><entry><title type="html">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</title><link href="https://www.soudegesu.com/aws/my-packer-structure/" rel="alternate" type="text/html" title="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！" /><published>2018-08-17T00:00:00+09:00</published><updated>2018-08-17T00:00:00+09:00</updated><id>https://www.soudegesu.com/aws/my-packer-structure</id><content type="html" xml:base="https://www.soudegesu.com/aws/my-packer-structure/">&lt;p&gt;様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。
+今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#作成したリポジトリ&quot; id=&quot;markdown-toc-作成したリポジトリ&quot;&gt;作成したリポジトリ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vagrantを使ってローカル環境でデバッグできるようにしておく&quot; id=&quot;markdown-toc-vagrantを使ってローカル環境でデバッグできるようにしておく&quot;&gt;Vagrantを使ってローカル環境でデバッグできるようにしておく&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#vagrantfileの準備&quot; id=&quot;markdown-toc-vagrantfileの準備&quot;&gt;Vagrantfileの準備&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#null-builderでvagrantに対してプロビジョニングする&quot; id=&quot;markdown-toc-null-builderでvagrantに対してプロビジョニングする&quot;&gt;Null BuilderでVagrantに対してプロビジョニングする&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#vagrantのスナップショット機能を使う&quot; id=&quot;markdown-toc-vagrantのスナップショット機能を使う&quot;&gt;Vagrantのスナップショット機能を使う&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ansibleの後にserverspecで検査する&quot; id=&quot;markdown-toc-ansibleの後にserverspecで検査する&quot;&gt;Ansibleの後にServerSpecで検査する&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#provisionerは-ansible-や-shell-local-を使う&quot; id=&quot;markdown-toc-provisionerは-ansible-や-shell-local-を使う&quot;&gt;provisionerは ansible や shell-local を使う&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#設定ファイルはroleごと環境ごとに準備する&quot; id=&quot;markdown-toc-設定ファイルはroleごと環境ごとに準備する&quot;&gt;設定ファイルは、roleごと、環境ごとに準備する&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#プラットフォームに依存するpacker-template&quot; id=&quot;markdown-toc-プラットフォームに依存するpacker-template&quot;&gt;プラットフォームに依存するPacker template&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#環境に依存する設定ファイル&quot; id=&quot;markdown-toc-環境に依存する設定ファイル&quot;&gt;環境に依存する設定ファイル&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ansible-roleシステムコンポーネントに依存する設定ファイル&quot; id=&quot;markdown-toc-ansible-roleシステムコンポーネントに依存する設定ファイル&quot;&gt;Ansible Role（システムコンポーネント）に依存する設定ファイル&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#実行コマンドは別ファイルでラップしておく&quot; id=&quot;markdown-toc-実行コマンドは別ファイルでラップしておく&quot;&gt;実行コマンドは別ファイルでラップしておく&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#まとめ&quot; id=&quot;markdown-toc-まとめ&quot;&gt;まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;作成したリポジトリ&quot;&gt;作成したリポジトリ&lt;/h2&gt;
+
+&lt;p&gt;はじめに、作成したリポジトリを以下に晒しておきます。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/soudegesu/my_packer_best_practice&quot;&gt;soudegesu/my_packer_best_practice&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;また、前提条件は以下とします。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;作成対象はAMI（Amazon Machine Image）&lt;/li&gt;
+  &lt;li&gt;プロビジョニングには &lt;a href=&quot;https://www.packer.io/&quot;&gt;Packer&lt;/a&gt; と &lt;a href=&quot;https://www.ansible.com/&quot;&gt;Ansible&lt;/a&gt; を使う&lt;/li&gt;
+  &lt;li&gt;インスタンスのテストには &lt;a href=&quot;https://serverspec.org/&quot;&gt;Sererspec&lt;/a&gt; を使う&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;PackerやAnsible、Sererspec自体の解説は割愛します。&lt;/p&gt;
+
+&lt;h2 id=&quot;vagrantを使ってローカル環境でデバッグできるようにしておく&quot;&gt;Vagrantを使ってローカル環境でデバッグできるようにしておく&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Ansible Playbookの書き始めの頃は、可能であればローカル環境上に &lt;a href=&quot;https://www.vagrantup.com/&quot;&gt;Vagrant&lt;/a&gt; と &lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;Virtual Box&lt;/a&gt; を使ってインスタンスを起動して、それに対してプロビジョニングするようにしました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;記述したAnsible PlaybookをいきなりAWS環境上のEC2へプロビジョニングをすることはやめました。
+それは、プロビジョニング以外の処理（インスタンスの起動/停止処理）もあって、デバッグに時間がかかるためです。&lt;/p&gt;
+
+&lt;h3 id=&quot;vagrantfileの準備&quot;&gt;Vagrantfileの準備&lt;/h3&gt;
+
+&lt;p&gt;まずは、以下のような &lt;code class=&quot;highlighter-rouge&quot;&gt;Vagrantfile&lt;/code&gt; を準備します。とりあえず &lt;code class=&quot;highlighter-rouge&quot;&gt;centos/7&lt;/code&gt; を指定しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Vagrant&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;configure&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;config&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  config&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;box &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;centos/7&quot;&lt;/span&gt;
+
+  config&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;network &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;forwarded_port&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; id&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ssh&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; guest&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; host&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2222&lt;/span&gt;
+
+  config&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;provider &lt;span class=&quot;s2&quot;&gt;&quot;virtualbox&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;vb&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+    vb&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;memory &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;1024&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  config&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;provision &lt;span class=&quot;s2&quot;&gt;&quot;shell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; inline&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt;SHELL
+    #yum &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;update&lt;/span&gt;
+    # add user centos
+    useradd centos
+    passwd &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;u&lt;/span&gt; centos
+    echo &lt;span class=&quot;s2&quot;&gt;&quot;centos ALL = NOPASSWD: ALL&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;sudoers&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;d&lt;/span&gt;/centos
+    echo &lt;span class=&quot;s2&quot;&gt;&quot;centos ALL=(ALL) NOPASSWD:ALL&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;sudoers&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;d&lt;/span&gt;/centos
+    # setup SSH
+    mkdir &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;centos&lt;span class=&quot;sr&quot;&gt;/.ssh; chown centos /&lt;/span&gt;home&lt;span class=&quot;sr&quot;&gt;/centos/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;ssh; chmod &lt;span class=&quot;m&quot;&gt;700&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;centos/&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;ssh
+    &lt;span class=&quot;k&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;vagrant&lt;span class=&quot;sr&quot;&gt;/.ssh/&lt;/span&gt;authorized_keys &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;centos&lt;span class=&quot;sr&quot;&gt;/.ssh/&lt;/span&gt;authorized_keys
+    chown centos &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;centos&lt;span class=&quot;sr&quot;&gt;/.ssh/&lt;/span&gt;authorized_keys
+    chmod &lt;span class=&quot;m&quot;&gt;600&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;centos&lt;span class=&quot;sr&quot;&gt;/.ssh/&lt;/span&gt;authorized_keys
+    # setup sshd config
+    sed &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ri&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'s/#PermitRootLogin yes/PermitRootLogin yes/g'&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;ssh/sshd_config
+    sed &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ri&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'s/UsePAM yes/#UsePAM yes/g'&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;ssh/sshd_config
+    sed &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ri&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'s/#UsePAM no/UsePAM no/g'&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;ssh/sshd_config
+    systemctl restart sshd
+  SHELL
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;公開されているAMIとVagentの &lt;code class=&quot;highlighter-rouge&quot;&gt;centos/7&lt;/code&gt; には、インストール済みのモジュールや、設定に差分があるため、
+可能なかぎり &lt;code class=&quot;highlighter-rouge&quot;&gt;config.vm.provision&lt;/code&gt; ブロックで差分を吸収しています。ここはハマると若干時間を取られます。&lt;/p&gt;
+
+&lt;p&gt;ここではAnsibleがSSHしてプロビジョニングするための &lt;code class=&quot;highlighter-rouge&quot;&gt;centos&lt;/code&gt; ユーザの追加と &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo&lt;/code&gt; 権限の追加、&lt;code class=&quot;highlighter-rouge&quot;&gt;sshd&lt;/code&gt; への設定を追加しています。&lt;/p&gt;
+
+&lt;h3 id=&quot;null-builderでvagrantに対してプロビジョニングする&quot;&gt;Null BuilderでVagrantに対してプロビジョニングする&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vagrant up&lt;/code&gt; コマンドを使って自前で起動する場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; コマンドだけできれば良いので、 &lt;a href=&quot;https://www.packer.io/docs/builders/null.html&quot;&gt;Null Builder&lt;/a&gt; を使います。&lt;/p&gt;
+
+&lt;p&gt;Packerのtemplateファイルの &lt;code class=&quot;highlighter-rouge&quot;&gt;builders&lt;/code&gt; を抜粋します。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;builders&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;null&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;communicator&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_pty&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_timeout&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1m&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{{user `ssh_host`}}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{{user `ssh_port`}}&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{{user `ssh_user`}}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_private_key_file&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{{user `ssh_key`}}&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;templateファイル上で展開される変数は以下を与えます。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;centos&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;../.vagrant/machines/default/virtualbox/private_key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2222&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なお、ポート &lt;code class=&quot;highlighter-rouge&quot;&gt;2222&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;Vagrantfile&lt;/code&gt; 内で &lt;code class=&quot;highlighter-rouge&quot;&gt;22&lt;/code&gt; 番と既にポートフォワードする設定を追加済みです。&lt;/p&gt;
+
+&lt;h3 id=&quot;vagrantのスナップショット機能を使う&quot;&gt;Vagrantのスナップショット機能を使う&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.vagrantup.com/&quot;&gt;Vagrant&lt;/a&gt; はバージョン &lt;code class=&quot;highlighter-rouge&quot;&gt;1.8&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;vagrant snapshot&lt;/code&gt; サブコマンドが使用可能になっています。
+これは、インスタンスの状態を保存＆復元するための機能です。&lt;/p&gt;
+
+&lt;p&gt;Ansible Playbook が何度でも流せるように、初期化時に Vagrantインスタンスの状態を一度スナップショットとして取得し、
+Packer実行前に毎回 &lt;code class=&quot;highlighter-rouge&quot;&gt;restore&lt;/code&gt; するようにします。&lt;/p&gt;
+
+&lt;h2 id=&quot;ansibleの後にserverspecで検査する&quot;&gt;Ansibleの後にServerSpecで検査する&lt;/h2&gt;
+
+&lt;p&gt;Ansible Playbookが実行された後は &lt;a href=&quot;https://serverspec.org/&quot;&gt;Serverspec&lt;/a&gt; を実行したいですよね。&lt;/p&gt;
+
+&lt;p&gt;残念ながら、PakcerにはServerspecのprovisionerがついていないので、 シェルを実行するためのprovisionerを使ってServerspecを実行します。&lt;/p&gt;
+
+&lt;h3 id=&quot;provisionerは-ansible-や-shell-local-を使う&quot;&gt;provisionerは ansible や shell-local を使う&lt;/h3&gt;
+
+&lt;p&gt;Packerのtemplateファイルで記載するprovisionerには &lt;a href=&quot;https://www.packer.io/docs/provisioners/ansible.html&quot;&gt;ansible&lt;/a&gt; や &lt;a href=&quot;https://www.packer.io/docs/provisioners/shell-local.html&quot;&gt;shell-local&lt;/a&gt; を使います。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.packer.io/docs/provisioners/ansible-local.html&quot;&gt;ansible-local&lt;/a&gt; や &lt;a href=&quot;https://www.packer.io/docs/provisioners/shell.html&quot;&gt;shell&lt;/a&gt;を使いません。&lt;/p&gt;
+
+&lt;p&gt;理由として、&lt;code class=&quot;highlighter-rouge&quot;&gt;ansible-local&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;shell&lt;/code&gt; は Packerでのプロビジョニング時に &lt;a href=&quot;https://www.ansible.com/&quot;&gt;Ansible&lt;/a&gt; や &lt;a href=&quot;https://serverspec.org/&quot;&gt;Serverspec&lt;/a&gt; を &lt;strong&gt;プロビジョニング先のインスタンスにインストールする必要がでてきてしまうため&lt;/strong&gt; です。実際のサービスで稼働させるインスタンスに不要なライブラリがインストールされているのは何とも気持ちの悪いものです。&lt;/p&gt;
+
+&lt;p&gt;必ず、ローカルマシンやCIサーバといったプロビジョニングする側にモジュールはインストールします。&lt;/p&gt;
+
+&lt;p&gt;ここでは &lt;code class=&quot;highlighter-rouge&quot;&gt;rake&lt;/code&gt; コマンドをラップした &lt;code class=&quot;highlighter-rouge&quot;&gt;run_spec.sh&lt;/code&gt; を呼び出していて、SSHするために必要な情報を引数として渡しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;provisioners&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ansible&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;playbook_file&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ansible/playbook-{{user `provision_target`}}.yml&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;centos&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_host_key_file&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{{user `ssh_key`}}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ansible_env_vars&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ANSIBLE_HOST_KEY_CHECKING=False&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ANSIBLE_NOCOLOR=True&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shell-local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cd serverspec &amp;amp;&amp;amp; sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;設定ファイルはroleごと環境ごとに準備する&quot;&gt;設定ファイルは、roleごと、環境ごとに準備する&lt;/h2&gt;
+
+&lt;p&gt;Packerのtemplateファイルでは多くの変数を必要とします。
+それらの依存関係を理解して、適切な設定ファイルに分割するのは割と重要だと思っています。&lt;/p&gt;
+
+&lt;p&gt;個人的には以下の3種類を作成し、Packer実行時に引数としてこれらの3種類を組合せて渡します。&lt;/p&gt;
+
+&lt;h3 id=&quot;プラットフォームに依存するpacker-template&quot;&gt;プラットフォームに依存するPacker template&lt;/h3&gt;
+
+&lt;p&gt;Packerのtemplateファイルはプロビジョニングするプラットフォーム毎に作成します。
+ローカルなのか、AWSなのか、Azureなのか、で1つずつ作るイメージです。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ファイル名&lt;/th&gt;
+      &lt;th&gt;用途&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ami-aws-template.json&lt;/td&gt;
+      &lt;td&gt;AWSにプロビジョニングするために使うPacker template&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ami-local-template.json&lt;/td&gt;
+      &lt;td&gt;ローカルのVagrantにプロビジョニングするために使うPacker template&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;環境に依存する設定ファイル&quot;&gt;環境に依存する設定ファイル&lt;/h3&gt;
+
+&lt;p&gt;プラットフォームの環境に依存する設定ファイルです。
+ここで言う「環境」とは、開発環境、ステージング環境、商用環境のような、システムを管理する単位一式のことを指しています。&lt;/p&gt;
+
+&lt;p&gt;ざっくり以下のようなイメージです。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ファイル名&lt;/th&gt;
+      &lt;th&gt;用途&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;env-A-variables.json&lt;/td&gt;
+      &lt;td&gt;AWSアカウント Aにプロビジョニングするときに使う設定&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;env-B-variables.json&lt;/td&gt;
+      &lt;td&gt;AWSアカウント Bにプロビジョニングするときに使う設定&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;env-local-variables.json&lt;/td&gt;
+      &lt;td&gt;ローカルのVagrantにプロビジョニングするために使う設定&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_region&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;your-region&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_vpc_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;vpc-xxxxxxxxxxxxxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_subnet_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;subnet-xxxxxxxxxxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh_user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;centos&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;use_profile&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;your-profile&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_instance_role&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;your-packer-role&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_keypair_name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;your-keypair-name&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;AWSアカウント単位でVPCのIDやキーペアの情報は変わってくるので、そのような情報はここにもたせます。&lt;/p&gt;
+
+&lt;h3 id=&quot;ansible-roleシステムコンポーネントに依存する設定ファイル&quot;&gt;Ansible Role（システムコンポーネント）に依存する設定ファイル&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ファイル名&lt;/th&gt;
+      &lt;th&gt;用途&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;role-hoge-variables.json&lt;/td&gt;
+      &lt;td&gt;Role &lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt; をプロビジョニングするときに使う設定&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;AnsibleのRole（システムコンポーネント）に依存する設定ファイルです。
+ベースとするAMIのインスタンスIDや、作成したAMI名のprefixなど置いておくといいと思います。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;packer_tag_prefix&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Packer-Hoge-AMI&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;instance_tag_prefix&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;HOGE_OPTIMIZED&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aws_source_ami&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ami-xxxxxxxx&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;実行コマンドは別ファイルでラップしておく&quot;&gt;実行コマンドは別ファイルでラップしておく&lt;/h2&gt;
+
+&lt;p&gt;一連のPacker実行コマンドの量が増えてしまうため、 コマンドをラップします。
+シェルでもなんでもいいですが、私は &lt;code class=&quot;highlighter-rouge&quot;&gt;Makefile&lt;/code&gt; にしています。&lt;/p&gt;
+
+&lt;p&gt;実行引数は最低限以下の2つで済みます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ansibleのプロビジョニング対象のRole&lt;/li&gt;
+  &lt;li&gt;AnsibleやServerspecがEC2へSSHするためのSSH鍵&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PACKER &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;packer
+&lt;span class=&quot;c&quot;&gt;# AnsibleのRole&lt;/span&gt;
+ROLE &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# EC2へのSSH鍵（絶対パス）&lt;/span&gt;
+AWS_KEY_FILE &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存 &lt;/span&gt;
+init-vagrant:
+	vagrant halt &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; vagrant destroy &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; vagrant up &lt;span class=&quot;nt&quot;&gt;--provision&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		vagrant snapshot save initial-save
+
+&lt;span class=&quot;c&quot;&gt;# Vagrantに対して先程のNull Builderでプロビジョニングします&lt;/span&gt;
+test-local:
+	@&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PACKER&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		vagrant snapshot restore initial-save &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		packer build &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;env-local-variables.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ssh_key=$(CURDIR)/.vagrant/machines/default/virtualbox/private_key'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'provision_target=${ROLE}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		ami-local-template.json
+
+&lt;span class=&quot;c&quot;&gt;# AWSのAMIを作成します&lt;/span&gt;
+create-ami:
+	@&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PACKER&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		packer build &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;env-aws-variables.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;role-&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ROLE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-variables&lt;/span&gt;.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'aws_key_file=${AWS_KEY_FILE}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;-var&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'provision_target=${ROLE}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		ami-aws-template.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はPackerでAMIを作成するときの個人的ベストプラクティスを紹介しました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ローカル環境でVagrantインスタンスを使って、Ansible PlaybookとServerspecの動作確認をする
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Vagrantfile&lt;/code&gt; では &lt;code class=&quot;highlighter-rouge&quot;&gt;config.vm.provision&lt;/code&gt; ブロックでAMIとの差分を減らす努力は必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Ansibleの後にServerspecを流す
+    &lt;ul&gt;
+      &lt;li&gt;provisoner は &lt;code class=&quot;highlighter-rouge&quot;&gt;ansible&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;shell-local&lt;/code&gt; を使う&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;変数ファイルは依存関係ごとに分ける&lt;/li&gt;
+  &lt;li&gt;実行コマンドをラップしたファイルを作る&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798155160&amp;amp;linkId=e31b0f9652aedc2ee6735408ac519d5e&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4774196479&amp;amp;linkId=c178f192d7778c77187b44c226c4e071&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="aws" /><category term="packer" /><summary type="html">様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。 今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。</summary></entry><entry><title type="html">Google Cloud SDKをセットアップする</title><link href="https://www.soudegesu.com/gcp/gcp-command/" rel="alternate" type="text/html" title="Google Cloud SDKをセットアップする" /><published>2018-08-05T00:00:00+09:00</published><updated>2018-08-05T00:00:00+09:00</updated><id>https://www.soudegesu.com/gcp/gcp-command</id><content type="html" xml:base="https://www.soudegesu.com/gcp/gcp-command/">&lt;p&gt;普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。&lt;/p&gt;
 
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#まずはcliでしょ&quot; id=&quot;markdown-toc-まずはcliでしょ&quot;&gt;まずはCLIでしょ&lt;/a&gt;&lt;/li&gt;
@@ -3363,126 +3698,4 @@ PAM認証でのユーザログインと、systemd上のデーモンプロセス�
 &lt;/iframe&gt;
 &lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4797382686&amp;amp;linkId=72348c4f427aaabd31a6e84ed1928825&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
 &lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。</summary></entry><entry><title type="html">Amazon Linux2(systemd)のシステム時刻を変更する</title><link href="https://www.soudegesu.com/linux/systemd_clock/" rel="alternate" type="text/html" title="Amazon Linux2(systemd)のシステム時刻を変更する" /><published>2018-06-09T00:00:00+09:00</published><updated>2018-06-09T00:00:00+09:00</updated><id>https://www.soudegesu.com/linux/systemd_clock</id><content type="html" xml:base="https://www.soudegesu.com/linux/systemd_clock/">&lt;p&gt;今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
-システム時刻の変更に関して備忘録として残しておきます。&lt;/p&gt;
-
-&lt;p&gt;なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#システムクロックを変更する&quot; id=&quot;markdown-toc-システムクロックを変更する&quot;&gt;システムクロックを変更する&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ハードウェアクロックを確認する&quot; id=&quot;markdown-toc-ハードウェアクロックを確認する&quot;&gt;ハードウェアクロックを確認する&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#参考にさせていただいたサイト&quot; id=&quot;markdown-toc-参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;システムクロックを変更する&quot;&gt;システムクロックを変更する&lt;/h2&gt;
-
-&lt;p&gt;システムクロックは &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/adjtime&lt;/code&gt; を使ってハードウェアクロックから算出されます。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;systemd&lt;/code&gt; の場合、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/adjtime&lt;/code&gt; が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat /etc/adjtime
-
-&amp;gt; 0.0 0 0.0
-&amp;gt; 0
-&amp;gt; UTC
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;システムクロックを確認しましょう。 &lt;code class=&quot;highlighter-rouge&quot;&gt;timedatectl&lt;/code&gt; コマンドを実行してみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;timedatectl
-
-&amp;gt;       Local time: Sat 2018-06-09 05:16:29 UTC
-&amp;gt;   Universal time: Sat 2018-06-09 05:16:29 UTC
-&amp;gt;         RTC time: Sat 2018-06-09 05:16:28
-&amp;gt;        Time zone: n/a (UTC, +0000)
-&amp;gt;      NTP enabled: yes
-&amp;gt; NTP synchronized: no
-&amp;gt;  RTC in local TZ: no
-&amp;gt;      DST active: n/a
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;何もしていないので、UTCのままですね。&lt;/p&gt;
-
-&lt;p&gt;次にtimezoneを &lt;code class=&quot;highlighter-rouge&quot;&gt;Asia/Tokyo&lt;/code&gt; にしてみましょう。こちらも &lt;code class=&quot;highlighter-rouge&quot;&gt;timedatectl&lt;/code&gt; コマンドで設定可能です。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;timedatectl set-timezone Asia/Tokyo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;設定がされたか確認してみましょう。 &lt;code class=&quot;highlighter-rouge&quot;&gt;timedatectl&lt;/code&gt; コマンドを実行したら、 Time zoneがJSTになっていることが確認できます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;timedatectl
-
-&amp;gt;       Local time: Sat 2018-06-09 14:57:45 JST
-&amp;gt;   Universal time: Sat 2018-06-09 05:57:45 UTC
-&amp;gt;         RTC time: Sat 2018-06-09 05:57:45
-&amp;gt;        Time zone: Asia/Tokyo (JST, +0900)
-&amp;gt;      NTP enabled: yes
-&amp;gt; NTP synchronized: no
-&amp;gt;  RTC in local TZ: no
-&amp;gt;       DST active: n/a
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;タイムゾーンを変更すると、 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/localtime&lt;/code&gt; にその設定が反映されます。
-ファイルを見てみましょう。 &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; してみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat /etc/localtime
-
-&amp;gt; TZif2
-&amp;gt;         ��&amp;gt;p��K����p��-���ۭ�����݌�����~~LMTJDTJSTTZif2
-&amp;gt;
-&amp;gt; �����e¤p�����&amp;gt;p������K��������p������-�����������ۭ�������������݌�����~~LMTJDTJST
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;文字化けしてしまいましたね。代わりに、 &lt;code class=&quot;highlighter-rouge&quot;&gt;zdump&lt;/code&gt; コマンドを使うことで &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/localtime&lt;/code&gt; が指すタイムゾーンの情報を確認してみましょう。
-これで JST になっていることを確認できました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;zdump /etc/localtime
-
-&amp;gt; /etc/localtime  Sat Jun  9 14:57:54 2018 JST
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;timedatectl set-time　&quot;2018-06-09 12:00:00&quot;&lt;/code&gt; のように、
-直接引数に与えられた時刻に設定することができますが、個人的に使った経験はありません。&lt;/p&gt;
-
-&lt;h2 id=&quot;ハードウェアクロックを確認する&quot;&gt;ハードウェアクロックを確認する&lt;/h2&gt;
-
-&lt;p&gt;Linuxが起動するときにシステムクロックを設定するため、ハードウェアクロックの情報が参照されます。&lt;/p&gt;
-
-&lt;p&gt;ハードウェアクロックの情報は &lt;code class=&quot;highlighter-rouge&quot;&gt;hwclock&lt;/code&gt; コマンドで確認できます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hwclock --debug
-
-&amp;gt; hwclock from util-linux 2.30.2
-&amp;gt; Trying to open: /dev/rtc0
-&amp;gt; Using the rtc interface to the clock.
-&amp;gt; Last drift adjustment done at 0 seconds after 1969
-&amp;gt; Last calibration done at 0 seconds after 1969
-&amp;gt; Hardware clock is on UTC time
-&amp;gt; Assuming hardware clock is kept in UTC time.
-&amp;gt; Waiting for clock tick...
-&amp;gt; ...got clock tick
-&amp;gt; Time read from Hardware Clock: 2018/06/09 06:09:22
-&amp;gt; Hw clock time : 2018/06/09 06:09:22 = 1528524562 seconds since 1969
-&amp;gt; Time since last adjustment is 1528524562 seconds
-&amp;gt; Calculated Hardware Clock drift is 0.000000 seconds
-&amp;gt; 2018-06-09 15:09:21.645250+0900
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;デバッグオプションなしで、 &lt;code class=&quot;highlighter-rouge&quot;&gt;hwclock&lt;/code&gt; だけ実行すると、ハードウェアに記録されている時刻が表示されます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hwclock
-
-&amp;gt; 2018-06-09 15:09:21.645250+0900
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;参考にさせていただいたサイト&quot;&gt;参考にさせていただいたサイト&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://wiki.archlinux.jp/index.php/%E6%99%82%E5%88%BB&quot;&gt;時刻 archlinux&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4798044911&amp;amp;linkId=ecbd4a37e5ba5b5255521397a806e73c&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-&lt;/iframe&gt;
-&lt;iframe style=&quot;width:120px;height:240px;&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; src=&quot;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;amp;t=soudegesu-22&amp;amp;m=amazon&amp;amp;o=9&amp;amp;p=8&amp;amp;l=as1&amp;amp;IS2=1&amp;amp;detail=1&amp;amp;asins=4797382686&amp;amp;linkId=72348c4f427aaabd31a6e84ed1928825&amp;amp;bc1=ffffff&amp;amp;lt1=_blank&amp;amp;fc1=333333&amp;amp;lc1=0066c0&amp;amp;bg1=ffffff&amp;amp;f=ifr&quot;&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 システム時刻の変更に関して備忘録として残しておきます。</summary></entry></feed>
+&lt;/div&gt;</content><author><name>soudegesu</name></author><category term="systemd" /><summary type="html">今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。</summary></entry></feed>
