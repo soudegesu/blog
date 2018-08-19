@@ -7,5 +7,4 @@ publish:
 		rbenv exec bundle exec jekyll build --lsi -s . -d docs -w --config _config.yml
 
 serve:
-	rm -rf _site && \
-		rbenv exec bundle exec jekyll serve --lsi -s . -d _site -w --config _config.yml,_config_dev.yml
+	hugo server -D
