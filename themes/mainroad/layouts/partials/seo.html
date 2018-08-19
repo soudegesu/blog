@@ -3,19 +3,16 @@
 <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{else}}{{ .Params.Description }}{{end}}">
 <meta property="og:description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{else}}{{ .Params.Description }}{{end}}">
 <meta name="author" content="{{ $.Site.Author.name }}">
-<meta property="og:locale" content="{{ if $.Site.defaultContentLanguage }}{{ $.Site.defaultContentLanguage }}{{else}}{{ "en" }}{{end}}">
+<meta property="og:locale" content="{{ if $.Site.languageCode }}{{ $.Site.languageCode }}{{else}}{{ "en" }}{{end}}">
 <meta property="og:site_name" content="{{ .Title }}">
 <meta property="og:title" content="{{ if .IsHome }}{{ .Title }}{{else}}{{ $.Site.Pages.Title }}{{end}}">
-{% if seo_url %}
-  <link rel="canonical" href="{{ page.url | prepend: seo_url | replace: "/index.html", "/" }}">
-  <meta property="og:url" content="{{ page.url | prepend: seo_url | replace: "/index.html", "/" }}">
-{% endif %}
-{% if site.twitter.username %}
-  <meta name="twitter:site" content="@{{ site.twitter.username | replace: "@", "" }}">
-  <meta name="twitter:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
-  <meta name="twitter:description" content="{{ seo_description }}">
-  <meta name="twitter:url" content="{{ canonical_url }}">
-
+<link rel="canonical" href="{{ $.Page.URL }}">
+<meta property="og:url" content="{{ $.Page.URL }}">
+<meta name="twitter:site" content="@{{ $.Site.Params.social_twitter }}">
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{else}}{{ .Params.Description }}{{end}}">
+<meta name="twitter:url" content="{{ $.Page.URL }}">
+{{ if .IsHome }}
   {% if page.header.image %}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="{% if page.header.image contains "://" %}{{ page.header.image }}{% else %}{{ page.header.image | absolute_url }}{% endif %}">
@@ -27,22 +24,18 @@
       <meta name="twitter:image" content="{{ site.og_image | absolute_url }}">
     {% endif %}
   {% endif %}
-
   {% if seo_author_twitter %}
     <meta name="twitter:creator" content="@{{ seo_author_twitter }}">
   {% endif %}
 {% endif %}
-
 {% if site.facebook %}
   {% if site.facebook.publisher %}
     <meta property="article:publisher" content="{{ site.facebook.publisher }}">
   {% endif %}
-
   {% if site.facebook.app_id %}
     <meta property="fb:app_id" content="{{ site.facebook.app_id }}">
   {% endif %}
 {% endif %}
-
 {% if page.header.image %}
   <meta property="og:image" content="{% if page.header.image contains "://" %}{{ page.header.image }}{% else %}{{ page.header.image | absolute_url }}{% endif %}">
 {% elsif page.header.overlay_image %}
@@ -52,42 +45,29 @@
 {% elsif site.og_image %}
   <meta property="og:image" content="{% if site.og_image contains "://" %}{{ site.og_image }}{% else %}{{ site.og_image | absolute_url }}{% endif %}">
 {% endif %}
-
-{% if page.date %}
-  <meta property="og:type" content="article">
-  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
-{% endif %}
-
-{% if paginator.previous_page %}
-  <link rel="prev" href="{{ paginator.previous_page_path | prepend: seo_url }}">
-{% endif %}
-{% if paginator.next_page %}
-  <link rel="next" href="{{ paginator.next_page_path | prepend: seo_url }}">
-{% endif %}
-
-{% if site.og_image %}
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "url": {{ seo_url | jsonify }},
-      "logo": {{ site.og_image | absolute_url | jsonify }}
-    }
-  </script>
-{% endif %}
-
-{% if site.social %}
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "{% if site.social.type %}{{ site.social.type }}{% else %}Person{% endif %}",
-      "name" : "{{ site.social.name | default: site.name }}",
-      "url" : {{ seo_url | jsonify }},
-      "sameAs" : {{ site.social.links | jsonify }}
-    }
-  </script>
-{% endif %}
-
+{{ if $.Param.date }}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ $.Param.date }}">
+{{ end }}
+{{ if $.Param.prev }}<link rel="prev" href="{{ $.Param.prev }}">{{ end }}
+{{ if $.Param.next }}<link rel="next" href="{{ $.Param.next }}">{{ end }}
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "{{ .Site.baseurl }}",
+    "logo": "{{ .Site.Author.avatar }}"
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "{{ .Site.Author.name }}",
+    "url" : "{{ .Site.baseurl }}",
+    "sameAs" : null
+  }
+</script>
 {{ if .Site.Params.googleSiteVerification }}<meta name="google-site-verification" content="{{ .Site.Params.googleSiteVerification }}" />{{end}}
 {{ if .Site.Params.bingSiteVerification }}<meta name="msvalidate.01" content="{{ .Site.Params.bingSiteVerification }}">{{end}}
 {{ if .Site.Params.yandexSiteVerification }}<meta name="yandex-verification" content="{{ .Site.Params.yandexSiteVerification }}">{{end}}

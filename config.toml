@@ -1,7 +1,7 @@
 defaultContentLanguage = "ja"
 languageCode = "ja-JP"
 
-baseurl = "https://www.soudegesu.com/"
+baseurl = "https://www.soudegesu.com"
 title = "そうなんでげす"
 theme = "mainroad"
 
