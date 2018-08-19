@@ -4,9 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>{{ .Title }}</title>
-	<meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{else}}{{ .Params.Description }}{{end}}">
 	{{ .Hugo.Generator }}
+	{{ partial "seo.html" . }}
 	{{ if .Site.Params.opengraph }}{{ template "_internal/opengraph.html" . }}{{ end }}
 	{{ if .Site.Params.twitter_cards }}{{ template "_internal/twitter_cards.html" . }}{{ end }}
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -21,6 +20,7 @@
 	{{- if not .Site.IsServer }}
 		{{ template "_internal/google_analytics_async.html" . }}
 	{{- end }}
+	{{ partial "ad_sense.html" . }}
 </head>
 <body class="body">
 	<div class="container container-outer">

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flutter on そうなんでげす</title>
+    <link>/tags/flutter/</link>
+    <description>Recent content in Flutter on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Sat, 11 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/flutter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Flutterでサンプルアプリを作ってみよう</title>
+      <link>/post/sample-app/</link>
+      <pubDate>Sat, 11 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/sample-app/</guid>
+      <description> flutter --version &amp;gt; Flutter 0.5.1 • channel beta • https://github.com/flutter/flutter.git &amp;gt; Framework • revision c7ea3ca377 (2 months ago) • 2018-05-29 21:07:33 +0200 &amp;gt; Engine • revision 1ed25ca7b7 &amp;gt; Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760  flutter analyze &amp;gt; Analyzing flutter_sample_app... &amp;gt; No issues found! (ran in 2.9s)  flutter emulators  flutter emulators --launch pixel_xl  まとめ 参考にさせていただいたサイト  Dart 2 Migration   </description>
+    </item>
+    
+  </channel>
+</rss>

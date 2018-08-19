@@ -1,9 +1,0 @@
-# Develop override settings
-url: http://127.0.0.1:4000
-analytics:
-  provider: false
-comments:
-  disqus:
-    shortname: "soudegesu-dev"
-sass:
-  style: expanded

@@ -1,0 +1,55 @@
+defaultContentLanguage = "ja"
+languageCode = "ja-JP"
+
+baseurl = "https://www.soudegesu.com/"
+title = "そうなんでげす"
+theme = "mainroad"
+
+enableEmoji = true
+paginate = "10"
+publishDir = "docs"
+enableRobotsTXT = true
+disqusShortname = "soudegesu"
+googleAnalytics = "UA-92599175-1"
+hasCJKLanguage = true
+
+[Author]
+    name = "soudegesu"
+    bio = "Software Engineer"
+    avatar = "/images/soudegesu.jpg"
+
+[Params]
+    subtitle = "またつまらぬモノを斬ってしまった"
+    description = "soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"
+    opengraph = true
+    twitter_cards = true
+    readmore = true
+    homeLayout = "content + sidebar" # Configure home page layout
+    listLayout = "content + sidebar" # Configure layout for list pages
+    singleLayout = "content + sidebar" # Configure layout for single pages
+    authorbox = true
+    toc = true
+    post_navigation = true
+    postSections = ["post", "past"]
+    #postSections = ["blog", "news"] # alternative that shows more than one section's pages
+    #dateformat = "2006-01-02" # change the format of dates
+    #mathjax = true # Enable MathJax
+    #mathjaxPath = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" # Specify MathJax path
+    #mathjaxConfig = "TeX-AMS-MML_HTMLorMML" # Specify MathJax config
+    googleSiteVerification = "cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw"
+    bingSiteVerification = ""
+    yandexSiteVerification = ""
+
+[Params.widgets]
+    search = true
+    recent_articles = true
+    recent_articles_num = 5
+    categories = true
+    tags = true
+    tags_counter = false
+
+    # Enable "Social" widget, if any of "social_*" set a value
+    social_twitter = "alten_manten"
+    social_github = "soudegesu"
+    #social_email = "example@example.com"
+    #social_google_plus = "profileid"
