@@ -17,6 +17,7 @@ hasCJKLanguage = true
     name = "soudegesu"
     bio = "Software Engineer"
     avatar = "/images/soudegesu.jpg"
+    twitter = "alten_manten"
 
 [Params]
     subtitle = "またつまらぬモノを斬ってしまった"
