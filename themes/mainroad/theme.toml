@@ -16,3 +16,21 @@ min_version = "0.38"
   name = "MH Magazine lite"
   homepage = "https://wordpress.org/themes/mh-magazine-lite/"
   repo = "https://themes.trac.wordpress.org/browser/mh-magazine-lite/2.5.6"
+
+[related]
+  threshold = 80
+  includeNewer = false
+  toLower = false
+
+[[related.indices]]
+  name = "keywords"
+  weight = 150
+
+[[related.indices]]
+  name  = "author"
+  toLower = true
+  weight = 30
+
+[[related.indices]]
+  name  = "tags"
+  weight = 100

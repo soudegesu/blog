@@ -1143,6 +1143,24 @@ textarea {
 	}
 }
 
+.related__item {
+	display: block;
+	padding: 5px 5px;
+	border-bottom: 1px dotted #ebebeb;
+}
+
+.related__item:first-child {
+	padding-top: 0;
+}
+
+.related {
+    border-left-width: 4px;
+    border-left-style: solid;
+    position: relative;
+    display: block;
+    border-color: #e64946;
+}
+
 @media screen and (max-width: 620px) {
 	input[type=text],
 	input[type=email],
