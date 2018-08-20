@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Batch on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/batch/</link>
+    <description>Recent content in Batch on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Mon, 02 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/batch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</title>
+      <link>https://www.soudegesu.com/aws/aws-batch-and-glue/</link>
+      <pubDate>Mon, 02 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/aws/aws-batch-and-glue/</guid>
+      <description>以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話 でGlueを少し</description>
+    </item>
+    
+  </channel>
+</rss>

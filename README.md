@@ -1,28 +1,18 @@
 # blog
-github pages with Jekyll.
+github pages with [Hugo](https://gohugo.io/).
 
-## Requirements
-* ruby 2.4.0 or more
-* use rbenv
+## Preconditions
+* [Hugo](https://gohugo.io/)
+    * v0.47 or more
 
-## Setup
+## Quick Start
 
-* install bundler
-```
-rbenv exec gem install bundler
-```
-
-* bundle install
-```
-rbenv exec bundle install --path vendor/bundler
-```
-
-* build(local)
+* build posts with local server. (including draft)
 ```
 make serve
 ```
 
-* build(publish)
+* build posts for publish article (exclude draft)
 ```
 make publish
 ```

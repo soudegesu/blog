@@ -1,348 +1,150 @@
-<!doctype html>
-<!--
-  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
-  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
-  Free for personal and commercial use under the MIT license
-  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
--->
-<html lang="ja" class="no-js">
-  <head>
-    <meta charset="utf-8">
-
-<!-- begin SEO -->
-
-
-
-
-
-
-
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="generator" content="Hugo 0.47" />
+	
 
 
 <title>Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする - そうなんでげす</title>
-
-
-
-
 <meta name="description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
-
-
-
-
+<meta property="og:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
 <meta name="author" content="soudegesu">
-
-<meta property="og:locale" content="ja_JP">
-<meta property="og:site_name" content="そうなんでげす">
-<meta property="og:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする">
-
-
-  <link rel="canonical" href="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
-  <meta property="og:url" content="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
-
-
-
-  <meta property="og:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
-
-
-
-  <meta name="twitter:site" content="@alten_manten">
-  <meta name="twitter:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする">
-  <meta name="twitter:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
-  <meta name="twitter:url" content="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
-
+<link rel="canonical" href="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
+<meta name="twitter:site" content="@alten_manten">
+<meta name="twitter:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする - そうなんでげす">
+<meta name="twitter:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
+<meta name="twitter:url" content="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@alten_manten">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:site_name" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする - そうなんでげす">
+<meta property="og:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/">
   
-    <meta name="twitter:card" content="summary">
-    
-      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/stepfunction_icon.png">
-    
-  
-
-  
-    <meta name="twitter:creator" content="@alten_manten">
-  
-
-
-
-
-
-  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/stepfunction_icon.png">
-
-
-
-  <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2018-05-23T00:00:00+09:00">
-
-
-
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "url": "https://www.soudegesu.com",
-      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
-    }
-  </script>
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Person",
-      "name" : "soudegsu",
-      "url" : "https://www.soudegesu.com",
-      "sameAs" : null
-    }
-  </script>
-
-
-
-  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
-
-
-
-
-<!-- end SEO -->
-
-
-<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+<meta property="og:image" content="https://www.soudegesu.com/images/icon/stepfunction_icon.png">
+<meta name="twitter:image" content="https://www.soudegesu.com/images/icon/stepfunction_icon.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-05-23 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2018-05-30-glue-process-cloudwatchlogs.md%29"><link rel="next" href="Page%28/past/2018-05-21-s3bucket-policy-with-terraform.md%29">
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
 </script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
-<!-- For all browsers -->
-<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
 
-<!--[if lte IE 9]>
-  <style>
-    /* old IE unsupported flexbox fixes */
-    .greedy-nav .site-title {
-      padding-right: 3em;
-    }
-    .greedy-nav button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-    }
-  </style>
-<![endif]-->
+	<meta property="og:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする" />
+<meta property="og:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" /><meta property="article:published_time" content="2018-05-23T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-05-23T00:00:00&#43;00:00"/>
+	<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする"/>
+<meta name="twitter:description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。"/>
 
-<meta http-equiv="cleartype" content="on">
-    <!-- start custom head snippets -->
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+	<link rel="stylesheet" href="/css/style.css">
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-92599175-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({
     google_ad_client: "ca-pub-5005266309965277",
     enable_page_level_ads: true
   });
 </script>
-
-<!-- end custom head snippets -->
-  </head>
-
-  <body class="layout--single">
-
-    <!--[if lt IE 9]>
-<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
-<![endif]-->
-    <div class="masthead">
-  <div class="masthead__inner-wrap">
-    <div class="masthead__menu">
-      <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
-        <ul class="visible-links">
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
-          
-        </ul>
-        <button><div class="navicon"></div></button>
-        <ul class="hidden-links hidden"></ul>
-      </nav>
-    </div>
-  </div>
-</div>
-
-    
+<script async src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" custom-element="amp-auto-ads"></script>
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277" />
 
 
+</head>
+<body class="body">
+	<div class="container container-outer">
+		<header class="header">
+			<div class="container container-inner">
+				<div class="logo" role="banner">
+					<a class="logo__link" href="/" title="そうなんでげす" rel="home">
+						<div class="logo__title">そうなんでげす</div>
+						<div class="logo__tagline">またつまらぬモノを斬ってしまった</div>
+					</a>
+				</div>
+			</div>
+			<div class="divider"></div>
+		</header>
+		<div class="wrapper flex">
 
-<div id="main" role="main">
-  
-  <div class="sidebar sticky">
-  
-
-<div itemscope itemtype="http://schema.org/Person">
-
-  
-    <div class="author__avatar">
-      
-        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
-      
-    </div>
-  
-
-  <div class="author__content">
-    <h3 class="author__name" itemprop="name">soudegesu</h3>
-    
-      <p class="author__bio" itemprop="description">
-        Software Engineer
-      </p>
-    
-  </div>
-
-  <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
-    <ul class="author__urls social-icons">
-      
-        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
-          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
-            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://github.com/soudegesu" itemprop="sameAs">
-            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      <!--
-  <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
-      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
-    </a>
-  </li>
--->
-    </ul>
-  </div>
-</div>
-
-  
-
-  <!-- under_profile -->
-<div align="center">
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="2594359046"
-     data-ad-format="auto"></ins>
-</div>
-
-  </div>
-
-
-  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする">
-    <meta itemprop="description" content="CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。">
-    <meta itemprop="datePublished" content="May 23, 2018">
-    
-
-    <div class="page__inner-wrap">
-      
-        <header>
-          <h1 class="page__title" itemprop="headline">Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする
-</h1>
-          
-            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  3 minute read
-</p>
-          
-        </header>
-      
-
-      <section class="page__content" itemprop="text">
-        <p>CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
-しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。</p>
-
-<ul id="markdown-toc">
-  <li><a href="#モチベーション" id="markdown-toc-モチベーション">モチベーション</a>    <ul>
-      <li><a href="#ログをs3にエクスポートしたい" id="markdown-toc-ログをs3にエクスポートしたい">ログをS3にエクスポートしたい</a></li>
-      <li><a href="#subscription-filterが使われているだと" id="markdown-toc-subscription-filterが使われているだと">Subscription Filterが使われている、、だと!?</a></li>
-      <li><a href="#create-export-taskは同時に1実行まで" id="markdown-toc-create-export-taskは同時に1実行まで">Create Export Taskは同時に1実行まで</a></li>
-    </ul>
-  </li>
-  <li><a href="#step-functionsで-create-export-task-apiを呼びまくる" id="markdown-toc-step-functionsで-create-export-task-apiを呼びまくる">Step Functionsで create export task APIを呼びまくる</a>    <ul>
-      <li><a href="#s3バケットを準備する" id="markdown-toc-s3バケットを準備する">S3バケットを準備する</a></li>
-      <li><a href="#lambdaの実装" id="markdown-toc-lambdaの実装">Lambdaの実装</a></li>
-      <li><a href="#step-functionsの実装" id="markdown-toc-step-functionsの実装">Step Functionsの実装</a></li>
-      <li><a href="#cloudwatch-eventsの設定" id="markdown-toc-cloudwatch-eventsの設定">CloudWatch Eventsの設定</a></li>
-      <li><a href="#動かしてみる" id="markdown-toc-動かしてみる">動かしてみる</a></li>
-    </ul>
-  </li>
-  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
-  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-05-23T00:00:00">May 23, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#モチベーション">モチベーション</a>
+<ul>
+<li><a href="#ログをs3にエクスポートしたい">ログをS3にエクスポートしたい</a></li>
+<li><a href="#subscription-filterが使われている-だと">Subscription Filterが使われている、、だと!?</a></li>
+<li><a href="#create-export-taskは同時に1実行まで">Create Export Taskは同時に1実行まで</a></li>
+</ul></li>
+<li><a href="#step-functionsで-create-export-task-apiを呼びまくる">Step Functionsで create export task APIを呼びまくる</a>
+<ul>
+<li><a href="#s3バケットを準備する">S3バケットを準備する</a></li>
+<li><a href="#lambdaの実装">Lambdaの実装</a></li>
+<li><a href="#step-functionsの実装">Step Functionsの実装</a></li>
+<li><a href="#cloudwatch-eventsの設定">CloudWatch Eventsの設定</a></li>
+<li><a href="#動かしてみる">動かしてみる</a></li>
+</ul></li>
+<li><a href="#まとめ">まとめ</a></li>
+<li><a href="#参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul></li>
 </ul>
+</nav>
+	</div>
+</div>
+<div class="post__content clearfix">
+			
+
+<p>CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
+しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。</p>
 
 <h2 id="モチベーション">モチベーション</h2>
 
@@ -352,7 +154,7 @@
 S3にログを集積し、そこをDWHにしてETL処理を施して可視化したりするのが事例としてよく見かけるので、
 今回は <strong>Cloudwatch LogsのいくつかのログストリームをS3にエクスポートしたい</strong> と考えました。</p>
 
-<h3 id="subscription-filterが使われているだと">Subscription Filterが使われている、、だと!?</h3>
+<h3 id="subscription-filterが使われている-だと">Subscription Filterが使われている、、だと!?</h3>
 
 <p>CloudWatch LogsからS3へログストリームを転送する簡易な方法は <a href="https://docs.aws.amazon.com/ja_jp/firehose/latest/dev/what-is-this-service.html">Kinesis Firehose</a> を使う方法です。</p>
 
@@ -360,11 +162,11 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>それは <strong>既に Subscription Filter が埋まっていた</strong> ことです。</p>
 
-<p><img src="/assets/images/20180523/cloudwatchlogs_subscription.png" alt="cloudwatchlogs_subscription" /></p>
+<p><img src="/images/20180523/cloudwatchlogs_subscription.png" alt="cloudwatchlogs_subscription" /></p>
 
 <p>（上は既にKinesis StreamにSubscription Filterを奪われた図）</p>
 
-<p>CloudWatch Logsを外部のAWSリソースにストリーム接続させるには <code class="highlighter-rouge">Subscription Filter</code> を設定する必要があるのですが、仕様上、 <strong>1ログストリームに対して1Subscription Filterしか設定できません。</strong></p>
+<p>CloudWatch Logsを外部のAWSリソースにストリーム接続させるには <code>Subscription Filter</code> を設定する必要があるのですが、仕様上、 <strong>1ログストリームに対して1Subscription Filterしか設定できません。</strong></p>
 
 <p>大抵、CloudWatch Logsの重要なログストリームほど、Subscription Filterが既に何者かによって設定されていて、運用上すんなり引っ剥がせないのです。</p>
 
@@ -374,10 +176,10 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>エクスポートする時間帯をUTCでレンジ指定することで、対象期間のログストリームを任意のバケットにエクスポートする <strong>タスク</strong> を登録できます。</p>
 
-<p><img src="/assets/images/20180523/export_task.png" alt="export_task" /></p>
+<p><img src="/images/20180523/export_task.png" alt="export_task" /></p>
 
 <p>ただこれにも制約があります。<strong>エクスポート機能は1度に1回しか実行できない</strong> のです。
-エクスポートするためのタスクを生成した後、そのエクスポートタスクのステータスが <code class="highlighter-rouge">COMPLETED</code> になるまで、
+エクスポートするためのタスクを生成した後、そのエクスポートタスクのステータスが <code>COMPLETED</code> になるまで、
 次のエクスポートを設定できません。</p>
 
 <p>実装目線で言えば、<strong>エクスポートタスクの終了を待ち合わせて、次のログストリームをエクスポートタスクを設定する</strong> 必要がありそうです。</p>
@@ -387,13 +189,13 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 <p>というわけでやってみましょう。今回実装した処理の流れはざっくり以下です。</p>
 
 <ol>
-  <li>CloudWatch Events で定期的に（Dailyとか） Step Functions を実行</li>
-  <li>Step Functionsから Lambda を キック</li>
-  <li>Lambda では CloudWatch Logs の create export task を実行</li>
-  <li>create export task で S3にログがエクスポートされる</li>
+<li>CloudWatch Events で定期的に（Dailyとか） Step Functions を実行</li>
+<li>Step Functionsから Lambda を キック</li>
+<li>Lambda では CloudWatch Logs の create export task を実行</li>
+<li>create export task で S3にログがエクスポートされる</li>
 </ol>
 
-<p><img src="/assets/images/20180523/export_to_s3.png" alt="export_to_s3" /></p>
+<p><img src="/images/20180523/export_to_s3.png" alt="export_to_s3" /></p>
 
 <p>順を追って見ていきましょう。手順的には後段から作る必要があるので、それに準じて説明します。</p>
 
@@ -403,135 +205,135 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>バケットは普通に作れば良いとして、 <strong>バケットポリシーを以下のように指定する</strong> のがポイントです。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"Service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logs.${リージョン名}.amazonaws.com"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:PutObject"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::${バケット名}/*"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"s3:x-amz-acl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bucket-owner-full-control"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"Service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logs.${リージョン名}.amazonaws.com"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:GetBucketAcl"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::${バケット名}"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Sid&quot;: &quot;1&quot;,
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Principal&quot;: {
+                &quot;Service&quot;: &quot;logs.${リージョン名}.amazonaws.com&quot;
+            },
+            &quot;Action&quot;: &quot;s3:PutObject&quot;,
+            &quot;Resource&quot;: &quot;arn:aws:s3:::${バケット名}/*&quot;,
+            &quot;Condition&quot;: {
+                &quot;StringEquals&quot;: {
+                    &quot;s3:x-amz-acl&quot;: &quot;bucket-owner-full-control&quot;
+                }
+            }
+        },
+        {
+            &quot;Sid&quot;: &quot;2&quot;,
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Principal&quot;: {
+                &quot;Service&quot;: &quot;logs.${リージョン名}.amazonaws.com&quot;
+            },
+            &quot;Action&quot;: &quot;s3:GetBucketAcl&quot;,
+            &quot;Resource&quot;: &quot;arn:aws:s3:::${バケット名}&quot;
+        }
+    ]
+}
+</code></pre>
 
 <h3 id="lambdaの実装">Lambdaの実装</h3>
 
 <p>次に CloudWatch Logsのexport task apiをコールするためのLambda Functionを作成します。
 以下にコードサンプルを載せます。</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-<span class="c"># -*- coding:utf-8 -*-</span>
+<pre><code class="language-python">#!/usr/bin/env python
+# -*- coding:utf-8 -*-
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">boto3</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">import</span> <span class="nn">pytz</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
+import logging
+import boto3
+from datetime import datetime
+from datetime import timedelta
+from dateutil.parser import parse
+import pytz
+import time
+import os
 
-<span class="k">def</span> <span class="nf">_is_executing_export_tasks</span><span class="p">():</span>
-    <span class="s">'''
+def _is_executing_export_tasks():
+    '''
     export taskが実行中かどうかチェック
-    '''</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'logs'</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'PENDING'</span><span class="p">,</span> <span class="s">'PENDING_CANCEL'</span><span class="p">,</span> <span class="s">'RUNNING'</span><span class="p">]:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_export_tasks</span><span class="p">(</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">statusCode</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s">'exportTasks'</span> <span class="ow">in</span> <span class="n">response</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s">'exportTasks'</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">return</span> <span class="bp">False</span>
+    '''
+    client = boto3.client('logs')
+    for status in ['PENDING', 'PENDING_CANCEL', 'RUNNING']:
+        response = client.describe_export_tasks(limit = 50, statusCode=status)
+        if 'exportTasks' in response and len(response['exportTasks']) &gt; 0:
+            return True
+    return False
 
-<span class="k">def</span> <span class="nf">_get_target_date</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
-    <span class="s">'''
+def _get_target_date(event):
+    '''
     CloudWatch Eventsの(実行日時 - 1)日をエクスポート対象にする
-    '''</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">tokyo_timezone</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="s">'Asia/Tokyo'</span><span class="p">)</span>
+    '''
+    target = None
+    tokyo_timezone = pytz.timezone('Asia/Tokyo')
 
-    <span class="n">utc_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s">'time'</span><span class="p">],</span> <span class="s">'</span><span class="si">%</span><span class="s">Y-</span><span class="si">%</span><span class="s">m-</span><span class="si">%</span><span class="s">dT</span><span class="si">%</span><span class="s">H:</span><span class="si">%</span><span class="s">M:</span><span class="si">%</span><span class="s">SZ'</span><span class="p">)</span>
-    <span class="n">tokyo_time</span> <span class="o">=</span> <span class="n">utc_dt</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">tokyo_timezone</span><span class="p">)</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">tokyo_time</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    utc_dt = datetime.strptime(event['time'], '%Y-%m-%dT%H:%M:%SZ')
+    tokyo_time = utc_dt.astimezone(tokyo_timezone)
+    target = tokyo_time - timedelta(days=1)
+    t = target.replace(hour=0, minute=0, second=0, microsecond=0)
 
-    <span class="n">target_date</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d'</span><span class="p">)</span>
-    <span class="n">from_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-    <span class="n">to_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">t</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_time</span><span class="p">,</span> <span class="n">to_time</span><span class="p">,</span> <span class="n">target_date</span>
+    target_date = t.strftime('%Y%m%d')
+    from_time = int(t.timestamp() * 1000)
+    to_time = int((t + timedelta(days=1) - timedelta(milliseconds=1)).timestamp() * 1000)
+    return from_time, to_time, target_date
 
-<span class="k">def</span> <span class="nf">_get_log_group</span><span class="p">(</span><span class="n">next_token</span><span class="p">):</span>
-    <span class="s">'''
+def _get_log_group(next_token):
+    '''
     ロググループを取得する
-    '''</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'logs'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">next_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">next_token</span> <span class="o">!=</span> <span class="s">''</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_log_groups</span><span class="p">(</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">nextToken</span> <span class="o">=</span> <span class="n">next_token</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c"># nextTokenは空文字を受け付けない</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_log_groups</span><span class="p">(</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span>
+    '''
+    client = boto3.client('logs')
+    if next_token is not None and next_token != '':
+        response = client.describe_log_groups(limit = 50, nextToken = next_token)
+    else:
+        # nextTokenは空文字を受け付けない
+        response = client.describe_log_groups(limit = 50)
 
-    <span class="k">if</span> <span class="s">'logGroups'</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="k">from</span> <span class="n">response</span><span class="p">[</span><span class="s">'logGroups'</span><span class="p">]</span>
-    <span class="c"># ロググループが多くて50件(最大)を超えるようなら再帰呼出し</span>
-    <span class="k">if</span> <span class="s">'nextToken'</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="k">from</span> <span class="n">_get_log_group</span><span class="p">(</span><span class="n">next_token</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">'nextToken'</span><span class="p">])</span>
+    if 'logGroups' in response:
+        yield from response['logGroups']
+    # ロググループが多くて50件(最大)を超えるようなら再帰呼出し
+    if 'nextToken' in response:
+        yield from _get_log_group(next_token = response['nextToken'])
 
-<span class="k">def</span> <span class="nf">_is_bucket_object_exists</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">bucket_dir</span><span class="p">):</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'s3'</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span> <span class="o">=</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">Prefix</span> <span class="o">=</span> <span class="p">(</span><span class="n">bucket_dir</span><span class="p">))</span>
-    <span class="k">return</span> <span class="s">'Contents'</span> <span class="ow">in</span> <span class="n">response</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s">'Contents'</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+def _is_bucket_object_exists(bucket_name, bucket_dir):
+    client = boto3.client('s3')
+    response = client.list_objects_v2(Bucket = bucket_name, Prefix = (bucket_dir))
+    return 'Contents' in response and len(response['Contents']) &gt; 0
 
-<span class="k">def</span> <span class="nf">_export_logs_to_s3</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">bucket_dir</span><span class="p">,</span> <span class="n">from_time</span><span class="p">,</span> <span class="n">to_time</span><span class="p">,</span> <span class="n">log_group_name</span><span class="p">):</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'logs'</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_export_task</span><span class="p">(</span><span class="n">taskName</span> <span class="o">=</span> <span class="n">bucket_dir</span><span class="p">,</span> <span class="n">logGroupName</span> <span class="o">=</span> <span class="n">log_group_name</span><span class="p">,</span> <span class="n">fromTime</span> <span class="o">=</span> <span class="n">from_time</span><span class="p">,</span> <span class="n">to</span> <span class="o">=</span> <span class="n">to_time</span><span class="p">,</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">destinationPrefix</span> <span class="o">=</span> <span class="n">bucket_dir</span><span class="p">)</span>
+def _export_logs_to_s3(bucket_name, bucket_dir, from_time, to_time, log_group_name):
+    client = boto3.client('logs')
+    response = client.create_export_task(taskName = bucket_dir, logGroupName = log_group_name, fromTime = from_time, to = to_time, destination = bucket_name, destinationPrefix = bucket_dir)
 
-<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">bucket_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'BUCKET_NAME'</span><span class="p">]</span>
-    <span class="n">from_time</span><span class="p">,</span> <span class="n">to_time</span><span class="p">,</span> <span class="n">target_date</span> <span class="o">=</span> <span class="n">_get_target_date</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
+def lambda_handler(event, context):
+    bucket_name = os.environ['BUCKET_NAME']
+    from_time, to_time, target_date = _get_target_date(event=event)
 
-    <span class="k">if</span> <span class="n">_is_executing_export_tasks</span><span class="p">():</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"status"</span><span class="p">:</span> <span class="s">"running"</span><span class="p">,</span>
-            <span class="s">"time"</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s">'time'</span><span class="p">]</span>
-        <span class="p">}</span>
+    if _is_executing_export_tasks():
+        return {
+            &quot;status&quot;: &quot;running&quot;,
+            &quot;time&quot;: event['time']
+        }
 
-    <span class="k">for</span> <span class="n">log_group</span> <span class="ow">in</span> <span class="n">_get_log_group</span><span class="p">(</span><span class="n">next_token</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">bucket_dir</span> <span class="o">=</span> <span class="n">log_group</span><span class="p">[</span><span class="s">'logGroupName'</span><span class="p">]</span> <span class="o">+</span> <span class="s">'/'</span> <span class="o">+</span><span class="n">target_date</span>
-        <span class="k">if</span> <span class="n">log_group</span><span class="p">[</span><span class="s">'logGroupName'</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">bucket_dir</span> <span class="o">=</span> <span class="n">log_group</span><span class="p">[</span><span class="s">'logGroupName'</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+    for log_group in _get_log_group(next_token=None):
+        bucket_dir = log_group['logGroupName'] + '/' +target_date
+        if log_group['logGroupName'].find('/') == 0:
+            bucket_dir = log_group['logGroupName'][1:]
 
-        <span class="k">if</span> <span class="n">_is_bucket_object_exists</span><span class="p">(</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">bucket_dir</span> <span class="o">=</span> <span class="n">bucket_dir</span><span class="p">):</span>
-            <span class="k">continue</span>
-        <span class="n">_export_logs_to_s3</span><span class="p">(</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">log_group_name</span> <span class="o">=</span> <span class="n">log_group</span><span class="p">[</span><span class="s">'logGroupName'</span><span class="p">],</span> <span class="n">from_time</span><span class="o">=</span> <span class="n">from_time</span><span class="p">,</span> <span class="n">to_time</span> <span class="o">=</span> <span class="n">to_time</span><span class="p">,</span> <span class="n">bucket_dir</span> <span class="o">=</span> <span class="n">bucket_dir</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"status"</span><span class="p">:</span> <span class="s">"running"</span><span class="p">,</span>
-            <span class="s">"time"</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s">'time'</span><span class="p">]</span>
-        <span class="p">}</span>
+        if _is_bucket_object_exists(bucket_name = bucket_name, bucket_dir = bucket_dir):
+            continue
+        _export_logs_to_s3(bucket_name = bucket_name, log_group_name = log_group['logGroupName'], from_time= from_time, to_time = to_time, bucket_dir = bucket_dir)
+        return {
+            &quot;status&quot;: &quot;running&quot;,
+            &quot;time&quot;: event['time']
+        }
 
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s">"status"</span><span class="p">:</span> <span class="s">"completed"</span><span class="p">,</span>
-        <span class="s">"time"</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s">'time'</span><span class="p">]</span>
-    <span class="p">}</span>
-</code></pre></div></div>
+    return {
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;time&quot;: event['time']
+    }
+</code></pre>
 
 <p>ポイントは <strong>Lambdaに戻り値を設定する</strong> ことです。
 今までLamdaで戻り値を指定しても使いみちは殆ど無かったのですが、ここでは役に立つのです。</p>
@@ -544,60 +346,60 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>定義したステートマシンは以下のようになっています。</p>
 
-<p><img src="/assets/images/20180523/statemachine.png" alt="statemachine" /></p>
+<p><img src="/images/20180523/statemachine.png" alt="statemachine" /></p>
 
 <p>各ステートの説明はざっくり以下になります。</p>
 
 <ol>
-  <li><code class="highlighter-rouge">Export Awslogs to S3</code> ：create export taskをする</li>
-  <li><code class="highlighter-rouge">Finished exporting?</code> ：処理中または処理可能なログストリームが存在するかチェックする</li>
-  <li><code class="highlighter-rouge">Success</code> ：ステートマシンの終了</li>
-  <li><code class="highlighter-rouge">Wait a minute</code> ：export taskが終わりそうな時間を適当に待つ</li>
+<li><code>Export Awslogs to S3</code> ：create export taskをする</li>
+<li><code>Finished exporting?</code> ：処理中または処理可能なログストリームが存在するかチェックする</li>
+<li><code>Success</code> ：ステートマシンの終了</li>
+<li><code>Wait a minute</code> ：export taskが終わりそうな時間を適当に待つ</li>
 </ol>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"Comment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Export Cloudwatch LogStream recursively"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"StartAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Export Awslogs to S3"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"TimeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">86400</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"States"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"Export Awslogs to S3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Task"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${Lambdaのarn}"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"Next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Finished exporting?"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"Finished exporting?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Choice"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"Choices"</span><span class="p">:[{</span><span class="w">
-        </span><span class="s2">"Variable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$.status"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="s2">"running"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"Next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wait a minute"</span><span class="w">
-      </span><span class="p">},{</span><span class="w">
-        </span><span class="s2">"Variable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$.status"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="s2">"completed"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"Next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Success"</span><span class="w">
-      </span><span class="p">}]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"Wait a minute"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wait"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"Seconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"Next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Export Awslogs to S3"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"Success"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Succeed"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+  &quot;Comment&quot;: &quot;Export Cloudwatch LogStream recursively&quot;,
+  &quot;StartAt&quot;: &quot;Export Awslogs to S3&quot;,
+  &quot;TimeoutSeconds&quot;: 86400,
+  &quot;States&quot;: {
+    &quot;Export Awslogs to S3&quot;: {
+      &quot;Type&quot;: &quot;Task&quot;,
+      &quot;Resource&quot;: &quot;${Lambdaのarn}&quot;,
+      &quot;Next&quot;: &quot;Finished exporting?&quot;
+    },
+    &quot;Finished exporting?&quot;: {
+      &quot;Type&quot;: &quot;Choice&quot;,
+      &quot;Choices&quot;:[{
+        &quot;Variable&quot;: &quot;$.status&quot;,
+        &quot;StringEquals&quot;: &quot;running&quot;,
+        &quot;Next&quot;: &quot;Wait a minute&quot;
+      },{
+        &quot;Variable&quot;: &quot;$.status&quot;,
+        &quot;StringEquals&quot;: &quot;completed&quot;,
+        &quot;Next&quot;: &quot;Success&quot;
+      }]
+    },
+    &quot;Wait a minute&quot;: {
+      &quot;Type&quot;: &quot;Wait&quot;,
+      &quot;Seconds&quot;: 5,
+      &quot;Next&quot;: &quot;Export Awslogs to S3&quot;
+    },
+    &quot;Success&quot;: {
+      &quot;Type&quot;: &quot;Succeed&quot;
+    }
+  }
+}
+</code></pre>
 
 <p>ポイントとしては、<strong>Waitのステートを入れている</strong> ところです。</p>
 
-<p>create export task のAPIは同時に実行できないので、<code class="highlighter-rouge">COMPLETE</code> するまでの概算秒数を入れています。</p>
+<p>create export task のAPIは同時に実行できないので、<code>COMPLETE</code> するまでの概算秒数を入れています。</p>
 
 <p><strong>Lambdaには実行時間の上限があるのと、稼働時間に応じた課金になる</strong> ので、Lambda関数の中でsleepするのは好ましくありません。</p>
 
-<p>もちろん、秒数は概算で問題なく、エクスポートが <code class="highlighter-rouge">COMPLETE</code> 以外の場合には 
-<code class="highlighter-rouge">Export Awslogs to S3</code> → <code class="highlighter-rouge">Finished exporting?</code> → <code class="highlighter-rouge">Wait a minute</code> をぐるぐる回るようにしておくのが良いでしょう。
-とは言え、無限ループにならないようにタイムアウト値 <code class="highlighter-rouge">TimeoutSeconds: 86400</code> (24時間)を指定しています。 
+<p>もちろん、秒数は概算で問題なく、エクスポートが <code>COMPLETE</code> 以外の場合には
+<code>Export Awslogs to S3</code> → <code>Finished exporting?</code> → <code>Wait a minute</code> をぐるぐる回るようにしておくのが良いでしょう。
+とは言え、無限ループにならないようにタイムアウト値 <code>TimeoutSeconds: 86400</code> (24時間)を指定しています。
 少し長いかもしれないので、要調整です。</p>
 
 <h3 id="cloudwatch-eventsの設定">CloudWatch Eventsの設定</h3>
@@ -606,26 +408,26 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>Step Functionsのarnを指定するだけなので、そこまで凝った所はありません。</p>
 
-<p><img src="/assets/images/20180523/cloudwatch_events.png" alt="cloudwatch_events" /></p>
+<p><img src="/images/20180523/cloudwatch_events.png" alt="cloudwatch_events" /></p>
 
-<p>このときに指定するロールには、信頼関係に <code class="highlighter-rouge">events.amazonaws.com</code> を指定し、
+<p>このときに指定するロールには、信頼関係に <code>events.amazonaws.com</code> を指定し、
 最低限以下のポリシーが必要です。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"states:StartExecution"</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"${Step Functionsのarn}"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Action&quot;: [
+                &quot;states:StartExecution&quot;
+            ],
+            &quot;Resource&quot;: [
+                &quot;${Step Functionsのarn}&quot;
+            ]
+        }
+    ]
+}
+</code></pre>
 
 <h3 id="動かしてみる">動かしてみる</h3>
 
@@ -633,7 +435,7 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 ちなみに、AWSアカウント内のロググループを全てエクスポートしたら、下のようになりました。
 （表示列は設定変更しています）</p>
 
-<p><img src="/assets/images/20180523/stacked_task.png" alt="stacked_task" /></p>
+<p><img src="/images/20180523/stacked_task.png" alt="stacked_task" /></p>
 
 <h2 id="まとめ">まとめ</h2>
 
@@ -649,529 +451,282 @@ Waitを外出ししているため、 <strong>Lambdaの実行時間制限をカ�
 ステートマシンを軸としたサーバレスな事例が多く紹介されてくることでしょう。</p>
 
 <h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
 <ul>
-  <li><a href="https://dev.classmethod.jp/cloud/aws/put-data-on-s3-through-firehose/">[新機能]Amazon Kinesis FirehoseでS3にデータを送ってみた #reinvent</a></li>
-  <li><a href="https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/how-step-functions-works.html">Step Functions の詳細</a></li>
+<li><a href="https://dev.classmethod.jp/cloud/aws/put-data-on-s3-through-firehose/">[新機能]Amazon Kinesis FirehoseでS3にデータを送ってみた #reinvent</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/how-step-functions-works.html">Step Functions の詳細</a></li>
 </ul>
 
 <div align="center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798155160&amp;linkId=e91e78f505e53d2986a0635db4aad1ce&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798155160&linkId=e91e78f505e53d2986a0635db4aad1ce&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
     </iframe>
 </div>
 
-        
-      </section>
-
-      <footer class="page__meta">
-        
-        
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
-    <span itemprop="keywords">
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/s3/" rel="tag">s3</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/cloudwatchlogs/" rel="tag">cloudwatchlogs</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/stepfunction/" rel="tag">stepfunction</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/lambda/" rel="tag">lambda</a></li>
+	</ul>
+</div>
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/aws/s3bucket-policy-with-terraform/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">TerraformでS3のバケットポリシーを書く方法</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next">
+		<a class="post-nav__link" href="/aws/glue-process-cloudwatchlogs/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話</p></a>
+	</div>
+</nav>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/cloudwatchlogs" class="page__taxonomy-item" rel="tag">cloudwatchlogs</a><span class="sep">, </span>
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/lambda" class="page__taxonomy-item" rel="tag">lambda</a><span class="sep">, </span>
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/s3" class="page__taxonomy-item" rel="tag">s3</a><span class="sep">, </span>
-    
-      
-      
-      <a href="https://www.soudegesu.com/tags/stepfunction" class="page__taxonomy-item" rel="tag">stepfunction</a>
-    
-    </span>
-  </p>
-
-
-
-
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
-    <span itemprop="keywords">
-    
-      
-      
-      <a href="https://www.soudegesu.com/categories/aws" class="page__taxonomy-item" rel="tag">aws</a>
-    
-    </span>
-  </p>
-
-
-        
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-05-23T00:00:00+09:00">May 23, 2018</time></p>
-        
-      </footer>
-
-      <section class="page__share">
-  
-
-  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
-
-  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
-
-  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
-
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
-
-  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/aws/export-cloudwatchlogs-to-s3/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
-
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </section>
 
+	
 
+<h3>関連記事</h3>
+
+<a href="/aws/s3bucket-policy-with-terraform/">
+    <div class="related">
+        <div class="related__item">
+            TerraformでS3のバケットポリシーを書く方法
+        </div>
     </div>
-
-    
-  <nav class="pagination">
-    
-      <a href="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/" class="pagination--pager" title="TerraformでS3のバケットポリシーを書く方法
-">Previous</a>
-    
-    
-      <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" class="pagination--pager" title="S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
-">Next</a>
-    
-  </nav>
-
-
-    
-      <div class="page__comments">
-  
-  
-    <h4 class="page__comments-title">Comments</h4>
-    <section id="disqus_thread"></section>
-  
-</div>
-
-    
-
-  </article>
-  
-  
-  <div class="page__related">
-    <h2 class="page__related-title">関連記事</h2>
-    
-    
-    
-
-    <div class="grid__wrapper">
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/glue-process-cloudwatchlogs/" rel="permalink">S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話
 </a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
-結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/" rel="permalink">TerraformでS3のバケットポリシーを書く方法
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/casperjs-on-lambda/" rel="permalink">AWS LambdaでCasperJSを実行してファイルアップロードを自動化する
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
-APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/s3-cross-account/" rel="permalink">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
-設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
-しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
-共有された側ではS3バケットの...</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/deploy-lambda-with-terraform/" rel="permalink">AWS LambdaのコードをTerraformでデプロイする
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
-AWS Lambdaは Cloud9 がコンソール上に組み込まれたこともあり、開発がさらに容易になりました。
-ブラウザエディタは そのままwebにつながる というのが最大の強みですが、まだまだ手元のリポジトリでコード...</p>
-  </article>
-</div>
-
-          
-          
-            
-    </div>      
-  </div>
-  
-
-  
-
-</div>
-
-
-    <div class="page__footer">
-      <footer>
-        <!-- start custom footer snippets -->
-
-<!-- end custom footer snippets -->
-        <div class="page__footer-follow">
-  <ul class="social-icons">
-    
-    
-      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
-    
-    
-    
-      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
-    
-    
-    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
-    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
-  </ul>
-</div>
-
-<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
-
-<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277"></amp-auto-ads>
-
-      </footer>
+<a href="/aws/casperjs-on-lambda/">
+    <div class="related">
+        <div class="related__item">
+            AWS LambdaでCasperJSを実行してファイルアップロードを自動化する
+        </div>
     </div>
+</a>
 
-    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+<a href="/aws/s3-cross-account/">
+    <div class="related">
+        <div class="related__item">
+            クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
+        </div>
+    </div>
+</a>
 
+<a href="/aws/deploy-lambda-with-terraform/">
+    <div class="related">
+        <div class="related__item">
+            AWS LambdaのコードをTerraformでデプロイする
+        </div>
+    </div>
+</a>
 
-
-
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-92599175-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-
-<script async custom-element="amp-auto-ads"src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
-
-
-
-
-  
-  <script type="text/javascript">
-  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  	var disqus_shortname = 'soudegesu';
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function() {
-  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  	})();
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function () {
-  		var s = document.createElement('script'); s.async = true;
-  		s.type = 'text/javascript';
-  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-  	}());
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="/aws/hosting-with-cloudfront-lambda-edge-serverless/">
+    <div class="related">
+        <div class="related__item">
+            Cloudfront&#43;Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]
+        </div>
+    </div>
+</a>
 
 
 
+</main>
 
 
+<aside class="sidebar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://www.soudegesu.com" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
+			<li class="widget__item"><a class="widget__link" href="/gcp/gcp-command/">Google Cloud SDKをセットアップする</a></li>
+			<li class="widget__item"><a class="widget__link" href="/java/tomcat-with-gradle/">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</a></li>
+			<li class="widget__item"><a class="widget__link" href="/mysql/mysql8-password/">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</a></li>
+			<li class="widget__item"><a class="widget__link" href="/dart/android-with-flutter/">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/anaconda">Anaconda</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/aws">Aws</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/blog">Blog</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/book">Book</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/continuous-delivery">Continuous delivery</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/dart">Dart</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker">Docker</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker-compose">Docker compose</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/engineer-life">Engineer life</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/ethereum">Ethereum</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/fish">Fish</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/gcp">Gcp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/java">Java</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/linux">Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/mysql">Mysql</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/nodejs">Nodejs</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/pyenv">Pyenv</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/python">Python</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/q_sharp">Q sharp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/security">Security</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/tensorflow">Tensorflow</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">Social</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/alten_manten" target="_blank">
+				<svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5 0-78.8 35.3-78.8 78.8 0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6 0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1 0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4 0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9 0 224.1-120 224.1-224.1 0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg>
+				<span>Twitter</span>
+			</a>
+		</div>
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/soudegesu" target="_blank">
+				<svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+	</div>
+</div>
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/acm" title="Acm">Acm</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/agile" title="Agile">Agile</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/amazonlinux" title="Amazonlinux">Amazonlinux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/anaconda" title="Anaconda">Anaconda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/android" title="Android">Android</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ansible" title="Ansible">Ansible</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/athena" title="Athena">Athena</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aurora" title="Aurora">Aurora</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aws" title="Aws">Aws</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/batch" title="Batch">Batch</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/beginner" title="Beginner">Beginner</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/blog" title="Blog">Blog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/book" title="Book">Book</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/casperjs" title="Casperjs">Casperjs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudfront" title="Cloudfront">Cloudfront</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudwatchlogs" title="Cloudwatchlogs">Cloudwatchlogs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/colaboratory" title="Colaboratory">Colaboratory</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/continuous-delivery" title="Continuous delivery">Continuous delivery</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cyber-security" title="Cyber security">Cyber security</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dapps" title="Dapps">Dapps</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dart" title="Dart">Dart</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/datadog" title="Datadog">Datadog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker" title="Docker">Docker</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ec2" title="Ec2">Ec2</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/engineer-life" title="Engineer life">Engineer life</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ethereum" title="Ethereum">Ethereum</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/express" title="Express">Express</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/fish" title="Fish">Fish</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/flutter" title="Flutter">Flutter</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ganache" title="Ganache">Ganache</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gcp" title="Gcp">Gcp</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/glue" title="Glue">Glue</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gradle" title="Gradle">Gradle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo" title="Hugo">Hugo</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/iam" title="Iam">Iam</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ios" title="Ios">Ios</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/java" title="Java">Java</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jib" title="Jib">Jib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jpms" title="Jpms">Jpms</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/lambda" title="Lambda">Lambda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/machine-learning" title="Machine learning">Machine learning</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/matplotlib" title="Matplotlib">Matplotlib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql" title="Mysql">Mysql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/nodejs" title="Nodejs">Nodejs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/packer" title="Packer">Packer</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv" title="Pyenv">Pyenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv-virtualenv" title="Pyenv virtualenv">Pyenv virtualenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/python" title="Python">Python</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/q" title="Q#">Q#</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/rds" title="Rds">Rds</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reactor" title="Reactor">Reactor</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/route53" title="Route53">Route53</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/s3" title="S3">S3</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/serverless" title="Serverless">Serverless</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sh" title="Sh">Sh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/spring" title="Spring">Spring</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/springboot" title="Springboot">Springboot</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sql" title="Sql">Sql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ssl" title="Ssl">Ssl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunction" title="Stepfunction">Stepfunction</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunctions" title="Stepfunctions">Stepfunctions</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/systemd" title="Systemd">Systemd</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tensorflow" title="Tensorflow">Tensorflow</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/terraform" title="Terraform">Terraform</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tomcat" title="Tomcat">Tomcat</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/truffle" title="Truffle">Truffle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/udemy" title="Udemy">Udemy</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/webflux" title="Webflux">Webflux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/zsh" title="Zsh">Zsh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%e7%b5%84%e7%b9%94%e8%ab%96" title="組織論">組織論</a>
+	</div>
+</div>
+</aside>
+	</div>
+		<footer class="footer">
+			<div class="container container-inner">
+				<div class="footer__copyright">&copy; 2018 そうなんでげす. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span></div>
+			</div>
+		</footer>
+	</div>
 
-  </body>
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script></body>
 </html>

@@ -1,365 +1,168 @@
-<!doctype html>
-<!--
-  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
-  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
-  Free for personal and commercial use under the MIT license
-  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
--->
-<html lang="ja" class="no-js">
-  <head>
-    <meta charset="utf-8">
-
-<!-- begin SEO -->
-
-
-
-
-
-
-
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="generator" content="Hugo 0.47" />
+	
 
 
 <title>AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！ - そうなんでげす</title>
-
-
-
-
 <meta name="description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
-
-
-
-
+<meta property="og:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
 <meta name="author" content="soudegesu">
-
-<meta property="og:locale" content="ja_JP">
-<meta property="og:site_name" content="そうなんでげす">
-<meta property="og:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！">
-
-
-  <link rel="canonical" href="https://www.soudegesu.com/aws/my-packer-best-practice/">
-  <meta property="og:url" content="https://www.soudegesu.com/aws/my-packer-best-practice/">
-
-
-
-  <meta property="og:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
-
-
-
-  <meta name="twitter:site" content="@alten_manten">
-  <meta name="twitter:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！">
-  <meta name="twitter:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
-  <meta name="twitter:url" content="https://www.soudegesu.com/aws/my-packer-best-practice/">
-
+<link rel="canonical" href="https://www.soudegesu.com/aws/my-packer-best-practice/">
+<meta name="twitter:site" content="@alten_manten">
+<meta name="twitter:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！ - そうなんでげす">
+<meta name="twitter:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
+<meta name="twitter:url" content="https://www.soudegesu.com/aws/my-packer-best-practice/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@alten_manten">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:site_name" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！ - そうなんでげす">
+<meta property="og:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！ - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/aws/my-packer-best-practice/">
   
-    <meta name="twitter:card" content="summary">
-    
-      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/packer_icon.png">
-    
-  
-
-  
-    <meta name="twitter:creator" content="@alten_manten">
-  
-
-
-
-
-
-  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/packer_icon.png">
-
-
-
-  <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2018-08-17T00:00:00+09:00">
-
-
-
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "url": "https://www.soudegesu.com",
-      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
-    }
-  </script>
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Person",
-      "name" : "soudegsu",
-      "url" : "https://www.soudegesu.com",
-      "sameAs" : null
-    }
-  </script>
-
-
-
-  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
-
-
-
-
-<!-- end SEO -->
-
-
-<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+<meta property="og:image" content="https://www.soudegesu.com/images/icon/packer_icon.png">
+<meta name="twitter:image" content="https://www.soudegesu.com/images/icon/packer_icon.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-17 00:00:00 &#43;0000 UTC"><link rel="next" href="Page%28/past/2018-08-05-gcp-command.md%29">
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
 </script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
-<!-- For all browsers -->
-<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
 
-<!--[if lte IE 9]>
-  <style>
-    /* old IE unsupported flexbox fixes */
-    .greedy-nav .site-title {
-      padding-right: 3em;
-    }
-    .greedy-nav button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-    }
-  </style>
-<![endif]-->
+	<meta property="og:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！" />
+<meta property="og:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/aws/my-packer-best-practice/" /><meta property="article:published_time" content="2018-08-17T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-08-17T00:00:00&#43;00:00"/>
+	<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！"/>
+<meta name="twitter:description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。"/>
 
-<meta http-equiv="cleartype" content="on">
-    <!-- start custom head snippets -->
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+	<link rel="stylesheet" href="/css/style.css">
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-92599175-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({
     google_ad_client: "ca-pub-5005266309965277",
     enable_page_level_ads: true
   });
 </script>
-
-<!-- end custom head snippets -->
-  </head>
-
-  <body class="layout--single">
-
-    <!--[if lt IE 9]>
-<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
-<![endif]-->
-    <div class="masthead">
-  <div class="masthead__inner-wrap">
-    <div class="masthead__menu">
-      <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
-        <ul class="visible-links">
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
-          
-        </ul>
-        <button><div class="navicon"></div></button>
-        <ul class="hidden-links hidden"></ul>
-      </nav>
-    </div>
-  </div>
-</div>
-
-    
+<script async src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" custom-element="amp-auto-ads"></script>
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277" />
 
 
+</head>
+<body class="body">
+	<div class="container container-outer">
+		<header class="header">
+			<div class="container container-inner">
+				<div class="logo" role="banner">
+					<a class="logo__link" href="/" title="そうなんでげす" rel="home">
+						<div class="logo__title">そうなんでげす</div>
+						<div class="logo__tagline">またつまらぬモノを斬ってしまった</div>
+					</a>
+				</div>
+			</div>
+			<div class="divider"></div>
+		</header>
+		<div class="wrapper flex">
 
-<div id="main" role="main">
-  
-  <div class="sidebar sticky">
-  
-
-<div itemscope itemtype="http://schema.org/Person">
-
-  
-    <div class="author__avatar">
-      
-        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
-      
-    </div>
-  
-
-  <div class="author__content">
-    <h3 class="author__name" itemprop="name">soudegesu</h3>
-    
-      <p class="author__bio" itemprop="description">
-        Software Engineer
-      </p>
-    
-  </div>
-
-  <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
-    <ul class="author__urls social-icons">
-      
-        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
-          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
-            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://github.com/soudegesu" itemprop="sameAs">
-            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      <!--
-  <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
-      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
-    </a>
-  </li>
--->
-    </ul>
-  </div>
-</div>
-
-  
-
-  <!-- under_profile -->
-<div align="center">
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="2594359046"
-     data-ad-format="auto"></ins>
-</div>
-
-  </div>
-
-
-  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！">
-    <meta itemprop="description" content="様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。">
-    <meta itemprop="datePublished" content="August 17, 2018">
-    
-
-    <div class="page__inner-wrap">
-      
-        <header>
-          <h1 class="page__title" itemprop="headline">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！
-</h1>
-          
-            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  2 minute read
-</p>
-          
-        </header>
-      
-
-      <section class="page__content" itemprop="text">
-        <p>様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。
-今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。</p>
-
-<ul id="markdown-toc">
-  <li><a href="#作成したリポジトリ" id="markdown-toc-作成したリポジトリ">作成したリポジトリ</a></li>
-  <li><a href="#vagrantを使ってローカル環境でデバッグできるようにしておく" id="markdown-toc-vagrantを使ってローカル環境でデバッグできるようにしておく">Vagrantを使ってローカル環境でデバッグできるようにしておく</a>    <ul>
-      <li><a href="#vagrantfileの準備" id="markdown-toc-vagrantfileの準備">Vagrantfileの準備</a></li>
-      <li><a href="#null-builderでvagrantに対してプロビジョニングする" id="markdown-toc-null-builderでvagrantに対してプロビジョニングする">Null BuilderでVagrantに対してプロビジョニングする</a></li>
-      <li><a href="#vagrantのスナップショット機能を使う" id="markdown-toc-vagrantのスナップショット機能を使う">Vagrantのスナップショット機能を使う</a></li>
-    </ul>
-  </li>
-  <li><a href="#ansibleの後にserverspecで検査する" id="markdown-toc-ansibleの後にserverspecで検査する">Ansibleの後にServerSpecで検査する</a>    <ul>
-      <li><a href="#provisionerは-ansible-や-shell-local-を使う" id="markdown-toc-provisionerは-ansible-や-shell-local-を使う">provisionerは ansible や shell-local を使う</a></li>
-    </ul>
-  </li>
-  <li><a href="#設定ファイルはroleごと環境ごとに準備する" id="markdown-toc-設定ファイルはroleごと環境ごとに準備する">設定ファイルは、roleごと、環境ごとに準備する</a>    <ul>
-      <li><a href="#プラットフォームに依存するpacker-template" id="markdown-toc-プラットフォームに依存するpacker-template">プラットフォームに依存するPacker template</a></li>
-      <li><a href="#環境に依存する設定ファイル" id="markdown-toc-環境に依存する設定ファイル">環境に依存する設定ファイル</a></li>
-      <li><a href="#ansible-roleシステムコンポーネントに依存する設定ファイル" id="markdown-toc-ansible-roleシステムコンポーネントに依存する設定ファイル">Ansible Role（システムコンポーネント）に依存する設定ファイル</a></li>
-    </ul>
-  </li>
-  <li><a href="#実行コマンドは別ファイルでラップしておく" id="markdown-toc-実行コマンドは別ファイルでラップしておく">実行コマンドは別ファイルでラップしておく</a></li>
-  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-17T00:00:00">August 17, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#作成したリポジトリ">作成したリポジトリ</a></li>
+<li><a href="#vagrantを使ってローカル環境でデバッグできるようにしておく">Vagrantを使ってローカル環境でデバッグできるようにしておく</a>
+<ul>
+<li><a href="#vagrantfileの準備">Vagrantfileの準備</a></li>
+<li><a href="#null-builderでvagrantに対してプロビジョニングする">Null BuilderでVagrantに対してプロビジョニングする</a></li>
+<li><a href="#vagrantのスナップショット機能を使う">Vagrantのスナップショット機能を使う</a></li>
+</ul></li>
+<li><a href="#ansibleの後にserverspecで検査する">Ansibleの後にServerSpecで検査する</a>
+<ul>
+<li><a href="#provisionerは-ansible-や-shell-local-を使う">provisionerは ansible や shell-local を使う</a></li>
+</ul></li>
+<li><a href="#設定ファイルは-roleごと-環境ごとに準備する">設定ファイルは、roleごと、環境ごとに準備する</a>
+<ul>
+<li><a href="#プラットフォームに依存するpacker-template">プラットフォームに依存するPacker template</a></li>
+<li><a href="#環境に依存する設定ファイル">環境に依存する設定ファイル</a></li>
+<li><a href="#ansible-role-システムコンポーネント-に依存する設定ファイル">Ansible Role（システムコンポーネント）に依存する設定ファイル</a></li>
+</ul></li>
+<li><a href="#実行コマンドは別ファイルでラップしておく">実行コマンドは別ファイルでラップしておく</a></li>
+<li><a href="#まとめ">まとめ</a></li>
+</ul></li>
 </ul>
+</nav>
+	</div>
+</div>
+<div class="post__content clearfix">
+			
+
+<p>様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。
+今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。</p>
 
 <h2 id="作成したリポジトリ">作成したリポジトリ</h2>
 
 <p>はじめに、作成したリポジトリを以下に晒しておきます。</p>
+
 <ul>
-  <li><a href="https://github.com/soudegesu/my_packer_best_practice">soudegesu/my_packer_best_practice</a></li>
+<li><a href="https://github.com/soudegesu/my_packer_best_practice">soudegesu/my_packer_best_practice</a></li>
 </ul>
 
 <p>また、前提条件は以下とします。</p>
 
 <ul>
-  <li>作成対象はAMI（Amazon Machine Image）</li>
-  <li>プロビジョニングには <a href="https://www.packer.io/">Packer</a> と <a href="https://www.ansible.com/">Ansible</a> を使う</li>
-  <li>インスタンスのテストには <a href="https://serverspec.org/">Sererspec</a> を使う</li>
+<li>作成対象はAMI（Amazon Machine Image）</li>
+<li>プロビジョニングには <a href="https://www.packer.io/">Packer</a> と <a href="https://www.ansible.com/">Ansible</a> を使う</li>
+<li>インスタンスのテストには <a href="https://serverspec.org/">Sererspec</a> を使う</li>
 </ul>
 
 <p>PackerやAnsible、Sererspec自体の解説は割愛します。</p>
@@ -373,83 +176,81 @@
 
 <h3 id="vagrantfileの準備">Vagrantfileの準備</h3>
 
-<p>まずは、以下のような <code class="highlighter-rouge">Vagrantfile</code> を準備します。とりあえず <code class="highlighter-rouge">centos/7</code> を指定しています。</p>
+<p>まずは、以下のような <code>Vagrantfile</code> を準備します。とりあえず <code>centos/7</code> を指定しています。</p>
 
-<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vagrant<span class="p">.</span>configure<span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="p">|</span>config<span class="p">|</span>
-  config<span class="p">.</span>vm<span class="p">.</span>box <span class="p">=</span> <span class="s2">"centos/7"</span>
+<pre><code class="language-vim">Vagrant.configure(&quot;2&quot;) do |config|
+  config.vm.box = &quot;centos/7&quot;
 
-  config<span class="p">.</span>vm<span class="p">.</span>network <span class="p">:</span>forwarded_port<span class="p">,</span> id<span class="p">:</span> <span class="s2">"ssh"</span><span class="p">,</span> guest<span class="p">:</span> <span class="m">22</span><span class="p">,</span> host<span class="p">:</span> <span class="m">2222</span>
+  config.vm.network :forwarded_port, id: &quot;ssh&quot;, guest: 22, host: 2222
 
-  config<span class="p">.</span>vm<span class="p">.</span>provider <span class="s2">"virtualbox"</span> <span class="k">do</span> <span class="p">|</span>vb<span class="p">|</span>
-    vb<span class="p">.</span>memory <span class="p">=</span> <span class="s2">"1024"</span>
-  <span class="k">end</span>
-  config<span class="p">.</span>vm<span class="p">.</span>provision <span class="s2">"shell"</span><span class="p">,</span> inline<span class="p">:</span> <span class="p">&lt;&lt;-</span>SHELL
-    #yum <span class="p">-</span><span class="k">y</span> <span class="k">update</span>
+  config.vm.provider &quot;virtualbox&quot; do |vb|
+    vb.memory = &quot;1024&quot;
+  end
+  config.vm.provision &quot;shell&quot;, inline: &lt;&lt;-SHELL
+    #yum -y update
     # add user centos
     useradd centos
-    passwd <span class="p">-</span><span class="k">f</span> <span class="p">-</span><span class="k">u</span> centos
-    echo <span class="s2">"centos ALL = NOPASSWD: ALL"</span> <span class="p">&gt;&gt;</span> <span class="sr">/etc/</span>sudoers<span class="p">.</span><span class="k">d</span>/centos
-    echo <span class="s2">"centos ALL=(ALL) NOPASSWD:ALL"</span> <span class="p">&gt;&gt;</span> <span class="sr">/etc/</span>sudoers<span class="p">.</span><span class="k">d</span>/centos
+    passwd -f -u centos
+    echo &quot;centos ALL = NOPASSWD: ALL&quot; &gt;&gt; /etc/sudoers.d/centos
+    echo &quot;centos ALL=(ALL) NOPASSWD:ALL&quot; &gt;&gt; /etc/sudoers.d/centos
     # setup SSH
-    mkdir <span class="p">-</span><span class="k">p</span> <span class="sr">/home/</span>centos<span class="sr">/.ssh; chown centos /</span>home<span class="sr">/centos/</span><span class="p">.</span>ssh; chmod <span class="m">700</span> <span class="sr">/home/</span>centos/<span class="p">.</span>ssh
-    <span class="k">cp</span> <span class="sr">/home/</span>vagrant<span class="sr">/.ssh/</span>authorized_keys <span class="sr">/home/</span>centos<span class="sr">/.ssh/</span>authorized_keys
-    chown centos <span class="sr">/home/</span>centos<span class="sr">/.ssh/</span>authorized_keys
-    chmod <span class="m">600</span> <span class="sr">/home/</span>centos<span class="sr">/.ssh/</span>authorized_keys
+    mkdir -p /home/centos/.ssh; chown centos /home/centos/.ssh; chmod 700 /home/centos/.ssh
+    cp /home/vagrant/.ssh/authorized_keys /home/centos/.ssh/authorized_keys
+    chown centos /home/centos/.ssh/authorized_keys
+    chmod 600 /home/centos/.ssh/authorized_keys
     # setup sshd config
-    sed <span class="p">-</span><span class="k">ri</span> <span class="s1">'s/#PermitRootLogin yes/PermitRootLogin yes/g'</span> <span class="sr">/etc/</span>ssh/sshd_config
-    sed <span class="p">-</span><span class="k">ri</span> <span class="s1">'s/UsePAM yes/#UsePAM yes/g'</span> <span class="sr">/etc/</span>ssh/sshd_config
-    sed <span class="p">-</span><span class="k">ri</span> <span class="s1">'s/#UsePAM no/UsePAM no/g'</span> <span class="sr">/etc/</span>ssh/sshd_config
+    sed -ri 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+    sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
     systemctl restart sshd
   SHELL
-<span class="k">end</span>
-</code></pre></div></div>
+end
+</code></pre>
 
-<p>公開されているAMIとVagentの <code class="highlighter-rouge">centos/7</code> には、インストール済みのモジュールや、設定に差分があるため、
-可能なかぎり <code class="highlighter-rouge">config.vm.provision</code> ブロックで差分を吸収しています。ここはハマると若干時間を取られます。</p>
+<p>公開されているAMIとVagentの <code>centos/7</code> には、インストール済みのモジュールや、設定に差分があるため、
+可能なかぎり <code>config.vm.provision</code> ブロックで差分を吸収しています。ここはハマると若干時間を取られます。</p>
 
-<p>ここではAnsibleがSSHしてプロビジョニングするための <code class="highlighter-rouge">centos</code> ユーザの追加と <code class="highlighter-rouge">sudo</code> 権限の追加、<code class="highlighter-rouge">sshd</code> への設定を追加しています。</p>
+<p>ここではAnsibleがSSHしてプロビジョニングするための <code>centos</code> ユーザの追加と <code>sudo</code> 権限の追加、<code>sshd</code> への設定を追加しています。</p>
 
 <h3 id="null-builderでvagrantに対してプロビジョニングする">Null BuilderでVagrantに対してプロビジョニングする</h3>
 
-<p><code class="highlighter-rouge">vagrant up</code> コマンドを使って自前で起動する場合は <code class="highlighter-rouge">ssh</code> コマンドだけできれば良いので、 <a href="https://www.packer.io/docs/builders/null.html">Null Builder</a> を使います。</p>
+<p><code>vagrant up</code> コマンドを使って自前で起動する場合は <code>ssh</code> コマンドだけできれば良いので、 <a href="https://www.packer.io/docs/builders/null.html">Null Builder</a> を使います。</p>
 
-<p>Packerのtemplateファイルの <code class="highlighter-rouge">builders</code> を抜粋します。</p>
+<p>Packerのtemplateファイルの <code>builders</code> を抜粋します。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
-</span><span class="s2">"builders"</span><span class="p">:[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"communicator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_pty"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_timeout"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"1m"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{user `ssh_host`}}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{user `ssh_port`}}"</span><span class="w"> </span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{user `ssh_user`}}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ssh_private_key_file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{user `ssh_key`}}"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-
-</span></code></pre></div></div>
+<pre><code class="language-json">&quot;builders&quot;:[
+    {
+        &quot;type&quot;: &quot;null&quot;,
+        &quot;communicator&quot;: &quot;ssh&quot;,
+        &quot;ssh_pty&quot;: true,
+        &quot;ssh_timeout&quot; : &quot;1m&quot;,
+        &quot;ssh_host&quot;: &quot;{{user `ssh_host`}}&quot;,
+        &quot;ssh_port&quot;: &quot;{{user `ssh_port`}}&quot; ,
+        &quot;ssh_username&quot;: &quot;{{user `ssh_user`}}&quot;,
+        &quot;ssh_private_key_file&quot;: &quot;{{user `ssh_key`}}&quot;
+    }
+]
+</code></pre>
 
 <p>templateファイル上で展開される変数は以下を与えます。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"ssh_host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ssh_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centos"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ssh_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../.vagrant/machines/default/virtualbox/private_key"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ssh_port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2222"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+    &quot;ssh_host&quot;: &quot;127.0.0.1&quot;,
+    &quot;ssh_user&quot;: &quot;centos&quot;,
+    &quot;ssh_key&quot;: &quot;../.vagrant/machines/default/virtualbox/private_key&quot;,
+    &quot;ssh_port&quot;: &quot;2222&quot;
+}
+</code></pre>
 
-<p>なお、ポート <code class="highlighter-rouge">2222</code> は <code class="highlighter-rouge">Vagrantfile</code> 内で <code class="highlighter-rouge">22</code> 番と既にポートフォワードする設定を追加済みです。</p>
+<p>なお、ポート <code>2222</code> は <code>Vagrantfile</code> 内で <code>22</code> 番と既にポートフォワードする設定を追加済みです。</p>
 
 <h3 id="vagrantのスナップショット機能を使う">Vagrantのスナップショット機能を使う</h3>
 
-<p><a href="https://www.vagrantup.com/">Vagrant</a> はバージョン <code class="highlighter-rouge">1.8</code> から <code class="highlighter-rouge">vagrant snapshot</code> サブコマンドが使用可能になっています。
+<p><a href="https://www.vagrantup.com/">Vagrant</a> はバージョン <code>1.8</code> から <code>vagrant snapshot</code> サブコマンドが使用可能になっています。
 これは、インスタンスの状態を保存＆復元するための機能です。</p>
 
 <p>Ansible Playbook が何度でも流せるように、初期化時に Vagrantインスタンスの状態を一度スナップショットとして取得し、
-Packer実行前に毎回 <code class="highlighter-rouge">restore</code> するようにします。</p>
+Packer実行前に毎回 <code>restore</code> するようにします。</p>
 
 <h2 id="ansibleの後にserverspecで検査する">Ansibleの後にServerSpecで検査する</h2>
 
@@ -463,33 +264,31 @@ Packer実行前に毎回 <code class="highlighter-rouge">restore</code> する�
 
 <p><a href="https://www.packer.io/docs/provisioners/ansible-local.html">ansible-local</a> や <a href="https://www.packer.io/docs/provisioners/shell.html">shell</a>を使いません。</p>
 
-<p>理由として、<code class="highlighter-rouge">ansible-local</code> や <code class="highlighter-rouge">shell</code> は Packerでのプロビジョニング時に <a href="https://www.ansible.com/">Ansible</a> や <a href="https://serverspec.org/">Serverspec</a> を <strong>プロビジョニング先のインスタンスにインストールする必要がでてきてしまうため</strong> です。実際のサービスで稼働させるインスタンスに不要なライブラリがインストールされているのは何とも気持ちの悪いものです。</p>
+<p>理由として、<code>ansible-local</code> や <code>shell</code> は Packerでのプロビジョニング時に <a href="https://www.ansible.com/">Ansible</a> や <a href="https://serverspec.org/">Serverspec</a> を <strong>プロビジョニング先のインスタンスにインストールする必要がでてきてしまうため</strong> です。実際のサービスで稼働させるインスタンスに不要なライブラリがインストールされているのは何とも気持ちの悪いものです。</p>
 
 <p>必ず、ローカルマシンやCIサーバといったプロビジョニングする側にモジュールはインストールします。</p>
 
-<p>ここでは <code class="highlighter-rouge">rake</code> コマンドをラップした <code class="highlighter-rouge">run_spec.sh</code> を呼び出していて、SSHするために必要な情報を引数として渡しています。</p>
+<p>ここでは <code>rake</code> コマンドをラップした <code>run_spec.sh</code> を呼び出していて、SSHするために必要な情報を引数として渡しています。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
-    </span><span class="s2">"provisioners"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ansible"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"playbook_file"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"ansible/playbook-{{user `provision_target`}}.yml"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centos"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"ssh_host_key_file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{user `ssh_key`}}"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"ansible_env_vars"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"ANSIBLE_HOST_KEY_CHECKING=False"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"ANSIBLE_NOCOLOR=True"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shell-local"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cd serverspec &amp;&amp; sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-    
-</span></code></pre></div></div>
+<pre><code class="language-json">    &quot;provisioners&quot;: [
+        {
+            &quot;type&quot;: &quot;ansible&quot;,
+            &quot;playbook_file&quot; : &quot;ansible/playbook-{{user `provision_target`}}.yml&quot;,
+            &quot;user&quot;: &quot;centos&quot;,
+            &quot;ssh_host_key_file&quot;: &quot;{{user `ssh_key`}}&quot;,
+            &quot;ansible_env_vars&quot;: [
+                &quot;ANSIBLE_HOST_KEY_CHECKING=False&quot;,
+                &quot;ANSIBLE_NOCOLOR=True&quot;
+            ]
+        },
+        {
+            &quot;type&quot;: &quot;shell-local&quot;,
+            &quot;command&quot;: &quot;cd serverspec &amp;&amp; sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}&quot;
+        }
+    ]
+</code></pre>
 
-<h2 id="設定ファイルはroleごと環境ごとに準備する">設定ファイルは、roleごと、環境ごとに準備する</h2>
+<h2 id="設定ファイルは-roleごと-環境ごとに準備する">設定ファイルは、roleごと、環境ごとに準備する</h2>
 
 <p>Packerのtemplateファイルでは多くの変数を必要とします。
 それらの依存関係を理解して、適切な設定ファイルに分割するのは割と重要だと思っています。</p>
@@ -502,22 +301,24 @@ Packer実行前に毎回 <code class="highlighter-rouge">restore</code> する�
 ローカルなのか、AWSなのか、Azureなのか、で1つずつ作るイメージです。</p>
 
 <table>
-  <thead>
-    <tr>
-      <th>ファイル名</th>
-      <th>用途</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>ami-aws-template.json</td>
-      <td>AWSにプロビジョニングするために使うPacker template</td>
-    </tr>
-    <tr>
-      <td>ami-local-template.json</td>
-      <td>ローカルのVagrantにプロビジョニングするために使うPacker template</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>ファイル名</th>
+<th>用途</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ami-aws-template.json</td>
+<td>AWSにプロビジョニングするために使うPacker template</td>
+</tr>
+
+<tr>
+<td>ami-local-template.json</td>
+<td>ローカルのVagrantにプロビジョニングするために使うPacker template</td>
+</tr>
+</tbody>
 </table>
 
 <h3 id="環境に依存する設定ファイル">環境に依存する設定ファイル</h3>
@@ -528,636 +329,401 @@ Packer実行前に毎回 <code class="highlighter-rouge">restore</code> する�
 <p>ざっくり以下のようなイメージです。</p>
 
 <table>
-  <thead>
-    <tr>
-      <th>ファイル名</th>
-      <th>用途</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>env-A-variables.json</td>
-      <td>AWSアカウント Aにプロビジョニングするときに使う設定</td>
-    </tr>
-    <tr>
-      <td>env-B-variables.json</td>
-      <td>AWSアカウント Bにプロビジョニングするときに使う設定</td>
-    </tr>
-    <tr>
-      <td>env-local-variables.json</td>
-      <td>ローカルのVagrantにプロビジョニングするために使う設定</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>ファイル名</th>
+<th>用途</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>env-A-variables.json</td>
+<td>AWSアカウント Aにプロビジョニングするときに使う設定</td>
+</tr>
+
+<tr>
+<td>env-B-variables.json</td>
+<td>AWSアカウント Bにプロビジョニングするときに使う設定</td>
+</tr>
+
+<tr>
+<td>env-local-variables.json</td>
+<td>ローカルのVagrantにプロビジョニングするために使う設定</td>
+</tr>
+</tbody>
 </table>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"aws_region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-region"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"aws_vpc_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vpc-xxxxxxxxxxxxxx"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"aws_subnet_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subnet-xxxxxxxxxxx"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ssh_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centos"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"use_profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-profile"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"aws_instance_role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-packer-role"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"aws_keypair_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-keypair-name"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+    &quot;aws_region&quot;: &quot;your-region&quot;,
+    &quot;aws_vpc_id&quot;: &quot;vpc-xxxxxxxxxxxxxx&quot;,
+    &quot;aws_subnet_id&quot;: &quot;subnet-xxxxxxxxxxx&quot;,
+    &quot;ssh_user&quot;: &quot;centos&quot;,
+    &quot;use_profile&quot;: &quot;your-profile&quot;,
+    &quot;aws_instance_role&quot;: &quot;your-packer-role&quot;,
+    &quot;aws_keypair_name&quot;: &quot;your-keypair-name&quot;
+}
+</code></pre>
 
 <p>AWSアカウント単位でVPCのIDやキーペアの情報は変わってくるので、そのような情報はここにもたせます。</p>
 
-<h3 id="ansible-roleシステムコンポーネントに依存する設定ファイル">Ansible Role（システムコンポーネント）に依存する設定ファイル</h3>
+<h3 id="ansible-role-システムコンポーネント-に依存する設定ファイル">Ansible Role（システムコンポーネント）に依存する設定ファイル</h3>
 
 <table>
-  <thead>
-    <tr>
-      <th>ファイル名</th>
-      <th>用途</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>role-hoge-variables.json</td>
-      <td>Role <code class="highlighter-rouge">hoge</code> をプロビジョニングするときに使う設定</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>ファイル名</th>
+<th>用途</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>role-hoge-variables.json</td>
+<td>Role <code>hoge</code> をプロビジョニングするときに使う設定</td>
+</tr>
+</tbody>
 </table>
 
 <p>AnsibleのRole（システムコンポーネント）に依存する設定ファイルです。
 ベースとするAMIのインスタンスIDや、作成したAMI名のprefixなど置いておくといいと思います。</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"packer_tag_prefix"</span><span class="p">:</span><span class="w">  </span><span class="s2">"Packer-Hoge-AMI"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"instance_tag_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HOGE_OPTIMIZED"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"aws_source_ami"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ami-xxxxxxxx"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<pre><code class="language-json">{
+    &quot;packer_tag_prefix&quot;:  &quot;Packer-Hoge-AMI&quot;,
+    &quot;instance_tag_prefix&quot;: &quot;HOGE_OPTIMIZED&quot;,
+    &quot;aws_source_ami&quot;: &quot;ami-xxxxxxxx&quot;
+}
+</code></pre>
 
 <h2 id="実行コマンドは別ファイルでラップしておく">実行コマンドは別ファイルでラップしておく</h2>
 
 <p>一連のPacker実行コマンドの量が増えてしまうため、 コマンドをラップします。
-シェルでもなんでもいいですが、私は <code class="highlighter-rouge">Makefile</code> にしています。</p>
+シェルでもなんでもいいですが、私は <code>Makefile</code> にしています。</p>
 
 <p>実行引数は最低限以下の2つで済みます。</p>
 
 <ul>
-  <li>Ansibleのプロビジョニング対象のRole</li>
-  <li>AnsibleやServerspecがEC2へSSHするためのSSH鍵</li>
+<li>Ansibleのプロビジョニング対象のRole</li>
+<li>AnsibleやServerspecがEC2へSSHするためのSSH鍵</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PACKER <span class="o">=</span> <span class="nb">cd </span>packer
-<span class="c"># AnsibleのRole</span>
-ROLE <span class="o">=</span> <span class="nv">$1</span>
-<span class="c"># EC2へのSSH鍵（絶対パス）</span>
-AWS_KEY_FILE <span class="o">=</span> <span class="nv">$2</span>
+<pre><code class="language-bash">PACKER = cd packer
+# AnsibleのRole
+ROLE = $1
+# EC2へのSSH鍵（絶対パス）
+AWS_KEY_FILE = $2
 
-<span class="c"># Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存 </span>
+# Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存
 init-vagrant:
-	vagrant halt <span class="o">&amp;&amp;</span> vagrant destroy <span class="nt">-f</span> <span class="o">&amp;&amp;</span> vagrant up <span class="nt">--provision</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+	vagrant halt &amp;&amp; vagrant destroy -f &amp;&amp; vagrant up --provision &amp;&amp; \
 		vagrant snapshot save initial-save
 
-<span class="c"># Vagrantに対して先程のNull Builderでプロビジョニングします</span>
+# Vagrantに対して先程のNull Builderでプロビジョニングします
 test-local:
-	@<span class="k">${</span><span class="nv">PACKER</span><span class="k">}</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-		vagrant snapshot restore initial-save <span class="o">&amp;&amp;</span> <span class="se">\</span>
-		packer build <span class="nt">-var-file</span><span class="o">=</span>env-local-variables.json <span class="se">\</span>
-		<span class="nt">-var</span> <span class="s1">'ssh_key=$(CURDIR)/.vagrant/machines/default/virtualbox/private_key'</span> <span class="se">\</span>
-		<span class="nt">-var</span> <span class="s1">'provision_target=${ROLE}'</span> <span class="se">\</span>
+	@${PACKER} &amp;&amp; \
+		vagrant snapshot restore initial-save &amp;&amp; \
+		packer build -var-file=env-local-variables.json \
+		-var 'ssh_key=$(CURDIR)/.vagrant/machines/default/virtualbox/private_key' \
+		-var 'provision_target=${ROLE}' \
 		ami-local-template.json
 
-<span class="c"># AWSのAMIを作成します</span>
+# AWSのAMIを作成します
 create-ami:
-	@<span class="k">${</span><span class="nv">PACKER</span><span class="k">}</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-		packer build <span class="se">\</span>
-		<span class="nt">-var-file</span><span class="o">=</span>env-aws-variables.json <span class="se">\</span>
-		<span class="nt">-var-file</span><span class="o">=</span>role-<span class="k">${</span><span class="nv">ROLE</span><span class="k">}</span><span class="nt">-variables</span>.json <span class="se">\</span>
-		<span class="nt">-var</span> <span class="s1">'aws_key_file=${AWS_KEY_FILE}'</span> <span class="se">\</span>
-		<span class="nt">-var</span> <span class="s1">'provision_target=${ROLE}'</span> <span class="se">\</span>
+	@${PACKER} &amp;&amp; \
+		packer build \
+		-var-file=env-aws-variables.json \
+		-var-file=role-${ROLE}-variables.json \
+		-var 'aws_key_file=${AWS_KEY_FILE}' \
+		-var 'provision_target=${ROLE}' \
 		ami-aws-template.json
-</code></pre></div></div>
+</code></pre>
 
 <h2 id="まとめ">まとめ</h2>
 
 <p>今回はPackerでAMIを作成するときの個人的ベストプラクティスを紹介しました。</p>
 
 <ul>
-  <li>ローカル環境でVagrantインスタンスを使って、Ansible PlaybookとServerspecの動作確認をする
-    <ul>
-      <li><code class="highlighter-rouge">Vagrantfile</code> では <code class="highlighter-rouge">config.vm.provision</code> ブロックでAMIとの差分を減らす努力は必要</li>
-    </ul>
-  </li>
-  <li>Ansibleの後にServerspecを流す
-    <ul>
-      <li>provisoner は <code class="highlighter-rouge">ansible</code> と <code class="highlighter-rouge">shell-local</code> を使う</li>
-    </ul>
-  </li>
-  <li>変数ファイルは依存関係ごとに分ける</li>
-  <li>実行コマンドをラップしたファイルを作る</li>
+<li>ローカル環境でVagrantインスタンスを使って、Ansible PlaybookとServerspecの動作確認をする
+
+<ul>
+<li><code>Vagrantfile</code> では <code>config.vm.provision</code> ブロックでAMIとの差分を減らす努力は必要</li>
+</ul></li>
+<li>Ansibleの後にServerspecを流す
+
+<ul>
+<li>provisoner は <code>ansible</code> と <code>shell-local</code> を使う</li>
+</ul></li>
+<li>変数ファイルは依存関係ごとに分ける</li>
+<li>実行コマンドをラップしたファイルを作る</li>
 </ul>
 
 <div align="center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798155160&amp;linkId=e31b0f9652aedc2ee6735408ac519d5e&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798155160&linkId=e31b0f9652aedc2ee6735408ac519d5e&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4774196479&amp;linkId=c178f192d7778c77187b44c226c4e071&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4774196479&linkId=c178f192d7778c77187b44c226c4e071&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
 </div>
 
-        
-      </section>
-
-      <footer class="page__meta">
-        
-        
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
-    <span itemprop="keywords">
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/aws/" rel="tag">aws</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/packer/" rel="tag">packer</a></li>
+	</ul>
+</div>
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/gcp/gcp-command/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Google Cloud SDKをセットアップする</p></a>
+	</div>
+</nav>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/packer" class="page__taxonomy-item" rel="tag">packer</a>
     
-    </span>
-  </p>
-
-
-
-
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
-    <span itemprop="keywords">
-    
-      
-      
-      <a href="https://www.soudegesu.com/categories/aws" class="page__taxonomy-item" rel="tag">aws</a>
-    
-    </span>
-  </p>
-
-
-        
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-08-17T00:00:00+09:00">August 17, 2018</time></p>
-        
-      </footer>
-
-      <section class="page__share">
-  
-
-  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！ https://www.soudegesu.com/aws/my-packer-best-practice/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
-
-  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/aws/my-packer-best-practice/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
-
-  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/aws/my-packer-best-practice/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
-
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/aws/my-packer-best-practice/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
-
-  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/aws/my-packer-best-practice/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
-
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </section>
 
+	
 
+<h3>関連記事</h3>
+
+<a href="/mysql/mysql8-password/">
+    <div class="related">
+        <div class="related__item">
+            MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）
+        </div>
     </div>
-
-    
-  <nav class="pagination">
-    
-      <a href="https://www.soudegesu.com/gcp/gcp-command/" class="pagination--pager" title="Google Cloud SDKをセットアップする
-">Previous</a>
-    
-    
-      <a href="#" class="pagination--pager disabled">Next</a>
-    
-  </nav>
-
-
-    
-      <div class="page__comments">
-  
-  
-    <h4 class="page__comments-title">Comments</h4>
-    <section id="disqus_thread"></section>
-  
-</div>
-
-    
-
-  </article>
-  
-  
-  <div class="page__related">
-    <h2 class="page__related-title">関連記事</h2>
-    
-    
-    
-
-    <div class="grid__wrapper">
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/mysql/mysql8-password/" rel="permalink">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）
 </a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
-
-
-
-  2 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">MySQL のメジャーバージョン 8 が 2018/4 にリリースされました。
-今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/amazonlinux2-docker/" rel="permalink">Amazon Linux2にdockerをインストールする
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">AMIをAmazon Linux2に変更したのですが、 yum install docker でdockerがインストールできなくなってしまったので対処方法を調査しました。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/aws-batch-and-glue/" rel="permalink">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  2 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">以前、 S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話 でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/casperjs-on-lambda/" rel="permalink">AWS LambdaでCasperJSを実行してファイルアップロードを自動化する
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
-APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
-
-</p>
-  </article>
-</div>
-
-          
-          
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-
-          
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://www.soudegesu.com/aws/s3-cross-account/" rel="permalink">クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
-設定により、複数のアカウントからバケットに対して操作を行うことができるため、大変便利な機能です。
-しかし、バケットのオーナーアカウントではAWSコンソール上でバケットを確認できるのですが、
-共有された側ではS3バケットの...</p>
-  </article>
-</div>
-
-          
-          
-            
-    </div>      
-  </div>
-  
-
-  
-
-</div>
-
-
-    <div class="page__footer">
-      <footer>
-        <!-- start custom footer snippets -->
-
-<!-- end custom footer snippets -->
-        <div class="page__footer-follow">
-  <ul class="social-icons">
-    
-    
-      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
-    
-    
-    
-      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
-    
-    
-    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
-    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
-  </ul>
-</div>
-
-<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
-
-<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277"></amp-auto-ads>
-
-      </footer>
+<a href="/aws/amazonlinux2-docker/">
+    <div class="related">
+        <div class="related__item">
+            Amazon Linux2にdockerをインストールする
+        </div>
     </div>
+</a>
 
-    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
+<a href="/aws/aws-batch-and-glue/">
+    <div class="related">
+        <div class="related__item">
+            AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する
+        </div>
+    </div>
+</a>
 
+<a href="/aws/casperjs-on-lambda/">
+    <div class="related">
+        <div class="related__item">
+            AWS LambdaでCasperJSを実行してファイルアップロードを自動化する
+        </div>
+    </div>
+</a>
 
-
-
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-92599175-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-
-<script async custom-element="amp-auto-ads"src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
-
-
-
-
-  
-  <script type="text/javascript">
-  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  	var disqus_shortname = 'soudegesu';
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function() {
-  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  	})();
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function () {
-  		var s = document.createElement('script'); s.async = true;
-  		s.type = 'text/javascript';
-  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-  	}());
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="/aws/s3-cross-account/">
+    <div class="related">
+        <div class="related__item">
+            クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか
+        </div>
+    </div>
+</a>
 
 
 
+</main>
 
 
+<aside class="sidebar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://www.soudegesu.com" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
+			<li class="widget__item"><a class="widget__link" href="/gcp/gcp-command/">Google Cloud SDKをセットアップする</a></li>
+			<li class="widget__item"><a class="widget__link" href="/java/tomcat-with-gradle/">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</a></li>
+			<li class="widget__item"><a class="widget__link" href="/mysql/mysql8-password/">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</a></li>
+			<li class="widget__item"><a class="widget__link" href="/dart/android-with-flutter/">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/anaconda">Anaconda</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/aws">Aws</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/blog">Blog</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/book">Book</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/continuous-delivery">Continuous delivery</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/dart">Dart</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker">Docker</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker-compose">Docker compose</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/engineer-life">Engineer life</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/ethereum">Ethereum</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/fish">Fish</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/gcp">Gcp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/java">Java</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/linux">Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/mysql">Mysql</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/nodejs">Nodejs</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/pyenv">Pyenv</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/python">Python</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/q_sharp">Q sharp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/security">Security</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/tensorflow">Tensorflow</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">Social</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/alten_manten" target="_blank">
+				<svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5 0-78.8 35.3-78.8 78.8 0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6 0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1 0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4 0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9 0 224.1-120 224.1-224.1 0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg>
+				<span>Twitter</span>
+			</a>
+		</div>
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/soudegesu" target="_blank">
+				<svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+	</div>
+</div>
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/acm" title="Acm">Acm</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/agile" title="Agile">Agile</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/amazonlinux" title="Amazonlinux">Amazonlinux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/anaconda" title="Anaconda">Anaconda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/android" title="Android">Android</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ansible" title="Ansible">Ansible</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/athena" title="Athena">Athena</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aurora" title="Aurora">Aurora</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aws" title="Aws">Aws</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/batch" title="Batch">Batch</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/beginner" title="Beginner">Beginner</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/blog" title="Blog">Blog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/book" title="Book">Book</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/casperjs" title="Casperjs">Casperjs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudfront" title="Cloudfront">Cloudfront</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudwatchlogs" title="Cloudwatchlogs">Cloudwatchlogs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/colaboratory" title="Colaboratory">Colaboratory</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/continuous-delivery" title="Continuous delivery">Continuous delivery</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cyber-security" title="Cyber security">Cyber security</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dapps" title="Dapps">Dapps</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dart" title="Dart">Dart</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/datadog" title="Datadog">Datadog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker" title="Docker">Docker</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ec2" title="Ec2">Ec2</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/engineer-life" title="Engineer life">Engineer life</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ethereum" title="Ethereum">Ethereum</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/express" title="Express">Express</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/fish" title="Fish">Fish</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/flutter" title="Flutter">Flutter</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ganache" title="Ganache">Ganache</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gcp" title="Gcp">Gcp</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/glue" title="Glue">Glue</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gradle" title="Gradle">Gradle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo" title="Hugo">Hugo</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/iam" title="Iam">Iam</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ios" title="Ios">Ios</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/java" title="Java">Java</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jib" title="Jib">Jib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jpms" title="Jpms">Jpms</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/lambda" title="Lambda">Lambda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/machine-learning" title="Machine learning">Machine learning</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/matplotlib" title="Matplotlib">Matplotlib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql" title="Mysql">Mysql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/nodejs" title="Nodejs">Nodejs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/packer" title="Packer">Packer</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv" title="Pyenv">Pyenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv-virtualenv" title="Pyenv virtualenv">Pyenv virtualenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/python" title="Python">Python</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/q" title="Q#">Q#</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/rds" title="Rds">Rds</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reactor" title="Reactor">Reactor</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/route53" title="Route53">Route53</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/s3" title="S3">S3</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/serverless" title="Serverless">Serverless</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sh" title="Sh">Sh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/spring" title="Spring">Spring</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/springboot" title="Springboot">Springboot</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sql" title="Sql">Sql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ssl" title="Ssl">Ssl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunction" title="Stepfunction">Stepfunction</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunctions" title="Stepfunctions">Stepfunctions</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/systemd" title="Systemd">Systemd</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tensorflow" title="Tensorflow">Tensorflow</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/terraform" title="Terraform">Terraform</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tomcat" title="Tomcat">Tomcat</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/truffle" title="Truffle">Truffle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/udemy" title="Udemy">Udemy</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/webflux" title="Webflux">Webflux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/zsh" title="Zsh">Zsh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%e7%b5%84%e7%b9%94%e8%ab%96" title="組織論">組織論</a>
+	</div>
+</div>
+</aside>
+	</div>
+		<footer class="footer">
+			<div class="container container-inner">
+				<div class="footer__copyright">&copy; 2018 そうなんでげす. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span></div>
+			</div>
+		</footer>
+	</div>
 
-  </body>
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script></body>
 </html>

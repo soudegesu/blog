@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/blog/</link>
+    <description>Recent content in Blog on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 05 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ブログ(静的サイト)をHUGOを使って作成する</title>
+      <link>https://www.soudegesu.com/blog/hugo/</link>
+      <pubDate>Fri, 05 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/blog/hugo/</guid>
+      <description>本サイトでは jekyll を使用してブログを作成しているのですが、他にも HUGO や hexo を使用されている方も多くいらっしゃるようなので、今回はHUGOを使用してブ</description>
+    </item>
+    
+  </channel>
+</rss>

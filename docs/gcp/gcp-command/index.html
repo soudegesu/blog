@@ -1,341 +1,144 @@
-<!doctype html>
-<!--
-  Minimal Mistakes Jekyll Theme 4.2.2 by Michael Rose
-  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
-  Free for personal and commercial use under the MIT license
-  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
--->
-<html lang="ja" class="no-js">
-  <head>
-    <meta charset="utf-8">
-
-<!-- begin SEO -->
-
-
-
-
-
-
-
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="generator" content="Hugo 0.47" />
+	
 
 
 <title>Google Cloud SDKをセットアップする - そうなんでげす</title>
-
-
-
-
 <meta name="description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。">
-
-
-
-
+<meta property="og:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。">
 <meta name="author" content="soudegesu">
-
-<meta property="og:locale" content="ja_JP">
-<meta property="og:site_name" content="そうなんでげす">
-<meta property="og:title" content="Google Cloud SDKをセットアップする">
-
-
-  <link rel="canonical" href="https://www.soudegesu.com/gcp/gcp-command/">
-  <meta property="og:url" content="https://www.soudegesu.com/gcp/gcp-command/">
-
-
-
-  <meta property="og:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。">
-
-
-
-  <meta name="twitter:site" content="@alten_manten">
-  <meta name="twitter:title" content="Google Cloud SDKをセットアップする">
-  <meta name="twitter:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。">
-  <meta name="twitter:url" content="https://www.soudegesu.com/gcp/gcp-command/">
-
+<link rel="canonical" href="https://www.soudegesu.com/gcp/gcp-command/">
+<meta name="twitter:site" content="@alten_manten">
+<meta name="twitter:title" content="Google Cloud SDKをセットアップする - そうなんでげす">
+<meta name="twitter:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。">
+<meta name="twitter:url" content="https://www.soudegesu.com/gcp/gcp-command/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@alten_manten">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:site_name" content="Google Cloud SDKをセットアップする - そうなんでげす">
+<meta property="og:title" content="Google Cloud SDKをセットアップする - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/gcp/gcp-command/">
   
-    <meta name="twitter:card" content="summary">
-    
-      <meta name="twitter:image" content="https://www.soudegesu.com/assets/images/icon/google_cloud_icon.png">
-    
-  
-
-  
-    <meta name="twitter:creator" content="@alten_manten">
-  
-
-
-
-
-
-  <meta property="og:image" content="https://www.soudegesu.com/assets/images/icon/google_cloud_icon.png">
-
-
-
-  <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2018-08-05T00:00:00+09:00">
-
-
-
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "url": "https://www.soudegesu.com",
-      "logo": "https://www.soudegesu.com/assets/images/soudegesu.jpg"
-    }
-  </script>
-
-
-
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Person",
-      "name" : "soudegsu",
-      "url" : "https://www.soudegesu.com",
-      "sameAs" : null
-    }
-  </script>
-
-
-
-  <meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
-
-
-
-
-<!-- end SEO -->
-
-
-<link href="https://www.soudegesu.com/feed.xml" type="application/atom+xml" rel="alternate" title="そうなんでげす Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+<meta property="og:image" content="https://www.soudegesu.com/images/icon/google_cloud_icon.png">
+<meta name="twitter:image" content="https://www.soudegesu.com/images/icon/google_cloud_icon.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-05 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2018-08-17-my-packer-best-practice.md%29"><link rel="next" href="Page%28/past/2018-08-02-tomcat-with-gradle.md%29">
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
 </script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
-<!-- For all browsers -->
-<link rel="stylesheet" href="https://www.soudegesu.com/assets/css/main.css">
 
-<!--[if lte IE 9]>
-  <style>
-    /* old IE unsupported flexbox fixes */
-    .greedy-nav .site-title {
-      padding-right: 3em;
-    }
-    .greedy-nav button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-    }
-  </style>
-<![endif]-->
+	<meta property="og:title" content="Google Cloud SDKをセットアップする" />
+<meta property="og:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/gcp/gcp-command/" /><meta property="article:published_time" content="2018-08-05T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-08-05T00:00:00&#43;00:00"/>
+	<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Google Cloud SDKをセットアップする"/>
+<meta name="twitter:description" content="仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。"/>
 
-<meta http-equiv="cleartype" content="on">
-    <!-- start custom head snippets -->
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+	<link rel="stylesheet" href="/css/style.css">
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-92599175-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({
     google_ad_client: "ca-pub-5005266309965277",
     enable_page_level_ads: true
   });
 </script>
-
-<!-- end custom head snippets -->
-  </head>
-
-  <body class="layout--single">
-
-    <!--[if lt IE 9]>
-<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
-<![endif]-->
-    <div class="masthead">
-  <div class="masthead__inner-wrap">
-    <div class="masthead__menu">
-      <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="https://www.soudegesu.com/">そうなんでげす</a>
-        <ul class="visible-links">
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/archives/">Archives</a></li>
-          
-            
-            <li class="masthead__menu-item"><a href="https://www.soudegesu.com/tags/">Tags</a></li>
-          
-        </ul>
-        <button><div class="navicon"></div></button>
-        <ul class="hidden-links hidden"></ul>
-      </nav>
-    </div>
-  </div>
-</div>
-
-    
+<script async src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" custom-element="amp-auto-ads"></script>
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277" />
 
 
+</head>
+<body class="body">
+	<div class="container container-outer">
+		<header class="header">
+			<div class="container container-inner">
+				<div class="logo" role="banner">
+					<a class="logo__link" href="/" title="そうなんでげす" rel="home">
+						<div class="logo__title">そうなんでげす</div>
+						<div class="logo__tagline">またつまらぬモノを斬ってしまった</div>
+					</a>
+				</div>
+			</div>
+			<div class="divider"></div>
+		</header>
+		<div class="wrapper flex">
 
-<div id="main" role="main">
-  
-  <div class="sidebar sticky">
-  
-
-<div itemscope itemtype="http://schema.org/Person">
-
-  
-    <div class="author__avatar">
-      
-        <img src="https://www.soudegesu.com/assets/images/soudegesu.jpg" class="author__avatar" alt="soudegesu" itemprop="image">
-      
-    </div>
-  
-
-  <div class="author__content">
-    <h3 class="author__name" itemprop="name">soudegesu</h3>
-    
-      <p class="author__bio" itemprop="description">
-        Software Engineer
-      </p>
-    
-  </div>
-
-  <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
-    <ul class="author__urls social-icons">
-      
-        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
-          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Kawasaki, Japan</span>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://twitter.com/alten_manten" itemprop="sameAs">
-            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-        <li>
-          <a href="https://github.com/soudegesu" itemprop="sameAs">
-            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
-          </a>
-        </li>
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      <!--
-  <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
-      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
-    </a>
-  </li>
--->
-    </ul>
-  </div>
-</div>
-
-  
-
-  <!-- under_profile -->
-<div align="center">
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="2594359046"
-     data-ad-format="auto"></ins>
-</div>
-
-  </div>
-
-
-  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Google Cloud SDKをセットアップする">
-    <meta itemprop="description" content="普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。">
-    <meta itemprop="datePublished" content="August 05, 2018">
-    
-
-    <div class="page__inner-wrap">
-      
-        <header>
-          <h1 class="page__title" itemprop="headline">Google Cloud SDKをセットアップする
-</h1>
-          
-            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  2 minute read
-</p>
-          
-        </header>
-      
-
-      <section class="page__content" itemprop="text">
-        <p>普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。</p>
-
-<ul id="markdown-toc">
-  <li><a href="#まずはcliでしょ" id="markdown-toc-まずはcliでしょ">まずはCLIでしょ</a></li>
-  <li><a href="#google-cloud-sdk-をインストールする" id="markdown-toc-google-cloud-sdk-をインストールする">Google Cloud SDK をインストールする</a></li>
-  <li><a href="#動作確認自然言語apiを試してみる" id="markdown-toc-動作確認自然言語apiを試してみる">動作確認：自然言語APIを試してみる</a></li>
-  <li><a href="#まとめ" id="markdown-toc-まとめ">まとめ</a></li>
-  <li><a href="#参考にさせていただいたサイト" id="markdown-toc-参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Google Cloud SDKをセットアップする</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-05T00:00:00">August 05, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/gcp" rel="category">gcp</a></span>
+</span></div>
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#まずはcliでしょ">まずはCLIでしょ</a></li>
+<li><a href="#google-cloud-sdk-をインストールする">Google Cloud SDK をインストールする</a></li>
+<li><a href="#動作確認-自然言語apiを試してみる">動作確認：自然言語APIを試してみる</a></li>
+<li><a href="#まとめ">まとめ</a></li>
+<li><a href="#参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul></li>
 </ul>
+</nav>
+	</div>
+</div>
+<div class="post__content clearfix">
+			
+
+<p>普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。</p>
 
 <h2 id="まずはcliでしょ">まずはCLIでしょ</h2>
 
-<p>仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。
-APIとして提供されている機能もあるのでCLIから実行できた方が嬉しいだろう、という考えもあり、まずはCLIで <code class="highlighter-rouge">gcloud</code> コマンドが使えるようにまでしたいと思います。</p>
+<p>仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。</p>
+
+<p>APIとして提供されている機能もあるのでCLIから実行できた方が嬉しいだろう、という考えもあり、まずはCLIで <code>gcloud</code> コマンドが使えるようにまでしたいと思います。</p>
 
 <h2 id="google-cloud-sdk-をインストールする">Google Cloud SDK をインストールする</h2>
 
@@ -346,169 +149,174 @@ APIとして提供されている機能もあるのでCLIから実行できた�
 
 <p>ただ、リンク先ではtarballを解凍する手段になるので、 今回は Homebrew を使っています。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap caskroom/cask
+<pre><code class="language-bash">brew tap caskroom/cask
 brew cask install google-cloud-sdk
-</code></pre></div></div>
+</code></pre>
 
-<p><code class="highlighter-rouge">gcloud init</code> で <code class="highlighter-rouge">gcloud</code> の設定を初期化します。ここからは対話形式で設定が続きます。</p>
+<p><code>gcloud init</code> で <code>gcloud</code> の設定を初期化します。ここからは対話形式で設定が続きます。</p>
 
 <p>ログイン済みのGoogleアカウントがデフォルト設定の選択肢として提案されます。</p>
 
-<p>今回は新規で作成するので <code class="highlighter-rouge">2</code> を選択します。</p>
+<p>今回は新規で作成するので <code>2</code> を選択します。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gcloud init
+<pre><code class="language-bash">gcloud init
 
-<span class="o">&gt;</span> Welcome! This <span class="nb">command </span>will take you through the configuration of gcloud.
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Settings from your current configuration <span class="o">[</span>default] are:
-<span class="o">&gt;</span> core:
-<span class="o">&gt;</span>   account: xxxxxxxxxxxx@xxxx.xxx
-<span class="o">&gt;</span>   disable_usage_reporting: <span class="s1">'True'</span>
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Pick configuration to use:
-<span class="o">&gt;</span>  <span class="o">[</span>1] Re-initialize this configuration <span class="o">[</span>default] with new settings
-<span class="o">&gt;</span>  <span class="o">[</span>2] Create a new configuration
-<span class="o">&gt;</span> Please enter your numeric choice:
+&gt; Welcome! This command will take you through the configuration of gcloud.
+&gt;
+&gt; Settings from your current configuration [default] are:
+&gt; core:
+&gt;   account: xxxxxxxxxxxx@xxxx.xxx
+&gt;   disable_usage_reporting: 'True'
+&gt;
+&gt; Pick configuration to use:
+&gt;  [1] Re-initialize this configuration [default] with new settings
+&gt;  [2] Create a new configuration
+&gt; Please enter your numeric choice:
 
-</code></pre></div></div>
+</code></pre>
 
 <p>設定名称を要求されるので、入力します。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Enter configuration name. Names start with a lower <span class="k">case</span> letter and
-<span class="o">&gt;</span> contain only lower <span class="k">case</span> letters a-z, digits 0-9, and hyphens <span class="s1">'-'</span>:
+<pre><code class="language-bash">&gt; Enter configuration name. Names start with a lower case letter and
+&gt; contain only lower case letters a-z, digits 0-9, and hyphens '-':
 設定名称を入力する
-</code></pre></div></div>
+</code></pre>
 
 <p>設定が進むと、紐付けるGoogleアカウントを指定します。
-今回は新規で紐付けるので <code class="highlighter-rouge">2</code> にします。</p>
+今回は新規で紐付けるので <code>2</code> にします。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Your current configuration has been <span class="nb">set </span>to: <span class="o">[(</span>設定名称<span class="o">)]</span>
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> You can skip diagnostics next <span class="nb">time </span>by using the following flag:
-<span class="o">&gt;</span>   gcloud init <span class="nt">--skip-diagnostics</span>
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Network diagnostic detects and fixes <span class="nb">local </span>network connection issues.
-<span class="o">&gt;</span> Checking network connection...done.
-<span class="o">&gt;</span> Reachability Check passed.
-<span class="o">&gt;</span> Network diagnostic <span class="o">(</span>1/1 checks<span class="o">)</span> passed.
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Choose the account you would like to use to perform operations <span class="k">for</span>
-<span class="o">&gt;</span> this configuration:
-<span class="o">&gt;</span>  <span class="o">[</span>1] xxxxxx@xxxx.xxx
-<span class="o">&gt;</span>  <span class="o">[</span>2] Log <span class="k">in </span>with a new account
-<span class="o">&gt;</span> Please enter your numeric choice:
+<pre><code class="language-bash">&gt; Your current configuration has been set to: [(設定名称)]
+&gt;
+&gt; You can skip diagnostics next time by using the following flag:
+&gt;   gcloud init --skip-diagnostics
+&gt;
+&gt; Network diagnostic detects and fixes local network connection issues.
+&gt; Checking network connection...done.
+&gt; Reachability Check passed.
+&gt; Network diagnostic (1/1 checks) passed.
+&gt;
+&gt; Choose the account you would like to use to perform operations for
+&gt; this configuration:
+&gt;  [1] xxxxxx@xxxx.xxx
+&gt;  [2] Log in with a new account
+&gt; Please enter your numeric choice:
 
 2
-</code></pre></div></div>
+</code></pre>
 
 <p>ブラウザが起動し、Googleアカウントの認証が要求されます。</p>
 
-<p><img src="/assets/images/20180805/sign_in_google.png" alt="sign_in_google" /></p>
+<p><img src="/images/20180805/sign_in_google.png" alt="sign_in_google" /></p>
 
 <p>利用規約を確認し許可します。</p>
 
-<p><img src="/assets/images/20180805/allow.png" alt="allow" /></p>
+<p><img src="/images/20180805/allow.png" alt="allow" /></p>
 
-<p>認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので <code class="highlighter-rouge">1</code> を選択します。</p>
+<p>認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので <code>1</code> を選択します。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> You are logged <span class="k">in </span>as: <span class="o">[</span>xxxxxxxxxxx@xxxxx.xxx].
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Pick cloud project to use:
-<span class="o">&gt;</span> <span class="o">[</span>1] xxxxxxxxxx
-<span class="o">&gt;</span> <span class="o">[</span>2] Create a new project
-<span class="o">&gt;</span>Please enter numeric choice or text value <span class="o">(</span>must exactly match list
-<span class="o">&gt;</span> item<span class="o">)</span>:
-<span class="o">&gt;</span>
+<pre><code class="language-bash">&gt; You are logged in as: [xxxxxxxxxxx@xxxxx.xxx].
+&gt;
+&gt; Pick cloud project to use:
+&gt; [1] xxxxxxxxxx
+&gt; [2] Create a new project
+&gt;Please enter numeric choice or text value (must exactly match list
+&gt; item):
+&gt;
 1
-</code></pre></div></div>
+</code></pre>
 
-<p>Compute Engineのデフォルトのリージョンの設定有無が聞かれます。とりあえず <code class="highlighter-rouge">Y</code> にします。</p>
+<p>Compute Engineのデフォルトのリージョンの設定有無が聞かれます。とりあえず <code>Y</code> にします。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Your current project has been <span class="nb">set </span>to: <span class="o">[</span>xxxxxxxx].
-<span class="o">&gt;</span>
-<span class="o">&gt;</span> Do you want to configure a default Compute Region and Zone? <span class="o">(</span>Y/n<span class="o">)</span>?
+<pre><code class="language-bash">&gt; Your current project has been set to: [xxxxxxxx].
+&gt;
+&gt; Do you want to configure a default Compute Region and Zone? (Y/n)?
 Y
-</code></pre></div></div>
+</code></pre>
 
-<p>リージョン番号のリストの入力を求められるので、日本のある <code class="highlighter-rouge">32</code>, <code class="highlighter-rouge">33</code>, <code class="highlighter-rouge">34</code> のいずれかで選択しておきます。</p>
+<p>リージョン番号のリストの入力を求められるので、日本のある <code>32</code>, <code>33</code>, <code>34</code> のいずれかで選択しておきます。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Which Google Compute Engine zone would you like to use as project
-<span class="o">&gt;</span> default?
-<span class="o">&gt;</span> If you <span class="k">do </span>not specify a zone via a <span class="nb">command </span>line flag <span class="k">while </span>working
-<span class="o">&gt;</span> with Compute Engine resources, the default is assumed.
-<span class="o">&gt;</span> <span class="o">[</span>1] us-east1-b
-<span class="o">&gt;</span> <span class="o">[</span>2] us-east1-c
-<span class="o">&gt;</span> <span class="o">[</span>3] us-east1-d
-<span class="o">&gt;</span> <span class="o">(</span>中略<span class="o">)</span>
-<span class="o">&gt;</span> <span class="o">[</span>32] asia-northeast1-b
-<span class="o">&gt;</span> <span class="o">[</span>33] asia-northeast1-c
-<span class="o">&gt;</span> <span class="o">[</span>34] asia-northeast1-a
-<span class="o">&gt;</span> <span class="o">(</span>中略<span class="o">)</span>
-<span class="o">&gt;</span> Did not print <span class="o">[</span>3] options.
-<span class="o">&gt;</span> Too many options <span class="o">[</span>53]. Enter <span class="s2">"list"</span> at prompt to print choices fully.
-<span class="o">&gt;</span> Please enter numeric choice or text value <span class="o">(</span>must exactly match list
+<pre><code class="language-bash">&gt; Which Google Compute Engine zone would you like to use as project
+&gt; default?
+&gt; If you do not specify a zone via a command line flag while working
+&gt; with Compute Engine resources, the default is assumed.
+&gt; [1] us-east1-b
+&gt; [2] us-east1-c
+&gt; [3] us-east1-d
+&gt; (中略)
+&gt; [32] asia-northeast1-b
+&gt; [33] asia-northeast1-c
+&gt; [34] asia-northeast1-a
+&gt; (中略)
+&gt; Did not print [3] options.
+&gt; Too many options [53]. Enter &quot;list&quot; at prompt to print choices fully.
+&gt; Please enter numeric choice or text value (must exactly match list
 32
-</code></pre></div></div>
+</code></pre>
 
 <p>これで一通り設定が完了しました。</p>
 
-<h2 id="動作確認自然言語apiを試してみる">動作確認：自然言語APIを試してみる</h2>
+<h2 id="動作確認-自然言語apiを試してみる">動作確認：自然言語APIを試してみる</h2>
 
 <p>セットアップはできたので、CLIで自然言語APIを試してみます。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gcloud ml language analyze-syntax <span class="nt">--language</span><span class="o">=</span>ja-JP <span class="nt">--content</span><span class="o">=</span><span class="s1">'子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'</span>
-</code></pre></div></div>
+<pre><code class="language-bash">gcloud ml language analyze-syntax --language=ja-JP \
+  --content='子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'
+</code></pre>
 
 <p>権限がないと言われるので、CLI経由でAPIを使う権限を設定します。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> API <span class="o">[</span>language.googleapis.com] not enabled on project <span class="o">[(</span>プロジェクト番号<span class="o">)]</span><span class="nb">.</span>
-<span class="o">&gt;</span> Would you like to <span class="nb">enable </span>and retry <span class="o">(</span>this will take a few minutes<span class="o">)</span>?
-<span class="o">&gt;</span> <span class="o">(</span>y/N<span class="o">)</span>?
+<pre><code class="language-bash">&gt; API [language.googleapis.com] not enabled on project [(プロジェクト番号)].
+&gt; Would you like to enable and retry (this will take a few minutes)?
+&gt; (y/N)?
 y
-</code></pre></div></div>
+</code></pre>
 
-<p>レスポンスが返ってきました。分かってはいましたが <code class="highlighter-rouge">analyze-syntax</code> の自然言語APIは可視化してあげないとつらいですね笑。</p>
+<p>レスポンスが返ってきました。分かってはいましたが <code>analyze-syntax</code> の自然言語APIは可視化してあげないとつらいですね笑。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-  <span class="s2">"language"</span>: <span class="s2">"ja-JP"</span>,
-  <span class="s2">"sentences"</span>: <span class="o">[</span>
-    <span class="o">{</span>
-      <span class="s2">"text"</span>: <span class="o">{</span>
-        <span class="s2">"beginOffset"</span>: 0,
-        <span class="s2">"content"</span>: <span class="s2">"</span><span class="se">\u</span><span class="s2">5b50</span><span class="se">\u</span><span class="s2">4f9b</span><span class="se">\u</span><span class="s2">304c</span><span class="se">\u</span><span class="s2">5acc</span><span class="se">\u</span><span class="s2">3044</span><span class="se">\u</span><span class="s2">306a</span><span class="se">\u</span><span class="s2">91ce</span><span class="se">\u</span><span class="s2">83dc</span><span class="se">\u</span><span class="s2">3068</span><span class="se">\u</span><span class="s2">304b3</span><span class="se">\u</span><span class="s2">7a2e</span><span class="se">\u</span><span class="s2">985e</span><span class="se">\u</span><span class="s2">304f</span><span class="se">\u</span><span class="s2">3089</span><span class="se">\u</span><span class="s2">3044</span><span class="se">\u</span><span class="s2">53d6</span><span class="se">\u</span><span class="s2">76bf</span><span class="se">\u</span><span class="s2">306b</span><span class="se">\u</span><span class="s2">4e57</span><span class="se">\u</span><span class="s2">305b</span><span class="se">\u</span><span class="s2">3066</span><span class="se">\u</span><span class="s2">30011</span><span class="se">\u</span><span class="s2">500b</span><span class="se">\u</span><span class="s2">3060</span><span class="se">\u</span><span class="s2">3051</span><span class="se">\u</span><span class="s2">6b8b</span><span class="se">\u</span><span class="s2">3059</span><span class="se">\u</span><span class="s2">4ee3</span><span class="se">\u</span><span class="s2">308f</span><span class="se">\u</span><span class="s2">308a</span><span class="se">\u</span><span class="s2">306b</span><span class="se">\u</span><span class="s2">6b8b</span><span class="se">\u</span><span class="s2">308a</span><span class="se">\u</span><span class="s2">306f</span><span class="se">\u</span><span class="s2">5168</span><span class="se">\u</span><span class="s2">90e8</span><span class="se">\u</span><span class="s2">30ad</span><span class="se">\u</span><span class="s2">30ec</span><span class="se">\u</span><span class="s2">30a4</span><span class="se">\u</span><span class="s2">306b</span><span class="se">\u</span><span class="s2">98df</span><span class="se">\u</span><span class="s2">3079</span><span class="se">\u</span><span class="s2">308b</span><span class="se">\u</span><span class="s2">30eb</span><span class="se">\u</span><span class="s2">30fc</span><span class="se">\u</span><span class="s2">30eb</span><span class="se">\u</span><span class="s2">306b</span><span class="se">\u</span><span class="s2">3057</span><span class="se">\u</span><span class="s2">3066</span><span class="se">\u</span><span class="s2">308b</span><span class="se">\u</span><span class="s2">3002"</span>
-      <span class="o">}</span>
-    <span class="o">}</span>
-  <span class="o">]</span>,
-  <span class="s2">"tokens"</span>: <span class="o">[</span>
-    <span class="o">{</span>
-      <span class="s2">"dependencyEdge"</span>: <span class="o">{</span>
-        <span class="s2">"headTokenIndex"</span>: 11,
-        <span class="s2">"label"</span>: <span class="s2">"NSUBJ"</span>
-      <span class="o">}</span>,
-      <span class="s2">"lemma"</span>: <span class="s2">"</span><span class="se">\u</span><span class="s2">5b50</span><span class="se">\u</span><span class="s2">4f9b"</span>,
-      <span class="s2">"partOfSpeech"</span>: <span class="o">{</span>
-        <span class="s2">"aspect"</span>: <span class="s2">"ASPECT_UNKNOWN"</span>,
-        <span class="s2">"case"</span>: <span class="s2">"CASE_UNKNOWN"</span>,
-        <span class="s2">"form"</span>: <span class="s2">"FORM_UNKNOWN"</span>,
-        <span class="s2">"gender"</span>: <span class="s2">"GENDER_UNKNOWN"</span>,
-        <span class="s2">"mood"</span>: <span class="s2">"MOOD_UNKNOWN"</span>,
-        <span class="s2">"number"</span>: <span class="s2">"NUMBER_UNKNOWN"</span>,
-        <span class="s2">"person"</span>: <span class="s2">"PERSON_UNKNOWN"</span>,
-        <span class="s2">"proper"</span>: <span class="s2">"NOT_PROPER"</span>,
-        <span class="s2">"reciprocity"</span>: <span class="s2">"RECIPROCITY_UNKNOWN"</span>,
-        <span class="s2">"tag"</span>: <span class="s2">"NOUN"</span>,
-        <span class="s2">"tense"</span>: <span class="s2">"TENSE_UNKNOWN"</span>,
-        <span class="s2">"voice"</span>: <span class="s2">"VOICE_UNKNOWN"</span>
-      <span class="o">}</span>,
-      <span class="s2">"text"</span>: <span class="o">{</span>
-        <span class="s2">"beginOffset"</span>: 0,
-        <span class="s2">"content"</span>: <span class="s2">"</span><span class="se">\u</span><span class="s2">5b50</span><span class="se">\u</span><span class="s2">4f9b"</span>
-      <span class="o">}</span>
-    <span class="o">}</span>,
-    <span class="o">(</span>中略<span class="o">)</span>
-  <span class="o">]</span>
-<span class="o">}</span>
-</code></pre></div></div>
+<pre><code class="language-bash">{
+  &quot;language&quot;: &quot;ja-JP&quot;,
+  &quot;sentences&quot;: [
+    {
+      &quot;text&quot;: {
+        &quot;beginOffset&quot;: 0,
+        &quot;content&quot;: &quot;\u5b50\u4f9b\u304c\u5acc\u3044\u306a\u91ce\u83dc\u3068
+        \u304b3\u7a2e\u985e\u304f\u3089\u3044\u53d6\u76bf\u306b\u4e57\u305b
+        \u3066\u30011\u500b\u3060\u3051\u6b8b\u3059\u4ee3\u308f\u308a\u306b
+        \u6b8b\u308a\u306f\u5168\u90e8\u30ad\u30ec\u30a4\u306b\u98df\u3079
+        \u308b\u30eb\u30fc\u30eb\u306b\u3057\u3066\u308b\u3002&quot;
+      }
+    }
+  ],
+  &quot;tokens&quot;: [
+    {
+      &quot;dependencyEdge&quot;: {
+        &quot;headTokenIndex&quot;: 11,
+        &quot;label&quot;: &quot;NSUBJ&quot;
+      },
+      &quot;lemma&quot;: &quot;\u5b50\u4f9b&quot;,
+      &quot;partOfSpeech&quot;: {
+        &quot;aspect&quot;: &quot;ASPECT_UNKNOWN&quot;,
+        &quot;case&quot;: &quot;CASE_UNKNOWN&quot;,
+        &quot;form&quot;: &quot;FORM_UNKNOWN&quot;,
+        &quot;gender&quot;: &quot;GENDER_UNKNOWN&quot;,
+        &quot;mood&quot;: &quot;MOOD_UNKNOWN&quot;,
+        &quot;number&quot;: &quot;NUMBER_UNKNOWN&quot;,
+        &quot;person&quot;: &quot;PERSON_UNKNOWN&quot;,
+        &quot;proper&quot;: &quot;NOT_PROPER&quot;,
+        &quot;reciprocity&quot;: &quot;RECIPROCITY_UNKNOWN&quot;,
+        &quot;tag&quot;: &quot;NOUN&quot;,
+        &quot;tense&quot;: &quot;TENSE_UNKNOWN&quot;,
+        &quot;voice&quot;: &quot;VOICE_UNKNOWN&quot;
+      },
+      &quot;text&quot;: {
+        &quot;beginOffset&quot;: 0,
+        &quot;content&quot;: &quot;\u5b50\u4f9b&quot;
+      }
+    },
+    (中略)
+  ]
+}
+</code></pre>
 
 <h2 id="まとめ">まとめ</h2>
 
@@ -518,439 +326,237 @@ y
 <h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
 
 <ul>
-  <li><a href="https://cloud.google.com/sdk/docs/quickstart-macos">Quickstart for macOS</a></li>
+<li><a href="https://cloud.google.com/sdk/docs/quickstart-macos">Quickstart for macOS</a></li>
 </ul>
 
-<div align="center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4822257908&amp;linkId=96562e30fee0c86028881bf8ff961412&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4822257908&linkId=96562e30fee0c86028881bf8ff961412&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798137146&amp;linkId=8519a36037ae78c56c57df76fd8e0342&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798137146&linkId=8519a36037ae78c56c57df76fd8e0342&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4798155373&amp;linkId=18c7903300574449f8b95d74c97a5a8f&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798155373&linkId=18c7903300574449f8b95d74c97a5a8f&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=soudegesu-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4865941053&amp;linkId=7d7b23bc20001ccbcc6f87feb17d24b4&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4865941053&linkId=7d7b23bc20001ccbcc6f87feb17d24b4&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/gcp/" rel="tag">gcp</a></li>
+	</ul>
 </div>
-
-        
-      </section>
-
-      <footer class="page__meta">
-        
-        
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
-    <span itemprop="keywords">
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/java/tomcat-with-gradle/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next">
+		<a class="post-nav__link" href="/aws/my-packer-best-practice/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</p></a>
+	</div>
+</nav>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
     
-      
-      
-      <a href="https://www.soudegesu.com/tags/gcp" class="page__taxonomy-item" rel="tag">gcp</a>
     
-    </span>
-  </p>
-
-
-
-
-  
-
-
-  
-  
-  
-
-  <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
-    <span itemprop="keywords">
     
-      
-      
-      <a href="https://www.soudegesu.com/categories/gcp" class="page__taxonomy-item" rel="tag">gcp</a>
-    
-    </span>
-  </p>
-
-
-        
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-08-05T00:00:00+09:00">August 05, 2018</time></p>
-        
-      </footer>
-
-      <section class="page__share">
-  
-
-  <a href="https://twitter.com/intent/tweet?via=alten_manten&text=Google Cloud SDKをセットアップする https://www.soudegesu.com/gcp/gcp-command/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
-
-  <a href="https://www.facebook.com/sharer.php?u=https://www.soudegesu.com/gcp/gcp-command/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
-
-  <a href="https://plus.google.com/share?url=https://www.soudegesu.com/gcp/gcp-command/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
-
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.soudegesu.com/gcp/gcp-command/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
-
-  <a href="http://b.hatena.ne.jp/append?https://www.soudegesu.com/gcp/gcp-command/" class="btn btn--hatebu" title="Share on Bookmark"><i class="fa fa-fw fa-hatebu" aria-hidden="true"></i><span> Bookmark</span></a>
-
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </section>
 
-
-    </div>
-
-    
-  <nav class="pagination">
-    
-      <a href="https://www.soudegesu.com/java/tomcat-with-gradle/" class="pagination--pager" title="Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する
-">Previous</a>
-    
-    
-      <a href="https://www.soudegesu.com/aws/my-packer-best-practice/" class="pagination--pager" title="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！
-">Next</a>
-    
-  </nav>
+	
 
 
-    
-      <div class="page__comments">
-  
-  
-    <h4 class="page__comments-title">Comments</h4>
-    <section id="disqus_thread"></section>
-  
+</main>
+
+
+<aside class="sidebar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://www.soudegesu.com" />
+	</form>
 </div>
-
-    
-
-  </article>
-  
-  
-  <div class="page__related">
-    <h2 class="page__related-title">関連記事</h2>
-    
-    
-    
-
-    <div class="grid__wrapper">
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-        
-        
-  
-        
-      
-    </div>      
-  </div>
-  
-
-  
-
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
+			<li class="widget__item"><a class="widget__link" href="/gcp/gcp-command/">Google Cloud SDKをセットアップする</a></li>
+			<li class="widget__item"><a class="widget__link" href="/java/tomcat-with-gradle/">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</a></li>
+			<li class="widget__item"><a class="widget__link" href="/mysql/mysql8-password/">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</a></li>
+			<li class="widget__item"><a class="widget__link" href="/dart/android-with-flutter/">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a></li>
+		</ul>
+	</div>
 </div>
-
-
-    <div class="page__footer">
-      <footer>
-        <!-- start custom footer snippets -->
-
-<!-- end custom footer snippets -->
-        <div class="page__footer-follow">
-  <ul class="social-icons">
-    
-    
-      <li><a href="https://twitter.com/alten_manten"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
-    
-    
-    
-      <li><a href="http://github.com/soudegesu"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
-    
-    
-    <li><a href="https://www.soudegesu.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
-    <li><a href="/sitemap/"><i class="fa fa-fw fa-sitemap" aria-hidden="true"></i> Sitemap</a></li>
-  </ul>
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/anaconda">Anaconda</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/aws">Aws</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/blog">Blog</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/book">Book</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/continuous-delivery">Continuous delivery</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/dart">Dart</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker">Docker</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker-compose">Docker compose</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/engineer-life">Engineer life</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/ethereum">Ethereum</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/fish">Fish</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/gcp">Gcp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/java">Java</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/linux">Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/mysql">Mysql</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/nodejs">Nodejs</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/pyenv">Pyenv</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/python">Python</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/q_sharp">Q sharp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/security">Security</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/tensorflow">Tensorflow</a></li>
+		</ul>
+	</div>
 </div>
+	
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">Social</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/alten_manten" target="_blank">
+				<svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5 0-78.8 35.3-78.8 78.8 0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6 0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1 0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4 0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9 0 224.1-120 224.1-224.1 0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg>
+				<span>Twitter</span>
+			</a>
+		</div>
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/soudegesu" target="_blank">
+				<svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+	</div>
+</div>
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/acm" title="Acm">Acm</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/agile" title="Agile">Agile</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/amazonlinux" title="Amazonlinux">Amazonlinux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/anaconda" title="Anaconda">Anaconda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/android" title="Android">Android</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ansible" title="Ansible">Ansible</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/athena" title="Athena">Athena</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aurora" title="Aurora">Aurora</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aws" title="Aws">Aws</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/batch" title="Batch">Batch</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/beginner" title="Beginner">Beginner</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/blog" title="Blog">Blog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/book" title="Book">Book</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/casperjs" title="Casperjs">Casperjs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudfront" title="Cloudfront">Cloudfront</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudwatchlogs" title="Cloudwatchlogs">Cloudwatchlogs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/colaboratory" title="Colaboratory">Colaboratory</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/continuous-delivery" title="Continuous delivery">Continuous delivery</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cyber-security" title="Cyber security">Cyber security</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dapps" title="Dapps">Dapps</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dart" title="Dart">Dart</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/datadog" title="Datadog">Datadog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker" title="Docker">Docker</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ec2" title="Ec2">Ec2</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/engineer-life" title="Engineer life">Engineer life</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ethereum" title="Ethereum">Ethereum</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/express" title="Express">Express</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/fish" title="Fish">Fish</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/flutter" title="Flutter">Flutter</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ganache" title="Ganache">Ganache</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gcp" title="Gcp">Gcp</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/glue" title="Glue">Glue</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gradle" title="Gradle">Gradle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo" title="Hugo">Hugo</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/iam" title="Iam">Iam</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ios" title="Ios">Ios</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/java" title="Java">Java</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jib" title="Jib">Jib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jpms" title="Jpms">Jpms</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/lambda" title="Lambda">Lambda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/machine-learning" title="Machine learning">Machine learning</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/matplotlib" title="Matplotlib">Matplotlib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql" title="Mysql">Mysql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/nodejs" title="Nodejs">Nodejs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/packer" title="Packer">Packer</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv" title="Pyenv">Pyenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv-virtualenv" title="Pyenv virtualenv">Pyenv virtualenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/python" title="Python">Python</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/q" title="Q#">Q#</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/rds" title="Rds">Rds</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reactor" title="Reactor">Reactor</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/route53" title="Route53">Route53</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/s3" title="S3">S3</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/serverless" title="Serverless">Serverless</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sh" title="Sh">Sh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/spring" title="Spring">Spring</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/springboot" title="Springboot">Springboot</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sql" title="Sql">Sql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ssl" title="Ssl">Ssl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunction" title="Stepfunction">Stepfunction</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunctions" title="Stepfunctions">Stepfunctions</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/systemd" title="Systemd">Systemd</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tensorflow" title="Tensorflow">Tensorflow</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/terraform" title="Terraform">Terraform</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tomcat" title="Tomcat">Tomcat</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/truffle" title="Truffle">Truffle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/udemy" title="Udemy">Udemy</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/webflux" title="Webflux">Webflux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/zsh" title="Zsh">Zsh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%e7%b5%84%e7%b9%94%e8%ab%96" title="組織論">組織論</a>
+	</div>
+</div>
+</aside>
+	</div>
+		<footer class="footer">
+			<div class="container container-inner">
+				<div class="footer__copyright">&copy; 2018 そうなんでげす. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span></div>
+			</div>
+		</footer>
+	</div>
 
-<div class="page__footer-copyright">&copy; 2018 soudegsu. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
-
-<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277"></amp-auto-ads>
-
-      </footer>
-    </div>
-
-    <script src="https://www.soudegesu.com/assets/js/main.min.js"></script>
-
-
-
-
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-92599175-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-
-<script async custom-element="amp-auto-ads"src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
-
-
-
-
-  
-  <script type="text/javascript">
-  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  	var disqus_shortname = 'soudegesu';
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function() {
-  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  	})();
-
-  	/* * * DON'T EDIT BELOW THIS LINE * * */
-  	(function () {
-  		var s = document.createElement('script'); s.async = true;
-  		s.type = 'text/javascript';
-  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-  	}());
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-
-
-
-
-
-  </body>
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script></body>
 </html>

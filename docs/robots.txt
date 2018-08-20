@@ -1,1 +1,1 @@
-Sitemap: https://www.soudegesu.com/sitemap.xml
+User-agent: *
