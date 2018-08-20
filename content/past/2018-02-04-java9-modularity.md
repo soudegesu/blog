@@ -9,10 +9,8 @@ tags:
     - gradle
     - springboot
     - JPMS
+url: /java/java9-modularity/
 ---
-
-* Table Of Contents
-{:toc}
 
 ## はじめに
 今回はJava 9で追加されたModule System移行に関して説明します。
@@ -21,7 +19,7 @@ tags:
 実は [社内向けにも同様の発表](https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou) はしています。
 少しネガティブなニュアンスで資料を書いていますが、社内の(いろんな意味で)危機意識を煽るため、という背景もあったので、その点ご了承ください。
 
-{% oembed https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou %}
+* [これからのJavaの話をしよう](https://speakerdeck.com/takaakisuzuki/korekarafalsejavafalsehua-wosiyou)
 
 ## 注意点
 2018/1時点での情報を基に記載をしていますので、今後変更になる可能性があります。
@@ -47,6 +45,7 @@ Javaのリリースロードマップの中で注目すべきは **サポート�
 例えば、Java 10が出たら、Java 9はその時点でサポート終了ということです。
 
 ルールとして一見わかりやすくはあるものの、以下のようなプロジェクトの場合はJavaのリリースサイクルに追従していくのは容易なことではありません。
+
 * リリースサイクルが長い
 * リリースタイミングが柔軟にコントロールできない
 * テストコード(非機能含む)が整備されていない
@@ -88,6 +87,7 @@ JDKを差し替えただけでは既存のJavaアプリケーションが動か�
 </div>
 
 このステップでは
+
 * Moduleの種類(Unnamed/Automatic/Named)と違いを理解する
 * classpathとmodulepathでのクラスロードの違いを理解する
 
@@ -97,7 +97,7 @@ JDKを差し替えただけでは既存のJavaアプリケーションが動か�
 (System#initPhase2の処理あたりからブレークポイント貼って読むといいです)
 
 ### Step 2. 依存ライブラリのバージョンアップを行う
-Step 1で基本が理解できたら、**Java8のうちに依存ライブラリのバージョンアップをやりましょう** 。 
+Step 1で基本が理解できたら、**Java8のうちに依存ライブラリのバージョンアップをやりましょう** 。
 リリースノートでJava9対応を謳っているライブラリはJava8でも動作可能なものが大半なので、今の内にJava9(Module System)対応版のバージョンまで依存ライブラリのバージョンを更新するのが良いです。
 理由は単純で、 **Module Systemに対応させるのも多少時間がかかるのに、ライブラリ自体のマイナーアップグレードの対応も同時に行うのは苦行** だからです。変更箇所が多いと、細かな変更を見落としがちになり、デグレードを引き起こす原因になります。また、ライブラリの更新と合わせて、細かく商用環境にデプロイすることで、リスクを減らしながらマイグレーションすることができます。
 
@@ -121,7 +121,7 @@ Step 1で基本が理解できたら、**Java8のうちに依存ライブラリ�
 実際問題、Named Moduleにマイグレーションする場合には、 **modulepath上で同じjavaのパッケージを持った複数のライブラリが存在しない状態** にする必要があり、依存ライブラリが古かったり多かったりするとパッケージの重複エラーが発生します。下のイメージの場合ではmodulepathでのクラスロードはできないので、ライブラリ側に対応をお願いするか、classpathからロードする必要があります。
 
 (例: `tomcat-embed-core` と `tomcat-juli` で パッケージ重複が起きていてNG)
-![conflict_packages]({{site.baseurl}}/assets/images/20180204/conflict_packages.png)
+![conflict_packages](/images/20180204/conflict_packages.png)
 
 ### Step 3. Unnamed Moduleにマイグレーションする
 
@@ -129,7 +129,7 @@ Unnamed Moduleはclasspathを用いてクラスをロードする方式であ�
 
 `Gradle` であれば、例えば以下のようにコンパイル引数を追加しました。
 
-```
+```groovy
 compileJava.options.compilerArgs += [
     "--add-modules", "java.xml.ws.annotation",
     "--add-modules", "java.xml.bind",
@@ -149,19 +149,19 @@ Named Moduleはメインモジュールの `module-info.java` に定義され�
 
 [Building Java 9 Modules](https://guides.gradle.org/building-java-9-modules/) を参考にしつつと言ったのですが、こちらも注意点があります。ページでは以下のようサンプルコードが書かれているのですが、試しにやってみたところ、一発でコンパイルは通りませんでした。
 
-```
+```groovy
 doFirst {
     options.compilerArgs = [
         '--module-path', classpath.asPath,
     ]
-    classpath = files()  
+    classpath = files()
 }
 ```
 
 このコードサンプルではGradleがリポジトリから取得したclasspath上のライブラリを全てmodulepathで読み込むように修正しています。
 そのため、Step 2でも少し触れましたが **modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合** は以下のようなエラーが出力されてしまいます。(例としてspringboot1.5.9が依存している `embed tomcate`のライブラリでパッケージが競合している場合)
 
-```
+```bash
 エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
 エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
 エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
@@ -173,6 +173,7 @@ doFirst {
 ```
 
 これを解決するためのワークアラウンドがそこそこ大変なのですが
+
 * モジュールのバージョンを合わせる(場合によっては片方のdependencyからexcludeする)
 * 代替可能な別クラスや別モジュールにコードを置き換えて、依存モジュールを減らす
 * 特定のモジュールのみclasspathから読み込むように `build.gradle` を修正する
@@ -188,6 +189,7 @@ doFirst {
 従来の `classpath` のクラスロードから `modulepath` へのクラスロードに機構が変わったことに加え、ビルドツールが現段階ではよしなにやってくれないため、モジュール同士の依存関係やモジュール自体の設計を強く意識する必要が出てきました。ここは今後の課題かもしれません。
 
 個人的には商用環境までデプロイできればかっこよかったのですが、
+
 * springboot 2.xの安定版がまだないこと
 * Java 9/10にはサポートがつかないこと
 * `build.gradle` の可読性とメンテナンス性が落ちた
@@ -197,6 +199,7 @@ Java 8もまだしばらくサポートされるようですし、今回の学�
 皆さんも是非、自プロダクトで練習してみてはいかがでしょうか。
 
 最後にポイントだけもう一度まとめておきます
+
 * マイグレ前にやること
     * 依存ライブラリのサポート状況を確認しておく
     * 依存ライブラリのバージョンを上げておく

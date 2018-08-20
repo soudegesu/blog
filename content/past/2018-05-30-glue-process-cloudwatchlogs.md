@@ -8,15 +8,12 @@ tags:
   - s3
   - cloudwatchlogs
   - glue
-# header:
-#   teaser: /assets/images/icon/glue_icon.png
+url: /aws/glue-process-cloudwatchlogs/
+twitter_card_image: https://www.soudegesu.com/images/icon/glue_icon.png
 ---
 
 S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。
 結論から言うと、GlueのCrawlerでログをいい感じにパースできなかったので、失敗しました、という話です。
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション
 
@@ -37,14 +34,14 @@ Apache Sparkをベースとしており、せっかくだから使ってみた�
 
 以下のような構成で処理させようと考えていました。
 
-![architecture]({{site.baseurl}}/assets/images/20180530/architecture.png)
+![architecture](/images/20180530/architecture.png)
 
 ### 基データのログフォーマット
 
 CloudWatch LogsはログデータがJSONフォーマットになっていると、
 JSON pathのような検索ができたり、ログを展開したときにpretty printしてくれるのでよく使ってしまいます。
 
-![cloudwatch_logs]({{site.baseurl}}/assets/images/20180530/cloudwatch_logs.png)
+![cloudwatch_logs](/images/20180530/cloudwatch_logs.png)
 
 今回処理させたいデータも、この **JSONフォーマットのログをCloudWatch Logsのエクスポート機能でS3にファイル出力したもの** です。
 
@@ -63,7 +60,7 @@ Glueには **Crawler** という設定があり、指定したデータソース
 Crawlerが S3バケットのファイルからデータカタログを作成してくれたわけですが、以下のように 「[ion](http://amzn.github.io/ion-docs/) でした」
 という結果が出てきました。
 
-![ion]({{site.baseurl}}/assets/images/20180530/ion.png)
+![ion](/images/20180530/ion.png)
 
 「あれ？jsonではないの？」
 
@@ -81,7 +78,7 @@ Crawlerが S3バケットのファイルからデータカタログを作成し�
 
 Crawlerがログファイルを分類するために、自前の [カスタム分類子](https://docs.aws.amazon.com/ja_jp/glue/latest/dg/custom-classifier.html) を設定することもできます。
 
-![crawler_classifier]({{site.baseurl}}/assets/images/20180530/crawler_classifier.png)
+![crawler_classifier](/images/20180530/crawler_classifier.png)
 
 * Grok
 * XML
@@ -105,6 +102,7 @@ GlueのCrawlerでいい感じにデータカタログを作るのに失敗しま
 特に今回のような、 **CloudWatch LogsのログがJSON形式で、エクスポート機能でS3に外出ししたファイル（ログの一部がJSON形式）** の場合には相性が悪いということがわかりました。
 
 ## 参考にさせていただいたサイト
+
 * [AWS Glue と Amazon S3 を使用してデータレイクの基礎を構築する](https://aws.amazon.com/jp/blogs/news/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/)
 
 <div align="center">

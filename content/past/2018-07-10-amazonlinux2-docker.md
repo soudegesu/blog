@@ -9,14 +9,11 @@ tags:
   - ec2
   - amazonlinux
   - docker
-# header:
-#   teaser: /assets/images/icon/ec2_icon.png
+url: /aws/amazonlinux2-docker/
+twitter_card_image: https://www.soudegesu.com/images/icon/ec2_icon.png
 ---
 
 AMIをAmazon Linux2に変更したのですが、 `yum install docker` でdockerがインストールできなくなってしまったので対処方法を調査しました。
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション
 

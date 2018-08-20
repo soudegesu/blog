@@ -10,14 +10,11 @@ tags:
     - glue
     - stepfunctions
     - athena
-# header:
-#   teaser: /assets/images/icon/glue_icon.png
+url: /aws/aws-batch-and-glue/
+twitter_card_image: https://www.soudegesu.com/images/icon/glue_icon.png
 ---
 
 以前、 [S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話](/aws/glue-process-cloudwatchlogs/) でGlueを少し触ってみたのですが、今回はAWS Batchで前処理 + Glue CrawlerでAthenaのスキーマを自動生成しました、という話をしようと思います。
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション：データを容易に検索したい
 
@@ -40,7 +37,7 @@ PUSH配信基盤の構築やレコメンドエンジン、その他諸々の機�
 
 さっそくやってみましょう。下図のようなアーキテクチャを構築しました。
 
-![architecture]({{site.baseurl}}/assets/images/20180702/architecture.png)
+![architecture](/images/20180702/architecture.png)
 
 大まかな処理の流れを説明すると
 
@@ -246,7 +243,7 @@ def lambda_handler(event, context):
 
 ここまで来れば、ETL済みのバケットへ以下のような構成でデータがアップロードされているはずです。
 
-![hive]({{site.baseurl}}/assets/images/20180702/hive.png)
+![hive](/images/20180702/hive.png)
 
 ### Glue CrawlerからAthenaのスキーマを作成する
 
@@ -291,18 +288,18 @@ resource "aws_glue_crawler" "sample" {
 Crawlerを実行すると、「Databases」 > 「Tables」 の中にいくつかデータテーブルができていることがわかります。
 これがAthenaのテーブルとリンクします。
 
-![glue_console]({{site.baseurl}}/assets/images/20180702/glue_console.png)
+![glue_console](/images/20180702/glue_console.png)
 
 作成されたテーブルの詳細を見てみると、`Classification` の部分が `json` となっています。
 パーティション内のデータをJSON形式のデータと認識してスキーマを定義してくれたということです。
 
 ネストされたJSONプロパティは `struct` として定義されていることもわかります。
 
-![table_detail]({{site.baseurl}}/assets/images/20180702/table_detail.png)
+![table_detail](/images/20180702/table_detail.png)
 
 なお、コンソールからテーブルを選択して、「Action」 > 「View data」 を選択すると、Athenaコンソールの紐づいているデータベースへ画面遷移します。
 
-![table_detail]({{site.baseurl}}/assets/images/20180702/table_detail.png)
+![table_detail](/images/20180702/table_detail.png)
 
 ここまで来れば、後は普通にクエリを書けるようになりますね。
 

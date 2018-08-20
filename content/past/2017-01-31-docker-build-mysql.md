@@ -2,12 +2,11 @@
 title: "Docker buildコマンドのimage作成〜コンテナ起動まで"
 description: "Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。"
 date: 2017-01-31
-categories: 
+categories:
     - docker
-tags: 
+tags:
     - docker
-# permalink:
-#     - /docker/image/build
+url: /docker/image/build
 ---
 
 自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。
@@ -53,7 +52,7 @@ RUN echo "finished setup !!"
 `docker build` コマンドを実行すると以下のようなエラーが出ました。
 
 ```
-#docker build -t soudegesu/mysql:0.0.1 . 
+#docker build -t soudegesu/mysql:0.0.1 .
 Sending build context to Docker daemon 57.86 MB
 Error response from daemon: The Dockerfile (Dockerfile) cannot be empty
 ```
@@ -115,7 +114,7 @@ root@08671cc122c7:/# mysql
 ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 ```
 
-このままだとコンテナを立ち上げただけなので、mysql自体起動していません。 
+このままだとコンテナを立ち上げただけなので、mysql自体起動していません。
 
 実はdocker run する際に オプションを指定してあげる必要があるようです。
 

@@ -7,15 +7,13 @@ categories:
 tags:
   - nodejs
   - express
+url: /nodejs/express-sitemap-module/
 ---
 
 以前書いた 「[Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう](/aws/hosting-with-cloudfront-lambda-edge-serverless/)」 の記事で、Node.jsの [express](http://expressjs.com/ja/) アプリケーションを作成しました。
 
 大抵、webコンテンツを作る時にメインフレームワーク以外のその他のプラグインで何を使おうか迷ってしまいます。
 今回はexpressアプリケーションのサイトマップ生成用npmモジュールを比較してみました。
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション
 ### サイトマップの作成どうしよう
@@ -54,7 +52,7 @@ S3を使わない理由は **節約** です!!
 
 アーキテクチャの概要は以下のようになります。
 
-![architecture]({{site.baseurl}}/assets/images/20180503/architecture.png)
+![architecture](/images/20180503/architecture.png)
 
 ### express-sitemap を試す
 
@@ -125,7 +123,7 @@ module.exports = app
 #curl http://localhost:3000/sitemap.xml
 
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://www.tools.soudegesu.com*</loc>
@@ -149,7 +147,7 @@ module.exports = app
     </url>
     <url>
         <loc>http://www.tools.soudegesu.com/aaaa</loc>
-    </url>    
+    </url>
 </urlset>
 ```
 
@@ -211,7 +209,7 @@ const sitemap = sm.createSitemap({
           lang: 'ja',
           url: 'https://www.tools.soudegesu.com/ja/alerm/'
         }
-      ]      
+      ]
     }
   ]
 });
@@ -247,7 +245,7 @@ module.exports = app
 #curl http://localhost:3000/sitemap.xml
 
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset 
+<urlset
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"

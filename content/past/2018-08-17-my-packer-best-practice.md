@@ -8,19 +8,16 @@ tags:
     - aws
     - packer
 url: /aws/my-packer-best-practice/
-# header:
-#   teaser: /assets/images/icon/packer_icon.png
+twitter_card_image: https://www.soudegesu.com/images/icon/packer_icon.png
 ---
 
 様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。
 今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。
 
-* Table Of Contents
-{:toc}
-
 ## 作成したリポジトリ
 
 はじめに、作成したリポジトリを以下に晒しておきます。
+
 * [soudegesu/my_packer_best_practice](https://github.com/soudegesu/my_packer_best_practice)
 
 また、前提条件は以下とします。
@@ -84,7 +81,6 @@ end
 Packerのtemplateファイルの `builders` を抜粋します。
 
 ```json
-{% raw %}
 "builders":[
     {
         "type": "null",
@@ -97,7 +93,6 @@ Packerのtemplateファイルの `builders` を抜粋します。
         "ssh_private_key_file": "{{user `ssh_key`}}"
     }
 ]
-{% endraw %}
 ```
 
 templateファイル上で展開される変数は以下を与えます。
@@ -140,7 +135,6 @@ Packerのtemplateファイルで記載するprovisionerには [ansible](https://
 ここでは `rake` コマンドをラップした `run_spec.sh` を呼び出していて、SSHするために必要な情報を引数として渡しています。
 
 ```json
-{% raw %}
     "provisioners": [
         {
             "type": "ansible",
@@ -157,7 +151,6 @@ Packerのtemplateファイルで記載するprovisionerには [ansible](https://
             "command": "cd serverspec && sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}"
         }
     ]
-{% endraw %}    
 ```
 
 ## 設定ファイルは、roleごと、環境ごとに準備する
@@ -238,7 +231,7 @@ ROLE = $1
 # EC2へのSSH鍵（絶対パス）
 AWS_KEY_FILE = $2
 
-# Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存 
+# Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存
 init-vagrant:
 	vagrant halt && vagrant destroy -f && vagrant up --provision && \
 		vagrant snapshot save initial-save

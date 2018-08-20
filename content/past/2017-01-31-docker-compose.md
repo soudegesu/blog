@@ -2,10 +2,10 @@
 title: "docker-composeを使ってmysql dockerコンテナを起動する"
 description: "docker-composeコマンドを使用して、mysqlのdockerコンテナ起動をやってみます。"
 date: 2017-01-31
-categories: 
+categories:
   - docker
   - docker-compose
-# permalinks: /docker/docker-compose/mysql
+url: /docker/docker-compose/mysql
 ---
 
 前回の記事で `docker build` からの `docker run` コマンドを使用することでmysqlのdockerコンテナの起動ができました。
@@ -16,13 +16,13 @@ categories:
 以下のサイトからdocker-toolboxをインストールしましょう。
 その中にdocker-composeも含まれています。
 
-[https://www.docker.com/products/docker-toolbox:embed:cite]
+* [https://docs.docker.com/toolbox/](https://docs.docker.com/toolbox/)
 
 そもそもdocker-composeは複数のコンテナ管理を容易に行う機能を提供してくれるものです。今回はmysqlコンテナでしか利用しませんが、システムコンポーネントの設定や起動順序の制御をyamlファイルに記載するだけで良いので、可読性が高く、VCSでも管理がしやすいです。
 
 例えば、以下のようなDockerfileがあったとします。
 
-```
+```Dockerfile
 FROM mysql:latest
 
 RUN { \
@@ -39,7 +39,7 @@ CMD ["mysqld"]
 
 それを呼び出すdocker-compose.ymlを作成します。
 
-```
+```Dockerfile
 mysql:
   build: .
   dockerfile: Dockerfile
@@ -62,8 +62,8 @@ dockerfileの箇所に作成したDockerfileを指定しておくことで、起
 ## docker-compose で起動する
 それでは起動してみましょう。
 
-```
-#docker-compose up                                                                                                                                                
+```bash
+#docker-compose up
 Starting soudegesu_mysql_1
 Attaching to soudegesu_mysql_1
 mysql_1  | 2017-01-31T07:09:28.026908Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
@@ -77,7 +77,7 @@ mysql_1  | 2017-01-31T07:09:28.054055Z 0 [Note] InnoDB: GCC builtin __atomic_thr
 
 mysqlコマンドで接続してみます。
 
-```
+```bash
 mysql -h 127.0.0.1 -P 3306 -u root -proot
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -99,7 +99,7 @@ mysql>
 できました。
 起動時のsqlファイルの実行結果も確認しましょう。
 
-```
+```bash
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -113,7 +113,7 @@ mysql> show databases;
 ```
 
 
-```
+```bash
 mysql> use soudegesu;
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
@@ -133,7 +133,7 @@ mysql> show tables;
 ## ちなみに
 既存のimageを使用して `docker-compose up` を実行することも可能です。場合に応じて設定を変更してください。
 
-```
+```Dockerfile
 mysql:
   image: mysql:latest ←これ
   ports:

@@ -6,14 +6,12 @@ categories:
     - python
 tags:
     - python
+url: /python/python-datetime/
 ---
 
 仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、**pythonのdatetimeを使った文字列から日時への変換** や **タイムゾーンの変更** を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。
 
 今回は自分の備忘録的な意味も込めて書こうと思います。
-
-* Table Of Contents
-{:toc}
 
 ## 環境情報
 
@@ -170,7 +168,7 @@ print(str_to_dt)
 しかし厄介なのが、型とaware/naiveオブジェクトの関係です。型に対して利用するオブジェクトが一意に決まりません。
 
 |型      |オブジェクト|
-|========|===========|
+|--------|----------|
 |date    |naive|
 |time    |naive または aware|
 |datetime|naive または aware|
@@ -178,7 +176,7 @@ print(str_to_dt)
 `time` 型と `datetime` 型がそれぞれ、 `aware` と `naive` かは以下で確認できます。
 
 |オブジェクト    |awareになる条件|naiveになる条件|
-|==============|==============|==============|
+|--------------|-------------|--------------|
 | time         |オブジェクト tの `t.tzinfo` が None でなく `t.tzinfo.utcoffset(None)` が None を返さない場合|aware以外の場合|
 | datetime     |オブジェクト dの `d.tzinfo` が None でなく `d.tzinfo.utcoffset(d)` が None を返さない場合| `d.tzinfo` が None であるか `d.tzinfo` が None でないが `d.tzinfo.utcoffset(d)` が None を返す場合|
 
@@ -238,6 +236,7 @@ print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
 私の場合、基本的には「データ仕様を確認して、タイムゾーンあり文字列として変換してしまう」方で処理をしようと思いました。
 
 ## 参考にさせていただいたサイト
+
 * [Python docs](https://docs.python.jp/3/library/datetime.html)
 
 <br><br>

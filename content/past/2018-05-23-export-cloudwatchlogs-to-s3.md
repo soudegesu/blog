@@ -9,15 +9,12 @@ tags:
     - cloudwatchlogs
     - stepfunction
     - lambda
-# header:
-#   teaser: /assets/images/icon/stepfunction_icon.png
+url: /aws/export-cloudwatchlogs-to-s3/
+twitter_card_image: https://www.soudegesu.com/images/icon/stepfunction_icon.png
 ---
 
 CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
 しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション
 
@@ -35,7 +32,7 @@ CloudWatch LogsからS3へログストリームを転送する簡易な方法は
 
 それは **既に Subscription Filter が埋まっていた** ことです。
 
-![cloudwatchlogs_subscription]({{site.baseurl}}/assets/images/20180523/cloudwatchlogs_subscription.png)
+![cloudwatchlogs_subscription](/images/20180523/cloudwatchlogs_subscription.png)
 
 （上は既にKinesis StreamにSubscription Filterを奪われた図）
 
@@ -49,7 +46,7 @@ CloudWatch Logsを外部のAWSリソースにストリーム接続させるに�
 
 エクスポートする時間帯をUTCでレンジ指定することで、対象期間のログストリームを任意のバケットにエクスポートする **タスク** を登録できます。
 
-![export_task]({{site.baseurl}}/assets/images/20180523/export_task.png)
+![export_task](/images/20180523/export_task.png)
 
 ただこれにも制約があります。**エクスポート機能は1度に1回しか実行できない** のです。
 エクスポートするためのタスクを生成した後、そのエクスポートタスクのステータスが `COMPLETED` になるまで、
@@ -66,7 +63,7 @@ CloudWatch Logsを外部のAWSリソースにストリーム接続させるに�
 3. Lambda では CloudWatch Logs の create export task を実行
 4. create export task で S3にログがエクスポートされる
 
-![export_to_s3]({{site.baseurl}}/assets/images/20180523/export_to_s3.png)
+![export_to_s3](/images/20180523/export_to_s3.png)
 
 順を追って見ていきましょう。手順的には後段から作る必要があるので、それに準じて説明します。
 
@@ -219,7 +216,7 @@ def lambda_handler(event, context):
 
 定義したステートマシンは以下のようになっています。
 
-![statemachine]({{site.baseurl}}/assets/images/20180523/statemachine.png)
+![statemachine](/images/20180523/statemachine.png)
 
 各ステートの説明はざっくり以下になります。
 
@@ -263,15 +260,15 @@ def lambda_handler(event, context):
 }
 ```
 
-ポイントとしては、**Waitのステートを入れている** ところです。 
+ポイントとしては、**Waitのステートを入れている** ところです。
 
 create export task のAPIは同時に実行できないので、`COMPLETE` するまでの概算秒数を入れています。
 
 **Lambdaには実行時間の上限があるのと、稼働時間に応じた課金になる** ので、Lambda関数の中でsleepするのは好ましくありません。
 
-もちろん、秒数は概算で問題なく、エクスポートが `COMPLETE` 以外の場合には 
+もちろん、秒数は概算で問題なく、エクスポートが `COMPLETE` 以外の場合には
 `Export Awslogs to S3` → `Finished exporting?` → `Wait a minute` をぐるぐる回るようにしておくのが良いでしょう。
-とは言え、無限ループにならないようにタイムアウト値 `TimeoutSeconds: 86400` (24時間)を指定しています。 
+とは言え、無限ループにならないようにタイムアウト値 `TimeoutSeconds: 86400` (24時間)を指定しています。
 少し長いかもしれないので、要調整です。
 
 ### CloudWatch Eventsの設定
@@ -280,7 +277,7 @@ CloudWatch Eventsでタイムベースのトリガー指定をします。
 
 Step Functionsのarnを指定するだけなので、そこまで凝った所はありません。
 
-![cloudwatch_events]({{site.baseurl}}/assets/images/20180523/cloudwatch_events.png)
+![cloudwatch_events](/images/20180523/cloudwatch_events.png)
 
 このときに指定するロールには、信頼関係に `events.amazonaws.com` を指定し、
 最低限以下のポリシーが必要です。
@@ -308,7 +305,7 @@ Step Functionsのarnを指定するだけなので、そこまで凝った所は
 ちなみに、AWSアカウント内のロググループを全てエクスポートしたら、下のようになりました。
 （表示列は設定変更しています）
 
-![stacked_task]({{site.baseurl}}/assets/images/20180523/stacked_task.png)
+![stacked_task](/images/20180523/stacked_task.png)
 
 ## まとめ
 
@@ -324,6 +321,7 @@ Step FunctionsはLambda以外にも様々なAWSリソースと連携ができる
 ステートマシンを軸としたサーバレスな事例が多く紹介されてくることでしょう。
 
 ## 参考にさせていただいたサイト
+
 * [[新機能]Amazon Kinesis FirehoseでS3にデータを送ってみた #reinvent](https://dev.classmethod.jp/cloud/aws/put-data-on-s3-through-firehose/)
 * [Step Functions の詳細](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/how-step-functions-works.html)
 

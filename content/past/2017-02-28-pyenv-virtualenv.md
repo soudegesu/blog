@@ -1,15 +1,15 @@
 ---
 title: "pyenvとpyenv-virtualenvでanacondaと共存する"
 date: 2017-02-28
-categories: 
+categories:
     - pyenv
     - anaconda
-tags: 
+tags:
     - python
     - pyenv
     - pyenv-virtualenv
     - anaconda
-permalink: /python/pyenv/anaconda
+url: /python/pyenv/anaconda
 ---
 ## はじめに
 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
@@ -19,10 +19,10 @@ anacondaを使用する機会も増えてきたので、`pyenv install`からの
 ## 今回やりたいこと
 1. 1台のマシンの中で使用するpythonのバージョンを切り替えたい
 1. さらに言えば、ディストリビューションも切り替えたい(anaconda)
-1. *anaconda*と*pyenv*の `activate` の競合を解決したい
-    1. *anaconda*を`activate`する際にフルパスで指定するのを避けたい
+1. *anaconda* と *pyenv* の `activate` の競合を解決したい
+    1. *anaconda* を`activate`する際にフルパスで指定するのを避けたい
 
-1と2は*pyenv*で、3は*pyenv-virtualenv*で解決できることになります。
+1と2は*pyenv*で、3は *pyenv-virtualenv* で解決できることになります。
 
 ## 環境
 * MacOSX Yosemite
@@ -80,7 +80,7 @@ pythonのvenvモジュールを呼び出し、仮想環境を構築します。
 ``` bash
 python3 -m venv .
 source bin/activate
-``` 
+```
 `deactivate`する場合には`deactivate`コマンドを入力するだけです。
 ``` bash
 deactivate
@@ -113,7 +113,7 @@ python -V
 ``` bash
 conda info -e
 > root                  *  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0
-``` 
+```
 次に、anacondaの仮想環境を構築します。
 ``` bash
 conda create -n fuga python=3.5 anaconda

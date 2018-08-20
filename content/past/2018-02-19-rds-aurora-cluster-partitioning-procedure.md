@@ -10,17 +10,12 @@ tags:
   - aurora
   - SQL
   - MySQL
+url: /aws/rds-aurora-cluster-partitioning-procedure/
 ---
-
 
 AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。
 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。
-
-
-* Table Of Contents
-{:toc}
-
 
 ## 今回やりたかったこと
 今回はRDS Aurora(MySQL互換)にてClusterを組み、テーブルは日でパーティショニングすることにしました。
@@ -131,7 +126,7 @@ DELIMITER ;
 CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
 ```
 
-なお、パーティションは **追加しかできない** ことに注意してください。 
+なお、パーティションは **追加しかできない** ことに注意してください。
 
 ### プロシージャ実行をEVENT登録し定期実行する
 
@@ -148,7 +143,7 @@ MySQLには `CREATE EVENT` 構文にてイベントをスケジュール実行�
 CREATE EVENT add_hoge_partition
 ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
 COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
-DO CALL 
+DO CALL
     add_hoge_partition(
         (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge', DATE_ADD(
             (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
@@ -161,21 +156,21 @@ DO CALL
 ## RDS Aurora Clusterの場合を考える
 ここで、Aurora Clusterの場合を考えます。
 Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Writer/Readerの構成になります。
-詳細は割愛しますが、Auroraに関しては以下のBalckBeltの資料を参照してください。
-
-{% oembed https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/29 %}
+詳細は割愛しますが、Auroraに関しては[BalckBeltの資料](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/29)を参照してください。
 
 ### EVENTはWriterのみで実行される
 先程、`CREATE EVENT` 構文にてプロシージャを日次で実行するように登録しました。
 Clusterを組んだ場合においては、「WriterとReaderの両方で実行されてしまうのでは？」と思い、以下のクエリを実行してみたところ、**プロシージャはWriterで1回だけ呼ばれている** ことが確認できました。
 
 * WriterでEVENTを確認
+
 ```sql
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
-> 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation	
+> 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation
 ```
 
 * ReaderでEVENTを確認
+
 ```sql
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
 > Empty set (0.01 sec)
@@ -196,7 +191,7 @@ Failoverさせた状態でも、翌日にもパーティションが作成され
 #### Aurora ClusterにIAM Roleを追加する
 Auroraからlambdaを実行するために、別途権限を付与する必要があります。
 IAMのメニューから専用のIAM Roleを作成しましょう(今回は `rdsToLambdaRole` という名前にします)。
-`rdsToLambdaRole` には 
+`rdsToLambdaRole` には
 
 ```json
 "Action": [
@@ -210,7 +205,7 @@ IAMのメニューから専用のIAM Roleを作成しましょう(今回は `rds
 
 こちらのパラメータも `dynamic` のためクラスタ再起動は不要です。
 
-![rds_to_lambda_role]({{site.baseurl}}/assets/images/20180219/rds_to_lambda_role.png)
+![rds_to_lambda_role](/images/20180219/rds_to_lambda_role.png)
 
 #### RDSインスタンスのあるsubnetのルーティング設定をする
 RDSからのoutbound通信を許可してあげる必要があるので、ルーティングの設定を行います。
@@ -304,7 +299,7 @@ Auroraから渡されたメッセージを処理して、監視システムや�
 以下のように **END OF LOG** しか表示されない場合があります。
 コンソール上部には 38.2kB とログの容量が記載されているにも関わらずに、です。
 
-![rds error log is empty]({{site.baseurl}}/assets/images/20180219/rds_log_is_empty.png)
+![rds error log is empty](/images/20180219/rds_log_is_empty.png)
 
 実はこれは、**「AWS側で使用するログを上記のログファイルに出力しているらしく、我々AWSのユーザ側には表示されない」という仕様** によるものです。少しわかりにくいですが、このログファイルの容量はAWS用のログの容量も含まれて表示されている、ということですね。
 
@@ -313,6 +308,7 @@ Auroraから渡されたメッセージを処理して、監視システムや�
 マネージドサービスであるRDSのプロシージャ内部の処理は隠蔽されて見通しが悪くなるため、エラーハンドリングをきちんと定義してあげることが肝要です。今回はRDSからlambdaを実行しましたが、CloudwatchLogsへ連携することもできるそうなので、機会があれば試してみたいと思います。
 
 ## 参考にさせていただいたサイト
+
 * [MySQL 5.6 リファレンスマニュアル 13.1.11 CREATE EVENT 構文](https://dev.mysql.com/doc/refman/5.6/ja/create-event.html)
 * [AWS Black Belt Online Seminar Amazon Aurora](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-aurora/)
 * [Amazon Aurora MySQL DB クラスターからの Lambda 関数の呼び出し](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/AuroraMySQL.Integrating.Lambda.html#AuroraMySQL.Integrating.ProcLambda)

@@ -7,18 +7,15 @@ categories:
 tags:
     - springboot
     - datadog
-# header:
-#   teaser: /assets/images/20180517/datadog_icon.png
+url: /java/datadog-with-springboot-micrometer/
+twitter_card_image: https://www.soudegesu.com/images/20180517/datadog_icon.png
 ---
 
 以前書いた「 [Spring Bootを1.5から2へマイグレーションするステップとポイント](/java/migrate-springboot-1-to-2/) 」 にて、
 [Datadog](https://www.datadoghq.com/)に対してメトリックを送信するの仕組みを [micrometer-registry-datadog](https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-datadog) に変更したのですが、
 Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。
 
-![micrometer]({{site.baseurl}}/assets/images/20180517/micrometer.png)
-
-* Table Of Contents
-{:toc}
+![micrometer](/images/20180517/micrometer.png)
 
 ## Micrometerって何
 
@@ -50,8 +47,8 @@ Spring Bootに [micrometer-registry-datadog](https://mvnrepository.com/artifact/
 なお、Micrometer自体は `spring-boot-starter-actuator` に含まれています。
 
 ```groovy
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.1.RELEASE'
-  compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
+compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.1.RELEASE'
+compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
 ```
 
 ### application.yamlの修正
@@ -78,25 +75,25 @@ Datadog上でタグを使ってメトリックを横断的にフィルタでき�
 また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに `spring.` のprefixを付与しています。
 
 ```java
-    @Bean
-    public MeterRegistryCustomizer<MeterRegistry> customizer() {
-        return registry -> {
-            try {
-                registry.config()
-                        .meterFilter(new MeterFilter() {
-                            @Override
-                            public Meter.Id map(Meter.Id id) {
-                                return id.withName("spring." + id.getName());
-                            }
-                        })
-                        .commonTags("env", "local")
-                        .commonTags("monitoring_group", "system_component_a")
-                        .commonTags("host", InetAddress.getLocalHost().getHostName());
-            } catch (UnknownHostException e) {
-                LOGGER.error("fail to resolve hostname.", e);
-            }
-        };
-    }
+@Bean
+public MeterRegistryCustomizer<MeterRegistry> customizer() {
+    return registry -> {
+        try {
+            registry.config()
+            .meterFilter(new MeterFilter() {
+                @Override
+                public Meter.Id map(Meter.Id id) {
+                    return id.withName("spring." + id.getName());
+                }
+            })
+            .commonTags("env", "local")
+            .commonTags("monitoring_group", "system_component_a")
+            .commonTags("host", InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            LOGGER.error("fail to resolve hostname.", e);
+        }
+    };
+}
 ```
 
 ## Datadog上でJVMのメトリックを見てみよう
@@ -109,25 +106,25 @@ Datadog上でタグを使ってメトリックを横断的にフィルタでき�
 
 JVMの使用メモリ量は `jvm.memory.used` のメトリックで確認できます。 (先程 `spring.` のprefixをつけているので、下の図では `spring.jvm.memory.used`)
 
-![used_memory]({{site.baseurl}}/assets/images/20180517/used_memory.png)
+![used_memory](/images/20180517/used_memory.png)
 
 #### ヒープ領域のみ
 
 次に `area:heap` を指定すると、ヒープ領域のみに絞りこむことができます。
 
-![heap_only]({{site.baseurl}}/assets/images/20180517/heap_only.png)
+![heap_only](/images/20180517/heap_only.png)
 
 #### Survivor領域
 
 `id:ps_survivor_space` を追加すると、 ヒープの中のさらにSurvivor領域のみにも絞り込めます。これは嬉しい。
 
-![survivor_only]({{site.baseurl}}/assets/images/20180517/survivor_only.png)
+![survivor_only](/images/20180517/survivor_only.png)
 
 #### 領域毎にグループ化する
 
 もちろん、 `id` をfromではなく、グルーピングで使用すると、Heap領域に対する各領域の状態が確認できます。
 
-![heap_group_by_id]({{site.baseurl}}/assets/images/20180517/heap_group_by_id.png)
+![heap_group_by_id](/images/20180517/heap_group_by_id.png)
 
 ### JVMメトリックの構成
 
@@ -175,12 +172,11 @@ failed to send metrics
     at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
     at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
     at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
-    at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
-    at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
     (以下略)
 ```
 
 ## まとめ
+
 `micrometer-registry-datadog` を使用すると、取得したいメトリックの情報が構造化されて、フィルタリングがしやすくなりました。
 特にJVMのメモリのメトリックは以前よりも直感的になった印象があります。
 

@@ -6,6 +6,7 @@ categories:
     - linux
 tags:
     - systemd
+url: /linux/systemd_clock/
 ---
 
 今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
@@ -13,15 +14,12 @@ tags:
 
 なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。
 
-* Table Of Contents
-{:toc}
-
 ## システムクロックを変更する
 
 システムクロックは `/etc/adjtime` を使ってハードウェアクロックから算出されます。
 `systemd` の場合、 `/etc/adjtime` が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。
 
-```
+```bash
 cat /etc/adjtime
 
 > 0.0 0 0.0
@@ -31,7 +29,7 @@ cat /etc/adjtime
 
 システムクロックを確認しましょう。 `timedatectl` コマンドを実行してみます。
 
-```
+```bash
 timedatectl
 
 >       Local time: Sat 2018-06-09 05:16:29 UTC
@@ -48,13 +46,13 @@ timedatectl
 
 次にtimezoneを `Asia/Tokyo` にしてみましょう。こちらも `timedatectl` コマンドで設定可能です。
 
-```
+```bash
 timedatectl set-timezone Asia/Tokyo
 ```
 
 設定がされたか確認してみましょう。 `timedatectl` コマンドを実行したら、 Time zoneがJSTになっていることが確認できます。
 
-```
+```bash
 timedatectl
 
 >       Local time: Sat 2018-06-09 14:57:45 JST
@@ -70,7 +68,7 @@ timedatectl
 タイムゾーンを変更すると、 `/etc/localtime` にその設定が反映されます。
 ファイルを見てみましょう。 `cat` してみましょう。
 
-```
+```bash
 cat /etc/localtime
 
 > TZif2
@@ -82,7 +80,7 @@ cat /etc/localtime
 文字化けしてしまいましたね。代わりに、 `zdump` コマンドを使うことで `/etc/localtime` が指すタイムゾーンの情報を確認してみましょう。
 これで JST になっていることを確認できました。
 
-```
+```bash
 zdump /etc/localtime
 
 > /etc/localtime  Sat Jun  9 14:57:54 2018 JST
@@ -97,7 +95,7 @@ Linuxが起動するときにシステムクロックを設定するため、ハ
 
 ハードウェアクロックの情報は `hwclock` コマンドで確認できます。
 
-```
+```bash
 hwclock --debug
 
 > hwclock from util-linux 2.30.2
@@ -118,7 +116,7 @@ hwclock --debug
 
 デバッグオプションなしで、 `hwclock` だけ実行すると、ハードウェアに記録されている時刻が表示されます。
 
-```
+```bash
 hwclock
 
 > 2018-06-09 15:09:21.645250+0900

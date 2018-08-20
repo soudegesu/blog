@@ -9,18 +9,15 @@ tags:
     - acm
     - route53
     - ssl
-permalink: /aws/validate-certification-manager
+url: /aws/validate-certification-manager
 ---
-
-* Table Of Contents
-{:toc}
 
 ## Route53でCertification Managerのドメイン検証ができるようになった
 
-![acm_validate]({{site.baseurl}}/assets/images/20180131/acm_validate.png)
+![acm_validate](/images/20180131/acm_validate.png)
 
 [DNS を使って AWS Certificate Manager の検証を簡単に](https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/)
-の記事にも記載があるように、2017/11に `AWS Certification Manager(以下ACM)` のSSL証明書取得の際の検証手順に *Route53のDNS検証* が追加されました。実はこれは、ACMで取得したSSL証明書の *取得* だけではなく *更新* においてもとても大きな利点があるので、今回はそれを紹介します。
+の記事にも記載があるように、2017/11に `AWS Certification Manager(以下ACM)` のSSL証明書取得の際の検証手順に **Route53のDNS検証** が追加されました。実はこれは、ACMで取得したSSL証明書の **取得** だけではなく **更新** においてもとても大きな利点があるので、今回はそれを紹介します。
 
 ## SSL証明書"発行"の違い
 ### E-mail検証は手間がかかる
@@ -33,6 +30,7 @@ permalink: /aws/validate-certification-manager
 そのため、私の場合は自分のAWSアカウント内にE-mail検証のためのメール受信箱を作成していました。
 
 自前のAWSアカウント内で検証を完結させるためには、
+
 * 受信ボックス代わりになるS3バケットを作成し
 * Route53にTXTレコードやMXレコードを作成し
 * SNSで受けたメールをS3に振り分け、
@@ -46,18 +44,20 @@ permalink: /aws/validate-certification-manager
 ### DNS検証によって検証ステップが格段に簡素になる
 DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメインの有効性を確認します。
 そのため
+
 * 「Create record in Route 53」 でCNAMEレコードを作成し
 *  少し待つ(10分くらい?)
+
 で検証が終了します。
 
 ね、簡単でしょう？
 
-![add_cname_records]({{site.baseurl}}/assets/images/20180131/add_record.png)
+![add_cname_records](/images/20180131/add_record.png)
 
 ## SSL証明書"更新"の違い
 ### ACMのSSL証明書有効期限は13ヶ月
 ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、1年程経過したらSSL証明書の更新作業が発生します。
-これはSSL証明書を運用されている人でしたら毎度のことなのですが、 *証明書の更新時期を忘れないよう* に通知の仕組みを入れたり、
+これはSSL証明書を運用されている人でしたら毎度のことなのですが、 **証明書の更新時期を忘れないよう** に通知の仕組みを入れたり、
 引き継ぎをしたり様々な工夫をされていることかと思います。
 
 ### ACM更新のプロセス
@@ -67,10 +67,10 @@ ACMで発行したSSL証明書の有効期限は13ヶ月です。そのため、
 ACM期限切れの60日前に自動更新可能なものかAWS側で検証し、検証に成功した場合には自動更新を実施してくれます。(自動更新の条件は後述します)
 
 #### ②ドメイン管理者に催促メールを通知
-①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります) 
+①の自動更新に失敗した場合には、証明書に記載されているドメインの管理者に対してメールが通知されます。(WHOISに記載されているメールアドレスもしくは、ドメイン名の前にadmin@を付加したメールアドレスになります)
 
 #### ③AWSアカウントに催促メールを通知
-②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。 
+②のメールからも検証が確認されない場合、AWSアカウントに登録されているメールアドレスに対して通知されます。
 
 #### ④手動でのACM検証作業
 メールに記載されたURLにアクセスし、承認ボタンを押すことでACMの検証が完了します。

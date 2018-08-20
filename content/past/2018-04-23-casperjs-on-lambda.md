@@ -2,19 +2,17 @@
 title: "AWS LambdaでCasperJSを実行してファイルアップロードを自動化する"
 description: "AWS Lambda上でCasperJSを動かしてファイルアップロードの自動化を行いました。本来であればAPIでバイナリデータをPOSTできれば良かったのですが、アップロード先のシステムでAPIが存在しなかったため、CasperJSを使ってファイルをアップロードするという暴挙に出ました。AWS LambdaでCasperJSを実行する際の注意点などを書きます。"
 date: 2018-04-23
-categories: 
+categories:
     - aws
-tags: 
-    - aws 
-    - lambda 
+tags:
+    - aws
+    - lambda
     - casperjs
+url: /aws/casperjs-on-lambda/
 ---
 
 AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
 APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
-
-* Table Of Contents
-{:toc}
 
 ## 日次でファイルをアップロードしたい
 
@@ -52,7 +50,7 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 
 今回実装したアーキテクチャはざっくり以下のようなイメージです。
 
-![casper_architecture]({{site.baseurl}}/assets/images/20180423/casperjs.png)
+![casper_architecture](/images/20180423/casperjs.png)
 
 実行環境やライブラリは以下になります。
 
@@ -124,6 +122,7 @@ CasperJSのコードも短かったのが良かったのかもしれません。
 と、これを書きながら、「CasperJSのコードを複数のLambdaで分担してGUIのテストできたらかっこいいな」と感じました。
 
 ## 参考にさせていただいたサイト
+
 * [CasperJS](http://casperjs.org/)
 * [PhantomJS](http://phantomjs.org/)
 * [node-casperjs-aws-lambda](https://github.com/narainsagar/node-casperjs-aws-lambda)

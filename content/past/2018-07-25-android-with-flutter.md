@@ -9,16 +9,13 @@ tags:
   - android
   - ios
   - dart
-# header:
-#   teaser: /assets/images/icon/flutter_icon.png
+url: /dart/android-with-flutter/
+twitter_card_image: https://www.soudegesu.com/images/icon/flutter_icon.png
 ---
 
 [gizmodoの記事](https://www.gizmodo.jp/2018/07/fuchsia-5years.html) で、[Google Fuchsia](https://ja.wikipedia.org/wiki/Google_Fuchsia) の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない [Flutter](https://flutter.io/) の環境構築をしてみます。
 
-![flutter](/assets/images/20180725/flutter.png)
-
-* Table Of Contents
-{:toc}
+![flutter](/images/20180725/flutter.png)
 
 ## モチベーション
 
@@ -185,11 +182,11 @@ flutter create sample
 `lib/main.dart` ファイルを開いて、 デバッグを選択（`F5` キー）を押すと、エミュレータを選択できます。
 とりあえず、iOS Simulator にします。
 
-![flutter](/assets/images/20180725/launch_app.png)
+![flutter](/images/20180725/launch_app.png)
 
 暫く待つと（数分待ちました。。）エミュレータが起動し、アプリが立ち上がります。
 
-![demo](/assets/images/20180725/demo.png)
+![demo](/images/20180725/demo.png)
 
 これで開発環境は構築できました！
 

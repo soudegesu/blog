@@ -4,18 +4,16 @@ description: "アプリケーションの脆弱性対応って調査にも時間
 date: 2018-04-24
 categories:
     - aws
-tags: 
+tags:
     - aurora
+url: /aws/aurora-security/
 ---
 
 アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。
 
-* Table Of Contents
-{:toc}
-
 ## [経緯]セキュリティバスターズからの依頼
 そこそこ大きい会社になってくると、セキュリティを専門とする部署があって、
-[CVE](http://cve.mitre.org/) の情報を収集しては 
+[CVE](http://cve.mitre.org/) の情報を収集しては
 
 **「こんな脆弱性が発表されたぞ！君たちのプロダクトは大丈夫なのか！？報告したまえ！」**
 
@@ -23,7 +21,7 @@ tags:
 
 例のごとく、
 
-**「MySQLの脆弱性が発表されたぞ！これな！」** 
+**「MySQLの脆弱性が発表されたぞ！これな！」**
 
 というお達しと共に
 
@@ -44,9 +42,7 @@ CVE-2018-XXXX
 
 そもそも「互換性がある」 からと言って、内部的な仕組みは違うので、一概に言えないのが難しい所です。
 
-例えば、下のスライドを見ると少しわかるのですが、ストレージ部分のアーキテクチャはAurora独自な感があるので、[CVE-2018-2755](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-2755) みたいなレプリケーションに関連する脆弱性は対象にならないのではないか、と推察したりもできます。
-
-{% oembed https://www.slideshare.net/AmazonWebServicesJapan/amazon-aurora-aurora/7 %}
+例えば、[このスライド](https://www.slideshare.net/AmazonWebServicesJapan/amazon-aurora-aurora/7) を見ると少しわかるのですが、ストレージ部分のアーキテクチャはAurora独自な感があるので、[CVE-2018-2755](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-2755) みたいなレプリケーションに関連する脆弱性は対象にならないのではないか、と推察したりもできます。
 
 ## サポートに聞いてみよう
 

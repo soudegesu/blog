@@ -7,14 +7,12 @@ categories:
 tags:
     - book
     - 組織論
+url: /book/reinventing-organizations/
 ---
 
 巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。
 簡単な書評と所感を書きたいと思います。
 以降の内容は **若干のネタバレを含みます** ので、本をまだ読まれていない方は、先に本を読むことをオススメします。
-
-* Table Of Contents
-{:toc}
 
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/4862762263/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4862762263&linkCode=as2&tag=soudegesu-22&linkId=43e663f0a957755b99c435f78312862e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4862762263&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4862762263" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
@@ -26,22 +24,20 @@ tags:
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/B00QJDOM6U/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B00QJDOM6U&linkCode=as2&tag=soudegesu-22&linkId=66b7a77610b78e915e749c4b63d7cfc4"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B00QJDOM6U&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=B00QJDOM6U" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
-<br>
 
 ただし、そのページ分量に見合うだけのエッセンスは詰まっています。
 特に今どきの組織論系の本でよく語られている内容は所々に散りばめられており、説明も一貫かつ丁寧になされているため、
 この一冊を読めば組織論に関する知識がない読者でも一から体系的に知識を抑えることができるでしょう。
 過去にリーダーシップ論、組織論、自己啓発の類を読んだことがある人は、自己の知識とマッピングされる箇所が多数あるでしょう。
 
-
 雑な言い方をすると、
+
 * 組織の基本概念はホラクラシー
 * 管理職の役割はManagement3.0
 * 従業員の行動原理はアンソニー・ロビンズ
 
 と共通する部分をいくつか感じました。
 
-<br>
 また、本書のコンテンツはおおまかに以下のような流れにて構成されています。
 
 * 組織モデルの移り変わり
@@ -92,8 +88,7 @@ tags:
 従業員個人の内発的動機を最大限に活かすことをエンジンとしているので、雇われ社長ではなく、
 内発的動機を持った社長で、かつワンマンでない方にとっては心強い転ばぬ先の杖になるのではないでしょうか。
 
-また、私のような一介の従業員の目線としては **「やらされ仕事ではなく、自身の内発的動機に基づく仕事に従事したい」**
-という意味で、ティールな組織で働いてみたいと思わせてくれました。
+また、私のような一介の従業員の目線としては **「やらされ仕事ではなく、自身の内発的動機に基づく仕事に従事したい」** という意味で、ティールな組織で働いてみたいと思わせてくれました。
 少なくとも、今後の社会人人生の次のステージに向けて、良い影響を与えてくれた良書であることは間違いありません。
 
 <br>

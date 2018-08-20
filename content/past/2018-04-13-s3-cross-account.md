@@ -4,9 +4,10 @@ description: "S3はバケットポリシーを設定することで、クロス�
 date: 2018-04-13
 categories:
     - aws
-tags: 
-    - aws 
+tags:
+    - aws
     - s3
+url: /aws/s3-cross-account/
 ---
 
 AWS S3はバケットポリシーを設定することで、クロスアカウントでのバケット共有ができます。
@@ -15,19 +16,13 @@ AWS S3はバケットポリシーを設定することで、クロスアカウ�
 共有された側ではS3バケットのコンソールにバケットが表示されません。
 今回はなんとかして閲覧する方法はないものかと試行錯誤してみました。
 
----
-
-* Table Of Contents
-{:toc}
-  
-
 ## やりたいこと
 ### S3をファイルストレージサービス的にファイル共有に使いたい
 
 今回やろうとしていたことを簡単に説明します。
 以下の図にまとめました。
 
-![share_bucket]({{site.baseurl}}/assets/images/20180413/share_bucket.png)
+![share_bucket](/images/20180413/share_bucket.png)
 
 既に本番環境で稼働しているサービスがあり(アカウントA)、
 アカウントA内にあるS3バケットにストアしているデータを他部門に提供する必要が出てきました。
@@ -40,7 +35,7 @@ AWS S3はバケットポリシーを設定することで、クロスアカウ�
 ## 課題
 ### ユーザはブラウザしか使えない
 
-今回のケースでは他部門の人間がエンジニアではないため、**ブラウザでのファイルダウンロードしかできない** という制約がありました。 
+今回のケースでは他部門の人間がエンジニアではないため、**ブラウザでのファイルダウンロードしかできない** という制約がありました。
 AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS3コンソールからファイルを見せる」** 必要がありました。
 
 ### コンソール上のバケットリストはバケットのオーナーアカウント側でしか見れない
@@ -84,11 +79,11 @@ AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS
 
 アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、
 
-![account_a_bucket_list]({{site.baseurl}}/assets/images/20180413/account_a_bucket_list.png)
+![account_a_bucket_list](/images/20180413/account_a_bucket_list.png)
 
 アカウントBでのS3コンソールから共有されたバケットを確認できないのです。
 
-![account_b_bucket_list]({{site.baseurl}}/assets/images/20180413/account_b_bucket_list.png)
+![account_b_bucket_list](/images/20180413/account_b_bucket_list.png)
 
 実は **S3のバケットリストはバケットを作成したオーナー側にしか表示されない** というAWSのS3の仕様があります。
 これは AWS CLIでも同様で、 `aws s3 ls` コマンドを実行しても、自分のアカウントで作成されたバケットの一覧しか取得できません。
@@ -103,17 +98,17 @@ AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS
 AWSコンソール上のS3のURLのルールは以下のようになっていて、
 AWSコンソールにログインしたセッション上で直叩きするとブラウザ上で表示することができます。
 
-```
+```bash
 https://s3.console.aws.amazon.com/s3/buckets/{バケット名}/
 ```
 
 今回の例で言えば、AWSアカウントBにログインした状態で下のURLを直叩きします。
 
-```
+```bash
 https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/
 ```
 
-![find_bucket]({{site.baseurl}}/assets/images/20180413/find_bucket_b.png)
+![find_bucket](/images/20180413/find_bucket_b.png)
 
 見えました。やったぜ。
 
@@ -134,16 +129,17 @@ Switch Roleを使ったアカウントの切り替えは記事にされている
 **「クロスアカウントで共有されたS3バケットはAWSコンソール上から閲覧可能なのか」** というタイトルで今回書きましたが、
 結論を言うと
 
-  
+
 **可能**
-  
+
 しかし、以下の条件を知っておく必要がありそうです。
+
 * 共有されたバケットがS3コンソールのバケット一覧で参照可能なのは**バケットのオーナーアカウント**のみ
 * **バケットのURLを直接入力する**ことで、共有先のアカウントでもブラウザ上で確認ができる
 * ただし、URL直接入力の方法は公式サポートされていないので、真面目にやるならSwitch Roleで対応する
 
 今回はURLを直接入力する方法で大丈夫そうだったので、よかったよかった。
-  
+
 
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4797392568/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4797392568&linkCode=am2&tag=soudegesu-22&linkId=2317c39300679077409ccb55e8076219"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4797392568&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4797392568" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />

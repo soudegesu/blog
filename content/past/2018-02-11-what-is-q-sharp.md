@@ -6,13 +6,11 @@ categories:
     - q_sharp
 tags:
     - q#
+url: /q_sharp/what-is-q-sharp/
 ---
 
 もともとは **仮想通貨** を調べていた時に、 **量子耐性** という言葉を発見し、量子耐性から **量子耐性のあるアルゴリズム** や量子プログラミング言語である **Q#** に行き着きました。
 Wikipediaなどを見てみると、**Q#** はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。
-
-* Table Of Contents
-{:toc}
 
 ## Q#の環境構築
 開発環境の構築に関しては大きく補足することは無さそうです。[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されています。
@@ -29,11 +27,11 @@ Microsoft Azureは30日間フリーで使えるクレジットを準備してく
 [Microsoft Quantum Development Kit](https://www.microsoft.com/en-us/quantum/development-kit) をダウンロードすることで `Q#` のコードが動かせるようになります。公式サイトではwebサイトからの `.vsix` ファイル(Visual Studio)入手の手順を紹介していますが、
 今回はヘッダーメニューの [Tools] > [Extensions and Updates..] から検索してインストールしました。
 
-![extension_and_updates]({{site.baseurl}}/assets/images/20180211/extension_and_updates.png)
+![extension_and_updates](/images/20180211/extension_and_updates.png)
 
 ### サンプルコードのインポート
 その後、[サンプルコード](https://github.com/microsoft/quantum)を `fork` したものを `clone` します。
-(私の場合、学んだことをissueに書き連ねていきたいので、こうしました) 
+(私の場合、学んだことをissueに書き連ねていきたいので、こうしました)
 
 Visual Studio上では `Team` というメニューでVCSにアクセスできるので、そこからインポートを行い、
 その後 `.sln` ファイルをダブルクリックしてプロジェクトを開きます。
@@ -44,7 +42,7 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 おもむろにプロンプトが立ち上がり、何かが実行されているのですが、なるほどどうしてよく分かりません。
 とりあえず、動作環境が構築できたことはわかりました。
 
-![prompt_success]({{site.baseurl}}/assets/images/20180211/prompt_success.png)
+![prompt_success](/images/20180211/prompt_success.png)
 
 ## 基本を抑える
 
@@ -67,7 +65,7 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
 以下のようなエラーが表示され、ビルドに失敗しました。
 
-```
+```bash
 Reference to unknown namespace Microsoft.Quantum.Primitive
 ```
 
@@ -79,7 +77,7 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 
 ### 少し変わったプリミティブ型
 #### Qubit
-量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。 
+量子コンピューティングに必要な量子ビット(Quantum Bit)を表現するための型。
 
 #### Pauli
 ブロッホ球での回転を考えるときに使用するパウリ行列を表す型。
@@ -104,8 +102,8 @@ Microsoftのサンプルコードで使われている `T` や `H` 、 `CNOT` �
 私はアルゴリズムや低レベルの機械計算を専門としてはいないため、応用するには学習時間が要しそうですが、
 今時点での言語仕様は比較的理解しやすいと感じました。量子力学の基礎となる数式の意味が理解できれば、
 量子ゲート作成に必要な演算部分は `Q#` から提供されているため、あとは組み合わせるだけになります。
-なお、[IBM Q](https://www.research.ibm.com/ibm-q/) にはGUIもあるのですが、 
-pythonのSDKとして [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。 
+なお、[IBM Q](https://www.research.ibm.com/ibm-q/) にはGUIもあるのですが、
+pythonのSDKとして [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) も提供しています。
 シミュレーションを目的とし、コード化による共有ができ、サクッと動かしてみたい、という方はこちらの方がいいのかもしれませんね。
 (すみません、こちらは動作確認していません)
 
@@ -116,6 +114,7 @@ pythonのSDKとして [qiskit-sdk-py](https://github.com/QISKit/qiskit-sdk-py) �
 今回は量子コンピュータプログラミング言語が活かせる演算までは踏み込みませんが、定期的に情報をウォッチしていきたいですね。
 
 ## 参考にさせていただいたサイト
+
 * [新プログラミング言語「Q#」で量子テレポーテーション](http://ut25252.hatenablog.com/entry/2017/12/15/222821)
 * [2. 量子計算の基本原理[1-14]](https://www.ipa.go.jp/security/enc/quantumcomputers/contents/doc/chap2.pdf)
 * [量子コンピュータと量子ゲートと私](https://qiita.com/eccyan/items/180fb909a55a59bb4e1b)

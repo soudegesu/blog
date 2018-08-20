@@ -6,18 +6,16 @@ categories:
   - gcp
 tags:
   - gcp
-# header:
-#   teaser: /assets/images/icon/google_cloud_icon.png
+url: /gcp/gcp-command/
+twitter_card_image: https://www.soudegesu.com/images/icon/google_cloud_icon.png
 ---
 
 普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。
 
-* Table Of Contents
-{:toc}
-
 ## まずはCLIでしょ
 
 仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。
+
 APIとして提供されている機能もあるのでCLIから実行できた方が嬉しいだろう、という考えもあり、まずはCLIで `gcloud` コマンドが使えるようにまでしたいと思います。
 
 ## Google Cloud SDK をインストールする
@@ -90,11 +88,11 @@ gcloud init
 
 ブラウザが起動し、Googleアカウントの認証が要求されます。
 
-![sign_in_google](/assets/images/20180805/sign_in_google.png)
+![sign_in_google](/images/20180805/sign_in_google.png)
 
 利用規約を確認し許可します。
 
-![allow](/assets/images/20180805/allow.png)
+![allow](/images/20180805/allow.png)
 
 認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので `1` を選択します。
 
@@ -147,7 +145,8 @@ Y
 セットアップはできたので、CLIで自然言語APIを試してみます。
 
 ```bash
-gcloud ml language analyze-syntax --language=ja-JP --content='子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'
+gcloud ml language analyze-syntax --language=ja-JP \
+  --content='子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'
 ```
 
 権限がないと言われるので、CLI経由でAPIを使う権限を設定します。
@@ -168,7 +167,11 @@ y
     {
       "text": {
         "beginOffset": 0,
-        "content": "\u5b50\u4f9b\u304c\u5acc\u3044\u306a\u91ce\u83dc\u3068\u304b3\u7a2e\u985e\u304f\u3089\u3044\u53d6\u76bf\u306b\u4e57\u305b\u3066\u30011\u500b\u3060\u3051\u6b8b\u3059\u4ee3\u308f\u308a\u306b\u6b8b\u308a\u306f\u5168\u90e8\u30ad\u30ec\u30a4\u306b\u98df\u3079\u308b\u30eb\u30fc\u30eb\u306b\u3057\u3066\u308b\u3002"
+        "content": "\u5b50\u4f9b\u304c\u5acc\u3044\u306a\u91ce\u83dc\u3068
+        \u304b3\u7a2e\u985e\u304f\u3089\u3044\u53d6\u76bf\u306b\u4e57\u305b
+        \u3066\u30011\u500b\u3060\u3051\u6b8b\u3059\u4ee3\u308f\u308a\u306b
+        \u6b8b\u308a\u306f\u5168\u90e8\u30ad\u30ec\u30a4\u306b\u98df\u3079
+        \u308b\u30eb\u30fc\u30eb\u306b\u3057\u3066\u308b\u3002"
       }
     }
   ],
@@ -212,7 +215,6 @@ y
 
 * [Quickstart for macOS](https://cloud.google.com/sdk/docs/quickstart-macos)
 
-<div align="center">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4822257908&linkId=96562e30fee0c86028881bf8ff961412&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798137146&linkId=8519a36037ae78c56c57df76fd8e0342&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
@@ -221,4 +223,3 @@ y
 </iframe>
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4865941053&linkId=7d7b23bc20001ccbcc6f87feb17d24b4&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>
-</div>

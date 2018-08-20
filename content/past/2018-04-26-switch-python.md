@@ -6,14 +6,11 @@ categories:
     - python
 tags:
     - python
+url: /python/switch-python/
 ---
 
 Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。
 今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。
-
-* Table Of Contents
-{:toc}
-
 
 ## モチベーション
 ### Python 2.x と Python 3.x を共存させたい

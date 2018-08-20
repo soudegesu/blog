@@ -1,10 +1,11 @@
 ---
 title: "Anaconda環境にTensorflowをインストールする"
 date: 2017-03-06
-categories: 
+categories:
     - tensorflow
 tags:
     - tensorflow
+url: /tensorflow/tensorflow-anaconda/
 ---
 
 ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。
@@ -19,7 +20,7 @@ tags:
 tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。
 
 ``` bash
-pip3 install tensorflow 
+pip3 install tensorflow
 ```
 
 ## 解決策

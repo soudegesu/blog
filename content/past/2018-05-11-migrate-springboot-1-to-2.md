@@ -7,6 +7,7 @@ categories:
 tags:
   - springboot
   - datadog
+url: /java/migrate-springboot-1-to-2/
 ---
 
 Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide)
@@ -14,10 +15,7 @@ Spring Bootの2がリリースされたので、[Spring Boot 2.0 Migration Guide
 
 spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-actuator、spring-boot-starter-thymeleafを主に使っている。結論だけ先に言うと、spring-boot-starter-actuatorのマイグレーションがめんどくさかったです。
 
-![springboot]({{site.baseurl}}/assets/images/20180511/springboot.png)
-
-* Table Of Contents
-{:toc}
+![springboot](/images/20180511/springboot.png)
 
 ## モチベーション
 ### これからのJava時代に備えて
@@ -44,7 +42,7 @@ Javaに関して抑えておきたいのは2点
 
 次に [Spring Bootのロードマップ](https://github.com/spring-projects/spring-boot/milestones) も確認しておく。
 
-![springboot-milestone]({{site.baseurl}}/assets/images/20180511/springboot-milestones.png)
+![springboot-milestone](/images/20180511/springboot-milestones.png)
 
 Spring Bootの場合には
 
@@ -146,7 +144,7 @@ management:
 ざっくり以下に置き換えている。
 
 |変更前      |変更後    |
-|===========|=========|
+|-----------|---------|
 |org.springframework.boot.autoconfigure.web.ErrorAttributes|org.springframework.boot.web.servlet.error.ErrorAttributes|
 |org.springframework.web.context.request.RequestAttributes|org.springframework.web.context.request.WebRequest|
 |org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter|org.springframework.web.servlet.config.annotation.WebMvcConfigurer|

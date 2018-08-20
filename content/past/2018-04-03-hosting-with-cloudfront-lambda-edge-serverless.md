@@ -5,18 +5,15 @@ date: 2018-04-03
 categories:
     - aws
 tags:
-    - aws 
+    - aws
     - lambda
     - cloudfront
     - serverless
     - nodejs
+url: /aws/hosting-with-cloudfront-lambda-edge-serverless/
 ---
 
 このブログ自体は `github-pages` と `cloudflare` を使って無料でホスティングをしているのですが、稀に **「動的なwebコンテンツを提供したい」** と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。
-
-
-* Table Of Contents
-{:toc}
 
 ## モチベーション
 ### 動的なwebコンテンツを作りたい！
@@ -35,7 +32,7 @@ VPSサービスは通常のレンタルサーバよりもランニングコス�
 参考までに2種類のサービス料金を記載しますが、コンテンツ配信のための月額料金がボディブローのようにじわじわ効いてくることが容易に想像できます。
 
 |サービス名|月額料金(最低スペック)|
-|====|====|
+|---------|------------------|
 |[さくらのVPS](https://vps.sakura.ad.jp/)| 685JPY/month 〜|
 |[GMOクラウド](https://vps.gmocloud.com/)| 780JPY/month 〜|
 
@@ -273,11 +270,11 @@ CloudfrontはCDNサービスなので、デプロイ後にキャッシュをク�
 
 AWSコンソールからCloudfrontのInvalidationsのタブを押します。
 
-![invalidations]({{site.baseurl}}/assets/images/20180403/invalidations.png)
+![invalidations](/images/20180403/invalidations.png)
 
 全てのURLのキャッシュをクリアしたいので、「*」を指定すればOKです。
 
-![invalidation_target]({{site.baseurl}}/assets/images/20180403/invalidation_target.png)
+![invalidation_target](/images/20180403/invalidation_target.png)
 
 なお、このキャッシュクリアに関してCloudfrontの料金ページでは、
 
@@ -295,11 +292,12 @@ AWSコンソールからCloudfrontのInvalidationsのタブを押します。
 
 1週間程寝かせてみた後のAWS Billing Dashboardは以下のようになりました。$1到達していないですね。素晴らしい。
 
-![billing dashboard]({{site.baseurl}}/assets/images/20180403/billing_dashborad.png)
+![billing dashboard](/images/20180403/billing_dashborad.png)
 
 立ち上げ期のアクセスが少ないコンテンツでは、ランニングコストが大きくならないようにサーバレスで節約していきたいですね！
 
 ## 参考にさせていただいたサイト
+
 * [Amazon Cloudfront 開発者ガイド](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html)
 
 

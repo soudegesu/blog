@@ -8,12 +8,13 @@ tags:
     - docker
     - gradle
     - jib
+url: /java/build-docker-image-with-jib/
 ---
 
 実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
 今回は [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin) を使ったDockerfileイメージのビルドを紹介します。
 
-![jib]({{site.baseurl}}/assets/images/20180717/jib.png)
+![jib](/images/20180717/jib.png)
 
 * Table Of Contents
 {:toc}
@@ -220,7 +221,7 @@ ps ax | grep java
 
 イメージをAWSコンソール上から確認してみましょう。
 
-![ecr_repo]({{site.baseurl}}/assets/images/20180717/ecr_repo.png)
+![ecr_repo](/images/20180717/ecr_repo.png)
 
 すばらしい！
 

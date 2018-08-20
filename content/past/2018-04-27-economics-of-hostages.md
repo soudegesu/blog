@@ -6,14 +6,11 @@ categories:
     - book
 tags:
     - book
+url: /book/economics-of-hostages/
 ---
 
 ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。
 エンジニアだからと、[オライリー本](https://www.oreilly.co.jp/index.shtml) ばかり読んでいてはいけないですね。
-
-* Table Of Contents
-{:toc}
-
 
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/4163905804/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4163905804&linkCode=as2&tag=soudegesu-22&linkId=7fcab04a4c51902e13a9c5d1d697eadc"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4163905804&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4163905804" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
@@ -37,7 +34,7 @@ tags:
 本書の特徴は一つは **人質ビジネスの変遷** を抑えている点です。
 
 そもそも、世間一般の「ビジネス」にはトレンドがあります。お金の流通するプラットフォームに流行り廃りがあるのと同様に、**人質ビジネスも一過性のブームに過ぎない** のです。
-本書では、「人質」が『商材』として機能していた一時代だけではなく、その前後の時代の『お金を産む種』にも十分に触れられているため、論展開に一貫性があります。 
+本書では、「人質」が『商材』として機能していた一時代だけではなく、その前後の時代の『お金を産む種』にも十分に触れられているため、論展開に一貫性があります。
 
 いかに、**地域経済が世界情勢の波に翻弄されながらも、合理的な方向へ変化を遂げていくか** を垣間見ることが出来ます。
 
@@ -49,7 +46,7 @@ tags:
 もちろん、命が助かった事例、残念ながら命を奪われた事例の両方が扱われます。
 **被害者の命運を分けたのは何か** 、とりわけ、一度に複数人が誘拐されたケースでは **なぜこの人は助かったのに、この人は助からなかったのか** が筆者の考察や関係者の取材によって明らかになります。
 
-また、人質解放交渉にあたって、交渉人、政府、実行犯、教唆犯等の **関心事が異なる人間同士の思惑と、複雑な駆け引き** 
+また、人質解放交渉にあたって、交渉人、政府、実行犯、教唆犯等の **関心事が異なる人間同士の思惑と、複雑な駆け引き**
 には、**道徳的観点がスッポリ抜け落ちるリアルさ** を感じざるを得ませんでした。
 
 なお、事例ベースの展開が本書の大半を占めるため、事例嫌いの読者の方にはあまり向かないかもしれません。

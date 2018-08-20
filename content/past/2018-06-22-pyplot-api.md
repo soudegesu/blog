@@ -6,8 +6,8 @@ categories:
     - python
 tags:
     - matplotlib
-# header:
-#   teaser: /assets/images/icon/python_icon.png
+url: /python/pyplot-api/
+twitter_card_image: https://www.soudegesu.com/images/icon/python_icon.png
 ---
 
 matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。
@@ -15,9 +15,6 @@ matplotlibはpythonでデータの可視化をするときに重宝しますが�
 たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。
 
 今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。
-
-* Table Of Contents
-{:toc}
 
 ## 実行環境
 
@@ -67,7 +64,7 @@ yerr = (.1, .08, .1, .0, .5)
 plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
 ```
 
-![bar]({{site.baseurl}}/assets/images/20180622/bar.png)
+![bar](/images/20180622/bar.png)
 
 `bottom` オプションで積み上げておきたい初期値を設定することで、 **積み上げ棒グラフ** を描画することもできます。
 
@@ -89,7 +86,7 @@ p2 = plt.bar(x, y2, width, align='center', bottom=y, yerr=yerr, ecolor='r')
 plt.show()
 ```
 
-![bar2]({{site.baseurl}}/assets/images/20180622/bar2.png)
+![bar2](/images/20180622/bar2.png)
 
 **y軸から横に伸びる棒グラフ** は `barh` 関数を使います。
 
@@ -105,7 +102,7 @@ xerr = (.1, .08, .1, .0, .5)
 plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
 ```
 
-![barh]({{site.baseurl}}/assets/images/20180622/barh.png)
+![barh](/images/20180622/barh.png)
 
 `broken_barh` 関数では、 **軸に足をつけない棒グラフ** を描画することができます。
 実際には指定領域を矩形描画することになります。
@@ -122,7 +119,7 @@ plt.xlim(0)
 plt.ylim(0)
 ```
 
-![broken_barh]({{site.baseurl}}/assets/images/20180622/broken_barh.png)
+![broken_barh](/images/20180622/broken_barh.png)
 
 ### ヒストグラム：hist/hist2d
 
@@ -140,7 +137,7 @@ x = mu + sigma * np.random.randn(100)
 plt.hist(x, 50, density=True, alpha=0.75)
 ```
 
-![hist]({{site.baseurl}}/assets/images/20180622/hist.png)
+![hist](/images/20180622/hist.png)
 
 **2次元のヒストグラム** を描画するには、 `hist2d` 関数を使用します。
 
@@ -156,7 +153,7 @@ y = np.random.randn(100000) + 5
 plt.hist2d(x, y, bins=40)
 ```
 
-![hist2d]({{site.baseurl}}/assets/images/20180622/hist2d.png)
+![hist2d](/images/20180622/hist2d.png)
 
 ### 円グラフ：pie
 
@@ -173,7 +170,7 @@ plt.pie(fracs, labels=labels, autopct='%1.1f%%')
 plt.show()
 ```
 
-![pie]({{site.baseurl}}/assets/images/20180622/pie.png)
+![pie](/images/20180622/pie.png)
 
 ### 散布図：scatter
 
@@ -194,7 +191,7 @@ plt.scatter(x, y, s=area, c=colors, alpha=0.5)
 plt.show()
 ```
 
-![scatter]({{site.baseurl}}/assets/images/20180622/scatter.png)
+![scatter](/images/20180622/scatter.png)
 
 ### 折れ線グラフ（積み上げ折れ線グラフ）：plot/stackplot/plot_date
 
@@ -212,7 +209,7 @@ plt.plot(x)
 plt.show()
 ```
 
-![plot]({{site.baseurl}}/assets/images/20180622/plot.png)
+![plot](/images/20180622/plot.png)
 
 **積み上げの折れ線グラフ** を描画するには `stackplot` 関数を使います。
 
@@ -229,7 +226,7 @@ plt.stackplot(x, y1, y2, y3, labels=labels)
 plt.show()
 ```
 
-![stackplot]({{site.baseurl}}/assets/images/20180622/stackplot.png)
+![stackplot](/images/20180622/stackplot.png)
 
 また、 **x軸が日付データの場合の折れ線グラフ** には `plot_date` 関数を用いることが可能です。
 
@@ -253,7 +250,7 @@ plt.plot_date(dates, s)
 plt.show()
 ```
 
-![plot_date]({{site.baseurl}}/assets/images/20180622/plot_date.png)
+![plot_date](/images/20180622/plot_date.png)
 
 
 ### 箱ひげ図：boxplot
@@ -269,7 +266,7 @@ a = np.array([1, 3, 0.25, 0.44, 5.88])
 plt.boxplot(a)
 ```
 
-![boxplot]({{site.baseurl}}/assets/images/20180622/boxplot.png)
+![boxplot](/images/20180622/boxplot.png)
 
 ### バイオリン図：violinplot
 
@@ -288,7 +285,7 @@ plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=Tru
 plt.show()
 ```
 
-![violinplot]({{site.baseurl}}/assets/images/20180622/violinplot.png)
+![violinplot](/images/20180622/violinplot.png)
 
 ### 等高線・水平曲線：contour/contourf
 
@@ -311,7 +308,7 @@ plt.figure()
 plt.contour(X, Y, Z)
 ```
 
-![contour]({{site.baseurl}}/assets/images/20180622/contour.png)
+![contour](/images/20180622/contour.png)
 
 **等高線の塗りつぶし** には `contourf` を使います。
 
@@ -331,7 +328,7 @@ plt.figure()
 plt.contourf(X, Y, Z)
 ```
 
-![contourf]({{site.baseurl}}/assets/images/20180622/contourf.png)
+![contourf](/images/20180622/contourf.png)
 
 ### 非構造三次元データ：tricontour/tricontourf
 
@@ -363,7 +360,7 @@ plt.colorbar()
 plt.tricontour(triang, z, colors='k')
 ```
 
-![tricontour]({{site.baseurl}}/assets/images/20180622/tricontour.png)
+![tricontour](/images/20180622/tricontour.png)
 
 ### 極座標：polar
 
@@ -380,7 +377,7 @@ plt.polar(theta, r)
 plt.show()
 ```
 
-![polar]({{site.baseurl}}/assets/images/20180622/polar.png)
+![polar](/images/20180622/polar.png)
 
 ### 対数：loglog/semilogx/semilogy
 
@@ -397,7 +394,7 @@ plt.title('loglog base 2 on x')
 plt.show()
 ```
 
-![loglog]({{site.baseurl}}/assets/images/20180622/loglog.png)
+![loglog](/images/20180622/loglog.png)
 
 **x軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogx` を使用します。
 
@@ -411,7 +408,7 @@ plt.semilogx(t, np.sin(2*np.pi*t))
 plt.grid(True)
 ```
 
-![semilogx]({{site.baseurl}}/assets/images/20180622/semilogx.png)
+![semilogx](/images/20180622/semilogx.png)
 
 **y軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogy` を使用します。
 
@@ -425,7 +422,7 @@ plt.semilogy(t, np.exp(-t/5.0))
 plt.grid(True)
 ```
 
-![semilogy]({{site.baseurl}}/assets/images/20180622/semilogy.png)
+![semilogy](/images/20180622/semilogy.png)
 
 ### 行列：matshow
 
@@ -443,7 +440,7 @@ plt.matshow(mat)
 plt.show()
 ```
 
-![matshow]({{site.baseurl}}/assets/images/20180622/matshow.png)
+![matshow](/images/20180622/matshow.png)
 
 ### スパース行列：spy
 
@@ -460,7 +457,7 @@ x[:, 12] = 0.
 plt.spy(x, markersize=3)
 ```
 
-![spy]({{site.baseurl}}/assets/images/20180622/spy.png)
+![spy](/images/20180622/spy.png)
 
 ### コヒーレンス：cohere
 
@@ -478,7 +475,7 @@ plt.cohere(x, y, NFFT=128)
 plt.figure()
 ```
 
-![cohere]({{site.baseurl}}/assets/images/20180622/cohere.png)
+![cohere](/images/20180622/cohere.png)
 
 ### 離散データ：stem
 
@@ -494,7 +491,7 @@ plt.stem(x, np.cos(x), '-.')
 plt.show()
 ```
 
-![stem]({{site.baseurl}}/assets/images/20180622/stem.png)
+![stem](/images/20180622/stem.png)
 
 ### ステップ応答：step
 
@@ -513,7 +510,7 @@ plt.scatter(x, y) #データを表す座標が見やすいようにしていま�
 plt.show()
 ```
 
-![step]({{site.baseurl}}/assets/images/20180622/step.png)
+![step](/images/20180622/step.png)
 
 ### 自己相関・相互相関：acorr/xcorr
 
@@ -527,7 +524,7 @@ x = np.random.normal(0, 10, 50)
 plt.acorr(x)
 ```
 
-![acorr]({{site.baseurl}}/assets/images/20180622/acorr.png)
+![acorr](/images/20180622/acorr.png)
 
 また、**相互相関** を描画は `xcorr` になります。
 
@@ -543,7 +540,7 @@ plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
 plt.show()
 ```
 
-![xcorr]({{site.baseurl}}/assets/images/20180622/xcorr.png)
+![xcorr](/images/20180622/xcorr.png)
 
 ### 複数イベントデータ：eventplot
 
@@ -566,7 +563,7 @@ plt.eventplot(data, lineoffsets=lineoffsets,
               linelengths=linelengths)
 ```
 
-![eventplot]({{site.baseurl}}/assets/images/20180622/eventplot.png)
+![eventplot](/images/20180622/eventplot.png)
 
 ### 六角形で描画：hexbin
 
@@ -582,7 +579,7 @@ y = np.arange(1, 10, 1)
 plt.hexbin(x, y, gridsize=10)
 ```
 
-![hexbin]({{site.baseurl}}/assets/images/20180622/hexbin.png)
+![hexbin](/images/20180622/hexbin.png)
 
 
 ### 疑似カラー描画：pcolor/pcolormesh/tripcolor
@@ -604,7 +601,7 @@ z_min, z_max = -np.abs(z).max(), np.abs(z).max()
 plt.pcolor(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 ```
 
-![pcolor]({{site.baseurl}}/assets/images/20180622/pcolor.png)
+![pcolor](/images/20180622/pcolor.png)
 
 **メッシュデータを高速に描画したい** 場合には `pcolormesh` 関数を使うと良いそうです。
 
@@ -623,7 +620,7 @@ z_min, z_max = -np.abs(z).max(), np.abs(z).max()
 plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
 ```
 
-![pcolormesh]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
+![pcolormesh](/images/20180622/pcolormesh.png)
 
 **`tricontour` に対する疑似カラー描画** には `tripcolor` 関数を使います。
 
@@ -653,7 +650,7 @@ plt.colorbar()
 plt.tripcolor(triang, z, shading='flat')
 ```
 
-![tripcolor]({{site.baseurl}}/assets/images/20180622/tripcolor.png)
+![tripcolor](/images/20180622/tripcolor.png)
 
 ### スペクトラム：magnitude_spectrum/phase_spectrum/angle_spectrum/specgram
 
@@ -679,7 +676,7 @@ plt.magnitude_spectrum(s, Fs=Fs)
 plt.show()
 ```
 
-![magnitude_spectrum]({{site.baseurl}}/assets/images/20180622/magnitude_spectrum.png)
+![magnitude_spectrum](/images/20180622/magnitude_spectrum.png)
 
 **位相スペクトラム** は `phase_spectrum` で描画します。
 
@@ -703,7 +700,7 @@ plt.phase_spectrum(s, Fs=Fs)
 plt.show()
 ```
 
-![phase_spectrum]({{site.baseurl}}/assets/images/20180622/pcolormesh.png)
+![phase_spectrum](/images/20180622/pcolormesh.png)
 
 **角度スペクトラム** は `angle_spectrum` で描画します。
 
@@ -715,7 +712,7 @@ x = np.random.normal(0, 10, 50)
 plt.angle_spectrum(x)
 ```
 
-![angle_spectrum]({{site.baseurl}}/assets/images/20180622/angle_spectrum.png)
+![angle_spectrum](/images/20180622/angle_spectrum.png)
 
 **スペクトログラム** は `specgram` になります。
 
@@ -743,7 +740,7 @@ plt.specgram(x, NFFT=NFFT, Fs=Fs, noverlap=900)
 plt.show()
 ```
 
-![specgram]({{site.baseurl}}/assets/images/20180622/specgram.png)
+![specgram](/images/20180622/specgram.png)
 
 ### スペクトル密度：psd/csd
 
@@ -769,7 +766,7 @@ plt.psd(s, 512, 1 / dt)
 plt.show()
 ```
 
-![psd]({{site.baseurl}}/assets/images/20180622/psd.png)
+![psd](/images/20180622/psd.png)
 
 **クロススペクトル密度** は `csd` で描画します。
 
@@ -793,7 +790,7 @@ plt.figure()
 plt.csd(x, y)
 ```
 
-![csd]({{site.baseurl}}/assets/images/20180622/csd.png)
+![csd](/images/20180622/csd.png)
 
 ### ベクトル：quiver/quiverkey
 
@@ -812,7 +809,7 @@ plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='fig
 plt.show()
 ```
 
-![quiver]({{site.baseurl}}/assets/images/20180622/quiver.png)
+![quiver](/images/20180622/quiver.png)
 
 ### 流線グラフ：streamplot
 
@@ -830,7 +827,7 @@ speed = np.sqrt(U*U + V*V)
 plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 ```
 
-![streamplot]({{site.baseurl}}/assets/images/20180622/streamplot.png)
+![streamplot](/images/20180622/streamplot.png)
 
 ## グラフに付加情報を加える
 
@@ -865,7 +862,7 @@ plt.title('subplot 2')
 plt.show()
 ```
 
-![title]({{site.baseurl}}/assets/images/20180622/title.png)
+![title](/images/20180622/title.png)
 
 ### 凡例の追加：legend/colorbar
 
@@ -882,7 +879,7 @@ plt.bar(x_data, y_data)
 plt.legend(['dataA'])
 ```
 
-![legend]({{site.baseurl}}/assets/images/20180622/legend.png)
+![legend](/images/20180622/legend.png)
 
 等高線（`contour`）に対する、 **色が表す値の凡例** は `colorbar` 関数で表示します。
 
@@ -903,7 +900,7 @@ plt.contourf(X, Y, Z)
 plt.colorbar()
 ```
 
-![colorbar]({{site.baseurl}}/assets/images/20180622/colorbar.png)
+![colorbar](/images/20180622/colorbar.png)
 
 ### ラベルの表示：xlabel/ylabel/clabel
 
@@ -926,7 +923,7 @@ plt.ylabel("Label Y")
 plt.show()
 ```
 
-![xlabel]({{site.baseurl}}/assets/images/20180622/xlabel.png)
+![xlabel](/images/20180622/xlabel.png)
 
 等高線（`contour`）に対しては `clabel` 関数で **色が表す値のラベル** を表示します。
 
@@ -947,7 +944,7 @@ CS = plt.contour(X, Y, Z)
 plt.clabel(CS, inline=1, fontsize=10)
 ```
 
-![clabel]({{site.baseurl}}/assets/images/20180622/clabel.png)
+![clabel](/images/20180622/clabel.png)
 
 ### 軸の描画範囲を制限：xlim/ylim
 
@@ -966,7 +963,7 @@ plt.plot(x, np.sin(x),label="y = sinx")
 plt.show()
 ```
 
-![xlim]({{site.baseurl}}/assets/images/20180622/xlim.png)
+![xlim](/images/20180622/xlim.png)
 
 ### 軸のスケールの変更：xscale/yscale
 
@@ -984,7 +981,7 @@ plt.plot(x, np.sin(x))
 plt.show()
 ```
 
-![xscale]({{site.baseurl}}/assets/images/20180622/xscale.png)
+![xscale](/images/20180622/xscale.png)
 
 ```python
 import numpy as np
@@ -998,7 +995,7 @@ plt.plot(x, np.sin(x))
 plt.show()
 ```
 
-![yscale]({{site.baseurl}}/assets/images/20180622/yscale.png)
+![yscale](/images/20180622/yscale.png)
 
 
 ### 目盛りの変更：xticks/yticks
@@ -1017,7 +1014,7 @@ plt.xticks(x, ('A', 'B', 'C', 'D'))
 plt.show()
 ```
 
-![xticks]({{site.baseurl}}/assets/images/20180622/xticks.png)
+![xticks](/images/20180622/xticks.png)
 
 ```python
 from matplotlib import pyplot as plt
@@ -1031,7 +1028,7 @@ plt.yticks(y, ('10', '20', '30', '40'))
 plt.show()
 ```
 
-![yticks]({{site.baseurl}}/assets/images/20180622/yticks.png)
+![yticks](/images/20180622/yticks.png)
 
 ### 表（テーブル）の表示：table
 
@@ -1059,7 +1056,7 @@ plt.table(cellText=data,
 plt.show()
 ```
 
-![table]({{site.baseurl}}/assets/images/20180622/table.png)
+![table](/images/20180622/table.png)
 
 ### 軸に対する描画データの追加：twinx/twiny
 
@@ -1087,7 +1084,7 @@ ax2.tick_params('y', colors='r')
 plt.show()
 ```
 
-![twinx]({{site.baseurl}}/assets/images/20180622/twinx.png)
+![twinx](/images/20180622/twinx.png)
 
 
 **y軸はそのままに、別のxの値を描画する** には `twiny` 関数を使います。
@@ -1114,7 +1111,7 @@ ax2.tick_params('y', colors='r')
 plt.show()
 ```
 
-![twiny]({{site.baseurl}}/assets/images/20180622/twiny.png)
+![twiny](/images/20180622/twiny.png)
 
 ### 注釈の追加：annotate
 
@@ -1144,7 +1141,7 @@ ax.set_ylim(-2,2)
 plt.show()
 ```
 
-![annotate]({{site.baseurl}}/assets/images/20180622/annotate.png)
+![annotate](/images/20180622/annotate.png)
 
 ### 矢印（直線）の追加：arrow
 
@@ -1165,7 +1162,7 @@ ax.set_ylim(0.25, 1.75)
 plt.show()
 ```
 
-![arrow]({{site.baseurl}}/assets/images/20180622/arrow.png)
+![arrow](/images/20180622/arrow.png)
 
 ### 平行・垂直の線を引く：axhline/axvline/hlines/vlines
 
@@ -1183,7 +1180,7 @@ plt.axhline(y=.5, xmin=0.25, xmax=0.75)
 plt.show()
 ```
 
-![axhline]({{site.baseurl}}/assets/images/20180622/axhline.png)
+![axhline](/images/20180622/axhline.png)
 
 同様に **x軸に対する平行線を複数引く** には `hlines` 関数が便利です。
 指定された `xmin` や `xmax` は複数の線全てに適用されます。
@@ -1201,7 +1198,7 @@ plt.hlines([-1, 1], xmin, xmax)
 plt.show()
 ```
 
-![hlines]({{site.baseurl}}/assets/images/20180622/hlines.png)
+![hlines](/images/20180622/hlines.png)
 
 `axvline`関数は **x軸に対する垂直の線** を引くことが出来ます。オプションの概念は `axhline` と同様です。
 
@@ -1216,7 +1213,7 @@ plt.axvline(x=.5, ymin=0.25, ymax=0.75, color='r', linewidth=4)
 plt.show()
 ```
 
-![axvline]({{site.baseurl}}/assets/images/20180622/axvline.png)
+![axvline](/images/20180622/axvline.png)
 
 同様に **x軸に対する垂直の線を複数引く** には `vlines` 関数が便利です。
 指定された `ymin` や `xmax` は複数の線全てに適用されます。
@@ -1234,7 +1231,7 @@ plt.vlines([-1, 1], ymin, ymax)
 plt.show()
 ```
 
-![vlines]({{site.baseurl}}/assets/images/20180622/vlines.png)
+![vlines](/images/20180622/vlines.png)
 
 ### 矩形の描画：axhspan/axvspan
 
@@ -1254,7 +1251,7 @@ plt.axhspan(1.25, 1.55, facecolor='g', alpha=0.5)
 plt.show()
 ```
 
-![axhspan]({{site.baseurl}}/assets/images/20180622/axhspan.png)
+![axhspan](/images/20180622/axhspan.png)
 
 `axvspan` 関数では **y軸と平行の矩形（四角形）** を描画することができます。
 x軸の範囲を表現したいときに使います。
@@ -1271,7 +1268,7 @@ plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
 plt.show()
 ```
 
-![axvspan]({{site.baseurl}}/assets/images/20180622/axvspan.png)
+![axvspan](/images/20180622/axvspan.png)
 
 ### 誤差の表示：errorbar
 
@@ -1295,7 +1292,7 @@ y = np.sin(np.arange(10.0) / 20.0) + 2
 plt.errorbar(x, y, yerr=0.1, lolims=True)
 ```
 
-![errorbar]({{site.baseurl}}/assets/images/20180622/errorbar.png)
+![errorbar](/images/20180622/errorbar.png)
 
 ### テキストの追加：text/figtext
 
@@ -1321,7 +1318,7 @@ plt.text(0.2, 0.5, "fugafuga", size=20, rotation=20.,
 plt.show()
 ```
 
-![text]({{site.baseurl}}/assets/images/20180622/text.png)
+![text](/images/20180622/text.png)
 
 同様に **テキストを追加する** 関数で `figtext` が存在します。
 
@@ -1342,7 +1339,7 @@ plt.errorbar(x, y)
 plt.figtext(0.5, 0.25, '$x$')
 ```
 
-![figtext]({{site.baseurl}}/assets/images/20180622/figtext.png)
+![figtext](/images/20180622/figtext.png)
 
 ### 範囲の塗りつぶし：fill/fill_between/fill_betweenx
 
@@ -1360,7 +1357,7 @@ y = np.sin(2*np.pi*x)
 plt.fill(x, y)
 ```
 
-![fill]({{site.baseurl}}/assets/images/20180622/fill.png)
+![fill](/images/20180622/fill.png)
 
 **塗りつぶし範囲のyを指定する** には `fill_between` 関数を使用します。
 
@@ -1376,7 +1373,7 @@ y2 = 0.5
 plt.fill_between(x, y1, y2)
 ```
 
-![fill_between]({{site.baseurl}}/assets/images/20180622/fill_between.png)
+![fill_between](/images/20180622/fill_between.png)
 
 **x軸に対して塗りつぶし範囲を指定する** には `fill_betweenx` 関数を使います。
 
@@ -1392,7 +1389,7 @@ x2 = 0.5
 plt.fill_betweenx(y, x1, x2)
 ```
 
-![fill_betweenx]({{site.baseurl}}/assets/images/20180622/fill_betweenx.png)
+![fill_betweenx](/images/20180622/fill_betweenx.png)
 
 ### 風向きの追加：barbs
 
@@ -1410,7 +1407,7 @@ v = (10,20,30,40,50)
 plt.barbs(x, y, u, v)
 ```
 
-![barbs]({{site.baseurl}}/assets/images/20180622/barbs.png)
+![barbs](/images/20180622/barbs.png)
 
 ## グラフのレイアウトを修正する
 
@@ -1432,7 +1429,7 @@ plt.axes([.65, .6, .2, .2], facecolor='k')
 plt.angle_spectrum(x)
 ```
 
-![axes]({{site.baseurl}}/assets/images/20180622/axes.png)
+![axes](/images/20180622/axes.png)
 
 ### 外枠の表示/非表示：box
 
@@ -1450,7 +1447,7 @@ plt.barh(x, y, width, align='center')
 plt.box(False)
 ```
 
-![box]({{site.baseurl}}/assets/images/20180622/box.png)
+![box](/images/20180622/box.png)
 
 ### グリッド（格子）の表示：grid/rgrids/thetagrids/triplot
 
@@ -1469,7 +1466,7 @@ plt.hist(x, 50, density=True, alpha=0.75)
 plt.grid(linestyle='-', linewidth=1)
 ```
 
-![grid]({{site.baseurl}}/assets/images/20180622/grid.png)
+![grid](/images/20180622/grid.png)
 
 **極座標グラフ（polar）にグリッドを表示** するには `rgrids` 関数を使います。
 
@@ -1482,7 +1479,7 @@ plt.rgrids((0.25, 0.5, 1.0))
 plt.show()
 ```
 
-![rgrids]({{site.baseurl}}/assets/images/20180622/rgrids.png)
+![rgrids](/images/20180622/rgrids.png)
 
 `rgrids` の代わりに `thetagrids` 関数で、**グリッドとラベルを一緒に設定** することも可能です。
 
@@ -1495,7 +1492,7 @@ plt.thetagrids(range(45,360,90), ('NE', 'NW', 'SW','SE'))
 plt.show()
 ```
 
-![thetagrids]({{site.baseurl}}/assets/images/20180622/thetagrids.png)
+![thetagrids](/images/20180622/thetagrids.png)
 
 **非構造三次元データ （tricontour） にグリッドを表示** するには `triplot` 関数を使います。
 
@@ -1516,7 +1513,7 @@ plt.triplot(triang, 'ko-')
 plt.show()
 ```
 
-![triplot]({{site.baseurl}}/assets/images/20180622/triplot.png)
+![triplot](/images/20180622/triplot.png)
 
 ### 目盛りの分割数を変更：locator_params
 
@@ -1539,7 +1536,7 @@ plt.locator_params(axis='x', nbins=8)
 plt.show()
 ```
 
-![locator_params]({{site.baseurl}}/assets/images/20180622/locator_params.png)
+![locator_params](/images/20180622/locator_params.png)
 
 ### マージンの追加：margins/subplots_adjust
 
@@ -1556,7 +1553,7 @@ plt.margins(0.3)
 plt.show()
 ```
 
-![margins]({{site.baseurl}}/assets/images/20180622/margins.png)
+![margins](/images/20180622/margins.png)
 
 `subplots` を使った複数のグラフ描画の場合には `subplots_adjust` が使えます。
 
@@ -1575,7 +1572,7 @@ plt.subplots_adjust(bottom=0.3, right=0.8, top=0.9)
 plt.show()
 ```
 
-![subplots_adjust]({{site.baseurl}}/assets/images/20180622/subplots_adjust.png)
+![subplots_adjust](/images/20180622/subplots_adjust.png)
 
 ### レイアウトの自動調整：tight_layout
 
@@ -1601,7 +1598,7 @@ example_plot(ax4)
 plt.tight_layout()
 ```
 
-![tight_layout]({{site.baseurl}}/assets/images/20180622/tight_layout.png)
+![tight_layout](/images/20180622/tight_layout.png)
 
 ### 複数グラフの描画:subplots
 
@@ -1621,7 +1618,7 @@ axes[1].scatter(x, y)
 plt.show()
 ```
 
-![subplots]({{site.baseurl}}/assets/images/20180622/subplots.png)
+![subplots](/images/20180622/subplots.png)
 
 ### テイストを手書き風に変更：xkcd
 
@@ -1638,7 +1635,7 @@ plt.plot(x, np.sin(x),label="y = sinx")
 plt.show()
 ```
 
-![xkcd]({{site.baseurl}}/assets/images/20180622/xkcd.png)
+![xkcd](/images/20180622/xkcd.png)
 
 ## まとめ
 

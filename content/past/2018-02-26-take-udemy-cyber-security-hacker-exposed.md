@@ -8,26 +8,24 @@ tags:
     - cyber security
     - udemy
     - beginner
+url: /security/take-udemy-cyber-security-hacker-exposed/
 ---
 
 昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。
 かくいう私もその口で、今回は [Udemy](https://www.udemy.com/) というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。
-
-* Table Of Contents
-{:toc}
 
 ## Udemyとは何か
 Udemyはオンライン学習プラットフォームです。自身の目的に合った学習コンテンツを購入し、オンラインで受講することができます。
 今回はサイバーセキュリティのコンテンツを購入したのですが、`Robotics` や `機械学習` のような別のIT分野の授業もありますし、
 `投資信託` のような経済系のコンテンツ等の幅広いジャンルの取り扱いがあります。
 
-![about_udemy]({{site.baseurl}}/assets/images/20180226/about_udemy.png)
+![about_udemy](/images/20180226/about_udemy.png)
 
 ## 学習のため購入したコンテンツ
 今回はUdemyの中でもサイバーセキュリティのコンテンツのジャンルの中で人気のコンテンツ [「The Complete Cyber Security Course : Hackers Exposed!」](https://www.udemy.com/the-complete-internet-security-privacy-course-volume-1/) を購入しました。
 価格は `1,300円` ほどで、クレジットカードでお支払いです。
 
-![cyber_security]({{site.baseurl}}/assets/images/20180226/cyber_security.png)
+![cyber_security](/images/20180226/cyber_security.png)
 
 この `The Complete Cyber Security Course` シリーズは全部で以下4つのコースが提供されており、先に進む程応用的な内容になっているそうです。(全部まだ受けていないので、伝聞で書いています)
 
@@ -44,6 +42,7 @@ Udemyはオンライン学習プラットフォームです。自身の目的に
 ### レベル感が視聴者(私)に合ってそうだったから
 
 まず私のサイバーセキュリティに関連しそうなシステム開発に略歴をざっくり記載すると
+
 * webアプリケーション開発経験7年程度
 * OSはCentOS/Amazon Linuxを中心に利用(Qubes OSやDebianはない)
 * インフラはAWSを利用しており、IAM制御/SecurityGroup設定/ルーティング程度なら自力でできる
@@ -96,6 +95,7 @@ Udemyはオンライン学習プラットフォームです。自身の目的に
 これらが全13章120項で構成されているのですが、1項が長くても20分程度のコンテンツであるため、隙間時間を学習に充てることができました。
 
 また、講師の方の英語についても
+
 * 話すスピードも丁度いい(聞き取れる)
 * 発音も聞き取り易い
 * 単語がゆらがない(表現がある程度一定)

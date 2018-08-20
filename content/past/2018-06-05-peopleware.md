@@ -6,15 +6,12 @@ categories:
   - book
 tags:
   - book
-# header:
-#   teaser: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4822281108&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
+url: /book/peopleware/
+twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4822281108&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 ---
 
 今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。
 以降の内容は **若干のネタバレを含みます** ので、本をまだ読まれていない方は、先に本を読むことをオススメします。
-
-* Table Of Contents
-{:toc}
 
 <div align="center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/B00I96CJWO/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B00I96CJWO&linkCode=as2&tag=soudegesu-22&linkId=6ae02fcebb6f0d35b7626bba2e51f880"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B00I96CJWO&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=B00I96CJWO" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />

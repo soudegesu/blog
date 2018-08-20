@@ -6,17 +6,14 @@ categories:
   - linux
 tags:
   - systemd
-# header:
-#   teaser: /assets/images/icon/linux_icon.png
+url: /linux/systemd_limits/
+twitter_card_image: https://www.soudegesu.com/images/icon/linux_icon.png
 ---
 
 今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、
 プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。
 
 なお、以降の手順は公式の Amazon Linux2 のAMIをそのままブートした後に試しています。
-
-* Table Of Contents
-{:toc}
 
 ## ソフトリミットとハードリミット
 

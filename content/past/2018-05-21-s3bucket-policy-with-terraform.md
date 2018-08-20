@@ -8,24 +8,20 @@ tags:
   - terraform
   - s3
   - iam
-# header:
-#   teaser: /assets/images/icons/terraform_icon.png
+url: /aws/s3bucket-policy-with-terraform/
+twitter_card_image: https://www.soudegesu.com/images/icons/terraform_icon.png
 ---
 
 インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。
 
 [Terraform](https://www.terraform.io/) も例外ではないのですが、S3バケットのポリシー設定の所でふと気付いたので書いておきます。
 
-
-* Table Of Contents
-{:toc}
-
 ## Terraform公式のS3のバケットポリシーが...
 
 Terraform公式の [aws_s3_bucket_policy](https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html)
 のリソースは `policy` の部分がヒアドキュメントで書かれています。
 
-```
+```terraform
 resource "aws_s3_bucket" "b" {
   bucket = "my_tf_test_bucket"
 }
@@ -130,6 +126,7 @@ HCLからポリシードキュメント（JSON）を生成するために、微�
 さらばヒアドキュメント！！
 
 ## 参考にさせていただいたサイト
+
 * [Terraform - Data Source:aws_iam_policy_document](https://www.terraform.io/docs/providers/aws/d/iam_policy_document.html)
 * [Terraform - Data Source: aws_s3_bucket_policy](https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html)
 

@@ -9,17 +9,16 @@ tags:
   - dapps
   - truffle
   - ganache
+url: /ethereum/ethereum-development-environment/
 ---
 
 以前、`IPFS` を調査したことがあり、そこから `Ethereum` の存在を知りました。
 昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
 今回はDApps開発のための下準備までを纏めます。
 
-* Table Of Contents
-{:toc}
-
 ## 環境情報
 今回、私は以下の環境にて構築を行いました
+
 * Mac Book Pro
   * OS: High Seria 10.13.2
 * Homebrew
@@ -290,7 +289,7 @@ geth --networkid 4224 --mine --minerthreads 1 --datadir "~/workspace/eth_private
 処理がもりもり走っていきます。ハンマーアイコンが出てくればマイニングできています。
 (もちろんテスト用なので、何の価値もないですが)
 
-![mining]({{site.baseurl}}/assets/images/20180305/chained.png)
+![mining](/images/20180305/chained.png)
 
 ### 別アカウントにEthを送ってみる
 先程複数アカウントを作成したので、実際にetherを送ってみましょう。
@@ -359,6 +358,7 @@ eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(
 
 ## まとめ
 駆け足でしたが、今回はざっくり以下まで実施できました。
+
 * `Ethereum` のインストール
 * 開発用のConfigファイルの作成
 * アカウントの作成

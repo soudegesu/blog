@@ -7,8 +7,8 @@ categories:
 tags:
   - book
   - 組織論
-# header:
-#   teaser: https://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4532192161&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
+url: /book/idea-from-history/
+twitter_card_image: https://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4532192161&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 ---
 
 「 [歴史からの発想　停滞と拘束からいかに脱するか](https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4532192161&linkCode=as2&tag=soudegesu-22&linkId=5513b5e79762b891cc2f9498116b17fa) 」を読みました。
@@ -19,9 +19,6 @@ tags:
 <div style="text-align: center">
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/4532192161/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4532192161&linkCode=as2&tag=soudegesu-22&linkId=5513b5e79762b891cc2f9498116b17fa"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4532192161&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4532192161" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
-
-* Table Of Contents
-{:toc}
 
 ## 歴史は繰り返すし、繰り返さない要素もある
 

@@ -1,8 +1,9 @@
 ---
 title: "TensorFlowのオンライン学習サイトを利用してみる"
 date: 2017-02-19
-categories: 
-  - tensorflow 
+categories:
+  - tensorflow
+url: /tensorflow/tensorflow-online-course/
 ---
 
 ## 機械学習を身につけたい意欲
@@ -28,6 +29,7 @@ NHKの朝のニュースでも頻繁に見るくらいですので、世間一�
 
 ## TensorFlowを学べるサイト
 オンラインでTensorFlowを学べるサイトがあるのかを探してみたところ、kadenzeというサイト「Creative Applications of Deep Learning with TensorFlow」という学習コースがありました。
+
 * [Creative Applications of Deep Learning with TensorFlow](https://www.kadenze.com/courses/creative-applications-of-deep-learning-with-tensorflow/info)
 
 全体としては1h程度の動画 ✕ 5枠にて構成されていました。

@@ -8,26 +8,24 @@ tags:
   - ethereum
   - truffle
   - ganache
-  - dapps 
+  - dapps
+url: /ethereum/ethereum-development-with-ganache/
 ---
 
 [前回の記事](/ethereum/ethereum-development-environment/) で `Ethereum` の開発環境の構築を行いました。
 今回はさらに `Ethereum` 用のフレームワークである `Truffle` と `Ganache` を使ってローカルでの開発環境を整えようと思います。
 
-* Table Of Contents
-{:toc}
-
 ## Truffleとは
 [Truffle](http://truffleframework.com/) は `Ethereum` アプリケーションの開発効率を上げるためのフレームワークです。
 ボイラープレート的な仕事をしてくれるところから始まり、 ネットワーク接続の設定管理や、ネットワークのマイグレーション実行や初期化、テストフレームワークをバンドルしていたりなど、一通り開発できるように準備を整えてくれます。
 
-![Truffle top]({{site.baseurl}}/assets/images/20180310/truffle.png)
+![Truffle top](/images/20180310/truffle.png)
 
 ## Ganacheとは
 
 [Ganache](http://truffleframework.com/ganache/) はDAppsを開発時のテストをする際に使用するローカル用のプライベートネットワークを構築してくれます。自動マイニングしてくれるので、別でターミナルを立ち上げて、マイニング用のコマンドを実行する必要もありません。発生したトランザクションは順番にソートされて表示もされるので、動作確認も比較的容易にできると思います。
 
-![Ganache top]({{site.baseurl}}/assets/images/20180310/ganache.png)
+![Ganache top](/images/20180310/ganache.png)
 
 ## セットアップ
 以前同様の記事を書きましたが、簡単におさらいします。
@@ -103,7 +101,7 @@ npm install solc@0.4.18
 ### truffleを初期化する
 
 ```bash
-npm run truffle init 
+npm run truffle init
 ```
 
 実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。
@@ -145,7 +143,7 @@ rm truffle-config.js
 次にインストール済みの `Ganache` を起動します。
 `Ganache` はデフォルトで10個のアカウントを作成してくれます。指定がなければ1番上に表示されているアカウントが `coinbase` になります。
 
-![Boot Ganache]({{site.baseurl}}/assets/images/20180310/boot_ganache.png)
+![Boot Ganache](/images/20180310/boot_ganache.png)
 
 Ganacheが表示しているネットワークの情報を基に、`truffle.js` を以下のように編集します。
 
@@ -172,7 +170,7 @@ npm run truffle-ganache
 
 Ganacheの画面を見てみると1番上のアドレスの `balance` (所有しているether) が `100` → `99.97` に減っています。
 
-![migration Ganache]({{site.baseurl}}/assets/images/20180310/migration_ganache.png)
+![migration Ganache](/images/20180310/migration_ganache.png)
 
 実はこれ、`npm run truffle-ganache` 実行により、`migrations/1_initial_migrations.js` が実行され、
 そこから `contracts/Migrations.sol` がデプロイされています。
@@ -180,7 +178,7 @@ Ganacheの画面を見てみると1番上のアドレスの `balance` (所有し
 
 `TRANSACTIONS` タブを押すと、トランザクションハッシュが生成されていることを確認できます。
 
-![transaction Ganache]({{site.baseurl}}/assets/images/20180310/transaction_ganache.png)
+![transaction Ganache](/images/20180310/transaction_ganache.png)
 
 また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、
 
@@ -202,7 +200,7 @@ web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], 
 
 `Ganache` の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。
 
-![transaction sample]({{site.baseurl}}/assets/images/20180310/transaction_sample.png)
+![transaction sample](/images/20180310/transaction_sample.png)
 
 ## まとめ
 

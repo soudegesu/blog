@@ -2,12 +2,13 @@
 title: "AWS LambdaのコードをTerraformでデプロイする"
 description: "TerraformでAWS Lambdaのコードをデプロイします。最近ではCloud9がLambdaのコンソールに統合されて、より開発が容易になりました、それでもやはり手元に元ソースを置いておきたいというケースがあります。主にNodeやPythonをランタイムに指定する場合に周辺のエコシステムをコミコミでzipでデプロイする必要があるので、今回はそれを説明しようと思います。"
 date: 2018-04-11
-categories: 
+categories:
     - aws
 tags:
     - aws
     - lambda
     - terraform
+url: /aws/deploy-lambda-with-terraform/
 ---
 
 今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。
@@ -17,12 +18,7 @@ AWS Lambdaは [Cloud9](https://aws.amazon.com/jp/cloud9/) がコンソール上�
 
 ↓ちなみに下が組み込まれたCloud9
 
-![cloud9_lambda]({{site.baseurl}}/assets/images/20180411/cloud9_lambda.png)
-
-
-* Table Of Contents
-{:toc}
-
+![cloud9_lambda](/images/20180411/cloud9_lambda.png)
 
 ## TerraformでAWS Lambdaをデプロイしたい
 `Infrastructure as Code` はクラウド界隈でバズってだいぶ時間も立っていますので、あまりここでは触れません。
@@ -80,7 +76,7 @@ AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な�
 
 Lambdaにソースコードを適用する方法は3種類存在します。
 
-![code_entry_type]({{site.baseurl}}/assets/images/20180411/type_of_code_entry.png)
+![code_entry_type](/images/20180411/type_of_code_entry.png)
 
 * Edit Code Inline
     * ブラウザ上のエディタに直接書く方法。デプロイ後のコードを突貫で修正したりする時によく使う。
@@ -172,6 +168,7 @@ Terraformを使用して、AWS Lambdaのソースコードのデプロイがで�
 ちなみにランタイムがNodeだとこれはおきませんでした。
 
 ## 参考にさせていただいたサイト
+
 * [Terraform:aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html)
 
 <br/>

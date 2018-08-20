@@ -9,12 +9,10 @@ tags:
     - machine-learning
     - tensorflow
     - python
+url: /python/colaboratory-is-a-good-tool-for-tensorflow-user/
 ---
 
 普段 [Jupter notebook](http://jupyter.org/) で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の [Colaboratory](https://colab.research.google.com/) を触ってみました。
-
-* Table Of Contents
-{:toc}
 
 ## Colaboratoryとは
 
@@ -25,7 +23,7 @@ tags:
 ちなみに、Googleアカウントが無くても利用できますが、Googleアカウントと連携した方がメリットが大きいので、
 作成することをオススメします。
 
-![colaboratory_top]({{site.baseurl}}/assets/images/20180502/colaboratory_top.png)
+![colaboratory_top](/images/20180502/colaboratory_top.png)
 
 以降では、早速使ってみたColaboratoryの特徴をまとめました。
 
@@ -36,7 +34,7 @@ tags:
 [よくある質問](https://research.google.com/colaboratory/faq.html) にも記載があったので引用します。
 
 > **Is it free to use?**
-> 
+>
 > Yes. Colaboratory is a research project that is free to use.
 
 無料です。最高です。
@@ -59,7 +57,7 @@ tags:
 
 <br>
 
-![switch_to_gpu_1]({{site.baseurl}}/assets/images/20180502/switch_to_gpu_1.png)
+![switch_to_gpu_1](/images/20180502/switch_to_gpu_1.png)
 
 <br>
 
@@ -67,7 +65,7 @@ tags:
 
 <br>
 
-![switch_to_gpu_2]({{site.baseurl}}/assets/images/20180502/switch_to_gpu_2.png)
+![switch_to_gpu_2](/images/20180502/switch_to_gpu_2.png)
 
 <br>
 
@@ -80,7 +78,7 @@ tf.test.gpu_device_name()
 
 デバイス名が表示されていますね。(CPUの場合は空文字が返ってきます)
 
-![switch_to_gpu_3]({{site.baseurl}}/assets/images/20180502/switch_to_gpu_3.png)
+![switch_to_gpu_3](/images/20180502/switch_to_gpu_3.png)
 
 ### Google Driveと連携できる
 
@@ -89,14 +87,14 @@ notebookが `.ipynb` 形式で連携できるのが嬉しいポイントです�
 
 Colaboratoryで作成したプログラムは自分のGoogle Driveに `.ipynb` で保存されます。
 
-![save_to_drive]({{site.baseurl}}/assets/images/20180502/save_to_drive.png)
+![save_to_drive](/images/20180502/save_to_drive.png)
 
 <br>
 
 逆に、既にローカルマシン上に存在する `.ipynb` ファイルのアップロードには メニューから [Upload notebook] を選択し、
 ファイルをドラッグ&ドロップするだけで読み込むことができます。
 
-![upload_notebook]({{site.baseurl}}/assets/images/20180502/upload_notebook.png)
+![upload_notebook](/images/20180502/upload_notebook.png)
 
 <br>
 
@@ -109,7 +107,7 @@ Colaboratory はJupyter notebookのGUIを少し拡張していて、コードス
 コードスニペットを呼び出して、notebookのcellに埋め込むことができます。
 特にGoogle Driveと連携する場合などには、Google APIの呼び出しのコード片を貼り付けるだけで済むので重宝します。
 
-![use_snipet]({{site.baseurl}}/assets/images/20180502/use_snipet.png)
+![use_snipet](/images/20180502/use_snipet.png)
 
 ショートカットキーもバインドされていて、 `Command/Ctrl + Alt + P` でスニペットウィンドウが表示されるので
 覚えておくのが良さそうです。
@@ -150,7 +148,7 @@ jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' 
 
 <br>
 
-![switch_runtime]({{site.baseurl}}/assets/images/20180502/switch_runtime.png)
+![switch_runtime](/images/20180502/switch_runtime.png)
 
 <br>
 

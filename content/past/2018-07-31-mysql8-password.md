@@ -8,15 +8,12 @@ tags:
   - mysql
   - ansible
   - packer
-# header:
-#   teaser: /assets/images/icon/mysql_icon.png
+url: /mysql/mysql8-password/
+twitter_card_image: https://www.soudegesu.com/images/icon/mysql_icon.png
 ---
 
 [MySQL](https://www.mysql.com/jp/) のメジャーバージョン `8` が 2018/4 にリリースされました。
 今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。
-
-* Table Of Contents
-{:toc}
 
 ## MySQL8のAMIを作りたい
 
@@ -40,7 +37,7 @@ ansible playbookのサンプルは以下のようになりました。
 
 ```yml
 ---
-{% raw %}- name: download epel-release
+- name: download epel-release
   yum:
     name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
     state: present
@@ -81,7 +78,7 @@ ansible playbookのサンプルは以下のようになりました。
     state: present
     host: '%'
   with_items:
-    - "{{ mysql.users }}"{% endraw %}
+    - "{{ mysql.users }}"
 ```
 
 ## ポイント解説
@@ -107,7 +104,6 @@ ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-pytho
 なお、 `MySQL-python` はPython2上でしか動作しない点も注意してください。
 
 ```yml
-{% raw %}
 - name: install mysql
   yum:
     name: "{{ item }}"
@@ -116,7 +112,6 @@ ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-pytho
     - mysql-community-devel*
     - mysql-community-server*
     - MySQL-python # これ
-{% endraw %}
 ```
 
 ### MySQLのデフォルト認証プラグインの変更
@@ -162,13 +157,11 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
 初期パスワードをログファイルから抽出して変数に登録した後( `register` )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。
 
 ```yml
-{% raw %}
 - name: get root password
   shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
   register: root_password # これで一回変数登録
 - name: update expired root user password
   command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"
-{% endraw %}
 ```
 
 **なぜ `mysql_user` ではなく `command` モジュールを使うの？** と思うことでしょう。
@@ -176,7 +169,6 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
 例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。
 
 ```yml
-{% raw %}
 -  mysql_user:
     login_user: root
     login_password: "{{ root_password }}"
@@ -185,7 +177,6 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
     priv: '*.*:ALL,GRANT'
     state: present
     host: '%'
-{% endraw %}
 ```
 
 実はこれだと、以下のようなエラーが発生します。
@@ -207,7 +198,6 @@ unable to connect to database, check login_user and login_password are correct o
 逆に `host` が未設定だと、localhostからの接続しか許可されません。
 
 ```yml
-{% raw %}
 - name: create mysql client user
   mysql_user:
     login_user: root
@@ -219,7 +209,6 @@ unable to connect to database, check login_user and login_password are correct o
     host: '%' # hostを設定しないと、localhostからの接続しか受け付けない
   with_items:
     - "{{ mysql.users }}"
-{% endraw %}
 ```
 
 ## まとめ
