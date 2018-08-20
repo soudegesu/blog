@@ -7,7 +7,7 @@
 <meta name="author" content="{{ $.Site.Author.name }}">
 <link rel="canonical" href="{{ .Site.BaseURL }}{{ .Page.URL }}">
 <meta name="twitter:site" content="@{{ $.Site.Author.twitter }}">
-<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Title }}{{ else }}{{ $title }}{{ end }}">
 <meta name="twitter:description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Params.Description }}{{ end }}">
 <meta name="twitter:url" content="{{ $url }}">
 <meta name="twitter:card" content="summary_large_image">
@@ -36,7 +36,7 @@
     "@context": "http://schema.org",
     "@type": "Organization",
     "url": "{{ .Site.BaseURL }}",
-    "logo": "{{ .Site.Author.avatar }}"
+    "logo": "{{ .Site.BaseURL }}{{ .Site.Author.avatar }}"
   }
 </script>
 <script type="application/ld+json">
