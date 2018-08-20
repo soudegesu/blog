@@ -11,16 +11,18 @@
 			<img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}">
 		</figure>
 		{{- end }}
+		{{- partial "ad/top.html" . -}}
 		{{- partial "post_toc.html" . -}}
 		<div class="post__content clearfix">
 			{{ .Content }}
 		</div>
 		{{ partial "post_tags.html" . }}
 	</article>
+	{{ partial "ad/bottom.html" . }}
 	{{ partial "authorbox.html" . }}
 	{{ partial "post_nav.html" . }}
-	{{ partial "comments.html" . }}
 	{{ partial "related.html" . }}
+	{{ partial "comments.html" . }}
 </main>
 
 {{ partial "sidebar.html" . }}
