@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="generator" content="Hugo 0.47" />
+	
+
+
+<title>matplotlibのpyplot APIをいろいろ試す - そうなんでげす</title>
+<meta name="description" content="matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。">
+<meta property="og:description" content="matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。">
+<meta name="author" content="soudegesu">
+<link rel="canonical" href="https://www.soudegesu.com/python/pyplot-api/">
+<meta name="twitter:site" content="@alten_manten">
+<meta name="twitter:title" content="matplotlibのpyplot APIをいろいろ試す - そうなんでげす">
+<meta name="twitter:description" content="matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。">
+<meta name="twitter:url" content="https://www.soudegesu.com/python/pyplot-api/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@alten_manten">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:site_name" content="matplotlibのpyplot APIをいろいろ試す - そうなんでげす">
+<meta property="og:title" content="matplotlibのpyplot APIをいろいろ試す - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/python/pyplot-api/">
+  
+<meta property="og:image" content="https://www.soudegesu.com/images/icon/python_icon.png">
+<meta name="twitter:image" content="https://www.soudegesu.com/images/icon/python_icon.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-06-22 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2018-07-03-aws-batch-and-glue.md%29"><link rel="next" href="Page%28/past/2018-06-10-systemd_limits.md%29">
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
+
+
+	<meta property="og:title" content="matplotlibのpyplot APIをいろいろ試す" />
+<meta property="og:description" content="matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/python/pyplot-api/" /><meta property="article:published_time" content="2018-06-22T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-06-22T00:00:00&#43;00:00"/>
+	<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="matplotlibのpyplot APIをいろいろ試す"/>
+<meta name="twitter:description" content="matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。"/>
+
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+	<link rel="stylesheet" href="/css/style.css">
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-92599175-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5005266309965277",
+    enable_page_level_ads: true
+  });
+</script>
+<script async src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" custom-element="amp-auto-ads"></script>
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277" />
+
+
+</head>
+<body class="body">
+	<div class="container container-outer">
+		<header class="header">
+			<div class="container container-inner">
+				<div class="logo" role="banner">
+					<a class="logo__link" href="/" title="そうなんでげす" rel="home">
+						<div class="logo__title">そうなんでげす</div>
+						<div class="logo__tagline">またつまらぬモノを斬ってしまった</div>
+					</a>
+				</div>
+			</div>
+			<div class="divider"></div>
+		</header>
+		<div class="wrapper flex">
+
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">matplotlibのpyplot APIをいろいろ試す</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-06-22T00:00:00">June 22, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#実行環境">実行環境</a></li>
+<li><a href="#pyplotの思想を理解する">pyplotの思想を理解する</a></li>
+<li><a href="#プロットできるデータの種類">プロットできるデータの種類</a>
+<ul>
+<li><a href="#棒グラフ-積み上げ棒グラフ-bar-barh-broken-barh">棒グラフ（積み上げ棒グラフ）：bar/barh/broken_barh</a></li>
+<li><a href="#ヒストグラム-hist-hist2d">ヒストグラム：hist/hist2d</a></li>
+<li><a href="#円グラフ-pie">円グラフ：pie</a></li>
+<li><a href="#散布図-scatter">散布図：scatter</a></li>
+<li><a href="#折れ線グラフ-積み上げ折れ線グラフ-plot-stackplot-plot-date">折れ線グラフ（積み上げ折れ線グラフ）：plot/stackplot/plot_date</a></li>
+<li><a href="#箱ひげ図-boxplot">箱ひげ図：boxplot</a></li>
+<li><a href="#バイオリン図-violinplot">バイオリン図：violinplot</a></li>
+<li><a href="#等高線-水平曲線-contour-contourf">等高線・水平曲線：contour/contourf</a></li>
+<li><a href="#非構造三次元データ-tricontour-tricontourf">非構造三次元データ：tricontour/tricontourf</a></li>
+<li><a href="#極座標-polar">極座標：polar</a></li>
+<li><a href="#対数-loglog-semilogx-semilogy">対数：loglog/semilogx/semilogy</a></li>
+<li><a href="#行列-matshow">行列：matshow</a></li>
+<li><a href="#スパース行列-spy">スパース行列：spy</a></li>
+<li><a href="#コヒーレンス-cohere">コヒーレンス：cohere</a></li>
+<li><a href="#離散データ-stem">離散データ：stem</a></li>
+<li><a href="#ステップ応答-step">ステップ応答：step</a></li>
+<li><a href="#自己相関-相互相関-acorr-xcorr">自己相関・相互相関：acorr/xcorr</a></li>
+<li><a href="#複数イベントデータ-eventplot">複数イベントデータ：eventplot</a></li>
+<li><a href="#六角形で描画-hexbin">六角形で描画：hexbin</a></li>
+<li><a href="#疑似カラー描画-pcolor-pcolormesh-tripcolor">疑似カラー描画：pcolor/pcolormesh/tripcolor</a></li>
+<li><a href="#スペクトラム-magnitude-spectrum-phase-spectrum-angle-spectrum-specgram">スペクトラム：magnitude_spectrum/phase_spectrum/angle_spectrum/specgram</a></li>
+<li><a href="#スペクトル密度-psd-csd">スペクトル密度：psd/csd</a></li>
+<li><a href="#ベクトル-quiver-quiverkey">ベクトル：quiver/quiverkey</a></li>
+<li><a href="#流線グラフ-streamplot">流線グラフ：streamplot</a></li>
+</ul></li>
+<li><a href="#グラフに付加情報を加える">グラフに付加情報を加える</a>
+<ul>
+<li><a href="#グラフのタイトル-title-suptitle">グラフのタイトル：title/suptitle</a></li>
+<li><a href="#凡例の追加-legend-colorbar">凡例の追加：legend/colorbar</a></li>
+<li><a href="#ラベルの表示-xlabel-ylabel-clabel">ラベルの表示：xlabel/ylabel/clabel</a></li>
+<li><a href="#軸の描画範囲を制限-xlim-ylim">軸の描画範囲を制限：xlim/ylim</a></li>
+<li><a href="#軸のスケールの変更-xscale-yscale">軸のスケールの変更：xscale/yscale</a></li>
+<li><a href="#目盛りの変更-xticks-yticks">目盛りの変更：xticks/yticks</a></li>
+<li><a href="#表-テーブル-の表示-table">表（テーブル）の表示：table</a></li>
+<li><a href="#軸に対する描画データの追加-twinx-twiny">軸に対する描画データの追加：twinx/twiny</a></li>
+<li><a href="#注釈の追加-annotate">注釈の追加：annotate</a></li>
+<li><a href="#矢印-直線-の追加-arrow">矢印（直線）の追加：arrow</a></li>
+<li><a href="#平行-垂直の線を引く-axhline-axvline-hlines-vlines">平行・垂直の線を引く：axhline/axvline/hlines/vlines</a></li>
+<li><a href="#矩形の描画-axhspan-axvspan">矩形の描画：axhspan/axvspan</a></li>
+<li><a href="#誤差の表示-errorbar">誤差の表示：errorbar</a></li>
+<li><a href="#テキストの追加-text-figtext">テキストの追加：text/figtext</a></li>
+<li><a href="#範囲の塗りつぶし-fill-fill-between-fill-betweenx">範囲の塗りつぶし：fill/fill_between/fill_betweenx</a></li>
+<li><a href="#風向きの追加-barbs">風向きの追加：barbs</a></li>
+</ul></li>
+<li><a href="#グラフのレイアウトを修正する">グラフのレイアウトを修正する</a>
+<ul>
+<li><a href="#グラフの位置変更-axes">グラフの位置変更：axes</a></li>
+<li><a href="#外枠の表示-非表示-box">外枠の表示/非表示：box</a></li>
+<li><a href="#グリッド-格子-の表示-grid-rgrids-thetagrids-triplot">グリッド（格子）の表示：grid/rgrids/thetagrids/triplot</a></li>
+<li><a href="#目盛りの分割数を変更-locator-params">目盛りの分割数を変更：locator_params</a></li>
+<li><a href="#マージンの追加-margins-subplots-adjust">マージンの追加：margins/subplots_adjust</a></li>
+<li><a href="#レイアウトの自動調整-tight-layout">レイアウトの自動調整：tight_layout</a></li>
+<li><a href="#複数グラフの描画-subplots">複数グラフの描画:subplots</a></li>
+<li><a href="#テイストを手書き風に変更-xkcd">テイストを手書き風に変更：xkcd</a></li>
+</ul></li>
+<li><a href="#まとめ">まとめ</a></li>
+<li><a href="#参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul></li>
+</ul>
+</nav>
+	</div>
+</div>
+<div class="post__content clearfix">
+			
+
+<p>matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。</p>
+
+<p>たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。</p>
+
+<p>今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。</p>
+
+<h2 id="実行環境">実行環境</h2>
+
+<p>実行環境は以下になります。</p>
+
+<ul>
+<li>mac OS (High Sierra 10.13)</li>
+<li>Python 3.6.1</li>
+<li>matplotlib 2.2.2</li>
+<li>jupyter 1.0.0</li>
+<li>numpy 1.14.5</li>
+<li>pandas 0.23.1</li>
+</ul>
+
+<p>また、今回作成したグラフは <a href="https://github.com/soudegesu/pyplot-test">こちら</a> にpushしてあります。</p>
+
+<h2 id="pyplotの思想を理解する">pyplotの思想を理解する</h2>
+
+<p>グラフ描画を始める前にpyplotの思想を理解しました。</p>
+
+<p>いきなりSample Garallyから行くと凝ったグラフが出てきて理解が追いつかなくなるので注意が必要です。</p>
+
+<p>探しにくいですが、公式の <a href="https://matplotlib.org/tutorials/introductory/usage.html">Usage GuideのGeneral Conceptsの項</a> にpyplotの概念の説明があるので一読しました。</p>
+
+<h2 id="プロットできるデータの種類">プロットできるデータの種類</h2>
+
+<p><code>matplotlib.pyplot</code> モジュールがデータのプロット（描画）を司るモジュールになります。</p>
+
+<p><a href="https://matplotlib.org/api/pyplot_summary.html">matplotlibのpyplotのページ</a> に提供しているAPIの一覧記載があるのでそれを参考に試していきます。</p>
+
+<p>ここでは、大きくわけて以下2種類を取り扱います。</p>
+
+<ul>
+<li>グラフの種類を指定する関数（棒グラフや円グラフなど）</li>
+<li>渡されたデータに対して、特定の演算結果を描画する関数（スペクトル計算など）</li>
+</ul>
+
+<h3 id="棒グラフ-積み上げ棒グラフ-bar-barh-broken-barh">棒グラフ（積み上げ棒グラフ）：bar/barh/broken_barh</h3>
+
+<p><strong>棒グラフ</strong> を描画します。 <code>xerr</code> <code>yerr</code> オプションを指定すると誤差の指定ができます。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+width = 0.3
+yerr = (.1, .08, .1, .0, .5)
+
+plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
+</code></pre>
+
+<p><img src="/images/20180622/bar.png" alt="bar" /></p>
+
+<p><code>bottom</code> オプションで積み上げておきたい初期値を設定することで、 <strong>積み上げ棒グラフ</strong> を描画することもできます。</p>
+
+<p>積み上げるグラフの複数の配列の要素数は同一である必要があり、<code>bottom</code> 指定を忘れると、2種類の棒グラフを重ねて描画してしまうので注意が必要です。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+y2 = (2, 1, 3, 2, 1)
+width = 0.3
+yerr = (.1, .08, .1, .0, .5)
+
+p1 = plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
+p2 = plt.bar(x, y2, width, align='center', bottom=y, yerr=yerr, ecolor='r')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/bar2.png" alt="bar2" /></p>
+
+<p><strong>y軸から横に伸びる棒グラフ</strong> は <code>barh</code> 関数を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+width = 0.3
+xerr = (.1, .08, .1, .0, .5)
+
+plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
+</code></pre>
+
+<p><img src="/images/20180622/barh.png" alt="barh" /></p>
+
+<p><code>broken_barh</code> 関数では、 <strong>軸に足をつけない棒グラフ</strong> を描画することができます。
+実際には指定領域を矩形描画することになります。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x =  [(1.5, 0.5)]
+y = (.5, 2.0)
+
+plt.broken_barh(x, y)
+plt.xlim(0)
+plt.ylim(0)
+</code></pre>
+
+<p><img src="/images/20180622/broken_barh.png" alt="broken_barh" /></p>
+
+<h3 id="ヒストグラム-hist-hist2d">ヒストグラム：hist/hist2d</h3>
+
+<p><strong>ヒストグラム</strong> を表示します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+</code></pre>
+
+<p><img src="/images/20180622/hist.png" alt="hist" /></p>
+
+<p><strong>2次元のヒストグラム</strong> を描画するには、 <code>hist2d</code> 関数を使用します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+x = np.random.randn(100000)
+y = np.random.randn(100000) + 5
+
+plt.hist2d(x, y, bins=40)
+</code></pre>
+
+<p><img src="/images/20180622/hist2d.png" alt="hist2d" /></p>
+
+<h3 id="円グラフ-pie">円グラフ：pie</h3>
+
+<p><strong>円グラフ</strong> を描画します。 <code>autopct</code> （円グラフ上に値を表示する）オプションのように、グラフを修飾する多くのオプションが備わっています。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+from matplotlib.gridspec import GridSpec
+
+labels = 'A', 'B', 'C', 'D'
+fracs = [15, 30, 45, 10]
+
+plt.pie(fracs, labels=labels, autopct='%1.1f%%')
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/pie.png" alt="pie" /></p>
+
+<h3 id="散布図-scatter">散布図：scatter</h3>
+
+<p><strong>散布図</strong> を描画します。 マーカーの大きさはオプション指定で変更しています。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+N = 50
+x = np.random.rand(N)
+y = np.random.rand(N)
+
+colors = np.random.rand(N)
+area = np.pi * (15 * np.random.rand(N))**2
+
+plt.scatter(x, y, s=area, c=colors, alpha=0.5)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/scatter.png" alt="scatter" /></p>
+
+<h3 id="折れ線グラフ-積み上げ折れ線グラフ-plot-stackplot-plot-date">折れ線グラフ（積み上げ折れ線グラフ）：plot/stackplot/plot_date</h3>
+
+<p><strong>折り線グラフ</strong> は <code>plot</code> で描画できます。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+x = np.random.rand(100)
+
+plt.plot(x)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/plot.png" alt="plot" /></p>
+
+<p><strong>積み上げの折れ線グラフ</strong> を描画するには <code>stackplot</code> 関数を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y1 = [1, 1, 2, 3, 5]
+y2 = [0, 4, 2, 6, 8]
+y3 = [1, 3, 5, 7, 9]
+
+plt.stackplot(x, y1, y2, y3, labels=labels)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/stackplot.png" alt="stackplot" /></p>
+
+<p>また、 <strong>x軸が日付データの場合の折れ線グラフ</strong> には <code>plot_date</code> 関数を用いることが可能です。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+from matplotlib.dates import (DateFormatter, drange)
+import numpy as np
+import datetime
+
+np.random.seed(0)
+
+formatter = DateFormatter('%Y/%m/%d/')
+date1 = datetime.date(1970, 1, 1)
+date2 = datetime.date(2018, 4, 12)
+delta = datetime.timedelta(days=100)
+
+dates = drange(date1, date2, delta)
+s = np.random.rand(len(dates))
+
+plt.plot_date(dates, s)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/plot_date.png" alt="plot_date" /></p>
+
+<h3 id="箱ひげ図-boxplot">箱ひげ図：boxplot</h3>
+
+<p><strong>箱ひげ図</strong> （最小値、第1四分位点、中央値、第3四分位点、最大値）を描画します。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+import random
+
+a = np.array([1, 3, 0.25, 0.44, 5.88])
+plt.boxplot(a)
+</code></pre>
+
+<p><img src="/images/20180622/boxplot.png" alt="boxplot" /></p>
+
+<h3 id="バイオリン図-violinplot">バイオリン図：violinplot</h3>
+
+<p><strong>バイオリン図</strong> （箱ひげ図に確率密度表示を加えたもの）を描画します。</p>
+
+<pre><code class="language-python">import pandas as pd
+import numpy as  np
+from matplotlib import pyplot as plt
+
+fs = 10
+pos = [1, 2, 4, 5, 7, 8]
+data = [np.random.normal(0, std, size=100) for std in pos]
+
+plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/violinplot.png" alt="violinplot" /></p>
+
+<h3 id="等高線-水平曲線-contour-contourf">等高線・水平曲線：contour/contourf</h3>
+
+<p><strong>等高線</strong> （同じ高さの値の集まり）を描画します。
+<code>contour</code> 単体だと値がわかりにくいので、 <code>clabel</code> や <code>colorbar</code> などで情報を付与すると良いです。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contour(X, Y, Z)
+</code></pre>
+
+<p><img src="/images/20180622/contour.png" alt="contour" /></p>
+
+<p><strong>等高線の塗りつぶし</strong> には <code>contourf</code> を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contourf(X, Y, Z)
+</code></pre>
+
+<p><img src="/images/20180622/contourf.png" alt="contourf" /></p>
+
+<h3 id="非構造三次元データ-tricontour-tricontourf">非構造三次元データ：tricontour/tricontourf</h3>
+
+<p><strong>非構造三次元データ</strong> を扱う場合には <code>tricontour</code> 、 <code>tricontourf</code> を使います。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+import numpy as np
+
+n_angles = 48
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+
+triang = tri.Triangulation(x, y)
+
+plt.gca().set_aspect('equal')
+plt.tricontourf(triang, z)
+plt.colorbar()
+plt.tricontour(triang, z, colors='k')
+</code></pre>
+
+<p><img src="/images/20180622/tricontour.png" alt="tricontour" /></p>
+
+<h3 id="極座標-polar">極座標：polar</h3>
+
+<p><strong>極座標</strong> の円状グラフを描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+
+plt.polar(theta, r)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/polar.png" alt="polar" /></p>
+
+<h3 id="対数-loglog-semilogx-semilogy">対数：loglog/semilogx/semilogy</h3>
+
+<p>対数を描画します。 <strong>両対数</strong> の場合には <code>loglog</code> 関数を使います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+t = np.arange(0.01, 20.0, 0.01)
+plt.loglog(t, 20 * np.exp( -t / 10.0), basex=2)
+plt.grid(True)
+plt.title('loglog base 2 on x')
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/loglog.png" alt="loglog" /></p>
+
+<p><strong>x軸を10を底とする対数スケールでの片対数</strong> を描画する場合には <code>semilogx</code> を使用します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogx(t, np.sin(2*np.pi*t))
+plt.grid(True)
+</code></pre>
+
+<p><img src="/images/20180622/semilogx.png" alt="semilogx" /></p>
+
+<p><strong>y軸を10を底とする対数スケールでの片対数</strong> を描画する場合には <code>semilogy</code> を使用します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.arange(0.01, 20.0, 0.01)
+
+plt.semilogy(t, np.exp(-t/5.0))
+plt.grid(True)
+</code></pre>
+
+<p><img src="/images/20180622/semilogy.png" alt="semilogy" /></p>
+
+<h3 id="行列-matshow">行列：matshow</h3>
+
+<p><strong>行列データ</strong> を描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+mat = np.random.rand(10,10)
+plt.matshow(mat)
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/matshow.png" alt="matshow" /></p>
+
+<h3 id="スパース行列-spy">スパース行列：spy</h3>
+
+<p><strong>スパース行列（疎行列）</strong> を描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.random.randn(20, 20)
+x[5] = 0.
+x[:, 12] = 0.
+
+plt.spy(x, markersize=3)
+</code></pre>
+
+<p><img src="/images/20180622/spy.png" alt="spy" /></p>
+
+<h3 id="コヒーレンス-cohere">コヒーレンス：cohere</h3>
+
+<p><strong>コヒーレンス（波の可干渉性）</strong> を描画することができます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+n = 1024
+x = np.random.randn(n)
+y = np.random.randn(n)
+
+plt.cohere(x, y, NFFT=128)
+plt.figure()
+</code></pre>
+
+<p><img src="/images/20180622/cohere.png" alt="cohere" /></p>
+
+<h3 id="離散データ-stem">離散データ：stem</h3>
+
+<p><strong>x軸から伸びるシーケンスとしてyの値</strong> を描画したい場合に使います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0.1, 2 * np.pi, 10)
+plt.stem(x, np.cos(x), '-.')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/stem.png" alt="stem" /></p>
+
+<h3 id="ステップ応答-step">ステップ応答：step</h3>
+
+<p><strong>ステップ応答</strong> を描画します。コンピュータ信号のような離散値とかを扱うときに使います。</p>
+
+<pre><code class="language-python">import numpy as np
+from numpy import ma
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 7, 0.4)
+y = np.sin(x).copy() + 2.5
+
+plt.step(x, y)
+plt.scatter(x, y) #データを表す座標が見やすいようにしています
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/step.png" alt="step" /></p>
+
+<h3 id="自己相関-相互相関-acorr-xcorr">自己相関・相互相関：acorr/xcorr</h3>
+
+<p><code>acorr</code> 関数で <strong>自己相関</strong> を描画することができます。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.random.normal(0, 10, 50)
+plt.acorr(x)
+</code></pre>
+
+<p><img src="/images/20180622/acorr.png" alt="acorr" /></p>
+
+<p>また、<strong>相互相関</strong> を描画は <code>xcorr</code> になります。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+x, y = np.random.randn(2, 100)
+plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xcorr.png" alt="xcorr" /></p>
+
+<h3 id="複数イベントデータ-eventplot">複数イベントデータ：eventplot</h3>
+
+<p><strong>複数のイベントデータ</strong> を並行して描画する。公式から引用すると、以下のようなユースケースがあるらしいです。</p>
+
+<blockquote>
+<p>This type of plot is commonly used in neuroscience for representing neural events, where it is usually called a spike raster, dot raster, or raster plot.</p>
+</blockquote>
+
+<pre><code>import numpy as np
+from matplotlib import pyplot as plt
+
+np.random.seed(1)
+
+data = np.random.random([6, 50])
+lineoffsets = np.array([-15, -3, 1, 1.5, 6, 10])
+linelengths = [10, 2, 1, 1, 3, 1.5]
+
+plt.figure()
+plt.eventplot(data, lineoffsets=lineoffsets,
+              linelengths=linelengths)
+</code></pre>
+
+<p><img src="/images/20180622/eventplot.png" alt="eventplot" /></p>
+
+<h3 id="六角形で描画-hexbin">六角形で描画：hexbin</h3>
+
+<p><strong>hex</strong> でデータを描画します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 10, 1)
+y = np.arange(1, 10, 1)
+
+plt.hexbin(x, y, gridsize=10)
+</code></pre>
+
+<p><img src="/images/20180622/hexbin.png" alt="hexbin" /></p>
+
+<h3 id="疑似カラー描画-pcolor-pcolormesh-tripcolor">疑似カラー描画：pcolor/pcolormesh/tripcolor</h3>
+
+<p>2次元配列のデータを <strong>擬似カラー</strong> で描画します。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+dx, dy = 0.15, 0.05
+
+y, x = np.mgrid[slice(-3, 3 + dy, dy),
+                slice(-3, 3 + dx, dx)]
+z = (1 - x / 2. + x ** 5 + y ** 3) * np.exp(-x ** 2 - y ** 2)
+z = z[:-1, :-1]
+z_min, z_max = -np.abs(z).max(), np.abs(z).max()
+
+plt.pcolor(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
+</code></pre>
+
+<p><img src="/images/20180622/pcolor.png" alt="pcolor" /></p>
+
+<p><strong>メッシュデータを高速に描画したい</strong> 場合には <code>pcolormesh</code> 関数を使うと良いそうです。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+dx, dy = 0.15, 0.05
+
+y, x = np.mgrid[slice(-3, 3 + dy, dy),
+                slice(-3, 3 + dx, dx)]
+z = (1 - x / 2. + x ** 5 + y ** 3) * np.exp(-x ** 2 - y ** 2)
+z = z[:-1, :-1]
+z_min, z_max = -np.abs(z).max(), np.abs(z).max()
+
+plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
+</code></pre>
+
+<p><img src="/images/20180622/pcolormesh.png" alt="pcolormesh" /></p>
+
+<p><strong><code>tricontour</code> に対する疑似カラー描画</strong> には <code>tripcolor</code> 関数を使います。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+import numpy as np
+
+n_angles = 48
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+
+triang = tri.Triangulation(x, y)
+
+plt.gca().set_aspect('equal')
+plt.tricontourf(triang, z)
+plt.colorbar()
+plt.tripcolor(triang, z, shading='flat')
+</code></pre>
+
+<p><img src="/images/20180622/tripcolor.png" alt="tripcolor" /></p>
+
+<h3 id="スペクトラム-magnitude-spectrum-phase-spectrum-angle-spectrum-specgram">スペクトラム：magnitude_spectrum/phase_spectrum/angle_spectrum/specgram</h3>
+
+<p>信号の強さを表す <strong>振幅スペクトラム</strong> は <code>magnitude_spectrum</code> で描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.01
+Fs = 1/dt
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t/0.05)
+cnse = np.convolve(nse, r)*dt
+cnse = cnse[:len(t)]
+
+s = 0.1*np.sin(2*np.pi*t) + cnse
+
+plt.magnitude_spectrum(s, Fs=Fs)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/magnitude_spectrum.png" alt="magnitude_spectrum" /></p>
+
+<p><strong>位相スペクトラム</strong> は <code>phase_spectrum</code> で描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.01
+Fs = 1/dt
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t/0.05)
+
+cnse = np.convolve(nse, r)*dt
+cnse = cnse[:len(t)]
+s = 0.1*np.sin(2*np.pi*t) + cnse
+
+plt.phase_spectrum(s, Fs=Fs)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/pcolormesh.png" alt="phase_spectrum" /></p>
+
+<p><strong>角度スペクトラム</strong> は <code>angle_spectrum</code> で描画します。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.random.normal(0, 10, 50)
+plt.angle_spectrum(x)
+</code></pre>
+
+<p><img src="/images/20180622/angle_spectrum.png" alt="angle_spectrum" /></p>
+
+<p><strong>スペクトログラム</strong> は <code>specgram</code> になります。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+dt = 0.0005
+t = np.arange(0.0, 20.0, dt)
+s1 = np.sin(2 * np.pi * 100 * t)
+s2 = 2 * np.sin(2 * np.pi * 400 * t)
+
+mask = np.where(np.logical_and(t &gt; 10, t &lt; 12), 1.0, 0.0)
+s2 = s2 * mask
+
+nse = 0.01 * np.random.random(size=len(t))
+
+x = s1 + s2 + nse
+NFFT = 1024
+Fs = int(1.0 / dt)
+
+plt.specgram(x, NFFT=NFFT, Fs=Fs, noverlap=900)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/specgram.png" alt="specgram" /></p>
+
+<h3 id="スペクトル密度-psd-csd">スペクトル密度：psd/csd</h3>
+
+<p><strong>パワースペクトル密度</strong> は <code>psd</code> で描画します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+from matplotlib import mlab as mlab
+
+np.random.seed(0)
+
+dt = 0.01
+t = np.arange(0, 10, dt)
+nse = np.random.randn(len(t))
+r = np.exp(-t / 0.05)
+
+cnse = np.convolve(nse, r) * dt
+cnse = cnse[:len(t)]
+s = 0.1 * np.sin(2 * np.pi * t) + cnse
+
+plt.psd(s, 512, 1 / dt)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/psd.png" alt="psd" /></p>
+
+<p><strong>クロススペクトル密度</strong> は <code>csd</code> で描画します。</p>
+
+<pre><code class="language-python">from scipy import signal
+from matplotlib import pyplot as plt
+
+fs = 10e3
+N = 1e5
+amp = 20
+freq = 1234.0
+noise_power = 0.001 * fs / 2
+time = np.arange(N) / fs
+b, a = signal.butter(2, 0.25, 'low')
+x = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
+y = signal.lfilter(b, a, x)
+x += amp*np.sin(2*np.pi*freq*time)
+y += np.random.normal(scale=0.1*np.sqrt(noise_power), size=time.shape)
+
+plt.figure()
+plt.csd(x, y)
+</code></pre>
+
+<p><img src="/images/20180622/csd.png" alt="csd" /></p>
+
+<h3 id="ベクトル-quiver-quiverkey">ベクトル：quiver/quiverkey</h3>
+
+<p><strong>ベクトル</strong> を描画します。また、 <code>quiverkey</code> 関数を使うことで、<strong>ベクトルのキー</strong> も描画することができます。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+X, Y = np.meshgrid(np.arange(0, 2 * np.pi, .2), np.arange(0, 2 * np.pi, .2))
+U = np.cos(X)
+V = np.sin(Y)
+
+Q = plt.quiver(X, Y, U, V, units='width')
+plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/quiver.png" alt="quiver" /></p>
+
+<h3 id="流線グラフ-streamplot">流線グラフ：streamplot</h3>
+
+<p><strong>流線</strong> を描画します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+Y, X = np.mgrid[-3:3:100j, -3:3:100j]
+U = -1 - X**2 + Y
+V = 1 + X - Y**2
+speed = np.sqrt(U*U + V*V)
+
+plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
+</code></pre>
+
+<p><img src="/images/20180622/streamplot.png" alt="streamplot" /></p>
+
+<h2 id="グラフに付加情報を加える">グラフに付加情報を加える</h2>
+
+<p>グラフに付加情報を加えることで、プロットされたデータの理解を補助することができます。
+以下ではグラフに付加情報を加える関数を調べてみました。</p>
+
+<h3 id="グラフのタイトル-title-suptitle">グラフのタイトル：title/suptitle</h3>
+
+<p>グラフに <strong>タイトルをつける</strong> には <code>title</code> 関数を使います。
+<strong>複数グラフにタイトルをつける</strong> には <code>suptitle</code> 関数を使います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+def f(t):
+    return np.cos(2*np.pi*t)
+
+t1 = np.arange(0.0, 5.0, 0.1)
+t2 = np.arange(0.0, 2.0, 0.01)
+
+plt.subplot(121)
+plt.plot(t1, f(t1), '-')
+plt.title('subplot 1')
+plt.suptitle('Suptitle', fontsize=16)
+
+
+plt.subplot(122)
+plt.plot(t2, np.cos(2*np.pi*t2), '--')
+plt.title('subplot 2')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/title.png" alt="title" /></p>
+
+<h3 id="凡例の追加-legend-colorbar">凡例の追加：legend/colorbar</h3>
+
+<p><strong>グラフデータの凡例</strong> を追加します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x_data = (1, 2, 3)
+y_data = (.5, 1.5 , .8)
+
+plt.bar(x_data, y_data)
+plt.legend(['dataA'])
+</code></pre>
+
+<p><img src="/images/20180622/legend.png" alt="legend" /></p>
+
+<p>等高線（<code>contour</code>）に対する、 <strong>色が表す値の凡例</strong> は <code>colorbar</code> 関数で表示します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+plt.contourf(X, Y, Z)
+plt.colorbar()
+</code></pre>
+
+<p><img src="/images/20180622/colorbar.png" alt="colorbar" /></p>
+
+<h3 id="ラベルの表示-xlabel-ylabel-clabel">ラベルの表示：xlabel/ylabel/clabel</h3>
+
+<p>グラフの軸に <strong>ラベル</strong> を表示します。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+import matplotlib
+
+np.random.seed(0)
+
+x = np.arange(0.0, 50.0, 2.0)
+y = x ** 1.3 + np.random.rand(*x.shape) * 30.0
+s = np.random.rand(*x.shape) * 800 + 500
+
+plt.scatter(x, y, s, c=&quot;g&quot;, alpha=0.5, label=&quot;Luck&quot;)
+plt.xlabel(&quot;Label X&quot;)
+plt.ylabel(&quot;Label Y&quot;)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xlabel.png" alt="xlabel" /></p>
+
+<p>等高線（<code>contour</code>）に対しては <code>clabel</code> 関数で <strong>色が表す値のラベル</strong> を表示します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = np.arange(-4.0, 3.0, delta)
+y = np.arange(-2.0, 2.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+plt.figure()
+CS = plt.contour(X, Y, Z)
+plt.clabel(CS, inline=1, fontsize=10)
+</code></pre>
+
+<p><img src="/images/20180622/clabel.png" alt="clabel" /></p>
+
+<h3 id="軸の描画範囲を制限-xlim-ylim">軸の描画範囲を制限：xlim/ylim</h3>
+
+<p>デフォルトだとデータの範囲に合わせてx軸/y軸の範囲が決まりますが、 <strong>軸の値の範囲</strong> を変更できます。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.xlim(-2, 2)
+plt.ylim(-0.75, 0.75)
+
+plt.plot(x, np.sin(x),label=&quot;y = sinx&quot;)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xlim.png" alt="xlim" /></p>
+
+<h3 id="軸のスケールの変更-xscale-yscale">軸のスケールの変更：xscale/yscale</h3>
+
+<p><strong>軸のスケール</strong> を変更します。<code>linear</code> <code>log</code> <code>logit</code> <code>symlog</code> を指定でき、対数をとった描画等ができます。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.xscale('symlog')
+
+plt.plot(x, np.sin(x))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xscale.png" alt="xscale" /></p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x = np.linspace(-np.pi, np.pi, 100)
+
+plt.yscale('log')
+
+plt.plot(x, np.sin(x))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/yscale.png" alt="yscale" /></p>
+
+<h3 id="目盛りの変更-xticks-yticks">目盛りの変更：xticks/yticks</h3>
+
+<p><strong>目盛り</strong> をカスタマイズするには <code>xticks</code> <code>yticks</code> 関数を使います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.arange(4)
+y = [10, 20, 30, 40]
+
+plt.bar(x, y)
+plt.xticks(x, ('A', 'B', 'C', 'D'))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xticks.png" alt="xticks" /></p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.arange(4)
+y = [10, 20, 30, 40]
+
+plt.bar(x, y)
+plt.yticks(y, ('10', '20', '30', '40'))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/yticks.png" alt="yticks" /></p>
+
+<h3 id="表-テーブル-の表示-table">表（テーブル）の表示：table</h3>
+
+<p>描画データの <strong>表（テーブル）</strong> を表示します。
+パッと見た感じ、表単体で描画するのはできなそうでした。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+data = [[ 66386, 174296,  75131, 577908,  32015],
+        [ 58230, 381139,  78045,  99308, 160454],
+        [ 89135,  80552, 152558, 497981, 603535],
+        [ 78415,  81858, 150656, 193263,  69638],
+        [139361, 331509, 343164, 781380,  52269]]
+columns = ('Freeze', 'Wind', 'Flood', 'Quake', 'Hail')
+rows = ['%d year' % x for x in (100, 50, 20, 10, 5)]
+
+plt.table(cellText=data,
+                      rowLabels=rows,
+                      rowColours=colors,
+                      colLabels=columns,
+                      loc='bottom')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/table.png" alt="table" /></p>
+
+<h3 id="軸に対する描画データの追加-twinx-twiny">軸に対する描画データの追加：twinx/twiny</h3>
+
+<p>同一の軸に対して別のデータを描画します。
+<strong>x軸はそのままに、別のyの値を描画する</strong> には <code>twinx</code> 関数を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twinx()
+s2 = np.sin(2 * np.pi * t)
+ax2.plot(t, s2, 'r.')
+ax2.set_ylabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/twinx.png" alt="twinx" /></p>
+
+<p><strong>y軸はそのままに、別のxの値を描画する</strong> には <code>twiny</code> 関数を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+fig, ax1 = plt.subplots()
+t = np.arange(0.01, 10.0, 0.01)
+s1 = np.exp(t)
+ax1.plot(t, s1, 'b-')
+ax1.set_xlabel('time (s)')
+ax1.set_ylabel('exp', color='b')
+ax1.tick_params('y', colors='b')
+
+ax2 = ax1.twiny()
+t2 = np.arange(10.01, 20.0, 0.01)
+s2 = np.exp(t2)
+ax2.plot(t2, s2, 'r.')
+ax2.set_xlabel('sin', color='r')
+ax2.tick_params('y', colors='r')
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/twiny.png" alt="twiny" /></p>
+
+<h3 id="注釈の追加-annotate">注釈の追加：annotate</h3>
+
+<p><strong>注釈を追加</strong> します。特定のデータポイントを指し示すときに使います。</p>
+
+<p><code>xycoords</code> オプションによって、<code>xy</code> や <code>xytext</code> の振る舞いが変わる点に注意が必要です。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+t = np.arange(0.0, 5.0, 0.01)
+s = np.cos(2*np.pi*t)
+line, = ax.plot(t, s, lw=2)
+
+# xycoordsがデフォルトの'data'なので、
+# 座標(4, 1)のデータに対して座標(3, 1.5)にテキストを表示して
+# 矢印で線を引っ張る
+ax.annotate('max', xy=(4, 1), xytext=(3, 1.5),
+            arrowprops=dict(facecolor='black', shrink=0.05),
+            )
+
+ax.set_ylim(-2,2)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/annotate.png" alt="annotate" /></p>
+
+<h3 id="矢印-直線-の追加-arrow">矢印（直線）の追加：arrow</h3>
+
+<p><strong>矢印を描画</strong> します。 <code>head_width</code> <code>head_length</code> オプションを記入しないとただの直線として描画されます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+#head_widthとhead_lengthを入れないと矢印にならない
+ax.arrow(x=0.5, y=0.5, dx=1.0, dy=1.0, ls='--', head_width=0.1, head_length=0.1)
+
+ax.set_xlim(0.25, 1.75)
+ax.set_ylim(0.25, 1.75)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/arrow.png" alt="arrow" /></p>
+
+<h3 id="平行-垂直の線を引く-axhline-axvline-hlines-vlines">平行・垂直の線を引く：axhline/axvline/hlines/vlines</h3>
+
+<p><code>axhline</code> 関数は <strong>x軸に対する平行線</strong> を引きます。
+また、 <code>xmin</code> <code>xmax</code> オプションで、直線を引く区間を指定できるのが便利です。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axhline(y=.5, xmin=0.25, xmax=0.75)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/axhline.png" alt="axhline" /></p>
+
+<p>同様に <strong>x軸に対する平行線を複数引く</strong> には <code>hlines</code> 関数が便利です。
+指定された <code>xmin</code> や <code>xmax</code> は複数の線全てに適用されます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+xmin = 1
+xmax =  10
+
+plt.hlines([-1, 1], xmin, xmax)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/hlines.png" alt="hlines" /></p>
+
+<p><code>axvline</code>関数は <strong>x軸に対する垂直の線</strong> を引くことが出来ます。オプションの概念は <code>axhline</code> と同様です。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axvline(x=.5, ymin=0.25, ymax=0.75, color='r', linewidth=4)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/axvline.png" alt="axvline" /></p>
+
+<p>同様に <strong>x軸に対する垂直の線を複数引く</strong> には <code>vlines</code> 関数が便利です。
+指定された <code>ymin</code> や <code>xmax</code> は複数の線全てに適用されます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+ymin = 1
+ymax =  10
+
+plt.vlines([-1, 1], ymin, ymax)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/vlines.png" alt="vlines" /></p>
+
+<h3 id="矩形の描画-axhspan-axvspan">矩形の描画：axhspan/axvspan</h3>
+
+<p><code>axhspan</code> 関数では <strong>x軸と平行の矩形（四角形）</strong> を描画することができます。
+y軸の範囲を表現したいときに使います。
+<code>xmin</code> <code>xmax</code> <code>ymin</code> <code>ymax</code> オプションを指定した場合は矩形を描画するという意味では <code>axvspan</code> と変わりません。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# yが1.25〜1.55までを一律で塗りつぶし
+plt.axhspan(1.25, 1.55, facecolor='g', alpha=0.5)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/axhspan.png" alt="axhspan" /></p>
+
+<p><code>axvspan</code> 関数では <strong>y軸と平行の矩形（四角形）</strong> を描画することができます。
+x軸の範囲を表現したいときに使います。
+<code>xmin</code> <code>xmax</code> <code>ymin</code> <code>ymax</code> オプションを指定した場合は矩形を描画するという意味では <code>axhspan</code> と変わりません。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/axvspan.png" alt="axvspan" /></p>
+
+<h3 id="誤差の表示-errorbar">誤差の表示：errorbar</h3>
+
+<p><strong>データの誤差</strong> を棒で表します。
+<code>uplims</code> <code>lolims</code> オプションで、上下のどちらの誤差か指定することもできます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y, yerr=0.1)
+
+y = np.sin(np.arange(10.0) / 20.0) + 1
+plt.errorbar(x, y, yerr=0.1, uplims=True)
+
+y = np.sin(np.arange(10.0) / 20.0) + 2
+plt.errorbar(x, y, yerr=0.1, lolims=True)
+</code></pre>
+
+<p><img src="/images/20180622/errorbar.png" alt="errorbar" /></p>
+
+<h3 id="テキストの追加-text-figtext">テキストの追加：text/figtext</h3>
+
+<p><code>text</code> 関数はグラフ上に <strong>テキストを追加</strong> します。 オプション指定で修飾することもできます。</p>
+
+<p>描画位置の指定は座標系に対して行います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+
+plt.text(0.6, 0.5, &quot;hogehoge&quot;, size=20, rotation=20.,
+         ha=&quot;center&quot;, va=&quot;center&quot;,
+         bbox=dict(boxstyle=&quot;square&quot;,
+                   ec=(1., 0.5, 0.5),
+                   fc=(1., 0.8, 0.8),
+                   )
+         )
+
+plt.text(0.2, 0.5, &quot;fugafuga&quot;, size=20, rotation=20.,
+         ha=&quot;center&quot;, va=&quot;center&quot;
+         )
+
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/text.png" alt="text" /></p>
+
+<p>同様に <strong>テキストを追加する</strong> 関数で <code>figtext</code> が存在します。</p>
+
+<p>描画位置の指定は図に対する相対位置であることに注意が必要です。（座標に依存しません）</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(0)
+x = np.arange(10.0)
+y = np.sin(np.arange(10.0) / 20.0)
+
+plt.errorbar(x, y)
+# x軸方向の中央(0.5)
+# y軸方向の1/4(0.25)の場所に
+# 文字「x」を埋め込む
+plt.figtext(0.5, 0.25, '$x$')
+</code></pre>
+
+<p><img src="/images/20180622/figtext.png" alt="figtext" /></p>
+
+<h3 id="範囲の塗りつぶし-fill-fill-between-fill-betweenx">範囲の塗りつぶし：fill/fill_between/fill_betweenx</h3>
+
+<p>グラフ上の <strong>範囲を色で塗りつぶして</strong> 描画します。
+<code>fill</code> ではy=0との間の色が塗りつぶされます。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y = np.sin(2*np.pi*x)
+
+#0〜y or y〜0の間を塗りつぶす
+plt.fill(x, y)
+</code></pre>
+
+<p><img src="/images/20180622/fill.png" alt="fill" /></p>
+
+<p><strong>塗りつぶし範囲のyを指定する</strong> には <code>fill_between</code> 関数を使用します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(0.0, 2, 0.01)
+y1 = np.sin(2*np.pi*x)
+y2 = 0.5
+
+#y1〜y2の間を塗りつぶす
+plt.fill_between(x, y1, y2)
+</code></pre>
+
+<p><img src="/images/20180622/fill_between.png" alt="fill_between" /></p>
+
+<p><strong>x軸に対して塗りつぶし範囲を指定する</strong> には <code>fill_betweenx</code> 関数を使います。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+y = np.arange(0.0, 2, 0.01)
+x1 = np.sin(2*np.pi*x)
+x2 = 0.5
+
+#x1〜x2の範囲を塗りつぶす
+plt.fill_betweenx(y, x1, x2)
+</code></pre>
+
+<p><img src="/images/20180622/fill_betweenx.png" alt="fill_betweenx" /></p>
+
+<h3 id="風向きの追加-barbs">風向きの追加：barbs</h3>
+
+<p><strong>天気図で使う風向きとその強さ</strong> を表す記号を描画します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+x =  (1, 2, 3, 4, 5)
+y = (1, 2, 3, 4, 5)
+u = (10,20,-30,40,-50)
+v = (10,20,30,40,50)
+
+plt.barbs(x, y, u, v)
+</code></pre>
+
+<p><img src="/images/20180622/barbs.png" alt="barbs" /></p>
+
+<h2 id="グラフのレイアウトを修正する">グラフのレイアウトを修正する</h2>
+
+<p>図を見やすくするために、グラフのレイアウトを微調整します。</p>
+
+<h3 id="グラフの位置変更-axes">グラフの位置変更：axes</h3>
+
+<p><strong>グラフの位置を変更</strong> します。 <strong>複数のグラフを重ね合わせる</strong> ときなどに使用します。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.random.normal(0, 10, 50)
+plt.acorr(x)
+
+# 引数は図を描画する位置の [left, bottom, width, height]を表す
+plt.axes([.65, .6, .2, .2], facecolor='k')
+plt.angle_spectrum(x)
+</code></pre>
+
+<p><img src="/images/20180622/axes.png" alt="axes" /></p>
+
+<h3 id="外枠の表示-非表示-box">外枠の表示/非表示：box</h3>
+
+<p>グラフの <strong>枠の表示/非表示</strong> を設定します。デフォルトではTrue（表示する）です。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+x =  np.arange(5)
+y = (1, 2, 3, 4, 5)
+width = 0.3
+
+plt.barh(x, y, width, align='center')
+plt.box(False)
+</code></pre>
+
+<p><img src="/images/20180622/box.png" alt="box" /></p>
+
+<h3 id="グリッド-格子-の表示-grid-rgrids-thetagrids-triplot">グリッド（格子）の表示：grid/rgrids/thetagrids/triplot</h3>
+
+<p>グラフ内に <strong>グリッドを表示</strong> します。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+plt.grid(linestyle='-', linewidth=1)
+</code></pre>
+
+<p><img src="/images/20180622/grid.png" alt="grid" /></p>
+
+<p><strong>極座標グラフ（polar）にグリッドを表示</strong> するには <code>rgrids</code> 関数を使います。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+plt.polar()
+plt.rgrids((0.25, 0.5, 1.0))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/rgrids.png" alt="rgrids" /></p>
+
+<p><code>rgrids</code> の代わりに <code>thetagrids</code> 関数で、<strong>グリッドとラベルを一緒に設定</strong> することも可能です。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+plt.polar()
+plt.thetagrids(range(45,360,90), ('NE', 'NW', 'SW','SE'))
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/thetagrids.png" alt="thetagrids" /></p>
+
+<p><strong>非構造三次元データ （tricontour） にグリッドを表示</strong> するには <code>triplot</code> 関数を使います。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib.tri as mtri
+import numpy as np
+
+x = np.asarray([0, 1, 2, 3, 0.5, 1.5, 2.5, 1, 2, 1.5])
+y = np.asarray([0, 0, 0, 0, 1.0, 1.0, 1.0, 2, 2, 3.0])
+triangles = [[0, 1, 4], [1, 2, 5], [2, 3, 6], [1, 5, 4], [2, 6, 5], [4, 5, 7],
+             [5, 6, 8], [5, 8, 7], [7, 8, 9]]
+triang = mtri.Triangulation(x, y, triangles)
+z = np.cos(1.5 * x) * np.cos(1.5 * y)
+
+plt.tricontourf(triang, z)
+plt.triplot(triang, 'ko-')
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/triplot.png" alt="triplot" /></p>
+
+<h3 id="目盛りの分割数を変更-locator-params">目盛りの分割数を変更：locator_params</h3>
+
+<p>指定軸の <strong>目盛りの分割数</strong> を指定できます。
+<code>nbins</code> オプションは2の乗数で指定するといい感じにスケールしてくれます。
+指定された数字通りに分割してくれるときとそうでないときがあり。</p>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+
+mu, sigma = 100, 15
+x = mu + sigma * np.random.randn(100)
+
+plt.hist(x, 50, density=True, alpha=0.75)
+# x軸を8分割
+plt.locator_params(axis='x', nbins=8)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/locator_params.png" alt="locator_params" /></p>
+
+<h3 id="マージンの追加-margins-subplots-adjust">マージンの追加：margins/subplots_adjust</h3>
+
+<p>図内の点に対してマージンをとって、データを見やすい位置に調整します。</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4]
+y = [1, 4, 9, 6]
+
+plt.plot(x, y, 'o')
+plt.margins(0.3)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/margins.png" alt="margins" /></p>
+
+<p><code>subplots</code> を使った複数のグラフ描画の場合には <code>subplots_adjust</code> が使えます。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+np.random.seed(0)
+
+plt.subplot(211)
+plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+plt.subplot(212)
+plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+
+plt.subplots_adjust(bottom=0.3, right=0.8, top=0.9)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/subplots_adjust.png" alt="subplots_adjust" /></p>
+
+<h3 id="レイアウトの自動調整-tight-layout">レイアウトの自動調整：tight_layout</h3>
+
+<p>複数グラフ間のレイアウト設定から、自動で調節してくれます。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import itertools
+
+fontsizes = itertools.cycle([8, 16, 24, 32])
+
+def example_plot(ax):
+    ax.plot([1, 2])
+    ax.set_xlabel('x-label', fontsize=next(fontsizes))
+    ax.set_ylabel('y-label', fontsize=next(fontsizes))
+    ax.set_title('Title', fontsize=next(fontsizes))
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
+example_plot(ax1)
+example_plot(ax2)
+example_plot(ax3)
+example_plot(ax4)
+plt.tight_layout()
+</code></pre>
+
+<p><img src="/images/20180622/tight_layout.png" alt="tight_layout" /></p>
+
+<h3 id="複数グラフの描画-subplots">複数グラフの描画:subplots</h3>
+
+<p>複数のグラフを描画する場合には、 <code>subplots</code> を使います。
+返却された <code>axes</code> 配列の要素にアクセスして、データをプロットする関数を実行することで描画が可能です。</p>
+
+<pre><code class="language-python">from matplotlib import pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2*np.pi, 400)
+y = np.sin(x**2)
+
+fig, axes = plt.subplots(2, 1)
+axes[0].plot(x, y)
+axes[1].scatter(x, y)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/subplots.png" alt="subplots" /></p>
+
+<h3 id="テイストを手書き風に変更-xkcd">テイストを手書き風に変更：xkcd</h3>
+
+<p>グラフを手書き風にできます。</p>
+
+<pre><code class="language-python">import numpy as np
+from matplotlib import pyplot as plt
+
+plt.xkcd()
+
+x = np.linspace(-np.pi, np.pi, 100)
+plt.plot(x, np.sin(x),label=&quot;y = sinx&quot;)
+plt.show()
+</code></pre>
+
+<p><img src="/images/20180622/xkcd.png" alt="xkcd" /></p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>matplotlibのAPI一覧からいろいろ試してみました。</p>
+
+<p>API名からは用途のイメージがわかないものもあり、試してみて「へぇ、こんなのあるんだ」というのも多かったです。
+また、指定オプションも多く組み込まれているので、一つのAPIでもデータの表現方法に幅が出ます。</p>
+
+<p>通常利用する分には概ねの十分な範囲をカバーできていると考えています。</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+<li><a href="https://matplotlib.org/api/pyplot_summary.html">The Pyplot API ; Matplotlib 2.2.2 documentation</a></li>
+</ul>
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=178862517X&linkId=3dec88b3972c7ff66f6e2f7f8f72c8c0&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117488&linkId=f93decd08ed89a95a63410d08e00c827&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873118417&linkId=8442e209dbcce8dfd90c9f2c8ea1c75a&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/matplotlib/" rel="tag">matplotlib</a></li>
+	</ul>
+</div>
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/linux/systemd_limits/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next">
+		<a class="post-nav__link" href="/aws/aws-batch-and-glue/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</p></a>
+	</div>
+</nav>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+	
+
+
+</main>
+
+
+<aside class="sidebar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://www.soudegesu.com" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
+			<li class="widget__item"><a class="widget__link" href="/gcp/gcp-command/">Google Cloud SDKをセットアップする</a></li>
+			<li class="widget__item"><a class="widget__link" href="/java/tomcat-with-gradle/">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</a></li>
+			<li class="widget__item"><a class="widget__link" href="/mysql/mysql8-password/">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</a></li>
+			<li class="widget__item"><a class="widget__link" href="/dart/android-with-flutter/">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/anaconda">Anaconda</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/aws">Aws</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/blog">Blog</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/book">Book</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/continuous-delivery">Continuous delivery</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/dart">Dart</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker">Docker</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker-compose">Docker compose</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/engineer-life">Engineer life</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/ethereum">Ethereum</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/fish">Fish</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/gcp">Gcp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/java">Java</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/linux">Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/mysql">Mysql</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/nodejs">Nodejs</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/pyenv">Pyenv</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/python">Python</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/q_sharp">Q sharp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/security">Security</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/tensorflow">Tensorflow</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">Social</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/alten_manten" target="_blank">
+				<svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5 0-78.8 35.3-78.8 78.8 0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6 0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1 0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4 0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9 0 224.1-120 224.1-224.1 0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg>
+				<span>Twitter</span>
+			</a>
+		</div>
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/soudegesu" target="_blank">
+				<svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+	</div>
+</div>
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/acm" title="Acm">Acm</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/agile" title="Agile">Agile</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/amazonlinux" title="Amazonlinux">Amazonlinux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/anaconda" title="Anaconda">Anaconda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/android" title="Android">Android</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ansible" title="Ansible">Ansible</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/athena" title="Athena">Athena</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aurora" title="Aurora">Aurora</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aws" title="Aws">Aws</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/batch" title="Batch">Batch</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/beginner" title="Beginner">Beginner</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/blog" title="Blog">Blog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/book" title="Book">Book</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/casperjs" title="Casperjs">Casperjs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudfront" title="Cloudfront">Cloudfront</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudwatchlogs" title="Cloudwatchlogs">Cloudwatchlogs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/colaboratory" title="Colaboratory">Colaboratory</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/continuous-delivery" title="Continuous delivery">Continuous delivery</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cyber-security" title="Cyber security">Cyber security</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dapps" title="Dapps">Dapps</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dart" title="Dart">Dart</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/datadog" title="Datadog">Datadog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker" title="Docker">Docker</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ec2" title="Ec2">Ec2</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/engineer-life" title="Engineer life">Engineer life</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ethereum" title="Ethereum">Ethereum</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/express" title="Express">Express</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/fish" title="Fish">Fish</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/flutter" title="Flutter">Flutter</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ganache" title="Ganache">Ganache</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gcp" title="Gcp">Gcp</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/glue" title="Glue">Glue</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gradle" title="Gradle">Gradle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo" title="Hugo">Hugo</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/iam" title="Iam">Iam</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ios" title="Ios">Ios</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/java" title="Java">Java</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jib" title="Jib">Jib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jpms" title="Jpms">Jpms</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/lambda" title="Lambda">Lambda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/machine-learning" title="Machine learning">Machine learning</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/matplotlib" title="Matplotlib">Matplotlib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql" title="Mysql">Mysql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/nodejs" title="Nodejs">Nodejs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/packer" title="Packer">Packer</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv" title="Pyenv">Pyenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv-virtualenv" title="Pyenv virtualenv">Pyenv virtualenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/python" title="Python">Python</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/q" title="Q#">Q#</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/rds" title="Rds">Rds</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reactor" title="Reactor">Reactor</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/route53" title="Route53">Route53</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/s3" title="S3">S3</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/serverless" title="Serverless">Serverless</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sh" title="Sh">Sh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/spring" title="Spring">Spring</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/springboot" title="Springboot">Springboot</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sql" title="Sql">Sql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ssl" title="Ssl">Ssl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunction" title="Stepfunction">Stepfunction</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunctions" title="Stepfunctions">Stepfunctions</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/systemd" title="Systemd">Systemd</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tensorflow" title="Tensorflow">Tensorflow</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/terraform" title="Terraform">Terraform</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tomcat" title="Tomcat">Tomcat</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/truffle" title="Truffle">Truffle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/udemy" title="Udemy">Udemy</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/webflux" title="Webflux">Webflux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/zsh" title="Zsh">Zsh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%e7%b5%84%e7%b9%94%e8%ab%96" title="組織論">組織論</a>
+	</div>
+</div>
+</aside>
+	</div>
+		<footer class="footer">
+			<div class="container container-inner">
+				<div class="footer__copyright">&copy; 2018 そうなんでげす. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span></div>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script></body>
+</html>

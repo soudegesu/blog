@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on そうなんでげす</title>
+    <link>https://www.soudegesu.com/categories/python/</link>
+    <description>Recent content in Python on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 22 Jun 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>matplotlibのpyplot APIをいろいろ試す</title>
+      <link>https://www.soudegesu.com/python/pyplot-api/</link>
+      <pubDate>Fri, 22 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/python/pyplot-api/</guid>
+      <description>matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。</description>
+    </item>
+    
+    <item>
+      <title>Colaboratoryは機械学習エンジニアための最高のツールだった</title>
+      <link>https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/</link>
+      <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/python/colaboratory-is-a-good-tool-for-tensorflow-user/</guid>
+      <description>普段 Jupter notebook で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の Colaboratory を触ってみました。 Colaboratoryとは Colaboratory は</description>
+    </item>
+    
+    <item>
+      <title>Pythonの2と3を切り替えて仮想環境を作る</title>
+      <link>https://www.soudegesu.com/python/switch-python/</link>
+      <pubDate>Thu, 26 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/python/switch-python/</guid>
+      <description>Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。 今回はMac</description>
+    </item>
+    
+    <item>
+      <title>Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい</title>
+      <link>https://www.soudegesu.com/python/python-datetime/</link>
+      <pubDate>Sun, 22 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/python/python-datetime/</guid>
+      <description>仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、pythonのdatetimeを使った文字列から日時への変</description>
+    </item>
+    
+  </channel>
+</rss>

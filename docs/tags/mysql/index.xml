@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mysql on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/mysql/</link>
+    <description>Recent content in Mysql on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Tue, 31 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</title>
+      <link>https://www.soudegesu.com/mysql/mysql8-password/</link>
+      <pubDate>Tue, 31 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/mysql/mysql8-password/</guid>
+      <description>MySQL のメジャーバージョン 8 が 2018&amp;frasl;4 にリリースされました。 今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところを</description>
+    </item>
+    
+    <item>
+      <title>AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</title>
+      <link>https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/</link>
+      <pubDate>Mon, 19 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/</guid>
+      <description>AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。 今回はAuroraのMySQL互換での日付パー</description>
+    </item>
+    
+  </channel>
+</rss>

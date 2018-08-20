@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Terraform on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/terraform/</link>
+    <description>Recent content in Terraform on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Mon, 21 May 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>TerraformでS3のバケットポリシーを書く方法</title>
+      <link>https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/</link>
+      <pubDate>Mon, 21 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/aws/s3bucket-policy-with-terraform/</guid>
+      <description>インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。 Terraform も例外ではな</description>
+    </item>
+    
+    <item>
+      <title>AWS LambdaのコードをTerraformでデプロイする</title>
+      <link>https://www.soudegesu.com/aws/deploy-lambda-with-terraform/</link>
+      <pubDate>Wed, 11 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/aws/deploy-lambda-with-terraform/</guid>
+      <description>今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。 AWS Lambdaは Cloud9 がコンソール上に組み込まれた</description>
+    </item>
+    
+  </channel>
+</rss>
