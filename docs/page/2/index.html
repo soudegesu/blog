@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
 <meta name="twitter:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-06-09 00:00:00 &#43;0000 UTC">
+<meta property="article:published_time" content="2018-06-10 00:00:00 &#43;0000 UTC">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -51,7 +51,7 @@
 <meta property="og:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://www.soudegesu.com/" />
-<meta property="og:updated_time" content="2018-06-09T00:00:00&#43;00:00"/>
+<meta property="og:updated_time" content="2018-06-10T00:00:00&#43;00:00"/>
 	<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="そうなんでげす"/>
 <meta name="twitter:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"/>
@@ -105,6 +105,26 @@ if (!doNotTrack) {
 		<div class="wrapper flex">
 
 	<main class="main list content" role="main"><article class="list__item post">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/linux/systemd_limits/" rel="bookmark">Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する</a>
+			</h3><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-06-10T00:00:00">June 10, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/linux" rel="category">linux</a></span>
+</span></div>
+		</header>
+		<div class="list__excerpt post__content">
+			今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、 プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録とし
+		</div>
+		<div class="list__footer">
+			<a class="list__footer-readmore btn" href="/linux/systemd_limits/">Read more…</a>
+		</div>
+	</div>
+</article><article class="list__item post">
 	<div class="list__content clearfix">
 		<header class="list__header">
 			<h3 class="list__title post__title ">
@@ -284,26 +304,6 @@ if (!doNotTrack) {
 			<a class="list__footer-readmore btn" href="/engineer-life/one-year-passed-since-the-early-bird-life/">Read more…</a>
 		</div>
 	</div>
-</article><article class="list__item post">
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/nodejs/express-sitemap-module/" rel="bookmark">Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-05-03T00:00:00">May 03, 2018</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/nodejs" rel="category">nodejs</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			以前書いた 「Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう」 の記事で、Node
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/nodejs/express-sitemap-module/">Read more…</a>
-		</div>
-	</div>
 </article>
 		
 
@@ -333,11 +333,11 @@ if (!doNotTrack) {
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/dart/flutter/codelabs-is-first-step-for-newcomer/">Flutter初心者はCodelabsをまずやってみよう!!</a></li>
 			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
 			<li class="widget__item"><a class="widget__link" href="/gcp/gcp-command/">Google Cloud SDKをセットアップする</a></li>
 			<li class="widget__item"><a class="widget__link" href="/java/tomcat-with-gradle/">Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する</a></li>
 			<li class="widget__item"><a class="widget__link" href="/mysql/mysql8-password/">MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</a></li>
-			<li class="widget__item"><a class="widget__link" href="/dart/android-with-flutter/">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a></li>
 		</ul>
 	</div>
 </div>

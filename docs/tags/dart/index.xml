@@ -6,10 +6,19 @@
     <description>Recent content in Dart on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Wed, 25 Jul 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 21 Aug 2018 08:39:33 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/dart/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Flutter初心者はCodelabsをまずやってみよう!!</title>
+      <link>https://www.soudegesu.com/post/dart/flutter/codelabs-is-first-step-for-newcomer/</link>
+      <pubDate>Tue, 21 Aug 2018 08:39:33 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/dart/flutter/codelabs-is-first-step-for-newcomer/</guid>
+      <description>環境構築の後はCodelabsだ！ 以前書いた記事 Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する でFl</description>
+    </item>
     
     <item>
       <title>Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</title>

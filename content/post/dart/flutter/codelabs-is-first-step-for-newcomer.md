@@ -8,7 +8,6 @@ categories:
 tags:
   - dart
   - flutter
-draft: true
 isCJKLanguage: true
 twitter_card_image: http://www.soudegesu.com/images/soudegesu.jpg
 ---
@@ -46,18 +45,18 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 3. [Building Beautiful UIs with Flutter](https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..%2Findex#0)
 4. [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html?index=..%2F..%2Findex#0)
 
-## やってみた感想
+## 学べたこと
 
 今回、ソースコードは各リンク先に掲載されているので、個人リポジトリの晒しはありません。
 
 ### Write Your First Flutter App, part 1 & 2
 
 [Write Your First Flutter App, part 1](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt1/index.html?index=..%2F..%2Findex#0) と
-[Write Your First Flutter App, part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/index.html?index=..%2F..%2Findex#0) についてはいたって普通でした。
+[Write Your First Flutter App, part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/index.html?index=..%2F..%2Findex#0) は本当に最初のステップという感じでした。
 
 リストビューを表示して、タップしたアイテムはFavoriteアイコンで保存され、別のビューで確認ができる、という簡単なものです。
 
-![list_view](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/img/b17de15fa7831a1c.png)
+{{< figure src="https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/img/b17de15fa7831a1c.png" class="center" width="40%" >}}
 
 ここでは以下を学ぶことができました。
 
@@ -72,15 +71,15 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 
 [Building Beautiful UIs with Flutter](https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..%2Findex#0) では簡単なメッセージングUIを作成します。
 
-と言っても、サーバ通信をするわけではないので、自分の打ち込んだメッセージがひたすらスタックしていくアプリです。
+メッセージングと言っても、サーバ通信をして実際に相手とチャットするわけではなく、自分の打ち込んだメッセージがひたすらスタックしていくアプリです。
 
-![chat_view](https://codelabs.developers.google.com/codelabs/flutter/img/9d2366169e72a4a6.png)
+{{< figure src="https://codelabs.developers.google.com/codelabs/flutter/img/9d2366169e72a4a6.png" class="center" width="40%" >}}
 
 ここでは以下を学ぶことができました。
 
 * 少し凝ったUIコンポーネントの設計
   * 標準で搭載されている [Column](https://docs.flutter.io/flutter/widgets/Column-class.html) や [Container](https://docs.flutter.io/flutter/widgets/Container-class.html) 等を使ってレイアウトを組み上げる
-* Controller系クラスでWidgetの動作制御や情報の取得を行う
+* `Controller` 系クラスで `Widget` の動作制御や情報へアクセスできる
   * [AnimationController](https://docs.flutter.io/flutter/animation/AnimationController-class.html) を使ったアニメーションを制御する
   * [TextEditingController](https://docs.flutter.io/flutter/widgets/TextEditingController-class.html) を使って入力フォームの値にアクセスする
 * ユーザ操作時の状態による処理のハンドリング（バリデーションとか）
@@ -88,7 +87,35 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 
 ### Firebase for Flutter
 
-![](https://codelabs.developers.google.com/codelabs/flutter-firebase/img/9fda61f0c0f8e865.png)
+最後に [Firebase](https://console.firebase.google.com/) を使って、バックエンドへの通信を行うアプリを作ります。
+
+赤ちゃんの名前の投票アプリを作ることが出来ます。
+
+{{< figure src="https://codelabs.developers.google.com/codelabs/flutter-firebase/img/9fda61f0c0f8e865.png" class="center" width="30%" >}}
+
+ここでは以下を学ぶことができました。
+
+* [Firebase](https://console.firebase.google.com/) をアプリに組み込むまでの手順
+* [Flutter Packages](https://pub.dartlang.org/flutter) の使い方
+  * [cloud_firestore](https://pub.dartlang.org/packages/cloud_firestore) モジュールの利用
+* 非同期処理
+  * `async` と `await` を使った実装（これは `Dart` の話）
+
+## 感想
+
+今回は [Codelabs](https://codelabs.developers.google.com/) で提供されている教材を用いて、簡単な [Flutter](https://flutter.io/) アプリケーションを作成しました。
+
+良かった点は以下です
+
+* ステップバイステップでソースコードを拡張していくため、取り残されない
+* 一講座あたりの所要時間も短く、空き時間にトライできる
+* mBaaSとの連携ができる（[Firebase](https://console.firebase.google.com/)）
+* 「あ、おれ、Flutterできるかも」 と錯覚する（いい意味で）
+
+手こずった点は以下です
+
+* 教材の手順通りに書かないと沼にはまる
+  * [Flutter](https://flutter.io/)が鋭意開発中ということもあり、[Firebase](https://console.firebase.google.com/)の初期設定や、使う [Flutter Packages](https://pub.dartlang.org/flutter) のバージョンを最新にするとデバッグが厳しかったです。
 
 ## 参考にさせていただいたサイト
 * [Building Beautiful UIs with Flutter](https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..%2Findex#0)
