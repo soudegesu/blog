@@ -78,9 +78,9 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 
 ここでは以下を学ぶことができました。
 
-* 少し凝ったUIコンポーネントの設計の仕方
+* 少し凝ったUIコンポーネントの設計
   * 標準で搭載されている [Column](https://docs.flutter.io/flutter/widgets/Column-class.html) や [Container](https://docs.flutter.io/flutter/widgets/Container-class.html) 等を使ってレイアウトを組み上げる
-* Controller系のクラスで動作の制御をする
+* Controller系クラスでWidgetの動作制御や情報の取得を行う
   * [AnimationController](https://docs.flutter.io/flutter/animation/AnimationController-class.html) を使ったアニメーションを制御する
   * [TextEditingController](https://docs.flutter.io/flutter/widgets/TextEditingController-class.html) を使って入力フォームの値にアクセスする
 * ユーザ操作時の状態による処理のハンドリング（バリデーションとか）
@@ -88,7 +88,7 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 
 ### Firebase for Flutter
 
-
+![](https://codelabs.developers.google.com/codelabs/flutter-firebase/img/9fda61f0c0f8e865.png)
 
 ## 参考にさせていただいたサイト
 * [Building Beautiful UIs with Flutter](https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..%2Findex#0)
