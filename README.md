@@ -7,6 +7,12 @@ github pages with [Hugo](https://gohugo.io/).
 
 ## Quick Start
 
+* create new post file
+
+```
+hugo new post/articlefile.md
+```
+
 * build posts with local server. (including draft)
 ```
 make serve

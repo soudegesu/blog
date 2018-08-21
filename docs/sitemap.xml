@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/dart/flutter/codelabs-is-first-step-for-newcomer/</loc>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/aws/my-packer-best-practice/</loc>
     <lastmod>2018-08-17T00:00:00+00:00</lastmod>
   </url>
@@ -390,13 +395,13 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/dart/</loc>
-    <lastmod>2018-07-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/dart/</loc>
-    <lastmod>2018-07-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -474,7 +479,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/flutter/</loc>
-    <lastmod>2018-07-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -607,6 +612,12 @@
   <url>
     <loc>https://www.soudegesu.com/past/</loc>
     <lastmod>2018-08-17T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/post/</loc>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -792,7 +803,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-08-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
