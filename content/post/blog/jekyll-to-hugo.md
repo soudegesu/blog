@@ -1,19 +1,19 @@
 ---
-title: "ブログをJekyllからHugoに移行した理由と苦労した点"
-description: ""
+title: "ブログをJekyllからHugoへの移行理由と手順"
+description: "このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。"
 date: "2018-08-22T08:00:34+09:00"
 thumbnail: "/images/icons/hugo_icon.png"
 categories:
   - "blog"
 tags:
   - "hugo"
-draft: true
 isCJKLanguage: true
+twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 ---
 
 このブログは Github Pages でホスティングされています。
 先日、このブログのサイトジェネレータを [Jekyll](https://jekyllrb.com/) から [Hugo](https://gohugo.io/) に変更しました。
-実行に移した経緯と苦労した点を紹介します。
+実行に移した経緯と手順を紹介します。
 
 ## そもそもなんでJekyllを使っていたか
 
@@ -65,11 +65,91 @@ isCJKLanguage: true
 
 ### 理由４： ページレイアウトの修正が用意
 
-ページレイアウトの修正や設定ファイルからのパラメータを渡すなどのカスタマイズ実装が [Hugo](https://gohugo.io/) の方が簡単でした。
+ページレイアウトの修正や設定ファイルからのパラメータを渡しなどのカスタマイズ実装が [Hugo](https://gohugo.io/) の方が簡単でした。
 
-そもそも、[Hugo](https://gohugo.io/) の公式ドキュメントにはYoutubeのハンズオン動画も掲載されるなど、初心者にもとっかかりのよいコンテンツ構成になっています。
+[Hugoの公式ドキュメント](https://gohugo.io/) はYoutubeのハンズオン動画も掲載されるなど、初心者にもとっかかりのよいコンテンツ構成に劇的に進化していることも一役買っていると思います。
 
-かつて [Jekyll](https://jekyllrb.com/) のレイアウトのカスタマイズを試みたのですが、泥沼にはまり大変苦労したのはいい思い出です。
+かつて [Jekyll](https://jekyllrb.com/) のレイアウトのカスタマイズを試みたのですが、欲しい情報になかなかたどり着かず、泥沼にはまり大変苦労したのはいい思い出です。
 
-## 移行してみて苦労したこと
+## 移行手順
 
+次に、移行手順とハマりポイントを書いていきます。
+
+### Jekyllからのマイグレーションコマンドを使う
+
+
+[Hugo](https://gohugo.io/) には [Jekyll](https://jekyllrb.com/) の [コンテンツをマイグレーションするためのコマンド](https://gohugo.io/commands/hugo_import_jekyll/) が用意されています。素晴らしい。
+
+```bash
+hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジェクトのパス}
+```
+
+実行すると、[Hugo](https://gohugo.io/) の基本的なフォルダ構成が生成され、今まで書いたコンテンツも `${Hugoプロジェクトのパス}/content/post` に展開されます。
+
+### 好きなテーマを入れる
+
+[Hugo Themes](https://themes.gohugo.io/) から好きなテーマを探して、 `${Hugoプロジェクトのパス}/themes` ディレクトリ内で `git clone` してあげれば良いです。
+超簡単です。
+
+テーマのリポジトリのREADMEファイルに `config.toml(.yaml)` の書き方も記載されていたので、タブの改良やGoogle Analyticsのコードも設定していきます。
+
+### shortcodes に合わせた書き方に変更する
+
+`hugo import` コマンド実行後に 「 `hugo server --theme=herring-cove` でビルドしてみてね！」 と表示されるのですが、これを実行するとビルドに失敗します。
+
+1つはオプションで指定している `--theme=herring-cove` が存在しないことなので簡単な話なのですが、
+
+もう1つは [Jekyllの使っているLiquid template](https://shopify.github.io/liquid/) を [Hugoのshortcodes](https://gohugo.io/content-management/shortcodes/) として解釈していたためであることがわかりました。
+
+大きく分けると3パターンあったため、これを全ての記事ファイルに対して修正を行いました。
+
+* Liquid template の {% row %} {% rowend %} がそのまま表示されてしまう
+* Liquid template から呼び出していた Jekyll Plugin の箇所でエラー
+* Liquid template で参照している変数が存在しない
+
+### パーマリンクへの対応
+
+デフォルトでは `${Hugoプロジェクトのパス}content/post` ディレクトリ配下のMarkdownファイルをビルドして記事を生成するのですが、 URLの構成もデフォルトでは `/post/${ディレクトリ名}/${ファイル名}` になってしまいます。
+
+以前は `/${カテゴリ}/${ファイル名}` という構成のURLにしていたので、パーマリンクの対応が別途必要でした。
+
+[URL Management](https://gohugo.io/content-management/urls/) と [Content Organization](https://gohugo.io/content-management/organization/) を参考に、 記事中のMarkdownファイル内で `url` プロパティを使うことでパーマリンクを設定します。
+
+例えば以下のようになります。
+
+```vim
+---
+title: "AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！"
+date: 2018-08-17
+categories:
+    - aws
+tags:
+    - aws
+    - packer
+url: /aws/my-packer-best-practice/
+---
+```
+
+### ディレクトリ構成の変更
+
+[Jekyll](https://jekyllrb.com/) で作成した記事は、[Hugo](https://gohugo.io/) で今後作成するコンテンツとは別ディレクトリで管理した方が見通しが良さそうなので、
+`hugo import` した記事は `${Hugoプロジェクトのパス}/content/past` というディレクトリに移動し、`config.toml` で `${Hugoプロジェクトのパス}/content/past` ディレクトリ配下もビルド対象にするように指定しました。
+
+```vim
+postSections = ["post", "past"]
+```
+
+```bash
+content --- post  # Hugoで作成した記事
+         `- past  # 過去にJekyllで作成した記事
+```
+
+これでようやくそれっぽくなりました。
+
+## まとめ
+
+今回は [Jekyll](https://jekyllrb.com/) から [Hugo](https://gohugo.io/) に変更した理由と手順をまとめました。
+
+サイトのデザインも刷新されて、ビルド時間も **60ms前後** と爆速です。今の所不自由もないため、ブログを更新するモチベーションも維持できそうです。
+
+やったぜ！

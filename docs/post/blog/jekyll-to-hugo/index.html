@@ -8,26 +8,26 @@
 	
 
 
-<title>zsh から fish (shell) へお引っ越しを試みた話 - そうなんでげす</title>
-<meta name="description" content="zsh使いの私がシェルスクリプトfishに浮気をしてみました。入門エントリとしてfishの初期設定を書いています。">
-<meta property="og:description" content="zsh使いの私がシェルスクリプトfishに浮気をしてみました。入門エントリとしてfishの初期設定を書いています。">
+<title>ブログをJekyllからHugoへの移行理由と手順 - そうなんでげす</title>
+<meta name="description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
+<meta property="og:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/sh/fish/">
+<link rel="canonical" href="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="zsh から fish (shell) へお引っ越しを試みた話 - そうなんでげす">
-<meta name="twitter:description" content="zsh使いの私がシェルスクリプトfishに浮気をしてみました。入門エントリとしてfishの初期設定を書いています。">
-<meta name="twitter:url" content="https://www.soudegesu.com/sh/fish/">
+<meta name="twitter:title" content="ブログをJekyllからHugoへの移行理由と手順 - そうなんでげす">
+<meta name="twitter:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="zsh から fish (shell) へお引っ越しを試みた話 - そうなんでげす">
-<meta property="og:title" content="zsh から fish (shell) へお引っ越しを試みた話 - そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/sh/fish/">
+<meta property="og:site_name" content="ブログをJekyllからHugoへの移行理由と手順 - そうなんでげす">
+<meta property="og:title" content="ブログをJekyllからHugoへの移行理由と手順 - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
   
-<meta property="og:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
-<meta name="twitter:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
+<meta property="og:image" content="https://www.soudegesu.com/images/icons/hugo_icon.png">
+<meta name="twitter:image" content="https://www.soudegesu.com/images/icons/hugo_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2017-02-18 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2017-02-19-tensorflow-online-course.md%29"><link rel="next" href="Page%28/past/2017-01-31-docker-build-mysql.md%29">
+<meta property="article:published_time" content="2018-08-22 08:00:34 &#43;0900 JST"><link rel="next" href="Page%28/post/dart/flutter/codelabs-is-first-step-for-newcomer.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,14 +47,14 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
 
-	<meta property="og:title" content="zsh から fish (shell) へお引っ越しを試みた話" />
-<meta property="og:description" content="zsh使いの私がシェルスクリプトfishに浮気をしてみました。入門エントリとしてfishの初期設定を書いています。" />
+	<meta property="og:title" content="ブログをJekyllからHugoへの移行理由と手順" />
+<meta property="og:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.soudegesu.com/sh/fish/" /><meta property="article:published_time" content="2017-02-18T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2017-02-18T00:00:00&#43;00:00"/>
+<meta property="og:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/" /><meta property="article:published_time" content="2018-08-22T08:00:34&#43;09:00"/>
+<meta property="article:modified_time" content="2018-08-22T08:00:34&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="zsh から fish (shell) へお引っ越しを試みた話"/>
-<meta name="twitter:description" content="zsh使いの私がシェルスクリプトfishに浮気をしてみました。入門エントリとしてfishの初期設定を書いています。"/>
+<meta name="twitter:title" content="ブログをJekyllからHugoへの移行理由と手順"/>
+<meta name="twitter:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -106,14 +106,17 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">zsh から fish (shell) へお引っ越しを試みた話</h1><div class="post__meta meta">
+			<h1 class="post__title">ブログをJekyllからHugoへの移行理由と手順</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-02-18T00:00:00">February 18, 2017</time>
+<time class="post__meta-date meta-date" datetime="2018-08-22T08:00:34">August 22, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/fish" rel="category">fish</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/blog" rel="category">blog</a></span>
 </span></div>
-		</header><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="/images/icons/hugo_icon.png" alt="ブログをJekyllからHugoへの移行理由と手順">
+		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
      style="display:block"
@@ -131,28 +134,26 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#fish-との出会い">fish との出会い</a></li>
-<li><a href="#fishとは">fishとは</a></li>
-<li><a href="#セットアップ手順">セットアップ手順</a>
+<li><a href="#そもそもなんでjekyllを使っていたか">そもそもなんでJekyllを使っていたか</a>
 <ul>
-<li><a href="#fishのインストール">fishのインストール</a></li>
-<li><a href="#デフォルトのシェル切り替え">デフォルトのシェル切り替え</a></li>
-<li><a href="#ターミナルを再起動する">ターミナルを再起動する</a></li>
+<li><a href="#理由１-githug-pagesがjekyllのページをジェネレートしてくれるから">理由１： Githug PagesがJekyllのページをジェネレートしてくれるから</a></li>
+<li><a href="#理由２-テーマやプラグインが多かったから">理由２： テーマやプラグインが多かったから</a></li>
 </ul></li>
-<li><a href="#fisherman-でpluginをインストールする">fisherman でpluginをインストールする</a>
+<li><a href="#なんでhugoに変更しようと思ったか">なんでHugoに変更しようと思ったか</a>
 <ul>
-<li><a href="#fisherman-のインストール">fisherman のインストール</a></li>
-<li><a href="#プラグインのインストール">プラグインのインストール</a></li>
-<li><a href="#powerlineのインストール">powerlineのインストール</a></li>
-<li><a href="#fonts-のインストール">fonts のインストール</a></li>
-<li><a href="#iterm2-ターミナル-の設定">iTerm2(ターミナル)の設定</a></li>
+<li><a href="#理由１-github-pagesで使えないjekyllプラグインが必要になった">理由１： Github Pagesで使えないJekyllプラグインが必要になった</a></li>
+<li><a href="#理由２-jekyllのビルドが遅くなった">理由２： Jekyllのビルドが遅くなった</a></li>
+<li><a href="#理由３-hugoのテーマやプラグインが揃ってきた">理由３： Hugoのテーマやプラグインが揃ってきた</a></li>
+<li><a href="#理由４-ページレイアウトの修正が用意">理由４： ページレイアウトの修正が用意</a></li>
 </ul></li>
-<li><a href="#起動時のconfigファイルを書き換える">起動時のconfigファイルを書き換える</a>
+<li><a href="#移行手順">移行手順</a>
 <ul>
-<li><a href="#export">export</a></li>
-<li><a href="#コマンドのalias">コマンドのalias</a></li>
+<li><a href="#jekyllからのマイグレーションコマンドを使う">Jekyllからのマイグレーションコマンドを使う</a></li>
+<li><a href="#好きなテーマを入れる">好きなテーマを入れる</a></li>
+<li><a href="#shortcodes-に合わせた書き方に変更する">shortcodes に合わせた書き方に変更する</a></li>
+<li><a href="#パーマリンクへの対応">パーマリンクへの対応</a></li>
+<li><a href="#ディレクトリ構成の変更">ディレクトリ構成の変更</a></li>
 </ul></li>
-<li><a href="#おまけ-bashを使えるようにする">おまけ: bashを使えるようにする</a></li>
 <li><a href="#まとめ">まとめ</a></li>
 </ul></li>
 </ul>
@@ -162,195 +163,152 @@ if (!doNotTrack) {
 <div class="post__content clearfix">
 			
 
-<h2 id="fish-との出会い">fish との出会い</h2>
+<p>このブログは Github Pages でホスティングされています。
+先日、このブログのサイトジェネレータを <a href="https://jekyllrb.com/">Jekyll</a> から <a href="https://gohugo.io/">Hugo</a> に変更しました。
+実行に移した経緯と手順を紹介します。</p>
 
-<p>これは本当に偶然の出会いで、
-「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライバーとでペアプロする』あのあれ、なんだったかな？確か頭の方が&rdquo;fish&rdquo;みたいな音じゃなかったかな？」と音を頼りに</p>
+<h2 id="そもそもなんでjekyllを使っていたか">そもそもなんでJekyllを使っていたか</h2>
 
-<p><strong>「fish プログラミング」</strong></p>
+<p>「変更するくらいなら、最初からそれ使えよ」という話ではあるのですが、当時の私にもそれなりの考えがあったのです。</p>
 
-<p>というキーワードで検索したところ、fish shell がヒットしたのであった。</p>
+<h3 id="理由１-githug-pagesがjekyllのページをジェネレートしてくれるから">理由１： Githug PagesがJekyllのページをジェネレートしてくれるから</h3>
 
-<p>仕事用もプレイベート用Macもzshを設定していて、個人的にはそれなりに満足していたのですが、色々zshにインストールしていたこともあって、起動やキー入力に若干もたつきを感じていたのもalternative factでしたので、ちょっと試してみようかなと思ったのが始まりです。</p>
+<p><a href="https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/">Gitubの公式</a> でも紹介されていますが、
+<a href="https://jekyllrb.com/">Jekyll</a> の設定を含んだリポジトリをGithub上にpushして、リポジトリの設定を変更するとGithub側でGithub Pagesを生成してくれます。</p>
 
-<h2 id="fishとは">fishとは</h2>
+<p>そのため、<strong>自前でサイトをジェネレートして、生成されたコンテンツをcommitしてpushする</strong> という手間が削減できるのです。この一手間を削減できることに旨味を感じていました。</p>
 
-<p><a href="https://fishshell.com/">fish</a> のfishは <span style="color: #d32f2f">F</span>riendly <span style="color: #d32f2f">i</span>nteractive <span style="color: #d32f2f">sh</span>ell の略でユーザフレンドリーさを売りにしたUNIX shellとのことです。どのあたりがユーザーフレンドリーか、というとざっと以下のようです。</p>
+<h3 id="理由２-テーマやプラグインが多かったから">理由２： テーマやプラグインが多かったから</h3>
+
+<p><a href="http://jekyllthemes.org/">http://jekyllthemes.org/</a> に <a href="https://jekyllrb.com/">Jekyll</a> のテーマが掲載されているのですが、
+それなりに充実していて、ぱっと使えるものが多かったのです。</p>
+
+<h2 id="なんでhugoに変更しようと思ったか">なんでHugoに変更しようと思ったか</h2>
+
+<p>次になぜ <a href="https://gohugo.io/">Hugo</a> に変更しようと思ったかを書きます。</p>
+
+<h3 id="理由１-github-pagesで使えないjekyllプラグインが必要になった">理由１： Github Pagesで使えないJekyllプラグインが必要になった</h3>
+
+<p>導入した後で気づいたのですが、 Github Pages使用可能なJekyll Pluginは <a href="https://help.github.com/articles/adding-jekyll-plugins-to-a-github-pages-site/">Adding Jekyll plugins to a GitHub Pages site</a> に掲載されています。</p>
+
+<p>最初は掲載されているプラグインで十分でした。
+しかし、後から <a href="https://www.slideshare.net/">Slideshare</a> のスライドを貼り付けるために <a href="https://oembed.com/">Oembed</a>フォーマットに対応した <a href="https://github.com/18F/jekyll-oembed">jekyll-oembed</a> プラグインを入れたり、国際化対応のために <a href="https://github.com/liamzebedee/jekyll-i18n">jekyll-i18n</a> プラグインを入れたりと、欲望が湧いてきました。</p>
+
+<p>サポート外のプラグインを使うには、Github側でのビルドを諦めるしかありません。
+つまり、<strong>ローカルマシン（ないしは何らかのビルド環境）上で生成したコンテンツをリポジトリにpushする</strong> 必要があるのです。</p>
+
+<p>これは当初Jekyllを採用した旨味が消えてしまうことになります。</p>
+
+<h3 id="理由２-jekyllのビルドが遅くなった">理由２： Jekyllのビルドが遅くなった</h3>
+
+<p><code>jekyll serve</code> コマンドを実行することで、下書きの出来栄え確認しながら編集することができます。
+リポジトリに蓄積される記事の量が増えるにつれて <strong>ビルドの時間が遅くなっていきました</strong> 。
+最近では1回ビルドするのに <strong>30秒</strong> 程度かかってしまうこともあり、ブログを書くモチベーションに影響してしまいました。</p>
+
+<p>これはファイル保存の都度、全てのコンテンツをリビルドするのが直接的な原因だと思います。
+ビルドに時間がかかることで有名な <a href="https://sass-lang.com/">Sass</a> も使われています。</p>
+
+<p>ひとつひとつ問題の切り分けを行うよりは、より高速な実行環境に切り替えた方が良いだろう、と考えました。</p>
+
+<h3 id="理由３-hugoのテーマやプラグインが揃ってきた">理由３： Hugoのテーマやプラグインが揃ってきた</h3>
+
+<p>以前 <a href="https://gohugo.io/">Hugo</a> を検討していたときには、<a href="https://gohugo.io/">Hugo</a> のバージョンも低く、
+公開されているテーマも少なかったため、プロダクトとしての将来が不安だったのですが、最近ではかなり良くなりました。</p>
+
+<h3 id="理由４-ページレイアウトの修正が用意">理由４： ページレイアウトの修正が用意</h3>
+
+<p>ページレイアウトの修正や設定ファイルからのパラメータを渡しなどのカスタマイズ実装が <a href="https://gohugo.io/">Hugo</a> の方が簡単でした。</p>
+
+<p><a href="https://gohugo.io/">Hugoの公式ドキュメント</a> はYoutubeのハンズオン動画も掲載されるなど、初心者にもとっかかりのよいコンテンツ構成に劇的に進化していることも一役買っていると思います。</p>
+
+<p>かつて <a href="https://jekyllrb.com/">Jekyll</a> のレイアウトのカスタマイズを試みたのですが、欲しい情報になかなかたどり着かず、泥沼にはまり大変苦労したのはいい思い出です。</p>
+
+<h2 id="移行手順">移行手順</h2>
+
+<p>次に、移行手順とハマりポイントを書いていきます。</p>
+
+<h3 id="jekyllからのマイグレーションコマンドを使う">Jekyllからのマイグレーションコマンドを使う</h3>
+
+<p><a href="https://gohugo.io/">Hugo</a> には <a href="https://jekyllrb.com/">Jekyll</a> の <a href="https://gohugo.io/commands/hugo_import_jekyll/">コンテンツをマイグレーションするためのコマンド</a> が用意されています。素晴らしい。</p>
+
+<pre><code class="language-bash">hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジェクトのパス}
+</code></pre>
+
+<p>実行すると、<a href="https://gohugo.io/">Hugo</a> の基本的なフォルダ構成が生成され、今まで書いたコンテンツも <code>${Hugoプロジェクトのパス}/content/post</code> に展開されます。</p>
+
+<h3 id="好きなテーマを入れる">好きなテーマを入れる</h3>
+
+<p><a href="https://themes.gohugo.io/">Hugo Themes</a> から好きなテーマを探して、 <code>${Hugoプロジェクトのパス}/themes</code> ディレクトリ内で <code>git clone</code> してあげれば良いです。
+超簡単です。</p>
+
+<p>テーマのリポジトリのREADMEファイルに <code>config.toml(.yaml)</code> の書き方も記載されていたので、タブの改良やGoogle Analyticsのコードも設定していきます。</p>
+
+<h3 id="shortcodes-に合わせた書き方に変更する">shortcodes に合わせた書き方に変更する</h3>
+
+<p><code>hugo import</code> コマンド実行後に 「 <code>hugo server --theme=herring-cove</code> でビルドしてみてね！」 と表示されるのですが、これを実行するとビルドに失敗します。</p>
+
+<p>1つはオプションで指定している <code>--theme=herring-cove</code> が存在しないことなので簡単な話なのですが、</p>
+
+<p>もう1つは <a href="https://shopify.github.io/liquid/">Jekyllの使っているLiquid template</a> を <a href="https://gohugo.io/content-management/shortcodes/">Hugoのshortcodes</a> として解釈していたためであることがわかりました。</p>
+
+<p>大きく分けると3パターンあったため、これを全ての記事ファイルに対して修正を行いました。</p>
 
 <ul>
-<li>コマンドのautocompleteやシンタックスハイライト</li>
-<li>web上でカラーチョイスができるカラフルなターミナル</li>
-<li>健全でシンプルな文法(bash等とは若干違うらしい)</li>
-<li>manページの自動生成と親切なヘルプメッセージ</li>
+<li>Liquid template の {% row %} {% rowend %} がそのまま表示されてしまう</li>
+<li>Liquid template から呼び出していた Jekyll Plugin の箇所でエラー</li>
+<li>Liquid template で参照している変数が存在しない</li>
 </ul>
 
-<p>もちろん、以前使用していたzshでも.zshrcに設定を入れたり、プラグインやテーマをインストールすることで自分好みの使いやすいターミナルに仕上げることができます。</p>
+<h3 id="パーマリンクへの対応">パーマリンクへの対応</h3>
 
-<h2 id="セットアップ手順">セットアップ手順</h2>
+<p>デフォルトでは <code>${Hugoプロジェクトのパス}content/post</code> ディレクトリ配下のMarkdownファイルをビルドして記事を生成するのですが、 URLの構成もデフォルトでは <code>/post/${ディレクトリ名}/${ファイル名}</code> になってしまいます。</p>
 
-<h3 id="fishのインストール">fishのインストール</h3>
+<p>以前は <code>/${カテゴリ}/${ファイル名}</code> という構成のURLにしていたので、パーマリンクの対応が別途必要でした。</p>
 
-<p>Homebrewを使用してfishをインストールします。
-(これ以外にもMacportsやインストーラー、Windows版、tarboll等様々サポートしていますので公式サイトを確認してください)</p>
+<p><a href="https://gohugo.io/content-management/urls/">URL Management</a> と <a href="https://gohugo.io/content-management/organization/">Content Organization</a> を参考に、 記事中のMarkdownファイル内で <code>url</code> プロパティを使うことでパーマリンクを設定します。</p>
 
-<pre><code>brew install fish
+<p>例えば以下のようになります。</p>
+
+<pre><code class="language-vim">---
+title: &quot;AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！&quot;
+date: 2018-08-17
+categories:
+    - aws
+tags:
+    - aws
+    - packer
+url: /aws/my-packer-best-practice/
+---
 </code></pre>
 
-<h3 id="デフォルトのシェル切り替え">デフォルトのシェル切り替え</h3>
+<h3 id="ディレクトリ構成の変更">ディレクトリ構成の変更</h3>
 
-<p><code>/etc/shells</code> を確認すると、使用可能なshellを確認できます。</p>
+<p><a href="https://jekyllrb.com/">Jekyll</a> で作成した記事は、<a href="https://gohugo.io/">Hugo</a> で今後作成するコンテンツとは別ディレクトリで管理した方が見通しが良さそうなので、
+<code>hugo import</code> した記事は <code>${Hugoプロジェクトのパス}/content/past</code> というディレクトリに移動し、<code>config.toml</code> で <code>${Hugoプロジェクトのパス}/content/past</code> ディレクトリ配下もビルド対象にするように指定しました。</p>
 
-<pre><code>&gt; cat /etc/shells
-# List of acceptable shells for chpass(1).
-# Ftpd will not allow users to connect who are not using
-# one of these shells.
-
-/bin/bash
-/bin/csh
-/bin/ksh
-/bin/sh
-/bin/tcsh
-/bin/zsh
+<pre><code class="language-vim">postSections = [&quot;post&quot;, &quot;past&quot;]
 </code></pre>
 
-<p>今のままでは <code>fish</code> は使用できませんので末尾に1行fishのパスを追記しましょう。</p>
-
-<pre><code>&gt;which fish
-/usr/local/bin/fish  #これを/etc/shellsに追記
+<pre><code class="language-bash">content --- post  # Hugoで作成した記事
+         `- past  # 過去にJekyllで作成した記事
 </code></pre>
 
-<p>以下のコマンドでターミナル起動時のログインシェルをfishに切り替えることができます。</p>
-
-<pre><code>chsh -s /usr/local/bin/fish
-</code></pre>
-
-<h3 id="ターミナルを再起動する">ターミナルを再起動する</h3>
-
-<p>ターミナルを再起動することでシェルが切り替わっていることを確認できます。
-個人的にはもう少しカラフルでかっこよくしたいのでプラグインを入れる方法を模索します。</p>
-
-<h2 id="fisherman-でpluginをインストールする">fisherman でpluginをインストールする</h2>
-
-<p>fishの場合、<a href="https://fisherman.github.io/">fisherman</a> がplugin managerとして利用可能なようですので、こちらをインストールして拡張していきましょう。</p>
-
-<h3 id="fisherman-のインストール">fisherman のインストール</h3>
-
-<pre><code>curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
-</code></pre>
-
-<h3 id="プラグインのインストール">プラグインのインストール</h3>
-
-<p>まずはプロンプトのテーマをインストールします。今回はjokerのテーマをインストールしてみます。</p>
-
-<pre><code>fisher joker
-</code></pre>
-
-<h3 id="powerlineのインストール">powerlineのインストール</h3>
-
-<p>私のmacではjokerのテーマで使用しているpowerlineをまだインストールしていなかったため、jokerのREADMEに添付されている画像のようなデザインになりませんでした。そのため、別途<a href="https://powerline.readthedocs.io/en/master/installation.html#pip-installation">powerlineをインストール</a>します。</p>
-
-<h3 id="fonts-のインストール">fonts のインストール</h3>
-
-<p>加えてfontsも別途インストールしなくてはいけないようです。(やること増えてきてしまった。。。)
-<a href="https://powerline.readthedocs.io/en/latest/installation/linux.html#font-installation">fontsのインストール手順</a> を参考にインストールするとpip を使用する方法が紹介されていて微妙なので、<a href="https://github.com/powerline/fonts">gitリポジトリ</a> からcloneしてきてシェルでフォントを一括でインストールします。</p>
-
-<pre><code>git clone https://github.com/powerline/fonts
-sh ./install.sh
-</code></pre>
-
-<h3 id="iterm2-ターミナル-の設定">iTerm2(ターミナル)の設定</h3>
-
-<p>iTerm2でインストールしたフォントが利用できるように設定をします。
-[Preference] &gt; [Profile]メニュー &gt; [Text]タブ &gt; [Font]と[Non-ASCII Font] の双方で「Change Font」を選択します。
-[All Fonts ] &gt; [Source Code Pro for Powerline] を選択します。</p>
-
-<p>やっとpowerlineが出ました。。
-補間も効くみたいですね。</p>
-
-<p>あとは.zshrcで記載しているPATHのexportやコマンドのailasを <strong>~/.config/fish/config.fish</strong> に転記しましょう。</p>
-
-<h2 id="起動時のconfigファイルを書き換える">起動時のconfigファイルを書き換える</h2>
-
-<p>.zshrc にものすごいたくさん書いていた私の場合、このお引越が一番時間かかりました。。
-fish起動時にconfig.fishを読み込んで、変数のexportやaliasの登録をしたい場合には以下のような書き換えが必要です。</p>
-
-<h3 id="export">export</h3>
-
-<ul>
-<li>zshの場合
-<code>
-export ANT_HOME=/usr/bin/apache-ant-1.9.4
-</code></li>
-<li>fishの場合
-<code>
-set -x ANT_HOME /usr/bin/apache-ant-1.9.4
-</code></li>
-</ul>
-
-<h3 id="コマンドのalias">コマンドのalias</h3>
-
-<ul>
-<li>zshの場合
-<code>
-alias la='ls -a'
-</code></li>
-<li>fishの場合
-<code>
-alias la='ls -a'
-function la
- ls -a $argv
-end
-</code></li>
-</ul>
-
-<p>aliasの登録がかなり面倒な感じになってしまっていますね。</p>
-
-<h2 id="おまけ-bashを使えるようにする">おまけ: bashを使えるようにする</h2>
-
-<p>fishの場合、bashとは文法が異なるため</p>
-
-<pre><code>bash hoge.sh
-</code></pre>
-
-<p>のように実行する必要があるため、少々不便です。</p>
-
-<p>そのため、fishでもbashのシェルが実行できるよう、プラグインを入れてあげる必要があります。</p>
-
-<pre><code>fisher edc/bass
-</code></pre>
+<p>これでようやくそれっぽくなりました。</p>
 
 <h2 id="まとめ">まとめ</h2>
 
-<ul>
-<li>fishはユーザーに優しいインターフェースを提供している(?)
+<p>今回は <a href="https://jekyllrb.com/">Jekyll</a> から <a href="https://gohugo.io/">Hugo</a> に変更した理由と手順をまとめました。</p>
 
-<ul>
-<li>実はzshでも同じプロンプトのデザインを提供しているケースもあるので見た目自体にはzshとの大きな差別化は図れていない。</li>
-<li>autocompleteはzshよりも少し便利かなという印象</li>
-</ul></li>
-<li>fishのconfigファイルは.zshrcや.bashrcと文法的な互換性がないので抵抗感がある
+<p>サイトのデザインも刷新されて、ビルド時間も <strong>60ms前後</strong> と爆速です。今の所不自由もないため、ブログを更新するモチベーションも維持できそうです。</p>
 
-<ul>
-<li>慣れなのかもしれないが、正直ここに時間をかけたくない</li>
-</ul></li>
-<li>fish の場合、コマンド履歴に対する操作がちょっと弱い
-
-<ul>
-<li><code>! ${履歴番号}</code> でコマンド再実行ができないみたい。(個人的には重宝していたのに。。)</li>
-<li>history コマンドでそもそも履歴の番号表示されないですし。。</li>
-</ul></li>
-</ul>
-
-<p>しばらくはプライベートはfish、仕事はzshで行こうと思いました。</p>
+<p>やったぜ！</p>
 
 		</div>
 		
 <div class="post__tags tags clearfix">
 	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
 	<ul class="tags__list">
-		<li class="tags__item"><a class="tags__link btn" href="/tags/sh/" rel="tag">sh</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/fish/" rel="tag">fish</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/zsh/" rel="tag">zsh</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/hugo/" rel="tag">hugo</a></li>
 	</ul>
 </div>
 	</article>
@@ -368,13 +326,21 @@ end
 	
 <nav class="post-nav flex">
 	<div class="post-nav__item post-nav__item--prev">
-		<a class="post-nav__link" href="/docker/image/build/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Docker buildコマンドのimage作成〜コンテナ起動まで</p></a>
-	</div>
-	<div class="post-nav__item post-nav__item--next">
-		<a class="post-nav__link" href="/tensorflow/tensorflow-online-course/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">TensorFlowのオンライン学習サイトを利用してみる</p></a>
+		<a class="post-nav__link" href="/post/dart/flutter/codelabs-is-first-step-for-newcomer/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Flutter初心者はCodelabsをまずやってみよう!!</p></a>
 	</div>
 </nav>
 	
+
+<h3>関連記事</h3>
+
+<a href="/blog/hugo/">
+    <div class="related">
+        <div class="related__item">
+            ブログ(静的サイト)をHUGOを使って作成する
+        </div>
+    </div>
+</a>
+
 
 
 	
