@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Tue, 21 Aug 2018 08:39:33 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 22 Aug 2018 08:00:34 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ブログをJekyllからHugoへの移行理由と手順</title>
+      <link>https://www.soudegesu.com/post/blog/jekyll-to-hugo/</link>
+      <pubDate>Wed, 22 Aug 2018 08:00:34 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/blog/jekyll-to-hugo/</guid>
+      <description>このブログは Github Pages でホスティングされています。 先日、このブログのサイトジェネレータを Jekyll から Hugo に変更しました。 実行に移した経緯と手順を紹介します</description>
+    </item>
     
     <item>
       <title>Flutter初心者はCodelabsをまずやってみよう!!</title>

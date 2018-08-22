@@ -6,10 +6,19 @@
     <description>Recent content in Hugo on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Fri, 05 May 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 22 Aug 2018 08:00:34 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ブログをJekyllからHugoへの移行理由と手順</title>
+      <link>https://www.soudegesu.com/post/blog/jekyll-to-hugo/</link>
+      <pubDate>Wed, 22 Aug 2018 08:00:34 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/blog/jekyll-to-hugo/</guid>
+      <description>このブログは Github Pages でホスティングされています。 先日、このブログのサイトジェネレータを Jekyll から Hugo に変更しました。 実行に移した経緯と手順を紹介します</description>
+    </item>
     
     <item>
       <title>ブログ(静的サイト)をHUGOを使って作成する</title>

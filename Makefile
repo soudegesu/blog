@@ -2,4 +2,4 @@ publish:
 	hugo
 
 serve:
-	hugo server -D
+	hugo server -DFE
