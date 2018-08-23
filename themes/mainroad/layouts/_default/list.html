@@ -1,6 +1,7 @@
 {{ partial "header.html" . }}
 
 	<main class="main list content" role="main">
+		{{ partial "ad/list_top.html" . }}
 		{{- if not .IsHome}}
 		{{- with .Title }}
 		<header class="page-header">
@@ -33,6 +34,7 @@
 		{{- end }}
 
 		{{ partial "pagination.html" . }}
+		{{ partial "ad/pagination.html" . }}
 	</main>
 
 {{ partial "sidebar.html" . }}
