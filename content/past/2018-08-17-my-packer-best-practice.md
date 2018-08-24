@@ -2,13 +2,14 @@
 title: "AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！"
 description: "様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。今回はPackerプロジェクトの個人的なベストプラクティスをまとめました。"
 date: 2018-08-17
+thumbnail: /images/icons/packer_icon.png
 categories:
     - aws
 tags:
     - aws
     - packer
 url: /aws/my-packer-best-practice/
-twitter_card_image: https://www.soudegesu.com/images/icon/packer_icon.png
+twitter_card_image: /images/icons/packer_icon.png
 ---
 
 様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。
