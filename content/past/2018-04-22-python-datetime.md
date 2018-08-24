@@ -2,11 +2,13 @@
 title: "Pythonで日付文字列からのdatetime変換やタイムゾーンの変更などをいい加減覚えたい"
 description: "Pythonで日付文字列からdatetimeへの変換とタイムゾーン変換をまとめます。仕事がら別のミドルウェアやデータソースから取得したepochtimeや日付文字列をPythonのdatetimeやpytzを使って変換する処理を書くことがあるのですが、毎回ネットで調べているのでいい加減覚えよるためにまとめます"
 date: 2018-04-22
+thumbnail: /images/icons/python_icon.png
 categories:
     - python
 tags:
     - python
 url: /python/python-datetime/
+twitter_card_image: /images/icons/python_icon.png
 ---
 
 仕事がらpythonを使って、データのコンバータを作成することも度々あるのですが、**pythonのdatetimeを使った文字列から日時への変換** や **タイムゾーンの変更** を毎回ネットで調べているので、いい加減覚えないと業務効率上差し支えそうです。

@@ -2,11 +2,13 @@
 title: "MySQL/PostgreSQLの脆弱性が発表された時に、RDS Aurora使いはどう対処すべきか"
 description: "アプリケーションの脆弱性対応って調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。"
 date: 2018-04-24
+thumbnail: /images/icons/rds_icon.png
 categories:
     - aws
 tags:
     - aurora
 url: /aws/aurora-security/
+twitter_card_image: /images/icons/rds_icon.png
 ---
 
 アプリケーションの脆弱性対応は調査にも時間がかかりますし、大変ですよね。RDS Auroraのようなマネージドサービスの場合、互換性のあるデータベースエンジン(MySQLやPostrgeSQL)の脆弱性が発表されたら、どうしたらよいのでしょうか。少し気になったので調べてみました。

@@ -2,6 +2,7 @@
 title: "Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう[貧テック]"
 description: "CloudfrontとLambda@Edgeを用いたWEBコンテンツの作成方法を紹介します。パスパラメータ一で動的なURL構成に対応可能で、ロングテールSEOも狙えるようになります。また、サーバレスによってランニングコストを抑えることもできるのでオススメです。"
 date: 2018-04-03
+thumbnail: /images/icons/cloudfront_icon.png
 categories:
     - aws
 tags:
@@ -11,6 +12,7 @@ tags:
     - serverless
     - nodejs
 url: /aws/hosting-with-cloudfront-lambda-edge-serverless/
+twitter_card_image: /images/icons/cloudfront_icon.png
 ---
 
 このブログ自体は `github-pages` と `cloudflare` を使って無料でホスティングをしているのですが、稀に **「動的なwebコンテンツを提供したい」** と思うことがあります。今回はお金を節約しつつ、動的なwebコンテンツを提供する方法を紹介します。

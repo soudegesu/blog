@@ -2,11 +2,13 @@
 title: "Docker buildコマンドのimage作成〜コンテナ起動まで"
 description: "Dockerfileとdocker buildコマンドを使用して、docker runでコンテナを起動するところまで行います。"
 date: 2017-01-31
+thumbnail: /images/icons/docker_icon.png
 categories:
     - docker
 tags:
     - docker
 url: /docker/image/build
+twitter_card_image: /images/icons/docker_icon.png
 ---
 
 自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。

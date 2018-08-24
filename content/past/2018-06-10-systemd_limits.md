@@ -2,13 +2,11 @@
 title: "Amazon Linux2(systemd)のプロセス数やファイルディスクリプタ数を変更する"
 description: "今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。"
 date: 2018-06-10
-thumbnail: /images/icons/linux_icon.png
 categories:
   - linux
 tags:
   - systemd
 url: /linux/systemd_limits/
-twitter_card_image: /images/icons/linux_icon.png
 ---
 
 今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、

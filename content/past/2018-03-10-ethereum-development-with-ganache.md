@@ -2,6 +2,7 @@
 title: "EthereumでDApps開発のための開発環境を構築する(Truffle&Ganache接続まで)"
 description: "Ganacheを用いたローカル環境の構築を行います"
 date: 2018-03-10
+thumbnail: /images/icons/ethereum_icon.png
 categories:
   - ethereum
 tags:
@@ -10,6 +11,7 @@ tags:
   - ganache
   - dapps
 url: /ethereum/ethereum-development-with-ganache/
+twitter_card_image: /images/icons/ethereum_icon.png
 ---
 
 [前回の記事](/ethereum/ethereum-development-environment/) で `Ethereum` の開発環境の構築を行いました。

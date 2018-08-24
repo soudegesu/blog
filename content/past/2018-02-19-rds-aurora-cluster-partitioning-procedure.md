@@ -2,6 +2,7 @@
 title: "AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする"
 description: "RDS Aurora Clusterで日付でのパーティションを作成する方法を紹介します。CREATE EVENTイベントからのプロシージャを定期実行をはじめ、Cluster時の振る舞いやエラーハンドリングについても触れます"
 date: 2018-02-19
+thumbnail: /images/icons/rds_icon.png
 categories:
   - aws
 tags:
@@ -11,6 +12,7 @@ tags:
   - SQL
   - MySQL
 url: /aws/rds-aurora-cluster-partitioning-procedure/
+twitter_card_image: /images/icons/rds_icon.png
 ---
 
 AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージドサービスです。

@@ -2,10 +2,12 @@
 title: "docker-composeを使ってmysql dockerコンテナを起動する"
 description: "docker-composeコマンドを使用して、mysqlのdockerコンテナ起動をやってみます。"
 date: 2017-01-31
+thumbnail: /images/icons/docker_icon.png
 categories:
   - docker
   - docker-compose
 url: /docker/docker-compose/mysql
+twitter_card_image: /images/icons/docker_icon.png
 ---
 
 前回の記事で `docker build` からの `docker run` コマンドを使用することでmysqlのdockerコンテナの起動ができました。

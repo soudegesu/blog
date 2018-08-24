@@ -2,6 +2,7 @@
 title: "springboot-webfluxのバックプレッシャーを体験してたらいい感じだった"
 description: "springboot2から利用可能になったwebfluxを調べました。従来のspringboot-mvcと振る舞い上の違いであるバックプレシャーを実際に試してみました。"
 date: 2018-03-16
+thumbnail: /images/icons/spring_icon.png
 categories:
     - java
 tags:
@@ -10,6 +11,7 @@ tags:
     - webflux
     - reactor
 url: /java/non-blocking-webflux/
+twitter_card_image: /images/icons/spring_icon.png
 ---
 
 2018/3にリリースされた `springboot2` から `spring5` がバンドルされるようになりました。

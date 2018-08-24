@@ -2,6 +2,7 @@
 title: "Colaboratoryは機械学習エンジニアための最高のツールだった"
 description: "普段Jupter notebookで統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題のColaboratoryを触り、その特徴をまとめてみました。"
 date: 2018-05-02
+thumbnail: /images/icons/colaboratory_icon.png
 categories:
     - python
 tags:
@@ -10,6 +11,7 @@ tags:
     - tensorflow
     - python
 url: /python/colaboratory-is-a-good-tool-for-tensorflow-user/
+twitter_card_image: /images/icons/colaboratory_icon.png
 ---
 
 普段 [Jupter notebook](http://jupyter.org/) で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の [Colaboratory](https://colab.research.google.com/) を触ってみました。

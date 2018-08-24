@@ -2,12 +2,14 @@
 title: "Expressのサイトマップ生成用npmモジュール（express-sitemapとsitemap）を比較しよう"
 description: "以前書いた「Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう」の記事でNode.jsのexpressアプリケーションを作成しました。大抵、webコンテンツを作る時にメインフレームワーク以外のその他のプラグインで何を使おうか迷ってしまいます。今回はexpressアプリケーションのサイトマップ生成用npmモジュールを比較してみました。"
 date: 2018-05-03
+thumbnail: /images/icons/nodejs_icon.png
 categories:
   - nodejs
 tags:
   - nodejs
   - express
 url: /nodejs/express-sitemap-module/
+twitter_card_image: /images/icons/nodejs_icon.png
 ---
 
 以前書いた 「[Cloudfront+Lambda@Edgeのサーバレス構成で費用を抑えつつ、動的なWEBコンテンツを作ろう](/aws/hosting-with-cloudfront-lambda-edge-serverless/)」 の記事で、Node.jsの [express](http://expressjs.com/ja/) アプリケーションを作成しました。
