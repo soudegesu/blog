@@ -1,11 +1,13 @@
 ---
 title: "Anaconda環境にTensorflowをインストールする"
 date: 2017-03-06
+thumbnail: /images/icons/python_icon.png
 categories:
     - tensorflow
 tags:
     - tensorflow
 url: /tensorflow/tensorflow-anaconda/
+twitter_card_image: /images/icons/python_icon.png
 ---
 
 ここから少しづつ、細切れになってしまいますが、tensorflowで学んだことを書いていこうと思います。

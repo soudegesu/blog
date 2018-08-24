@@ -2,6 +2,7 @@
 title: "AWS LambdaのコードをTerraformでデプロイする"
 description: "TerraformでAWS Lambdaのコードをデプロイします。最近ではCloud9がLambdaのコンソールに統合されて、より開発が容易になりました、それでもやはり手元に元ソースを置いておきたいというケースがあります。主にNodeやPythonをランタイムに指定する場合に周辺のエコシステムをコミコミでzipでデプロイする必要があるので、今回はそれを説明しようと思います。"
 date: 2018-04-11
+thumbnail: /images/icons/lambda_icon.png
 categories:
     - aws
 tags:
@@ -9,6 +10,7 @@ tags:
     - lambda
     - terraform
 url: /aws/deploy-lambda-with-terraform/
+twitter_card_image: /images/icons/lambda_icon.png
 ---
 
 今更感もありますが、今日はTerraformでのAWS Lambdaのコード化について書きます。

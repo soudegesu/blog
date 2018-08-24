@@ -2,11 +2,13 @@
 title: "「人質の経済学」を読んだ"
 description: "ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめました。戦火とは程遠い国に住んでいる人間が国際社会の予備知識を蓄える目的も込めて購入しています。"
 date: 2018-04-27
+thumbnail: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4163905804&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 categories:
     - book
 tags:
     - book
 url: /book/economics-of-hostages/
+twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4163905804&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 ---
 
 ロレッタ・ナポリオーニ著の「人質の経済学」を読んだのでざっくり書評をまとめたいと思います。

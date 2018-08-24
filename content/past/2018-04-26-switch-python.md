@@ -2,11 +2,13 @@
 title: "Pythonの2と3を切り替えて仮想環境を作る"
 description: "Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。"
 date: 2018-04-26
+thumbnail: /images/icons/python_icon.png
 categories:
     - python
 tags:
     - python
 url: /python/switch-python/
+twitter_card_image: /images/icons/python_icon.png
 ---
 
 Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。

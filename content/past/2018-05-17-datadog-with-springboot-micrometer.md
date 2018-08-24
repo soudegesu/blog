@@ -2,14 +2,14 @@
 title: "micrometer-registry-datadogを使ったらDatadogのJVMのメトリックがわかりやすくなった"
 description: "以前書いた「 Spring Bootを1.5から2へマイグレーションするステップとポイント」 にて、Datadogに対してメトリックを送信するの仕組みをmicrometer-registry-datadogに変更したのですが、Javaアプリケーションのメトリック取得がいい感じだったので、今回はそれを紹介します。"
 date: 2018-05-17
-thumbnail: /images/20180517/datadog_icon.png
+thumbnail: /images/icons/datadog_icon.png
 categories:
     - java
 tags:
     - springboot
     - datadog
 url: /java/datadog-with-springboot-micrometer/
-twitter_card_image: /images/20180517/datadog_icon.png
+twitter_card_image: /images/icons/datadog_icon.png
 ---
 
 以前書いた「 [Spring Bootを1.5から2へマイグレーションするステップとポイント](/java/migrate-springboot-1-to-2/) 」 にて、

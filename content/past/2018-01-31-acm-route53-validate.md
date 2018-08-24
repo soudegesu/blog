@@ -2,6 +2,7 @@
 title: "AWS Certification ManagerのSSL証明書の検証にはDNS検証を使った方が良い"
 description: "AWS Certification Managerで発行されるSSL証明書には自動更新されるための条件があるのです。"
 date: 2018-01-31
+thumbnail: /images/icons/acm_icon.png
 categories:
     - aws
 tags:
@@ -10,6 +11,7 @@ tags:
     - route53
     - ssl
 url: /aws/validate-certification-manager
+twitter_card_image: /images/icons/acm_icon.png
 ---
 
 ## Route53でCertification Managerのドメイン検証ができるようになった

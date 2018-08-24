@@ -1,9 +1,11 @@
 ---
 title: "TensorFlowのオンライン学習サイトを利用してみる"
 date: 2017-02-19
+thumbnail: /images/icons/python_icon.png
 categories:
   - tensorflow
 url: /tensorflow/tensorflow-online-course/
+twitter_card_image: /images/icons/python_icon.png
 ---
 
 ## 機械学習を身につけたい意欲

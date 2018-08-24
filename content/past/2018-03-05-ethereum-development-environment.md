@@ -2,6 +2,7 @@
 title: "EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)"
 description: "DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました"
 date: 2018-03-05
+thumbnail: /images/icons/ethereum_icon.png
 categories:
   - ethereum
 tags:
@@ -10,6 +11,7 @@ tags:
   - truffle
   - ganache
 url: /ethereum/ethereum-development-environment/
+twitter_card_image: /images/icons/ethereum_icon.png
 ---
 
 以前、`IPFS` を調査したことがあり、そこから `Ethereum` の存在を知りました。

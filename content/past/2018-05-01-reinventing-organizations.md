@@ -2,12 +2,14 @@
 title: "「ティール組織」はこれからの経営者に読んで欲しい一冊"
 description: "巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。"
 date: 2018-05-01
+thumbnail: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4862762263&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4862762263
 categories:
     - book
 tags:
     - book
     - 組織論
 url: /book/reinventing-organizations/
+twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4862762263&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4862762263
 ---
 
 巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。
