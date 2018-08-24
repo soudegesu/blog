@@ -2,6 +2,7 @@
 title: "Step FunctionsでCloudWatch LogsのロググループをS3へエクスポートする"
 description: "CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。"
 date: 2018-05-23
+thumbnail: /images/icons/stepfunction_icon.png
 categories:
     - aws
 tags:
@@ -10,7 +11,7 @@ tags:
     - stepfunction
     - lambda
 url: /aws/export-cloudwatchlogs-to-s3/
-twitter_card_image: https://www.soudegesu.com/images/icon/stepfunction_icon.png
+twitter_card_image: /images/icons/stepfunction_icon.png
 ---
 
 CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。

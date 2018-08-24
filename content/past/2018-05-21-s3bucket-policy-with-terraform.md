@@ -4,12 +4,13 @@ description: "インフラのコード化を進める作業では、コード化
 date: 2018-05-21
 categories:
   - aws
+thumbnail: /images/icons/terraform_icon.png
 tags:
   - terraform
   - s3
   - iam
 url: /aws/s3bucket-policy-with-terraform/
-twitter_card_image: https://www.soudegesu.com/images/icons/terraform_icon.png
+twitter_card_image: /images/icons/terraform_icon.png
 ---
 
 インフラのコード化を進める作業では、コード化のライブラリ作法に倣うため、ドキュメントを見ながら設定を書いていくことが多いです。

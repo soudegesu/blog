@@ -2,11 +2,13 @@
 title: "Amazon Linux2(systemd)のシステム時刻を変更する"
 description: "今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、システム時刻の変更に関して備忘録として残しておきます。"
 date: 2018-06-09
+thumbnail: /images/icons/linux_icon.png
 categories:
     - linux
 tags:
     - systemd
 url: /linux/systemd_clock/
+twitter_card_image: /images/icons/linux_icon.png
 ---
 
 今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、

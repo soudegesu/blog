@@ -2,12 +2,13 @@
 title: "matplotlibのpyplot APIをいろいろ試す"
 description: "matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。たまにデータの可視化をするのですが、 matplotlibの調べ物に時間がかかるときがあり「なんか時間がもったいないな」と感じていました。今回はmatplotlibのドキュメントを読みつつ、matplotlibのpyplot APIをいろいろ試し、自分向けにまとめました。"
 date: 2018-06-22
+thumbnail: /images/icons/python_icon.png
 categories:
     - python
 tags:
     - matplotlib
 url: /python/pyplot-api/
-twitter_card_image: https://www.soudegesu.com/images/icon/python_icon.png
+twitter_card_image: /images/icons/python_icon.png
 ---
 
 matplotlibはpythonでデータの可視化をするときに重宝しますが、ドキュメントがパッと見わかりにくいので、取っ掛かりが難しいです。
