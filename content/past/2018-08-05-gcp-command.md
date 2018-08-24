@@ -2,12 +2,13 @@
 title: "Google Cloud SDKをセットアップする"
 description: "仕事でGCPのサービスの利用を検討することになり、まずはセットアップができないと話にならないので今回はその手順をまとめました。"
 date: 2018-08-05
+thumbnail: /images/icons/google_cloud_icon.png
 categories:
   - gcp
 tags:
   - gcp
 url: /gcp/gcp-command/
-twitter_card_image: https://www.soudegesu.com/images/icon/google_cloud_icon.png
+twitter_card_image: /images/icons/google_cloud_icon.png
 ---
 
 普段はもっぱらAWSなのですが、GCP特有のサービス（機械学習や自然言語、BigQueryなど）を使う機会に恵まれたため、まずその調査から始めたいと思います。

@@ -2,13 +2,14 @@
 title: "Gradleとgradle-tomcat-pluginを使ってローカルでTomcatを起動する"
 description: "最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。"
 date: 2018-08-02
+thumbnail: /images/icons/gradle_icon.png
 categories:
     - java
 tags:
     - tomcat
     - gradle
 url: /java/tomcat-with-gradle/
-twitter_card_image: https://www.soudegesu.com/images/icon/gradle_icon.png
+twitter_card_image: /images/icons/gradle_icon.png
 ---
 
 最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。

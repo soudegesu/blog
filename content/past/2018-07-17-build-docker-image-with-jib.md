@@ -2,6 +2,7 @@
 title: "jibを使ってJavaアプリケーションのDockerイメージをビルドする"
 description: "実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。今回はJibを使ったDockerfileイメージのビルドを紹介します。"
 date: 2018-07-17
+thumbnail: /images/20180717/jib.png
 categories:
     - java
 tags:
@@ -9,16 +10,11 @@ tags:
     - gradle
     - jib
 url: /java/build-docker-image-with-jib/
+twitter_card_image: /images/20180717/jib.png
 ---
 
 実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
 今回は [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin) を使ったDockerfileイメージのビルドを紹介します。
-
-![jib](/images/20180717/jib.png)
-
-* Table Of Contents
-{:toc}
-
 
 ## モチベーション
 
