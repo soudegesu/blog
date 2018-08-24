@@ -2,6 +2,7 @@
 title: "「ピープルウェア」を読んでマネジメントを考える"
 description: "今更ながらですが、「ピープルウェア」を読みました。人通り読み終えたので、所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。"
 date: 2018-06-05
+thumbnail: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4822281108&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22
 categories:
   - book
 tags:

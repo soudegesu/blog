@@ -2,6 +2,7 @@
 title: "Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する"
 description: "gizmodoの記事で、の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない Flutter の環境構築をしてみます。"
 date: 2018-07-25
+thumbnail: /images/icons/flutter_icon.png
 categories:
   - dart
 tags:
@@ -10,7 +11,7 @@ tags:
   - ios
   - dart
 url: /dart/android-with-flutter/
-twitter_card_image: https://www.soudegesu.com/images/icon/flutter_icon.png
+twitter_card_image: /images/icons/flutter_icon.png
 ---
 
 [gizmodoの記事](https://www.gizmodo.jp/2018/07/fuchsia-5years.html) で、[Google Fuchsia](https://ja.wikipedia.org/wiki/Google_Fuchsia) の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない [Flutter](https://flutter.io/) の環境構築をしてみます。

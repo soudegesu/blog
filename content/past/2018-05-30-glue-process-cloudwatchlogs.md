@@ -2,6 +2,7 @@
 title: "S3にエクスポートされたCloudWatch LogsのファイルをGlueのCrawlerでETLしようとして轟沈した話"
 description: "S3にエクスポートした CloudWatch Logs のログファイルをAWS GlueでETLしようと挑戦してみました。結論から言うと、GlueのCrawlerがログをいい感じにパースできなかったので、失敗しました、という話です。"
 date: 2018-05-30
+thumbnail: /images/icons/glue_icon.png
 categories:
   - aws
 tags:
@@ -9,7 +10,7 @@ tags:
   - cloudwatchlogs
   - glue
 url: /aws/glue-process-cloudwatchlogs/
-twitter_card_image: https://www.soudegesu.com/images/icon/glue_icon.png
+twitter_card_image: /images/icons/glue_icon.png
 ---
 
 S3にエクスポートした CloudWatch Logs のログストリームをAWS GlueでETLしようと挑戦してみました。

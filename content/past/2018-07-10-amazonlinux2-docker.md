@@ -2,6 +2,7 @@
 title: "Amazon Linux2にdockerをインストールする"
 description: "AMIをAmazon Linux2に変更したのですが、yum install docker でdockerがインストールできなくなってしまったので対処方法を調査しました。"
 date: 2018-07-10
+thumbnail: /images/icons/ec2_icon.png
 categories:
   - aws
 tags:
@@ -10,7 +11,7 @@ tags:
   - amazonlinux
   - docker
 url: /aws/amazonlinux2-docker/
-twitter_card_image: https://www.soudegesu.com/images/icon/ec2_icon.png
+twitter_card_image: /images/icons/ec2_icon.png
 ---
 
 AMIをAmazon Linux2に変更したのですが、 `yum install docker` でdockerがインストールできなくなってしまったので対処方法を調査しました。
