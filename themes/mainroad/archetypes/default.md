@@ -9,5 +9,5 @@ tags:
   - ""
 draft: true
 isCJKLanguage: true
-twitter_card_image: http://www.soudegesu.com/images/soudegesu.jpg
+twitter_card_image: /images/soudegesu.jpg
 ---
