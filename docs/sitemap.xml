@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/design/try-prott/</loc>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/blog/jekyll-to-hugo/</loc>
     <lastmod>2018-08-22T08:00:34+09:00</lastmod>
   </url>
@@ -417,6 +422,18 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/design/</loc>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/categories/design/</loc>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/docker/</loc>
     <lastmod>2018-07-17T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -622,7 +639,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-08-22T08:00:34+09:00</lastmod>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -783,6 +800,12 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/tool/</loc>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/truffle/</loc>
     <lastmod>2018-03-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -808,7 +831,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-08-22T08:00:34+09:00</lastmod>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
     <priority>0</priority>
   </url>
   
