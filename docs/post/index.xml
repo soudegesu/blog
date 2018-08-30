@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sat, 25 Aug 2018 15:54:58 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 30 Aug 2018 18:34:52 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編</title>
+      <link>https://www.soudegesu.com/post/python/create-excel-with-openpyxl/</link>
+      <pubDate>Thu, 30 Aug 2018 18:34:52 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/create-excel-with-openpyxl/</guid>
+      <description>今回はExcelファイルをPythonで操作する方法を紹介したいと思います。 実行環境 実行環境とのそのバージョンは以下になります。 python 3.6 openpyxl 2.5.6 op</description>
+    </item>
     
     <item>
       <title>モバイルアプリやWEBアプリのプロトタイピングはProttでやるといいかもしれない</title>
