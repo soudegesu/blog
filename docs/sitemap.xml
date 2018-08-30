@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/python/create-excel-with-openpyxl/</loc>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/design/try-prott/</loc>
     <lastmod>2018-08-25T15:54:58+09:00</lastmod>
   </url>
@@ -482,6 +487,12 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/excel/</loc>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/express/</loc>
     <lastmod>2018-05-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -626,6 +637,12 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/openpyxl/</loc>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/packer/</loc>
     <lastmod>2018-08-17T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -639,7 +656,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -663,18 +680,18 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/python/</loc>
-    <lastmod>2018-05-02T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/python/</loc>
-    <lastmod>2018-06-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/q#/</loc>
+    <loc>https://www.soudegesu.com/tags/q/</loc>
     <lastmod>2018-02-11T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -831,7 +848,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
+    <lastmod>2018-08-30T18:34:52+09:00</lastmod>
     <priority>0</priority>
   </url>
   
