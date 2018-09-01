@@ -2,12 +2,22 @@
 {{ with $related }}
 <h3>関連記事</h3>
 {{ range . }}
-<a href="{{ .RelPermalink }}">
-    <div class="related">
-        <div class="related__item">
-            {{ .Title }}
-        </div>
-    </div>
-</a>
+<div class="list__item">
+{{- if .Params.thumbnail }}
+<figure class="list__thumbnail">
+    <a href="{{ .Permalink }}">
+        <img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}" />
+    </a>
+</figure>
+{{- end }}
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="{{ .RelPermalink }}" rel="bookmark">{{ .Title }}</a>
+        </h4>
+        {{- if or (not .Date.IsZero) .Params.categories }}<div class="list__meta meta">{{ partial "post_meta.html" . }}</div>{{- end }}
+    </header>
+</div>
+</div>
 {{ end }}
 {{ end }}
