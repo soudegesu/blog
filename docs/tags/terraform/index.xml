@@ -6,10 +6,19 @@
     <description>Recent content in Terraform on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Mon, 21 May 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 02 Sep 2018 06:32:25 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い</title>
+      <link>https://www.soudegesu.com/post/aws/caller_identity/</link>
+      <pubDate>Sun, 02 Sep 2018 06:32:25 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/aws/caller_identity/</guid>
+      <description>今回は Terraform の小ネタです。AWSアカウント番号を .tfvars ファイルに記載しない方法を紹介します。 .tfvars に記載しがちな情報 ってありますよね。 例えば、AWSアカ</description>
+    </item>
     
     <item>
       <title>TerraformでS3のバケットポリシーを書く方法</title>
