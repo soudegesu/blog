@@ -8,26 +8,26 @@
 	
 
 
-<title>Android - そうなんでげす</title>
-<meta name="description" content="">
-<meta property="og:description" content="">
+<title>Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い - そうなんでげす</title>
+<meta name="description" content="今回はTerraformの小ネタです。AWSアカウント番号を.tfvarsファイルに記載しない方法を紹介します。">
+<meta property="og:description" content="今回はTerraformの小ネタです。AWSアカウント番号を.tfvarsファイルに記載しない方法を紹介します。">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/tags/android/">
+<link rel="canonical" href="https://www.soudegesu.com/post/aws/caller_identity/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="Android - そうなんでげす">
-<meta name="twitter:description" content="">
-<meta name="twitter:url" content="https://www.soudegesu.com/tags/android/">
+<meta name="twitter:title" content="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い - そうなんでげす">
+<meta name="twitter:description" content="今回はTerraformの小ネタです。AWSアカウント番号を.tfvarsファイルに記載しない方法を紹介します。">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/aws/caller_identity/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="Android - そうなんでげす">
-<meta property="og:title" content="Android - そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/tags/android/">
+<meta property="og:site_name" content="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い - そうなんでげす">
+<meta property="og:title" content="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/aws/caller_identity/">
   
-<meta property="og:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
-<meta name="twitter:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
+<meta property="og:image" content="/images/icons/terraform_icon.png">
+<meta name="twitter:image" content="/images/icons/terraform_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-25 00:00:00 &#43;0000 UTC">
+<meta property="article:published_time" content="2018-09-02 06:32:25 &#43;0900 JST"><link rel="next" href="Page%28/post/python/sheet-excel-with-openpyxl.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,18 +47,17 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
 
-	<meta property="og:title" content="Android" />
-<meta property="og:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.soudegesu.com/tags/android/" />
-<meta property="og:updated_time" content="2018-07-25T00:00:00&#43;00:00"/>
+	<meta property="og:title" content="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い" />
+<meta property="og:description" content="今回はTerraformの小ネタです。AWSアカウント番号を.tfvarsファイルに記載しない方法を紹介します。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/post/aws/caller_identity/" /><meta property="article:published_time" content="2018-09-02T06:32:25&#43;09:00"/>
+<meta property="article:modified_time" content="2018-09-02T06:32:25&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Android"/>
-<meta name="twitter:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"/>
+<meta name="twitter:title" content="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い"/>
+<meta name="twitter:description" content="今回はTerraformの小ネタです。AWSアカウント番号を.tfvarsファイルに記載しない方法を紹介します。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
-	<link rel="alternate" type="application/rss&#43;xml" href="/tags/android/index.xml">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
 	<link rel="stylesheet" href="/css/style.css">
 	<script type="text/javascript" src="/js/scripts.js"></script>
@@ -104,64 +103,235 @@ if (!doNotTrack) {
 		</header>
 		<div class="wrapper flex">
 
-	<main class="main list content" role="main">
-		<div class="list__item">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="4763598447"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</div>
-		<header class="page-header">
-			<h1 class="page-header__title">Android</h1>
-		</header><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="https://www.soudegesu.com/dart/android-with-flutter/">
-			<img src="/images/icons/flutter_icon.png" alt="Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する" />
-		</a>
-	</figure>
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/dart/android-with-flutter/" rel="bookmark">Flutterでモバイルアプリケーション（Android/iOS）の開発環境を構築する</a>
-			</h3><div class="list__meta meta">
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-07-25T00:00:00">July 25, 2018</time>
+<time class="post__meta-date meta-date" datetime="2018-09-02T06:32:25">September 02, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/dart" rel="category">dart</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
 </span></div>
 		</header>
-		<div class="list__excerpt post__content">
-			gizmodoの記事 で、Google Fuchsia の話が触れられていました。今回は Fuchsia 上で動作するようになるかもしれない Flutter の環境構築をしてみます。 モチベー
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/dart/android-with-flutter/">Read more…</a>
-		</div>
-	</div>
-</article>
-
-		
-		<div class="pagenation-ad">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<figure class="post__thumbnail">
+			<img src="/images/icons/terraform_icon.png" alt="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い">
+		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="8671053867"
-     data-ad-format="auto"
+     data-ad-slot="9690134838"
+     data-ad-format="rectangle"
      data-full-width-responsive="true"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#tfvars-に記載しがちな情報">.tfvars に記載しがちな情報</a></li>
+<li><a href="#aws-caller-identity-を使う">aws_caller_identity を使う</a></li>
+<li><a href="#参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
+</ul></li>
+</ul>
+</nav>
+	</div>
 </div>
-	</main>
+<div class="post__content clearfix">
+			
+
+<p>今回は <a href="https://www.terraform.io/">Terraform</a> の小ネタです。AWSアカウント番号を <code>.tfvars</code> ファイルに記載しない方法を紹介します。</p>
+
+<h2 id="tfvars-に記載しがちな情報">.tfvars に記載しがちな情報</h2>
+
+<p>ってありますよね。 例えば、AWSアカウント番号がそうです。 <a href="https://www.terraform.io/docs/modules/usage.html">Terraform Module</a> を使って、それなりのサイズ感のシステムコンポーネント定義を書いていくと、モジュール毎の <code>variables.tf</code> ファイルに</p>
+
+<pre><code class="language-terraform">variable &quot;account_id&quot; {
+}
+</code></pre>
+
+<p>と定義した後、 <code>.tfvars</code> ファイルに</p>
+
+<pre><code>account_id = &quot;XXXXXXXXXXX&quot;
+</code></pre>
+
+<p>という記載が増えて冗長に感じます。</p>
+
+<p>定義された <code>account_id</code> という変数は、例えば、ポリシードキュメントの作成や、ARN指定、ECRリポジトリのドメイン名などに埋め込むことがあります。</p>
+
+<p>こんな感じだったり、</p>
+
+<pre><code>data &quot;aws_iam_policy_document&quot; &quot;xxxxx&quot; {
+    statement {
+        effect = &quot;Allow&quot;
+
+        actions = [
+            &quot;s3:PutObject&quot;,
+        ]
+
+        resources = [
+            &quot;arn:aws:s3:::xxxxx/*&quot;
+        ]
+
+        principals = {
+            type = &quot;AWS&quot;
+            identifiers = [
+                &quot;${var.account_id}&quot;
+            ]
+        }
+    }
+}
+</code></pre>
+
+<p>こんな感じで使ったりしていました。</p>
+
+<pre><code>${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/xxxxxxxxx:${var.image_tag},
+</code></pre>
+
+<h2 id="aws-caller-identity-を使う">aws_caller_identity を使う</h2>
+
+<p>最近知ったのですが、 <a href="https://www.terraform.io/docs/providers/aws/d/caller_identity.html">aws_caller_identity</a> のData Sourceを使うことで記述をすっきりさせることができることがわかりました。</p>
+
+<p><a href="https://www.terraform.io/docs/providers/aws/d/caller_identity.html">aws_caller_identity</a> は読んで字のごとく、 <a href="https://www.terraform.io/">Terraform</a> コマンドを実行している側の情報を取得できるのです。</p>
+
+<p>以下のように <code>data</code> 定義をします。</p>
+
+<pre><code>data &quot;aws_caller_identity&quot; &quot;current&quot; {}
+</code></pre>
+
+<p><code>aws_caller_identity</code> から <code>account_id</code> の属性値が参照できるので、以下のようにアクセスできます。</p>
+
+<pre><code>principals = {
+  type = &quot;AWS&quot;
+  identifiers = [
+    &quot;${data.aws_caller_identity.current.account_id}&quot;
+  ]
+}
+</code></pre>
+
+<p>こうすることで、 <code>.tfvars</code> ファイルの変数定義も減らせてすっきりですね！</p>
+
+<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
+
+<ul>
+<li><a href="https://www.terraform.io/docs/providers/aws/d/caller_identity.html">aws_caller_identity</a></li>
+</ul>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/aws/" rel="tag">aws</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/terraform/" rel="tag">terraform</a></li>
+	</ul>
+</div>
+	</article>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="8973386323"
+     data-ad-format="rectangle"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/post/python/sheet-excel-with-openpyxl/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更</p></a>
+	</div>
+</nav>
+	
+
+<h3>関連記事</h3>
+
+<a href="/aws/deploy-lambda-with-terraform/">
+    <div class="related">
+        <div class="related__item">
+            AWS LambdaのコードをTerraformでデプロイする
+        </div>
+    </div>
+</a>
+
+<a href="/aws/my-packer-best-practice/">
+    <div class="related">
+        <div class="related__item">
+            AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！
+        </div>
+    </div>
+</a>
+
+<a href="/aws/amazonlinux2-docker/">
+    <div class="related">
+        <div class="related__item">
+            Amazon Linux2にdockerをインストールする
+        </div>
+    </div>
+</a>
+
+<a href="/aws/aws-batch-and-glue/">
+    <div class="related">
+        <div class="related__item">
+            AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する
+        </div>
+    </div>
+</a>
+
+<a href="/aws/s3bucket-policy-with-terraform/">
+    <div class="related">
+        <div class="related__item">
+            TerraformでS3のバケットポリシーを書く方法
+        </div>
+    </div>
+</a>
+
+
+
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+</main>
 
 
 <aside class="sidebar">
