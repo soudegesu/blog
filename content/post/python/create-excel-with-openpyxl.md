@@ -1,5 +1,5 @@
 ---
-title: "ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編"
+title: "ExcelをPython（openpyxl）で操作する - ファイルの作成と保存"
 description: "今回はExcelファイルをPythonで操作する方法を紹介したいと思います。"
 date: "2018-08-30T18:34:52+09:00"
 thumbnail: /images/icons/python_icon.png
