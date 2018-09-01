@@ -8,26 +8,26 @@
 	
 
 
-<title>ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編 - そうなんでげす</title>
+<title>ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす</title>
 <meta name="description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta property="og:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta name="author" content="soudegesu">
 <link rel="canonical" href="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編 - そうなんでげす">
+<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
 <meta name="twitter:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta name="twitter:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編 - そうなんでげす">
-<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編 - そうなんでげす">
+<meta property="og:site_name" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
+<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
 <meta property="og:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
   
 <meta property="og:image" content="/images/icons/python_icon.png">
 <meta name="twitter:image" content="/images/icons/python_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-30 18:34:52 &#43;0900 JST"><link rel="next" href="Page%28/post/design/try-prott.md%29">
+<meta property="article:published_time" content="2018-08-30 18:34:52 &#43;0900 JST"><link rel="prev" href="Page%28/post/python/sheet-excel-with-openpyxl.md%29"><link rel="next" href="Page%28/post/design/try-prott.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,13 +47,13 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
 
-	<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編" />
+	<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存" />
 <meta property="og:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/" /><meta property="article:published_time" content="2018-08-30T18:34:52&#43;09:00"/>
 <meta property="article:modified_time" content="2018-08-30T18:34:52&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編"/>
+<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存"/>
 <meta name="twitter:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -106,7 +106,7 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編</h1><div class="post__meta meta">
+			<h1 class="post__title">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
 <time class="post__meta-date meta-date" datetime="2018-08-30T18:34:52">August 30, 2018</time>
 <span class="post__meta-categories meta-categories">
@@ -115,7 +115,7 @@ if (!doNotTrack) {
 </span></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編">
+			<img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存">
 		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
@@ -274,6 +274,9 @@ wb.save(filename = 'sample_book.xlsx')
 	<div class="post-nav__item post-nav__item--prev">
 		<a class="post-nav__link" href="/post/design/try-prott/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">モバイルアプリやWEBアプリのプロトタイピングはProttでやるといいかもしれない</p></a>
 	</div>
+	<div class="post-nav__item post-nav__item--next">
+		<a class="post-nav__link" href="/post/python/sheet-excel-with-openpyxl/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更</p></a>
+	</div>
 </nav>
 	
 
@@ -368,11 +371,11 @@ wb.save(filename = 'sample_book.xlsx')
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
-			<li class="widget__item"><a class="widget__link" href="/post/python/create-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存編</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/sheet-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/create-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/design/try-prott/">モバイルアプリやWEBアプリのプロトタイピングはProttでやるといいかもしれない</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/blog/jekyll-to-hugo/">ブログをJekyllからHugoへの移行理由と手順</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/dart/flutter/codelabs-is-first-step-for-newcomer/">Flutter初心者はCodelabsをまずやってみよう!!</a></li>
-			<li class="widget__item"><a class="widget__link" href="/aws/my-packer-best-practice/">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a></li>
 		</ul>
 	</div>
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
