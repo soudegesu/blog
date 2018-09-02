@@ -8,20 +8,20 @@
 	
 
 
-<title>ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす</title>
+<title>ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く - そうなんでげす</title>
 <meta name="description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta property="og:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta name="author" content="soudegesu">
 <link rel="canonical" href="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
+<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く - そうなんでげす">
 <meta name="twitter:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。">
 <meta name="twitter:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
-<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存 - そうなんでげす">
+<meta property="og:site_name" content="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く - そうなんでげす">
+<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く - そうなんでげす">
 <meta property="og:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
   
 <meta property="og:image" content="/images/icons/python_icon.png">
@@ -47,13 +47,13 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" />
 
 
-	<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存" />
+	<meta property="og:title" content="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く" />
 <meta property="og:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/" /><meta property="article:published_time" content="2018-08-30T18:34:52&#43;09:00"/>
 <meta property="article:modified_time" content="2018-08-30T18:34:52&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存"/>
+<meta name="twitter:title" content="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く"/>
 <meta name="twitter:description" content="今回はExcelファイルをPythonで操作する方法を紹介したいと思います。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -106,7 +106,7 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存</h1><div class="post__meta meta">
+			<h1 class="post__title">ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
 <time class="post__meta-date meta-date" datetime="2018-08-30T18:34:52">August 30, 2018</time>
 <span class="post__meta-categories meta-categories">
@@ -115,7 +115,7 @@ if (!doNotTrack) {
 </span></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - ファイルの作成と保存">
+			<img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く">
 		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
@@ -136,14 +136,15 @@ if (!doNotTrack) {
 <ul>
 <li><a href="#実行環境">実行環境</a></li>
 <li><a href="#openpyxlのインストール">openpyxlのインストール</a></li>
-<li><a href="#とりあえず新規のexcelファイルを作成してみる">とりあえず新規のExcelファイルを作成してみる</a>
+<li><a href="#新規excelファイルの作成">新規Excelファイルの作成</a>
 <ul>
 <li><a href="#モジュールのインポート">モジュールのインポート</a></li>
 <li><a href="#ワークブックの作成">ワークブックの作成</a></li>
 <li><a href="#シート名の変更">シート名の変更</a></li>
 <li><a href="#ファイルの保存">ファイルの保存</a></li>
-</ul></li>
 <li><a href="#できあがりを確認する">できあがりを確認する</a></li>
+</ul></li>
+<li><a href="#既に存在するファイルを開くときは">既に存在するファイルを開くときは？</a></li>
 <li><a href="#まとめ">まとめ</a></li>
 </ul></li>
 </ul>
@@ -176,7 +177,7 @@ if (!doNotTrack) {
 <pre><code class="language-bash">pip install openpyxl
 </code></pre>
 
-<h2 id="とりあえず新規のexcelファイルを作成してみる">とりあえず新規のExcelファイルを作成してみる</h2>
+<h2 id="新規excelファイルの作成">新規Excelファイルの作成</h2>
 
 <p>千里の道も一歩から。まずは新規でファイルを作成しましょう。</p>
 
@@ -214,7 +215,7 @@ ws.title = &quot;シートの名前&quot;
 wb.save(filename = 'sample_book.xlsx')
 </code></pre>
 
-<h2 id="できあがりを確認する">できあがりを確認する</h2>
+<h3 id="できあがりを確認する">できあがりを確認する</h3>
 
 <p>ファイルが正しく保存されているか確認しましょう。</p>
 
@@ -230,6 +231,18 @@ wb.save(filename = 'sample_book.xlsx')
 
 <p>ただしくシート名がリネームされていますね！</p>
 
+<h2 id="既に存在するファイルを開くときは">既に存在するファイルを開くときは？</h2>
+
+<p><a href="https://www.python.org/">Python</a> でExcelを操作するモチベーションは <strong>「既に存在するExcelファイルの操作をプログラムから行いたい（自動化したい）」</strong> ケースが多いので、ここでは既存のエクセルファイルの開き方に触れておきます。</p>
+
+<p><code>load_workbook</code> 関数にファイルのパスを指定することで <code>Workbook</code> オブジェクトを簡単に取得できます。</p>
+
+<pre><code class="language-python">from openpyxl import load_workbook
+wb = load_workbook('sample_book.xlsx')
+print(wb.sheetnames)
+# ['シートの名前'] が出力されます
+</code></pre>
+
 <h2 id="まとめ">まとめ</h2>
 
 <p>今回は <a href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a> を使って以下を行いました。</p>
@@ -238,6 +251,7 @@ wb.save(filename = 'sample_book.xlsx')
 <li>Excelファイルの作成</li>
 <li>Excelファイルの保存</li>
 <li>Excelファイルのデフォルトのシート名変更</li>
+<li>Excelファイルを開く</li>
 </ul>
 
 <p>本来やりたいことはここから先だと思いますので、少しづつまとめていきたいと思います。</p>
@@ -425,7 +439,7 @@ wb.save(filename = 'sample_book.xlsx')
 		<ul class="widget__list">
 			<li class="widget__item"><a class="widget__link" href="/post/aws/caller_identity/">Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/python/sheet-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更</a></li>
-			<li class="widget__item"><a class="widget__link" href="/post/python/create-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - ファイルの作成と保存</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/create-excel-with-openpyxl/">ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/design/try-prott/">モバイルアプリやWEBアプリのプロトタイピングはProttでやるといいかもしれない</a></li>
 			<li class="widget__item"><a class="widget__link" href="/post/blog/jekyll-to-hugo/">ブログをJekyllからHugoへの移行理由と手順</a></li>
 		</ul>

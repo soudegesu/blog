@@ -1,5 +1,5 @@
 ---
-title: "ExcelをPython（openpyxl）で操作する - ファイルの作成と保存"
+title: "ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く"
 description: "今回はExcelファイルをPythonで操作する方法を紹介したいと思います。"
 date: "2018-08-30T18:34:52+09:00"
 thumbnail: /images/icons/python_icon.png
@@ -35,7 +35,7 @@ twitter_card_image: /images/icons/python_icon.png
 pip install openpyxl
 ```
 
-## とりあえず新規のExcelファイルを作成してみる
+## 新規Excelファイルの作成
 
 千里の道も一歩から。まずは新規でファイルを作成しましょう。
 
@@ -77,7 +77,7 @@ ws.title = "シートの名前"
 wb.save(filename = 'sample_book.xlsx')
 ```
 
-## できあがりを確認する
+### できあがりを確認する
 
 ファイルが正しく保存されているか確認しましょう。
 
@@ -93,6 +93,19 @@ wb.save(filename = 'sample_book.xlsx')
 
 ただしくシート名がリネームされていますね！
 
+## 既に存在するファイルを開くときは？
+
+[Python](https://www.python.org/) でExcelを操作するモチベーションは **「既に存在するExcelファイルの操作をプログラムから行いたい（自動化したい）」** ケースが多いので、ここでは既存のエクセルファイルの開き方に触れておきます。
+
+`load_workbook` 関数にファイルのパスを指定することで `Workbook` オブジェクトを簡単に取得できます。
+
+```python
+from openpyxl import load_workbook
+wb = load_workbook('sample_book.xlsx')
+print(wb.sheetnames)
+# ['シートの名前'] が出力されます
+```
+
 ## まとめ
 
 今回は [openpyxl](https://openpyxl.readthedocs.io/en/stable/index.html) を使って以下を行いました。
@@ -100,6 +113,7 @@ wb.save(filename = 'sample_book.xlsx')
 * Excelファイルの作成
 * Excelファイルの保存
 * Excelファイルのデフォルトのシート名変更
+* Excelファイルを開く
 
 本来やりたいことはここから先だと思いますので、少しづつまとめていきたいと思います。
 
