@@ -38,7 +38,7 @@ hasCJKLanguage = true
     #mathjaxPath = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" # Specify MathJax path
     #mathjaxConfig = "TeX-AMS-MML_HTMLorMML" # Specify MathJax config
     googleSiteVerification = "cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw"
-    bingSiteVerification = ""
+    bingSiteVerification = "C58B4D4C2D3C5B99C7CF26F79733F9EB"
     yandexSiteVerification = ""
 
 [Params.widgets]
