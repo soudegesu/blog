@@ -1,5 +1,5 @@
 ---
-title: "ブログをJekyllからHugoへの移行理由と手順"
+title: "JekyllからHugoへの移行理由と手順"
 description: "このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。"
 date: "2018-08-22T08:00:34+09:00"
 thumbnail: "/images/icons/hugo_icon.png"
