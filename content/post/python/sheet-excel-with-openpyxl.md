@@ -1,5 +1,5 @@
 ---
-title: "ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更"
+title: "ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更"
 description: "前回のExcelをPython（openpyxl）で操作する - ファイルの作成と保存ではopenpyxlを使って、Excelファイルの作成を行いました。今回はシートの操作を行ってみましょう。"
 date: "2018-08-31T08:53:18+09:00"
 thumbnail: /images/icons/python_icon.png

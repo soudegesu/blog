@@ -6,13 +6,22 @@
     <description>Recent content in Openpyxl on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Fri, 31 Aug 2018 08:53:18 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 02 Sep 2018 09:38:14 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/openpyxl/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>ExcelをPython（openpyxl）で操作する - シートの作成やシートの属性値変更</title>
+      <title>ExcelをPython（openpyxl）で操作する - セルの読み書き</title>
+      <link>https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/</link>
+      <pubDate>Sun, 02 Sep 2018 09:38:14 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/</guid>
+      <description>前回の ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更 では openpyxl を使って Excelシートの作成 と Excel</description>
+    </item>
+    
+    <item>
+      <title>ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更</title>
       <link>https://www.soudegesu.com/post/python/sheet-excel-with-openpyxl/</link>
       <pubDate>Fri, 31 Aug 2018 08:53:18 +0900</pubDate>
       
