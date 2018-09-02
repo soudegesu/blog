@@ -39,7 +39,7 @@ hasCJKLanguage = true
     #mathjaxConfig = "TeX-AMS-MML_HTMLorMML" # Specify MathJax config
     googleSiteVerification = "cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw"
     bingSiteVerification = "C58B4D4C2D3C5B99C7CF26F79733F9EB"
-    yandexSiteVerification = ""
+    yandexSiteVerification = "2f79a5310dc24118"
 
 [Params.widgets]
     search = true
