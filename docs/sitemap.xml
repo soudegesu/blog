@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/event/builderscon_2018/</loc>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/</loc>
     <lastmod>2018-09-02T09:38:14+09:00</lastmod>
   </url>
@@ -502,6 +507,18 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/event/</loc>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/categories/event/</loc>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/excel/</loc>
     <lastmod>2018-09-02T09:38:14+09:00</lastmod>
     <priority>0</priority>
@@ -671,7 +688,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-09-02T09:38:14+09:00</lastmod>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -863,7 +880,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-09-02T09:38:14+09:00</lastmod>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
     <priority>0</priority>
   </url>
   

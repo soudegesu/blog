@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Event on そうなんでげす</title>
+    <link>https://www.soudegesu.com/categories/event/</link>
+    <description>Recent content in Event on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 07 Sep 2018 09:48:44 +0900</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/categories/event/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>builderscon 2018 Tokyo に行ってきた</title>
+      <link>https://www.soudegesu.com/post/event/builderscon_2018/</link>
+      <pubDate>Fri, 07 Sep 2018 09:48:44 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/event/builderscon_2018/</guid>
+      <description>2018/09/06から2018/09/08 の日程で builderscon 2018 Tokyo が開催されました。 家族の体調の都合で 2018/09/08 (最終日) は参加できず、家でベルセルクを見る</description>
+    </item>
+    
+  </channel>
+</rss>
