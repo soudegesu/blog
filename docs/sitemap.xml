@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/aws/aurora_postgresql_parameter/</loc>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/event/builderscon_2018/</loc>
     <lastmod>2018-09-07T09:48:44+09:00</lastmod>
   </url>
@@ -328,13 +333,13 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/aws/</loc>
-    <lastmod>2018-09-02T06:32:25+09:00</lastmod>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/aws/</loc>
-    <lastmod>2018-09-02T06:32:25+09:00</lastmod>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -688,7 +693,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -736,7 +741,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/rds/</loc>
-    <lastmod>2018-02-19T00:00:00+00:00</lastmod>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -880,7 +885,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
     <priority>0</priority>
   </url>
   

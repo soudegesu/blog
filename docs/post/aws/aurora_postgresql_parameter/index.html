@@ -8,26 +8,26 @@
 	
 
 
-<title>そうなんでげす</title>
-<meta name="description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。">
-<meta property="og:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。">
+<title>RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について - そうなんでげす</title>
+<meta name="description" content="">
+<meta property="og:description" content="">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/">
+<link rel="canonical" href="https://www.soudegesu.com/post/aws/aurora_postgresql_parameter/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="そうなんでげす">
-<meta name="twitter:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。">
-<meta name="twitter:url" content="https://www.soudegesu.com/">
+<meta name="twitter:title" content="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について - そうなんでげす">
+<meta name="twitter:description" content="">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/aws/aurora_postgresql_parameter/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="そうなんでげす - そうなんでげす">
-<meta property="og:title" content="そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/">
+<meta property="og:site_name" content="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について - そうなんでげす">
+<meta property="og:title" content="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/aws/aurora_postgresql_parameter/">
   
-<meta property="og:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
-<meta name="twitter:image" content="https://www.soudegesu.com/images/soudegesu.jpg">
+<meta property="og:image" content="/images/icons/rds_icon.png">
+<meta name="twitter:image" content="/images/icons/rds_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2017-02-28 00:00:00 &#43;0000 UTC">
+<meta property="article:published_time" content="2018-09-17 07:00:59 &#43;0900 JST"><link rel="next" href="Page%28/post/event/builderscon_2018.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,18 +47,17 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" /><meta name="msvalidate.01" content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name="yandex-verification" content="2f79a5310dc24118">
 
 
-	<meta property="og:title" content="そうなんでげす" />
-<meta property="og:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.soudegesu.com/" />
-<meta property="og:updated_time" content="2017-02-28T00:00:00&#43;00:00"/>
+	<meta property="og:title" content="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について" />
+<meta property="og:description" content="2018/2月頃から東京リージョンでも、RDS Aurora（PostgreSQL互換）が使用可能 になりました。 今回は RDS Aurora（Post" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/post/aws/aurora_postgresql_parameter/" /><meta property="article:published_time" content="2018-09-17T07:00:59&#43;09:00"/>
+<meta property="article:modified_time" content="2018-09-17T07:00:59&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="そうなんでげす"/>
-<meta name="twitter:description" content="soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"/>
+<meta name="twitter:title" content="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について"/>
+<meta name="twitter:description" content="2018/2月頃から東京リージョンでも、RDS Aurora（PostgreSQL互換）が使用可能 になりました。 今回は RDS Aurora（Post"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
-	<link rel="alternate" type="application/rss&#43;xml" href="/index.xml">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
 	<link rel="stylesheet" href="/css/style.css">
 	<script type="text/javascript" src="/js/scripts.js"></script>
@@ -104,162 +103,284 @@ if (!doNotTrack) {
 		</header>
 		<div class="wrapper flex">
 
-	<main class="main list content" role="main">
-		<div class="list__item">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-09-17T07:00:59">September 17, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="/images/icons/rds_icon.png" alt="RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について">
+		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="4763598447"
-     data-ad-format="auto"
+     data-ad-slot="9690134838"
+     data-ad-format="rectangle"
      data-full-width-responsive="true"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-</div><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="https://www.soudegesu.com/python/pyenv/anaconda/">
-			<img src="/images/icons/python_icon.png" alt="pyenvとpyenv-virtualenvでanacondaと共存する" />
-		</a>
-	</figure>
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/python/pyenv/anaconda/" rel="bookmark">pyenvとpyenv-virtualenvでanacondaと共存する</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-02-28T00:00:00">February 28, 2017</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/pyenv" rel="category">pyenv</a>, <a class="meta-categories__link" href="/categories/anaconda" rel="category">anaconda</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			はじめに 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。 anacondaを使用する機会も増えてきたので、
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/python/pyenv/anaconda/">Read more…</a>
-		</div>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#walを使ったレプリケーション">WALを使ったレプリケーション</a></li>
+<li><a href="#auroraは共有ストレージ">Auroraは共有ストレージ</a></li>
+<li><a href="#サポートに聞いてみよう">サポートに聞いてみよう</a></li>
+<li><a href="#まとめ">まとめ</a></li>
+</ul></li>
+</ul>
+</nav>
 	</div>
-</article><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="https://www.soudegesu.com/tensorflow/tensorflow-online-course/">
-			<img src="/images/icons/python_icon.png" alt="TensorFlowのオンライン学習サイトを利用してみる" />
-		</a>
-	</figure>
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/tensorflow/tensorflow-online-course/" rel="bookmark">TensorFlowのオンライン学習サイトを利用してみる</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-02-19T00:00:00">February 19, 2017</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/tensorflow" rel="category">tensorflow</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			機械学習を身につけたい意欲 ここ1年で&rdquo;AI&rdquo;や&rdquo;人工知能&rdquo;のワードを耳にする機会は大変増えま
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/tensorflow/tensorflow-online-course/">Read more…</a>
-		</div>
-	</div>
-</article><article class="list__item post">
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/sh/fish/" rel="bookmark">zsh から fish (shell) へお引っ越しを試みた話</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-02-18T00:00:00">February 18, 2017</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/fish" rel="category">fish</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			fish との出会い これは本当に偶然の出会いで、 「『大きなスクリーンにソースコードを映して、周囲からいろいろヤジ飛ばされながら、ナビゲーターとドライ
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/sh/fish/">Read more…</a>
-		</div>
-	</div>
-</article><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="https://www.soudegesu.com/docker/image/build/">
-			<img src="/images/icons/docker_icon.png" alt="Docker buildコマンドのimage作成〜コンテナ起動まで" />
-		</a>
-	</figure>
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/docker/image/build/" rel="bookmark">Docker buildコマンドのimage作成〜コンテナ起動まで</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-01-31T00:00:00">January 31, 2017</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/docker" rel="category">docker</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。 Dockerfile
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/docker/image/build/">Read more…</a>
-		</div>
-	</div>
-</article><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="https://www.soudegesu.com/docker/docker-compose/mysql/">
-			<img src="/images/icons/docker_icon.png" alt="docker-composeを使ってmysql dockerコンテナを起動する" />
-		</a>
-	</figure>
-	<div class="list__content clearfix">
-		<header class="list__header">
-			<h3 class="list__title post__title ">
-				<a href="/docker/docker-compose/mysql/" rel="bookmark">docker-composeを使ってmysql dockerコンテナを起動する</a>
-			</h3><div class="list__meta meta">
-<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-01-31T00:00:00">January 31, 2017</time>
-<span class="post__meta-categories meta-categories">
-	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/docker" rel="category">docker</a>, <a class="meta-categories__link" href="/categories/docker-compose" rel="category">docker-compose</a></span>
-</span></div>
-		</header>
-		<div class="list__excerpt post__content">
-			前回の記事で docker build からの docker run コマンドを使用することでmysqlのdockerコンテナの起動ができました。 個人的にはcliのオプション指定が長く
-		</div>
-		<div class="list__footer">
-			<a class="list__footer-readmore btn" href="/docker/docker-compose/mysql/">Read more…</a>
-		</div>
-	</div>
-</article>
-		
-
-		
-<div class="pagination">
-	<a class="pagination__item pagination__item--prev btn" href="/page/5/">«</a>
-	<span class="pagination__item pagination__item--current">6/6</span>
 </div>
+<div class="post__content clearfix">
+			
 
-		<div class="pagenation-ad">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<p>2018/2月頃から東京リージョンでも、<a href="https://aws.amazon.com/jp/blogs/news/amazon-aurora-with-postgresql-compatibility-is-available-in-the-asia-pacific-tokyo-region/">RDS Aurora（PostgreSQL互換）が使用可能</a> になりました。</p>
+
+<p>今回は RDS Aurora（PostgreSQL互換） のパラメータチューニング中に、ふと疑問に思ったことを書きます。</p>
+
+<p>なお、エンジンバージョンは <code>aurora-postgresql9.6</code> として以下はまとめていきます。</p>
+
+<h2 id="walを使ったレプリケーション">WALを使ったレプリケーション</h2>
+
+<p>PostgreSQLには WAL（Write Ahead Logging）という仕組みがあります。いわゆるトランザクションログのことを指しますが、
+通常のPostgreSQLでクラスタを組んだ場合には、WALのデータをスレーブが同期することでレプリケーションを可能にしています。</p>
+
+<h2 id="auroraは共有ストレージ">Auroraは共有ストレージ</h2>
+
+<p>レプリケーションを実現するためにWALが必要、と先ほど述べましたが、
+一方で今回使うRDS Auroraはストレージノード自体をWriter/Reader機で共有するため、
+<strong>「そもそも、WALを使ったレプリケーションはサポートされているのか？」</strong> と考えたわけです。</p>
+
+<p>加えて、RDS Auroraのパラメータグループを確認してみると、指定可能なパラメータにWALに纏わるものが含まれます。</p>
+
+<p>例えば、以下のようなパラメータが該当します。</p>
+
+<ul>
+<li>wal_receiver_status_interval</li>
+<li>wal_receiver_timeout</li>
+<li>wal_sender_timeout</li>
+</ul>
+
+<p>結局、WALを使ってレプリケーションをしているか否か、よくわかりません。</p>
+
+<h2 id="サポートに聞いてみよう">サポートに聞いてみよう</h2>
+
+<p>というわけで、AWSのサポートに問い合わせを行いました。</p>
+
+<p>結論を言うと</p>
+
+<ul>
+<li>通常利用の限りでは <code>wal_receiver_status_interval</code> <code>wal_receiver_timeout</code> <code>wal_sender_timeout</code> は調整しても <strong>使われない</strong>
+
+<ul>
+<li>WAL Sender/Receiver等の <strong>プロセスが起動していない</strong> ため</li>
+<li>つまり、WALによるレプリケーションは行わない（Aurora独自のレプリケーションの仕組みを使う）</li>
+</ul></li>
+<li><strong>RDS for PostgreSQLからRDS Aurora（PostgreSQL互換）をリードレプリカとして作成する場合は</strong>、<code>wal_receiver_status_interval</code> <code>wal_receiver_timeout</code> <code>wal_sender_timeout</code> が有効になる
+
+<ul>
+<li>PostgreSQLのWAL Sender/Receiverプロセスが起動し、PostgreSQLの方式にてレプリケーションが行われるため</li>
+</ul></li>
+</ul>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>RDS for PostgreSQLからAuroraをレプリカに複製する場合にはWALが有効になるということでした。これは考慮していませんでした。
+通常のAuroraクラスターのユースケースではそもそもWALのプロセスが動作していないため、チューニング時には気にしないのが良さそうです。</p>
+
+<p>また一つ賢くなりました。</p>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B01IB6Q1CA&linkId=b4ca40feb7751f1112ee85917e0b2533"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1260108279&linkId=c4ac74c453d2e72a86aec32e11bd9a82"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4797392568&linkId=5026f77348a642a4054d5ac9a12a0bf4"></iframe>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/rds/" rel="tag">rds</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/aws/" rel="tag">aws</a></li>
+	</ul>
+</div>
+	</article>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-5005266309965277"
-     data-ad-slot="8671053867"
-     data-ad-format="auto"
+     data-ad-slot="8973386323"
+     data-ad-format="rectangle"
      data-full-width-responsive="true"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/post/event/builderscon_2018/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">builderscon 2018 Tokyo に行ってきた</p></a>
+	</div>
+</nav>
+	
+
+<h3>関連記事</h3>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/aws/rds-aurora-cluster-partitioning-procedure/">
+        <img src="/images/icons/rds_icon.png" alt="AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/aws/rds-aurora-cluster-partitioning-procedure/" rel="bookmark">AWS RDS Aurora Cluster(MySQL互換)でパーティションをプロシージャで定期的に追加しつつ、エラーハンドリングもする</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-02-19T00:00:00">February 19, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+    </header>
 </div>
-	</main>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/aws/caller_identity/">
+        <img src="/images/icons/terraform_icon.png" alt="Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/aws/caller_identity/" rel="bookmark">Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-09-02T06:32:25">September 02, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/aws/my-packer-best-practice/">
+        <img src="/images/icons/packer_icon.png" alt="AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/aws/my-packer-best-practice/" rel="bookmark">AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-17T00:00:00">August 17, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/aws/amazonlinux2-docker/">
+        <img src="/images/icons/ec2_icon.png" alt="Amazon Linux2にdockerをインストールする" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/aws/amazonlinux2-docker/" rel="bookmark">Amazon Linux2にdockerをインストールする</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-07-10T00:00:00">July 10, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/aws/aws-batch-and-glue/">
+        <img src="/images/icons/glue_icon.png" alt="AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/aws/aws-batch-and-glue/" rel="bookmark">AWS Batchで前処理をしてGlue CrawlerでAthenaのスキーマを作成する</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-07-02T00:00:00">July 02, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/aws" rel="category">aws</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+
+
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+</main>
 
 
 <aside class="sidebar">
