@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Packer on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/packer/</link>
+    <description>Recent content in Packer on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 17 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/packer/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！</title>
+      <link>https://www.soudegesu.com/aws/my-packer-best-practice/</link>
+      <pubDate>Fri, 17 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/aws/my-packer-best-practice/</guid>
+      <description>様々なプロジェクトで仕事をするにあたって、AWSのAMI（Amazon Machine Image）を多くつくるようになりました。 今回はPackerプロジェ</description>
+    </item>
+    
+    <item>
+      <title>MySQL 8のAnsibleハマりポイント（rootのパスワード変更とか）</title>
+      <link>https://www.soudegesu.com/mysql/mysql8-password/</link>
+      <pubDate>Tue, 31 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/mysql/mysql8-password/</guid>
+      <description>MySQL のメジャーバージョン 8 が 2018&amp;frasl;4 にリリースされました。 今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところを</description>
+    </item>
+    
+  </channel>
+</rss>

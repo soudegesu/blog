@@ -13,6 +13,11 @@ disqusShortname = "soudegesu"
 googleAnalytics = "UA-92599175-1"
 hasCJKLanguage = true
 
+[outputFormats]
+[outputFormats.RSS]
+mediatype = "application/rss"
+baseName = "feed"
+
 [Author]
     name = "soudegesu"
     bio = "Software Engineer"

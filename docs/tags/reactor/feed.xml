@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reactor on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/reactor/</link>
+    <description>Recent content in Reactor on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 16 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/reactor/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>springboot-webfluxのバックプレッシャーを体験してたらいい感じだった</title>
+      <link>https://www.soudegesu.com/java/non-blocking-webflux/</link>
+      <pubDate>Fri, 16 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/java/non-blocking-webflux/</guid>
+      <description>2018/3にリリースされた springboot2 から spring5 がバンドルされるようになりました。 リリースの中でも注目機能と言われている webflux 、とりわけ webflux が内包しているリア</description>
+    </item>
+    
+  </channel>
+</rss>
