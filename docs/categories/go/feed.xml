@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on そうなんでげす</title>
+    <link>https://www.soudegesu.com/categories/go/</link>
+    <description>Recent content in Go on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Mon, 24 Sep 2018 06:12:28 +0900</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/categories/go/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Goのinterfaceを使ったmockのテストの書き方を学んだ</title>
+      <link>https://www.soudegesu.com/post/go/test-with-interface/</link>
+      <pubDate>Mon, 24 Sep 2018 06:12:28 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/go/test-with-interface/</guid>
+      <description>プログラミング言語 Go を最近少しづつ触るようになってきました。 主に Python で書いていた簡易なスクリプトを置き換える作業なのですが、 開発の過程で、Go</description>
+    </item>
+    
+  </channel>
+</rss>

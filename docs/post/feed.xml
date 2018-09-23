@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Mon, 17 Sep 2018 07:00:59 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 24 Sep 2018 06:12:28 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Goのinterfaceを使ったmockのテストの書き方を学んだ</title>
+      <link>https://www.soudegesu.com/post/go/test-with-interface/</link>
+      <pubDate>Mon, 24 Sep 2018 06:12:28 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/go/test-with-interface/</guid>
+      <description>プログラミング言語 Go を最近少しづつ触るようになってきました。 主に Python で書いていた簡易なスクリプトを置き換える作業なのですが、 開発の過程で、Go</description>
+    </item>
     
     <item>
       <title>RDS Aurora（PostgreSQL互換）のwalパラメータの有効性について</title>
