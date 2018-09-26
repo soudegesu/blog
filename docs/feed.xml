@@ -6,10 +6,19 @@
     <description>Recent content on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Mon, 24 Sep 2018 06:12:28 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 26 Sep 2018 06:00:59 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Goのreflectパッケージを使ってインスタンスを生成する</title>
+      <link>https://www.soudegesu.com/post/go/create-instance-with-reflection/</link>
+      <pubDate>Wed, 26 Sep 2018 06:00:59 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/go/create-instance-with-reflection/</guid>
+      <description>プログラミング言語 Go で インスタンスを生成する関数を作るにはどうすれば良いかを調査しました。 抽象化されたプログラムを書くには？ 抽象化されたコー</description>
+    </item>
     
     <item>
       <title>Goのinterfaceを使ったmockのテストの書き方を学んだ</title>

@@ -8,26 +8,26 @@
 	
 
 
-<title>ブログをJekyllからHugoへ移行した理由と移行手順 - そうなんでげす</title>
-<meta name="description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
-<meta property="og:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
+<title>Goのreflectパッケージを使ってインスタンスを生成する - そうなんでげす</title>
+<meta name="description" content="プログラミング言語 Goでインスタンスを生成する関数を作るにはどうすれば良いかを調査しました。">
+<meta property="og:description" content="プログラミング言語 Goでインスタンスを生成する関数を作るにはどうすれば良いかを調査しました。">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
+<link rel="canonical" href="https://www.soudegesu.com/post/go/create-instance-with-reflection/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="ブログをJekyllからHugoへ移行した理由と移行手順 - そうなんでげす">
-<meta name="twitter:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。">
-<meta name="twitter:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
+<meta name="twitter:title" content="Goのreflectパッケージを使ってインスタンスを生成する - そうなんでげす">
+<meta name="twitter:description" content="プログラミング言語 Goでインスタンスを生成する関数を作るにはどうすれば良いかを調査しました。">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/go/create-instance-with-reflection/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="ブログをJekyllからHugoへ移行した理由と移行手順 - そうなんでげす">
-<meta property="og:title" content="ブログをJekyllからHugoへ移行した理由と移行手順 - そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/">
+<meta property="og:site_name" content="Goのreflectパッケージを使ってインスタンスを生成する - そうなんでげす">
+<meta property="og:title" content="Goのreflectパッケージを使ってインスタンスを生成する - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/go/create-instance-with-reflection/">
   
-<meta property="og:image" content="https://www.soudegesu.com/images/icons/hugo_icon.png">
-<meta name="twitter:image" content="https://www.soudegesu.com/images/icons/hugo_icon.png">
+<meta property="og:image" content="/images/icons/gopher_icon.png">
+<meta name="twitter:image" content="/images/icons/gopher_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-22 08:00:34 &#43;0900 JST"><link rel="prev" href="Page%28/post/design/try-prott.md%29"><link rel="next" href="Page%28/post/dart/flutter/codelabs-is-first-step-for-newcomer.md%29">
+<meta property="article:published_time" content="2018-09-26 06:00:59 &#43;0900 JST"><link rel="next" href="Page%28/post/go/test-with-interface.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,14 +47,14 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" /><meta name="msvalidate.01" content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name="yandex-verification" content="2f79a5310dc24118">
 
 
-	<meta property="og:title" content="ブログをJekyllからHugoへ移行した理由と移行手順" />
-<meta property="og:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。" />
+	<meta property="og:title" content="Goのreflectパッケージを使ってインスタンスを生成する" />
+<meta property="og:description" content="プログラミング言語 Goでインスタンスを生成する関数を作るにはどうすれば良いかを調査しました。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.soudegesu.com/post/blog/jekyll-to-hugo/" /><meta property="article:published_time" content="2018-08-22T08:00:34&#43;09:00"/>
-<meta property="article:modified_time" content="2018-08-22T08:00:34&#43;09:00"/>
+<meta property="og:url" content="https://www.soudegesu.com/post/go/create-instance-with-reflection/" /><meta property="article:published_time" content="2018-09-26T06:00:59&#43;09:00"/>
+<meta property="article:modified_time" content="2018-09-26T06:00:59&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ブログをJekyllからHugoへ移行した理由と移行手順"/>
-<meta name="twitter:description" content="このブログは Github Pages でホスティングされています。先日、このブログのサイトジェネレータをJekyllからHugoに変更しました。実行に移した経緯と手順を紹介します。"/>
+<meta name="twitter:title" content="Goのreflectパッケージを使ってインスタンスを生成する"/>
+<meta name="twitter:description" content="プログラミング言語 Goでインスタンスを生成する関数を作るにはどうすれば良いかを調査しました。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -106,16 +106,16 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">ブログをJekyllからHugoへ移行した理由と移行手順</h1><div class="post__meta meta">
+			<h1 class="post__title">Goのreflectパッケージを使ってインスタンスを生成する</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-08-22T08:00:34">August 22, 2018</time>
+<time class="post__meta-date meta-date" datetime="2018-09-26T06:00:59">September 26, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/blog" rel="category">blog</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/go" rel="category">go</a></span>
 </span></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/images/icons/hugo_icon.png" alt="ブログをJekyllからHugoへ移行した理由と移行手順">
+			<img src="/images/icons/gopher_icon.png" alt="Goのreflectパッケージを使ってインスタンスを生成する">
 		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
@@ -134,27 +134,22 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#そもそもなんでjekyllを使っていたか">そもそもなんでJekyllを使っていたか</a>
+<li><a href="#抽象化されたプログラムを書くには">抽象化されたプログラムを書くには？</a></li>
+<li><a href="#goではreflectパッケージを使う">Goではreflectパッケージを使う</a>
 <ul>
-<li><a href="#理由１-githug-pagesがjekyllのページをジェネレートしてくれるから">理由１： Githug PagesがJekyllのページをジェネレートしてくれるから</a></li>
-<li><a href="#理由２-テーマやプラグインが多かったから">理由２： テーマやプラグインが多かったから</a></li>
-</ul></li>
-<li><a href="#なんでhugoに変更しようと思ったか">なんでHugoに変更しようと思ったか</a>
+<li><a href="#関数本体の処理">関数本体の処理</a>
 <ul>
-<li><a href="#理由１-github-pagesで使えないjekyllプラグインが必要になった">理由１： Github Pagesで使えないJekyllプラグインが必要になった</a></li>
-<li><a href="#理由２-jekyllのビルドが遅くなった">理由２： Jekyllのビルドが遅くなった</a></li>
-<li><a href="#理由３-hugoのテーマやプラグインが揃ってきた">理由３： Hugoのテーマやプラグインが揃ってきた</a></li>
-<li><a href="#理由４-ページレイアウトの修正が用意">理由４： ページレイアウトの修正が用意</a></li>
+<li><a href="#引数は-reflect-type-型">引数は <code>reflect.Type</code> 型</a></li>
+<li><a href="#reflect-new-でインスタンスを生成"><code>reflect.New()</code> でインスタンスを生成</a></li>
+<li><a href="#reflect-interface-で-interface-を返却"><code>reflect.Interface()</code> で interface{} を返却</a></li>
 </ul></li>
-<li><a href="#移行手順">移行手順</a>
+<li><a href="#呼び出し元の処理">呼び出し元の処理</a>
 <ul>
-<li><a href="#jekyllからのマイグレーションコマンドを使う">Jekyllからのマイグレーションコマンドを使う</a></li>
-<li><a href="#好きなテーマを入れる">好きなテーマを入れる</a></li>
-<li><a href="#shortcodes-に合わせた書き方に変更する">shortcodes に合わせた書き方に変更する</a></li>
-<li><a href="#パーマリンクへの対応">パーマリンクへの対応</a></li>
-<li><a href="#ディレクトリ構成の変更">ディレクトリ構成の変更</a></li>
+<li><a href="#reflect-typeof-で型情報を取得する"><code>reflect.TypeOf()</code> で型情報を取得する</a></li>
+<li><a href="#戻り値を型アサーション">戻り値を型アサーション</a></li>
 </ul></li>
-<li><a href="#まとめ">まとめ</a></li>
+<li><a href="#所感">所感</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -163,152 +158,103 @@ if (!doNotTrack) {
 <div class="post__content clearfix">
 			
 
-<p>このブログは Github Pages でホスティングされています。
-先日、このブログのサイトジェネレータを <a href="https://jekyllrb.com/">Jekyll</a> から <a href="https://gohugo.io/">Hugo</a> に変更しました。
-実行に移した経緯と手順を紹介します。</p>
+<p>プログラミング言語 <a href="https://github.com/golang/go">Go</a> で
+インスタンスを生成する関数を作るにはどうすれば良いかを調査しました。</p>
 
-<h2 id="そもそもなんでjekyllを使っていたか">そもそもなんでJekyllを使っていたか</h2>
+<h2 id="抽象化されたプログラムを書くには">抽象化されたプログラムを書くには？</h2>
 
-<p>「変更するくらいなら、最初からそれ使えよ」という話ではあるのですが、当時の私にもそれなりの考えがあったのです。</p>
+<p>抽象化されたコードを書く場面にしばしば出くわすことがあります。
+分かりやすい例として、 <strong>型そのものの情報を使ってインスタンスを生成する</strong>、というのもその一つです。
+Javaで言えば以下のようなコードです。</p>
 
-<h3 id="理由１-githug-pagesがjekyllのページをジェネレートしてくれるから">理由１： Githug PagesがJekyllのページをジェネレートしてくれるから</h3>
-
-<p><a href="https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/">Gitubの公式</a> でも紹介されていますが、
-<a href="https://jekyllrb.com/">Jekyll</a> の設定を含んだリポジトリをGithub上にpushして、リポジトリの設定を変更するとGithub側でGithub Pagesを生成してくれます。</p>
-
-<p>そのため、<strong>自前でサイトをジェネレートして、生成されたコンテンツをcommitしてpushする</strong> という手間が削減できるのです。この一手間を削減できることに旨味を感じていました。</p>
-
-<h3 id="理由２-テーマやプラグインが多かったから">理由２： テーマやプラグインが多かったから</h3>
-
-<p><a href="http://jekyllthemes.org/">http://jekyllthemes.org/</a> に <a href="https://jekyllrb.com/">Jekyll</a> のテーマが掲載されているのですが、
-それなりに充実していて、ぱっと使えるものが多かったのです。</p>
-
-<h2 id="なんでhugoに変更しようと思ったか">なんでHugoに変更しようと思ったか</h2>
-
-<p>次になぜ <a href="https://gohugo.io/">Hugo</a> に変更しようと思ったかを書きます。</p>
-
-<h3 id="理由１-github-pagesで使えないjekyllプラグインが必要になった">理由１： Github Pagesで使えないJekyllプラグインが必要になった</h3>
-
-<p>導入した後で気づいたのですが、 Github Pages使用可能なJekyll Pluginは <a href="https://help.github.com/articles/adding-jekyll-plugins-to-a-github-pages-site/">Adding Jekyll plugins to a GitHub Pages site</a> に掲載されています。</p>
-
-<p>最初は掲載されているプラグインで十分でした。
-しかし、後から <a href="https://www.slideshare.net/">Slideshare</a> のスライドを貼り付けるために <a href="https://oembed.com/">Oembed</a>フォーマットに対応した <a href="https://github.com/18F/jekyll-oembed">jekyll-oembed</a> プラグインを入れたり、国際化対応のために <a href="https://github.com/liamzebedee/jekyll-i18n">jekyll-i18n</a> プラグインを入れたりと、欲望が湧いてきました。</p>
-
-<p>サポート外のプラグインを使うには、Github側でのビルドを諦めるしかありません。
-つまり、<strong>ローカルマシン（ないしは何らかのビルド環境）上で生成したコンテンツをリポジトリにpushする</strong> 必要があるのです。</p>
-
-<p>これは当初Jekyllを採用した旨味が消えてしまうことになります。</p>
-
-<h3 id="理由２-jekyllのビルドが遅くなった">理由２： Jekyllのビルドが遅くなった</h3>
-
-<p><code>jekyll serve</code> コマンドを実行することで、下書きの出来栄え確認しながら編集することができます。
-リポジトリに蓄積される記事の量が増えるにつれて <strong>ビルドの時間が遅くなっていきました</strong> 。
-最近では1回ビルドするのに <strong>30秒</strong> 程度かかってしまうこともあり、ブログを書くモチベーションに影響してしまいました。</p>
-
-<p>これはファイル保存の都度、全てのコンテンツをリビルドするのが直接的な原因だと思います。
-ビルドに時間がかかることで有名な <a href="https://sass-lang.com/">Sass</a> も使われています。</p>
-
-<p>ひとつひとつ問題の切り分けを行うよりは、より高速な実行環境に切り替えた方が良いだろう、と考えました。</p>
-
-<h3 id="理由３-hugoのテーマやプラグインが揃ってきた">理由３： Hugoのテーマやプラグインが揃ってきた</h3>
-
-<p>以前 <a href="https://gohugo.io/">Hugo</a> を検討していたときには、<a href="https://gohugo.io/">Hugo</a> のバージョンも低く、
-公開されているテーマも少なかったため、プロダクトとしての将来が不安だったのですが、最近ではかなり良くなりました。</p>
-
-<h3 id="理由４-ページレイアウトの修正が用意">理由４： ページレイアウトの修正が用意</h3>
-
-<p>ページレイアウトの修正や設定ファイルからのパラメータを渡しなどのカスタマイズ実装が <a href="https://gohugo.io/">Hugo</a> の方が簡単でした。</p>
-
-<p><a href="https://gohugo.io/">Hugoの公式ドキュメント</a> はYoutubeのハンズオン動画も掲載されるなど、初心者にもとっかかりのよいコンテンツ構成に劇的に進化していることも一役買っていると思います。</p>
-
-<p>かつて <a href="https://jekyllrb.com/">Jekyll</a> のレイアウトのカスタマイズを試みたのですが、欲しい情報になかなかたどり着かず、泥沼にはまり大変苦労したのはいい思い出です。</p>
-
-<h2 id="移行手順">移行手順</h2>
-
-<p>次に、移行手順とハマりポイントを書いていきます。</p>
-
-<h3 id="jekyllからのマイグレーションコマンドを使う">Jekyllからのマイグレーションコマンドを使う</h3>
-
-<p><a href="https://gohugo.io/">Hugo</a> には <a href="https://jekyllrb.com/">Jekyll</a> の <a href="https://gohugo.io/commands/hugo_import_jekyll/">コンテンツをマイグレーションするためのコマンド</a> が用意されています。素晴らしい。</p>
-
-<pre><code class="language-bash">hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジェクトのパス}
+<pre><code class="language-java">private &lt;T&gt; T createInstance (Class&lt;T&gt; clazz) {
+    T obj = null;
+    try {
+        // クラス情報を基にインスタンスを生成
+        obj = (T)(Class.forName(clazz.getName()));
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+    return obj;
+}
 </code></pre>
 
-<p>実行すると、<a href="https://gohugo.io/">Hugo</a> の基本的なフォルダ構成が生成され、今まで書いたコンテンツも <code>${Hugoプロジェクトのパス}/content/post</code> に展開されます。</p>
+<h2 id="goではreflectパッケージを使う">Goではreflectパッケージを使う</h2>
 
-<h3 id="好きなテーマを入れる">好きなテーマを入れる</h3>
+<p>先程のようなコードを <a href="https://github.com/golang/go">Go</a> で書くには、 <a href="https://golang.org/pkg/reflect/">reflect</a> パッケージを使って、リフレクションをすることになります。</p>
 
-<p><a href="https://themes.gohugo.io/">Hugo Themes</a> から好きなテーマを探して、 <code>${Hugoプロジェクトのパス}/themes</code> ディレクトリ内で <code>git clone</code> してあげれば良いです。
-超簡単です。</p>
+<p>今回は型情報を基にインスタンスを生成する <code>createInstance</code> 関数を作成してみましょう。</p>
 
-<p>テーマのリポジトリのREADMEファイルに <code>config.toml(.yaml)</code> の書き方も記載されていたので、タブの改良やGoogle Analyticsのコードも設定していきます。</p>
+<h3 id="関数本体の処理">関数本体の処理</h3>
 
-<h3 id="shortcodes-に合わせた書き方に変更する">shortcodes に合わせた書き方に変更する</h3>
+<p>まずはインスタンス生成処理の本体となる <code>createInstance</code> 関数を作成します。
+コードは以下のようになります。</p>
 
-<p><code>hugo import</code> コマンド実行後に 「 <code>hugo server --theme=herring-cove</code> でビルドしてみてね！」 と表示されるのですが、これを実行するとビルドに失敗します。</p>
-
-<p>1つはオプションで指定している <code>--theme=herring-cove</code> が存在しないことなので簡単な話なのですが、</p>
-
-<p>もう1つは <a href="https://shopify.github.io/liquid/">Jekyllの使っているLiquid template</a> を <a href="https://gohugo.io/content-management/shortcodes/">Hugoのshortcodes</a> として解釈していたためであることがわかりました。</p>
-
-<p>大きく分けると3パターンあったため、これを全ての記事ファイルに対して修正を行いました。</p>
-
-<ul>
-<li>Liquid template の {% row %} {% rowend %} がそのまま表示されてしまう</li>
-<li>Liquid template から呼び出していた Jekyll Plugin の箇所でエラー</li>
-<li>Liquid template で参照している変数が存在しない</li>
-</ul>
-
-<h3 id="パーマリンクへの対応">パーマリンクへの対応</h3>
-
-<p>デフォルトでは <code>${Hugoプロジェクトのパス}content/post</code> ディレクトリ配下のMarkdownファイルをビルドして記事を生成するのですが、 URLの構成もデフォルトでは <code>/post/${ディレクトリ名}/${ファイル名}</code> になってしまいます。</p>
-
-<p>以前は <code>/${カテゴリ}/${ファイル名}</code> という構成のURLにしていたので、パーマリンクの対応が別途必要でした。</p>
-
-<p><a href="https://gohugo.io/content-management/urls/">URL Management</a> と <a href="https://gohugo.io/content-management/organization/">Content Organization</a> を参考に、 記事中のMarkdownファイル内で <code>url</code> プロパティを使うことでパーマリンクを設定します。</p>
-
-<p>例えば以下のようになります。</p>
-
-<pre><code class="language-vim">---
-title: &quot;AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！&quot;
-date: 2018-08-17
-categories:
-    - aws
-tags:
-    - aws
-    - packer
-url: /aws/my-packer-best-practice/
----
+<pre><code class="language-go">// インスタンスを作るだけの関数
+func createInstance(typ reflect.Type) interface{} {
+	val := reflect.New(typ).Elem()
+	return val.Interface()
+}
 </code></pre>
 
-<h3 id="ディレクトリ構成の変更">ディレクトリ構成の変更</h3>
+<p>ここでポイントをいくつか紹介します。</p>
 
-<p><a href="https://jekyllrb.com/">Jekyll</a> で作成した記事は、<a href="https://gohugo.io/">Hugo</a> で今後作成するコンテンツとは別ディレクトリで管理した方が見通しが良さそうなので、
-<code>hugo import</code> した記事は <code>${Hugoプロジェクトのパス}/content/past</code> というディレクトリに移動し、<code>config.toml</code> で <code>${Hugoプロジェクトのパス}/content/past</code> ディレクトリ配下もビルド対象にするように指定しました。</p>
+<h4 id="引数は-reflect-type-型">引数は <code>reflect.Type</code> 型</h4>
 
-<pre><code class="language-vim">postSections = [&quot;post&quot;, &quot;past&quot;]
+<p>関数への引数は　<code>reflect.Type</code> 型にしています。
+<code>interface{}</code> 型でも良いのですが、<code>interface{}</code> 型だと引数に何でも入れれてしまうので、 <code>reflect.Type</code> によって型を縛ります。</p>
+
+<h4 id="reflect-new-でインスタンスを生成"><code>reflect.New()</code> でインスタンスを生成</h4>
+
+<p><code>reflect.New()</code> 関数では、 <code>reflect.Type</code> 型の引数に与えられたインスタンスを生成します。
+次に <code>reflect.Elem()</code> でポインタの指す実体にアクセスできるようにします。</p>
+
+<h4 id="reflect-interface-で-interface-を返却"><code>reflect.Interface()</code> で interface{} を返却</h4>
+
+<p>最後に <code>Interface()</code> 関数を呼んで、 <code>interface{}</code> 型で返せるようにします。
+<code>createInstance()</code> 関数内でキャストできると嬉しいかもしれませんが、
+ジェネリクス的なものはGoにはありませんし、動的な型アサーションも難しそうなので、
+基本的には、<code>createInstance()</code> 関数の呼び出し元で型アサーションをすることになります。</p>
+
+<h3 id="呼び出し元の処理">呼び出し元の処理</h3>
+
+<p>作成した <code>createInstance()</code> 関数の呼び出し元の処理は以下のようになります。</p>
+
+<pre><code class="language-go">var u User
+obj := createInstance(reflect.TypeOf(u))
+r := obj.(User)
 </code></pre>
 
-<pre><code class="language-bash">content --- post  # Hugoで作成した記事
-         `- past  # 過去にJekyllで作成した記事
-</code></pre>
+<h4 id="reflect-typeof-で型情報を取得する"><code>reflect.TypeOf()</code> で型情報を取得する</h4>
 
-<p>これでようやくそれっぽくなりました。</p>
+<p>宣言した変数を <code>reflect.TypeOf()</code> の引数に与えることで、 <code>reflect.Type</code> 型のオブジェクトが取得できます。
+これを <code>createInstance()</code> 関数に渡して上げます。</p>
 
-<h2 id="まとめ">まとめ</h2>
+<h4 id="戻り値を型アサーション">戻り値を型アサーション</h4>
 
-<p>今回は <a href="https://jekyllrb.com/">Jekyll</a> から <a href="https://gohugo.io/">Hugo</a> に変更した理由と手順をまとめました。</p>
+<p>戻り値を型アサーションすることで <code>obj</code> 変数が <code>User</code> 型としての定義を持っているかを確認してくれます。
+これで、呼び出し元でも <code>User</code> 型として処理を書けるわけです。</p>
 
-<p>サイトのデザインも刷新されて、ビルド時間も <strong>60ms前後</strong> と爆速です。今の所不自由もないため、ブログを更新するモチベーションも維持できそうです。</p>
+<h3 id="所感">所感</h3>
 
-<p>やったぜ！</p>
+<p><a href="https://github.com/golang/go">Go</a> でインスタンス生成を行う、抽象度の少し高いコードを書くことができました。
+ただ、逆に手間がかかってしまう感も否めず、変に共通化を狙わずに、シンプルに処理を書いた方が吉かもしれないなー、と思いました。</p>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=tf_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798142417&linkId=2a504e0591dea2b29c897641fee103b4&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=tf_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4908686033&linkId=bc543f9a203ae829ea5149b77f7f26ed&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>   
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=tf_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873118468&linkId=a29dc46f2c8ec02b6826b9192aabec5f&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=tf_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117526&linkId=f9d2734b0ac386b7e7acb6a0331d2268&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
 
 		</div>
 		
 <div class="post__tags tags clearfix">
 	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
 	<ul class="tags__list">
-		<li class="tags__item"><a class="tags__link btn" href="/tags/hugo/" rel="tag">hugo</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/go/" rel="tag">go</a></li>
 	</ul>
 </div>
 	</article>
@@ -326,10 +272,7 @@ url: /aws/my-packer-best-practice/
 	
 <nav class="post-nav flex">
 	<div class="post-nav__item post-nav__item--prev">
-		<a class="post-nav__link" href="/post/dart/flutter/codelabs-is-first-step-for-newcomer/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Flutter初心者はCodelabsをまずやってみよう!!</p></a>
-	</div>
-	<div class="post-nav__item post-nav__item--next">
-		<a class="post-nav__link" href="/post/design/try-prott/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">モバイルアプリやWEBアプリのプロトタイピングはProttでやるといいかもしれない</p></a>
+		<a class="post-nav__link" href="/post/go/test-with-interface/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Goのinterfaceを使ったmockのテストの書き方を学んだ</p></a>
 	</div>
 </nav>
 	
@@ -338,20 +281,20 @@ url: /aws/my-packer-best-practice/
 
 <div class="list__item">
 <figure class="list__thumbnail">
-    <a href="https://www.soudegesu.com/blog/hugo/">
-        <img src="/images/icons/hugo_icon.png" alt="ブログ(静的サイト)をHUGOを使って作成する" />
+    <a href="https://www.soudegesu.com/post/go/test-with-interface/">
+        <img src="/images/icons/gopher_icon.png" alt="Goのinterfaceを使ったmockのテストの書き方を学んだ" />
     </a>
 </figure>
 <div class="list__content clearfix">
     <header class="list__header">
         <h4 class="list__title post__title ">
-            <a href="/blog/hugo/" rel="bookmark">ブログ(静的サイト)をHUGOを使って作成する</a>
+            <a href="/post/go/test-with-interface/" rel="bookmark">Goのinterfaceを使ったmockのテストの書き方を学んだ</a>
         </h4><div class="list__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2017-05-05T00:00:00">May 05, 2017</time>
+<time class="post__meta-date meta-date" datetime="2018-09-24T06:12:28">September 24, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/blog" rel="category">blog</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/go" rel="category">go</a></span>
 </span></div>
     </header>
 </div>
