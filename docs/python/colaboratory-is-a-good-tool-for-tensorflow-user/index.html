@@ -139,6 +139,7 @@ if (!doNotTrack) {
 <ul>
 <li><a href="#利用料がタダ">利用料がタダ</a></li>
 <li><a href="#gpuも使える">GPUも使える</a></li>
+<li><a href="#tpuも使える">TPUも使える</a></li>
 <li><a href="#google-driveと連携できる">Google Driveと連携できる</a></li>
 <li><a href="#デフォルトでスニペットが揃っている">デフォルトでスニペットが揃っている</a></li>
 <li><a href="#実行環境が選択できる">実行環境が選択できる</a>
@@ -213,7 +214,14 @@ if (!doNotTrack) {
 
 <p><br></p>
 
-<p><img src="/images/20180502/switch_to_gpu_1.png" alt="switch_to_gpu_1" /></p>
+
+<figure class="center">
+    
+        <img src="/images/20180502/switch_to_gpu_1.png" width="70%" />
+    
+    
+</figure>
+
 
 <p><br></p>
 
@@ -223,7 +231,14 @@ if (!doNotTrack) {
 
 <p><br></p>
 
-<p><img src="/images/20180502/switch_to_gpu_2.png" alt="switch_to_gpu_2" /></p>
+
+<figure class="center">
+    
+        <img src="/images/20180502/switch_to_gpu_2.png" width="70%" />
+    
+    
+</figure>
+
 
 <p><br></p>
 
@@ -236,6 +251,15 @@ tf.test.gpu_device_name()
 <p>デバイス名が表示されていますね。(CPUの場合は空文字が返ってきます)</p>
 
 <p><img src="/images/20180502/switch_to_gpu_3.png" alt="switch_to_gpu_3" /></p>
+
+<h3 id="tpuも使える">TPUも使える</h3>
+
+<p><sup>2018</sup>&frasl;<sub>09</sub> 頃に <strong>TPU（Tensor Processing Unit）</strong> も選択できるようになりました。</p>
+
+<p>TPUのざっくり説明に関しては <a href="https://ja.wikipedia.org/wiki/%E3%83%86%E3%83%B3%E3%82%BD%E3%83%AB%E3%83%BB%E3%83%97%E3%83%AD%E3%82%BB%E3%83%83%E3%82%B7%E3%83%B3%E3%82%B0%E3%83%BB%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88">Wikipedia</a> を参照ください。</p>
+
+<p>Googleはエッジコンピューティング向けに <a href="https://cloud.watch.impress.co.jp/docs/news/1134852.html">Edge TPU</a> を外販するようなので、
+そのTPU向けに書いたコードを試したりできそうですね。神か。</p>
 
 <h3 id="google-driveと連携できる">Google Driveと連携できる</h3>
 
