@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Wed, 26 Sep 2018 16:17:21 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 02 Oct 2018 08:46:15 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>goenvでGoをセットアップする</title>
+      <link>https://www.soudegesu.com/post/go/setup_goenv/</link>
+      <pubDate>Tue, 02 Oct 2018 08:46:15 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/go/setup_goenv/</guid>
+      <description>今の所、プログラミング言語 Go は 1.x 系のバージョンが最新なわけですが、 非公式ながら Go2 の話も盛り上がっているので、 そろそろ真面目にバージョン管理す</description>
+    </item>
     
     <item>
       <title>json.Unmarshalとreflectパッケージを使って構造体を生成する</title>
