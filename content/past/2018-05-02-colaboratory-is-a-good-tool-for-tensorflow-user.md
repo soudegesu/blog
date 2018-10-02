@@ -59,7 +59,7 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 
 <br>
 
-![switch_to_gpu_1](/images/20180502/switch_to_gpu_1.png)
+{{< figure src="/images/20180502/switch_to_gpu_1.png" class="center" width="70%" >}}
 
 <br>
 
@@ -67,7 +67,7 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 
 <br>
 
-![switch_to_gpu_2](/images/20180502/switch_to_gpu_2.png)
+{{< figure src="/images/20180502/switch_to_gpu_2.png" class="center" width="70%" >}}
 
 <br>
 
@@ -81,6 +81,15 @@ tf.test.gpu_device_name()
 デバイス名が表示されていますね。(CPUの場合は空文字が返ってきます)
 
 ![switch_to_gpu_3](/images/20180502/switch_to_gpu_3.png)
+
+### TPUも使える
+
+2018/09 頃に **TPU（Tensor Processing Unit）** も選択できるようになりました。
+
+TPUのざっくり説明に関しては [Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%86%E3%83%B3%E3%82%BD%E3%83%AB%E3%83%BB%E3%83%97%E3%83%AD%E3%82%BB%E3%83%83%E3%82%B7%E3%83%B3%E3%82%B0%E3%83%BB%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88) を参照ください。
+
+Googleはエッジコンピューティング向けに [Edge TPU](https://cloud.watch.impress.co.jp/docs/news/1134852.html) を外販するようなので、
+そのTPU向けに書いたコードを試したりできそうですね。神か。
 
 ### Google Driveと連携できる
 
