@@ -1,5 +1,5 @@
 ---
-title: "Install-Minikube"
+title: "Minikubeをインストールしてローカル環境でKubernatesを動かす"
 description: ""
 date: "2018-10-03T08:39:26+09:00"
 thumbnail: ""
@@ -13,6 +13,10 @@ isCJKLanguage: true
 twitter_card_image: /images/soudegesu.jpg
 ---
 
+今回はローカル環境で [Kubernates](https://kubernetes.io/) を動かすために、
+[Minikube](https://github.com/kubernetes/minikube) をインストールします。
+
+
 ## 事前準備
 
 以降は以下の環境にて実行することを前提としています。
@@ -22,7 +26,7 @@ twitter_card_image: /images/soudegesu.jpg
 
 ### VirtualBoxのインストール
 
-次の工程でインストールする [Minikube](https://github.com/kubernetes/minikube) では以下のVMをサポートしています。
+今回インストールする [Minikube](https://github.com/kubernetes/minikube) では以下のVMをサポートしています。
 
 * virtualbox
 * vmwarefusion
@@ -34,7 +38,7 @@ twitter_card_image: /images/soudegesu.jpg
 
 なんでも良いのですが、今回は過去に使ったことのある [VirtualBox](https://www.virtualbox.org/) のインストーラをダウンロードし、インストールしました。
 
-### minikube をインストールする
+### Minikube をインストールする
 
 次に、ローカル環境で [Kubernates](https://kubernetes.io/) を動かすために、
 [Minikube](https://github.com/kubernetes/minikube) をインストールします。
@@ -43,16 +47,22 @@ twitter_card_image: /images/soudegesu.jpg
 brew cask install minikube
 ```
 
+インストールされたかを確認します。
+
+```bash
+minikube version
+
+> minikube version: v0.29.0
+```
+
 これで `minikube` コマンドが使えるようになりました。
+
 
 ## Usageを確認する
 
-`minikube` コマンドに準備されているサブコマンドを確認してみます。
-めちゃ出ました。
+`minikube help` コマンドで、サブコマンドを確認してみます。
 
 ```bash
-minikube
-
 Minikube is a CLI tool that provisions and manages single-node Kubernetes clusters optimized for development workflows.
 
 Usage:
@@ -95,11 +105,6 @@ Flags:
       --vmodule moduleSpec               comma-separated list of pattern=N settings for file-filtered logging
 ```
 
-```bash
-minikube completion
-```
-
-
 ## Minikubeを起動する
 
 ```bash
@@ -110,4 +115,9 @@ minikube start
 kubectl config current-context
 
 > minikube
+```
+
+
+```bash
+minikube completion
 ```
