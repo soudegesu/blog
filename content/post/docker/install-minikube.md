@@ -1,6 +1,6 @@
 ---
 title: "MinikubeでKubernatesのローカル環境を構築する"
-description: ""
+description: "builderscon tokyo 2018Kubernatesに関する発表がいくつかありました。業務的に使う機会がなかったのですが、これを機に触ってみようと思い、まずは環境構築から、という話です。"
 date: "2018-10-03T08:39:26+09:00"
 thumbnail: /images/icons/k8s_icon.png
 categories:
@@ -12,9 +12,8 @@ isCJKLanguage: true
 twitter_card_image: /images/icons/k8s_icon.png
 ---
 
-今回はローカル環境で [Kubernates](https://kubernetes.io/) を動かすために、
-[Minikube](https://github.com/kubernetes/minikube) をインストールします。
-
+[builderscon tokyo 2018](https://builderscon.io/tokyo/2018/) で [Kubernates](https://kubernetes.io/) に関する
+発表がいくつかありました。業務的に使う機会がなかったのですが、これを機に触ってみようと思い、まずは環境構築から、という話です。
 
 ## 事前準備
 
@@ -252,7 +251,7 @@ minikube stop
 設定ファイルを削除して気づいたのですが、 [Minikube](https://github.com/kubernetes/minikube) には `profile` の概念があり、
 複数の [Minikube](https://github.com/kubernetes/minikube) インスタンスを扱うことができるようです。
 
-デフォルトでは `minikube` というプロファイル名ですが、 `minikube profile ${プロファイル名` で現在の [Minikube](https://github.com/kubernetes/minikube) インスタンスを別プロファイルとして扱えます。
+デフォルトでは `minikube` というプロファイルが存在しますが、 `minikube profile ${プロファイル名}` で現在の [Minikube](https://github.com/kubernetes/minikube) インスタンスを別プロファイルとして扱えます。
 
 例えば、以下のようにしてプロファイル `hoge` を作成した後、起動すると、
 
@@ -299,6 +298,10 @@ minikube start
 │       └── config.json
 ```
 
+プロファイルをデフォルトに戻すときは `minikube profile default` としてあげます。
+
+「あれ？私は今どっちのプロファイルでminikube立ち上げてるんだ？」と都度意識してあげる必要はありそうです。
+
 ## ダッシュボードを確認する
 
 最後に、ローカル環境で起動した [Kubernates](https://kubernetes.io/) クラスタをダッシュボードで確認しましょう。
@@ -308,6 +311,8 @@ minikube dashboard
 ```
 
 {{< figure src="/images/20181003/minikube_dashboard.png" class="center" width="100%" >}}
+
+ここまでできれば、次は開発ができそうです！
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4295004804&linkId=8e13fb4b1e8ffb04d23631ff17587599"></iframe>
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4873118409&linkId=b2dae0c89a5c2f690d8e24943d6e6c9c"></iframe>

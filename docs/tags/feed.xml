@@ -221,7 +221,7 @@
     <item>
       <title>Docker</title>
       <link>https://www.soudegesu.com/tags/docker/</link>
-      <pubDate>Tue, 17 Jul 2018 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Oct 2018 08:39:26 +0900</pubDate>
       
       <guid>https://www.soudegesu.com/tags/docker/</guid>
       <description></description>
@@ -395,6 +395,15 @@
       <pubDate>Sun, 04 Feb 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.soudegesu.com/tags/jpms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernates</title>
+      <link>https://www.soudegesu.com/tags/kubernates/</link>
+      <pubDate>Wed, 03 Oct 2018 08:39:26 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/tags/kubernates/</guid>
       <description></description>
     </item>
     

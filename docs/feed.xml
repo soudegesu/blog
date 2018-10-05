@@ -6,10 +6,19 @@
     <description>Recent content on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Tue, 02 Oct 2018 08:46:15 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 03 Oct 2018 08:39:26 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MinikubeでKubernatesのローカル環境を構築する</title>
+      <link>https://www.soudegesu.com/post/docker/install-minikube/</link>
+      <pubDate>Wed, 03 Oct 2018 08:39:26 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/docker/install-minikube/</guid>
+      <description>builderscon tokyo 2018 で Kubernates に関する 発表がいくつかありました。業務的に使う機会がなかったのですが、これを機に触ってみようと思い、まずは環境構築から、という話で</description>
+    </item>
     
     <item>
       <title>goenvでGoをセットアップする</title>
