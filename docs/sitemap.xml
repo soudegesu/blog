@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/docker/install-minikube/</loc>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/go/setup_goenv/</loc>
     <lastmod>2018-10-02T08:46:15+09:00</lastmod>
   </url>
@@ -485,13 +490,13 @@
   
   <url>
     <loc>https://www.soudegesu.com/categories/docker/</loc>
-    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/tags/docker/</loc>
-    <lastmod>2018-07-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -658,6 +663,12 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/tags/kubernates/</loc>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/tags/lambda/</loc>
     <lastmod>2018-05-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -725,7 +736,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-10-02T08:46:15+09:00</lastmod>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -917,7 +928,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-10-02T08:46:15+09:00</lastmod>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
     <priority>0</priority>
   </url>
   
