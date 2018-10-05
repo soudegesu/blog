@@ -1,16 +1,15 @@
 ---
-title: "Minikubeをインストールしてローカル環境でKubernatesを動かす"
+title: "MinikubeでKubernatesのローカル環境を構築する"
 description: ""
 date: "2018-10-03T08:39:26+09:00"
-thumbnail: ""
+thumbnail: /images/icons/k8s_icon.png
 categories:
   - "docker"
 tags:
   - "docker"
   - "kubernates"
-draft: true
 isCJKLanguage: true
-twitter_card_image: /images/soudegesu.jpg
+twitter_card_image: /images/icons/k8s_icon.png
 ---
 
 今回はローカル環境で [Kubernates](https://kubernetes.io/) を動かすために、
@@ -105,19 +104,210 @@ Flags:
       --vmodule moduleSpec               comma-separated list of pattern=N settings for file-filtered logging
 ```
 
-## Minikubeを起動する
+## Minikubeの起動/停止
+
+`minikube start` コマンドで [Kubernates](https://kubernetes.io/) クラスタを起動します。
+
+
+初回実行時、`kubelet` や `kubeadm` もダウンロードされていることがわかります。
 
 ```bash
 minikube start
+
+> Starting local Kubernetes v1.10.0 cluster...
+> Starting VM...
+> Downloading Minikube ISO
+>  166.67 MB / 171.87 MB [== (中略)
 ```
+
+余談ですが、 `kubeadm` のダウンロードが終了する前に `minikube logs -f` コマンドを実行してしまうと、以下のエラーメッセージが表示されます。
 
 ```bash
-kubectl config current-context
-
-> minikube
+F1005 08:25:45.623595    4174 logs.go:50] Error getting cluster bootstrapper: getting kubeadm bootstrapper: getting ssh client: Error dialing tcp via ssh client: dial tcp 127.0.0.1:22: connect: connection refused
 ```
+
+起動確認をしてみます。
+
+```bash
+minikube status
+
+> minikube: Running
+> cluster: Running
+> kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
+```
+
+停止するときは以下です。
+
+```bash
+minikube stop
+```
+
+## Minikubeの設定ファイルを確認する
+
+`minikube start` にて無事 [Minikube](https://github.com/kubernetes/minikube) の起動が完了すると、`~/.minikube/` 配下にファイルが生成されます。
 
 
 ```bash
-minikube completion
+/Users/xxxxxxxxxx/.minikube/
+├── addons
+├── apiserver.crt
+├── apiserver.key
+├── ca.crt
+├── ca.key
+├── ca.pem
+├── cache
+│   ├── iso
+│   │   └── minikube-v0.29.0.iso
+│   └── v1.10.0
+│       ├── kubeadm
+│       └── kubelet
+├── cert.pem
+├── certs
+│   ├── ca-key.pem
+│   ├── ca.pem
+│   ├── cert.pem
+│   └── key.pem
+├── client.crt
+├── client.key
+├── config
+├── files
+├── key.pem
+├── logs
+├── machines
+│   ├── minikube
+│   │   ├── boot2docker.iso
+│   │   ├── config.json
+│   │   ├── disk.vmdk
+│   │   ├── id_rsa
+│   │   ├── id_rsa.pub
+│   │   └── minikube
+│   │       ├── Logs
+│   │       │   ├── VBox.log
+│   │       │   └── VBox.log.1
+│   │       ├── minikube.vbox
+│   │       └── minikube.vbox-prev
+│   ├── server-key.pem
+│   └── server.pem
+├── profiles
+│   └── minikube
+│       └── config.json
+├── proxy-client-ca.crt
+├── proxy-client-ca.key
+├── proxy-client.crt
+└── proxy-client.key
 ```
+
+`profiles/minikube/config.json` には以下のようにVMの設定と、[Kubernates](https://kubernetes.io/) の設定が記載されていました。
+これらは `minikube start` コマンドのオプションとして渡せる値たちですね。
+
+```json
+{
+    "MachineConfig": {
+        "MinikubeISO": "https://storage.googleapis.com/minikube/iso/minikube-v0.29.0.iso",
+        "Memory": 2048,
+        "CPUs": 2,
+        "DiskSize": 20000,
+        "VMDriver": "virtualbox",
+        "HyperkitVpnKitSock": "",
+        "HyperkitVSockPorts": [],
+        "XhyveDiskDriver": "ahci-hd",
+        "DockerEnv": null,
+        "InsecureRegistry": null,
+        "RegistryMirror": null,
+        "HostOnlyCIDR": "192.168.99.1/24",
+        "HypervVirtualSwitch": "",
+        "KvmNetwork": "default",
+        "DockerOpt": null,
+        "DisableDriverMounts": false,
+        "NFSShare": [],
+        "NFSSharesRoot": "/nfsshares",
+        "UUID": "",
+        "GPU": false
+    },
+    "KubernetesConfig": {
+        "KubernetesVersion": "v1.10.0",
+        "NodeIP": "192.168.99.100",
+        "NodeName": "minikube",
+        "APIServerName": "minikubeCA",
+        "APIServerNames": null,
+        "APIServerIPs": null,
+        "DNSDomain": "cluster.local",
+        "ContainerRuntime": "",
+        "NetworkPlugin": "",
+        "FeatureGates": "",
+        "ServiceCIDR": "10.96.0.0/12",
+        "ExtraOptions": null,
+        "ShouldLoadCachedImages": false
+    }
+}
+```
+
+## クラスタの削除
+
+`minikube delete` コマンドは **ローカルのクラスタや関連ファイルを削除する** ことができます。
+実際に試してみたところ、 `machines/minikube` ディレクトリと `profiles/minikube/config.json` ファイルが削除されていることを確認できました。
+
+## プロファイルによるインスタンスの切り替え
+
+設定ファイルを削除して気づいたのですが、 [Minikube](https://github.com/kubernetes/minikube) には `profile` の概念があり、
+複数の [Minikube](https://github.com/kubernetes/minikube) インスタンスを扱うことができるようです。
+
+デフォルトでは `minikube` というプロファイル名ですが、 `minikube profile ${プロファイル名` で現在の [Minikube](https://github.com/kubernetes/minikube) インスタンスを別プロファイルとして扱えます。
+
+例えば、以下のようにしてプロファイル `hoge` を作成した後、起動すると、
+
+```bash
+minikube profile hoge
+
+> minikube profile was successfully set to hoge
+
+minikube start
+```
+
+先程の設定ファイルのディレクトリ内にもプロファイル用の設定が新規で追加されています。なるほどですね。
+
+```bash
+├── machines
+│   ├── hoge
+│   │   ├── boot2docker.iso
+│   │   ├── config.json
+│   │   ├── disk.vmdk
+│   │   ├── hoge
+│   │   │   ├── Logs
+│   │   │   │   └── VBox.log
+│   │   │   ├── hoge.vbox
+│   │   │   └── hoge.vbox-prev
+│   │   ├── id_rsa
+│   │   └── id_rsa.pub
+│   ├── minikube
+│   │   ├── boot2docker.iso
+│   │   ├── config.json
+│   │   ├── disk.vmdk
+│   │   ├── id_rsa
+│   │   ├── id_rsa.pub
+│   │   └── minikube
+│   │       ├── Logs
+│   │       │   └── VBox.log
+│   │       ├── minikube.vbox
+│   │       └── minikube.vbox-prev
+│   ├── server-key.pem
+│   └── server.pem
+├── profiles
+│   ├── hoge
+│   │   └── config.json
+│   └── minikube
+│       └── config.json
+```
+
+## ダッシュボードを確認する
+
+最後に、ローカル環境で起動した [Kubernates](https://kubernetes.io/) クラスタをダッシュボードで確認しましょう。
+
+```bash
+minikube dashboard
+```
+
+{{< figure src="/images/20181003/minikube_dashboard.png" class="center" width="100%" >}}
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4295004804&linkId=8e13fb4b1e8ffb04d23631ff17587599"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4873118409&linkId=b2dae0c89a5c2f690d8e24943d6e6c9c"></iframe>
