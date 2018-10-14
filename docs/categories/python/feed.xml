@@ -6,10 +6,19 @@
     <description>Recent content in Python on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sat, 13 Oct 2018 06:52:26 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 14 Oct 2018 16:31:14 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/categories/python/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PandasでDataFrameの追加や結合をする</title>
+      <link>https://www.soudegesu.com/post/python/pandas-merge-data/</link>
+      <pubDate>Sun, 14 Oct 2018 16:31:14 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/pandas-merge-data/</guid>
+      <description>以前書いた ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換 では Pandas でExcelファイルの読み込み</description>
+    </item>
     
     <item>
       <title>ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</title>
