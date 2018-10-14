@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Wed, 03 Oct 2018 08:39:26 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 13 Oct 2018 06:52:26 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</title>
+      <link>https://www.soudegesu.com/post/python/pandas-with-openpyxl/</link>
+      <pubDate>Sat, 13 Oct 2018 06:52:26 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/pandas-with-openpyxl/</guid>
+      <description>以前、openpyxl を使ってExcelファイルの操作に関する記事をいくつか書きました。 ExcelをPython（openpyxl）で操作す</description>
+    </item>
     
     <item>
       <title>MinikubeでKubernatesのローカル環境を構築する</title>

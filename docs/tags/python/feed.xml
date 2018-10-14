@@ -6,10 +6,19 @@
     <description>Recent content in Python on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sun, 02 Sep 2018 09:38:14 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 13 Oct 2018 06:52:26 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/python/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</title>
+      <link>https://www.soudegesu.com/post/python/pandas-with-openpyxl/</link>
+      <pubDate>Sat, 13 Oct 2018 06:52:26 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/pandas-with-openpyxl/</guid>
+      <description>以前、openpyxl を使ってExcelファイルの操作に関する記事をいくつか書きました。 ExcelをPython（openpyxl）で操作す</description>
+    </item>
     
     <item>
       <title>ExcelをPython（openpyxl）で操作する - セルの読み書き</title>
