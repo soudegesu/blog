@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sun, 14 Oct 2018 16:31:14 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 15 Oct 2018 08:39:08 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PandasでNaNの列を処理する</title>
+      <link>https://www.soudegesu.com/post/python/pandas_with_nan_columns/</link>
+      <pubDate>Mon, 15 Oct 2018 08:39:08 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/pandas_with_nan_columns/</guid>
+      <description>Pandas でデータを扱うことで、データ分析の前処理が格段に楽になります。 列データにおける NaN の処理を例に、Pandasの便利さの説明をしたいと思います</description>
+    </item>
     
     <item>
       <title>PandasでDataFrameの追加や結合をする</title>
