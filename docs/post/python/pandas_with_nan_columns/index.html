@@ -8,26 +8,26 @@
 	
 
 
-<title>EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) - そうなんでげす</title>
-<meta name="description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました">
-<meta property="og:description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました">
+<title>PandasでNaNの列を処理する - そうなんでげす</title>
+<meta name="description" content="PandasにおけるNaNの取扱いの仕方を説明します。列データにNaNがあるかを見つける方法や、集計、NaNのある行データの削除、デフォルト値への置換など。">
+<meta property="og:description" content="PandasにおけるNaNの取扱いの仕方を説明します。列データにNaNがあるかを見つける方法や、集計、NaNのある行データの削除、デフォルト値への置換など。">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/ethereum/ethereum-development-environment/">
+<link rel="canonical" href="https://www.soudegesu.com/post/python/pandas_with_nan_columns/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) - そうなんでげす">
-<meta name="twitter:description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました">
-<meta name="twitter:url" content="https://www.soudegesu.com/ethereum/ethereum-development-environment/">
+<meta name="twitter:title" content="PandasでNaNの列を処理する - そうなんでげす">
+<meta name="twitter:description" content="PandasにおけるNaNの取扱いの仕方を説明します。列データにNaNがあるかを見つける方法や、集計、NaNのある行データの削除、デフォルト値への置換など。">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/python/pandas_with_nan_columns/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) - そうなんでげす">
-<meta property="og:title" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで) - そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/ethereum/ethereum-development-environment/">
+<meta property="og:site_name" content="PandasでNaNの列を処理する - そうなんでげす">
+<meta property="og:title" content="PandasでNaNの列を処理する - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/python/pandas_with_nan_columns/">
   
-<meta property="og:image" content="/images/icons/ethereum_icon.png">
-<meta name="twitter:image" content="/images/icons/ethereum_icon.png">
+<meta property="og:image" content="/images/icons/python_icon.png">
+<meta name="twitter:image" content="/images/icons/python_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-03-05 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2018-03-10-ethereum-development-with-ganache.md%29"><link rel="next" href="Page%28/past/2018-02-26-take-udemy-cyber-security-hacker-exposed.md%29">
+<meta property="article:published_time" content="2018-10-15 08:39:08 &#43;0900 JST"><link rel="next" href="Page%28/post/python/pandas-merge-data.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,14 +47,14 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" /><meta name="msvalidate.01" content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name="yandex-verification" content="2f79a5310dc24118">
 
 
-	<meta property="og:title" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)" />
-<meta property="og:description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました" />
+	<meta property="og:title" content="PandasでNaNの列を処理する" />
+<meta property="og:description" content="PandasにおけるNaNの取扱いの仕方を説明します。列データにNaNがあるかを見つける方法や、集計、NaNのある行データの削除、デフォルト値への置換など。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.soudegesu.com/ethereum/ethereum-development-environment/" /><meta property="article:published_time" content="2018-03-05T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2018-03-05T00:00:00&#43;00:00"/>
+<meta property="og:url" content="https://www.soudegesu.com/post/python/pandas_with_nan_columns/" /><meta property="article:published_time" content="2018-10-15T08:39:08&#43;09:00"/>
+<meta property="article:modified_time" content="2018-10-15T08:39:08&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)"/>
-<meta name="twitter:description" content="DAppsを開発したくてEthereumの環境構築を行いました。今回はテストネット上で複数アカウントを作成し、Ethのやりとりをするところまでを纏めました"/>
+<meta name="twitter:title" content="PandasでNaNの列を処理する"/>
+<meta name="twitter:description" content="PandasにおけるNaNの取扱いの仕方を説明します。列データにNaNがあるかを見つける方法や、集計、NaNのある行データの削除、デフォルト値への置換など。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -106,16 +106,16 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)</h1><div class="post__meta meta">
+			<h1 class="post__title">PandasでNaNの列を処理する</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-03-05T00:00:00">March 05, 2018</time>
+<time class="post__meta-date meta-date" datetime="2018-10-15T08:39:08">October 15, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/ethereum" rel="category">ethereum</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
 </span></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/images/icons/ethereum_icon.png" alt="EthereumでDApps開発のための開発環境を構築する(Ethereumで別アカウントに送金まで)">
+			<img src="/images/icons/python_icon.png" alt="PandasでNaNの列を処理する">
 		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
@@ -134,18 +134,15 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#環境情報">環境情報</a></li>
-<li><a href="#etehreumのセットアップ">Etehreumのセットアップ</a>
+<li><a href="#nanとは">NaNとは</a></li>
+<li><a href="#各列にnanが存在するかを確認する">各列にNaNが存在するかを確認する</a></li>
+<li><a href="#各列にnanが何件あるかを確認する">各列にNaNが何件あるかを確認する</a></li>
+<li><a href="#nanの取り扱いを決める">NaNの取り扱いを決める</a>
 <ul>
-<li><a href="#ethereumのインストール">Ethereumのインストール</a></li>
-<li><a href="#設定ファイルの作成">設定ファイルの作成</a></li>
-<li><a href="#プライベートネットワークの初期化">プライベートネットワークの初期化</a></li>
-<li><a href="#アカウントの作成">アカウントの作成</a></li>
-<li><a href="#マイニングの動作確認をする">マイニングの動作確認をする</a></li>
-<li><a href="#別アカウントにethを送ってみる">別アカウントにEthを送ってみる</a></li>
+<li><a href="#nanが存在する行を削除する">NaNが存在する行を削除する</a></li>
+<li><a href="#nanに対してデフォルト値を設定する">NaNに対してデフォルト値を設定する</a></li>
 </ul></li>
 <li><a href="#まとめ">まとめ</a></li>
-<li><a href="#参考にさせていただいたサイト">参考にさせていただいたサイト</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -154,378 +151,277 @@ if (!doNotTrack) {
 <div class="post__content clearfix">
 			
 
-<p>以前、<code>IPFS</code> を調査したことがあり、そこから <code>Ethereum</code> の存在を知りました。
-昨年頃から本格的に日本でも名前が売れてきて、日本語のソースも増えてきたこともあるので、これを機にサンプルでも作成しようかと思いました。
-今回はDApps開発のための下準備までを纏めます。</p>
+<p><a href="https://pandas.pydata.org/">Pandas</a> でデータを扱うことで、データ分析の前処理が格段に楽になります。</p>
 
-<h2 id="環境情報">環境情報</h2>
+<p>列データにおける <code>NaN</code> の処理を例に、<a href="https://pandas.pydata.org/">Pandas</a>の便利さの説明をしたいと思います。</p>
 
-<p>今回、私は以下の環境にて構築を行いました</p>
+<h2 id="nanとは">NaNとは</h2>
 
-<ul>
-<li>Mac Book Pro
+<p><strong>NaN（Not a Number）</strong> は浮動小数点型における異常な値のことを意味します。
+わかりやすい例で言うと、0での割り算が該当します。これは実数では表せないため、 <code>NaN</code> になります。</p>
 
-<ul>
-<li>OS: High Seria 10.13.2</li>
-</ul></li>
-<li>Homebrew
+<p><a href="https://pandas.pydata.org/">Pandas</a> において <code>NaN</code> は <strong>値が欠損している</strong> 場合によく遭遇する表現です。
+具体例で見ていきましょう。以下のようなサンプルデータ（<code>sample.csv</code>）を作成します。</p>
 
-<ul>
-<li>1.5.6</li>
-</ul></li>
-</ul>
-
-<h2 id="etehreumのセットアップ">Etehreumのセットアップ</h2>
-
-<p>今回は <a href="https://www.ethereum.org/">Ethereum</a> を使用します。理由としては、DApps開発のためのOSSとして開発が積極的に行われており、
-様々なDAppsにて使用されている(らしい)からです。</p>
-
-<h3 id="ethereumのインストール">Ethereumのインストール</h3>
-
-<p>Homebrewがあれば簡単にインストールができます。</p>
-
-<ul>
-<li>リポジトリを追加</li>
-</ul>
-
-<pre><code class="language-bash">brew tap ethereum/ethereum
+<pre><code class="language-csv">ID,名前,年齢,性別,趣味
+1,小林,20,男,野球観戦
+2,田中,35,女,飲み会
+3,佐藤,29,男
+4,鈴木,44,女,編み物
 </code></pre>
 
-<ul>
-<li>Ethereum をインストール</li>
-</ul>
+<p>データを <code>read_csv</code> 関数で読み出して <code>DataFrame</code> とした後、表示してみます。</p>
 
-<pre><code class="language-bash">brew install ethereum
+<pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv('./sample.csv')
+df.head()
 </code></pre>
 
-<ul>
-<li>バージョンを確認</li>
-</ul>
+<p>佐藤さんは <strong>趣味</strong> の列のデータが欠損しているので <code>NaN</code> と表示されていますね。</p>
 
-<pre><code class="language-bash">geth -h
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>名前</th>
+<th>年齢</th>
+<th>性別</th>
+<th>趣味</th>
+</tr>
+</thead>
 
-&gt; NAME:
-&gt;    geth - the go-ethereum command line interface
-&gt;
-&gt;    Copyright 2013-2017 The go-ethereum Authors
-&gt;
-&gt; USAGE:
-&gt;    geth [options] command [command options] [arguments...]
-&gt;
-&gt; VERSION:
-&gt;    1.8.1-stable
-(以下略)
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>小林</td>
+<td>20</td>
+<td>男</td>
+<td>野球観戦</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>田中</td>
+<td>35</td>
+<td>女</td>
+<td>飲み会</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>3</td>
+<td>佐藤</td>
+<td>29</td>
+<td>男</td>
+<td>NaN</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>4</td>
+<td>鈴木</td>
+<td>44</td>
+<td>女</td>
+<td>編み物</td>
+</tr>
+</tbody>
+</table>
+
+<p>例えば、<strong>必須回答</strong> と <strong>任意回答</strong> の項目があるアンケート分析の場面においては、任意回答項目の列に <code>NaN</code> が頻出することは想像に難くないでしょう。
+要件に応じて欠損値を正しく処理するのは、とても重要な作業です。</p>
+
+<h2 id="各列にnanが存在するかを確認する">各列にNaNが存在するかを確認する</h2>
+
+<p>ここから、 <code>NaN</code> のハンドリグをまとめていきます。</p>
+
+<p>まずは、各列の中に <code>NaN</code> があるかをパッと判断できると嬉しいでしょう。<code>isna</code> 関数を使えば簡単に確認できます。</p>
+
+<pre><code class="language-python">df.isna().any()
+
+&gt; ID    False
+&gt; 名前    False
+&gt; 年齢    False
+&gt; 性別    False
+&gt; 趣味     True
 </code></pre>
 
-<p><code>1.8.1</code> がインストールされているようですね。</p>
+<p><code>any()</code> と組み合わせることで、<strong>1つでもNaNがあればTrue</strong> と出力指定ができます。
+上の出力で言えば、<strong>趣味</strong> のカラムは1つ以上欠損しているので <code>True</code> です。</p>
 
-<p>以降の作業は以下のディレクトリにて実施します。(誤解を招かないように念のため)</p>
+<p><code>df.isna().all()</code> としてしまうと、 <strong>全ての値がNaNであればTrue</strong> となってしまうので、注意しましょう。</p>
 
-<pre><code class="language-bash">pwd
-&gt; /Users/xxxxxx/workspace/eth_private_net
+<h2 id="各列にnanが何件あるかを確認する">各列にNaNが何件あるかを確認する</h2>
+
+<p><code>NaN</code> の件数を集計したい場合には <code>sum()</code> を使えば良いです。</p>
+
+<pre><code class="language-python">df.isna().sum()
+
+&gt; ID    0
+&gt; 名前    0
+&gt; 年齢    0
+&gt; 性別    0
+&gt; 趣味    1
+&gt; dtype: int64
 </code></pre>
 
-<h3 id="設定ファイルの作成">設定ファイルの作成</h3>
+<h2 id="nanの取り扱いを決める">NaNの取り扱いを決める</h2>
 
-<p><code>Ethereum</code> の 1.6から <code>puppeth</code> コマンドが追加されました。
-これを使って初期化を行います。</p>
+<p>次に実際に <code>NaN</code> となっているデータの取扱いを考えます。</p>
 
-<pre><code class="language-bash">puppeth
+<h3 id="nanが存在する行を削除する">NaNが存在する行を削除する</h3>
+
+<p>以下は、全ての列に対して1つでも <code>NaN</code> がある <strong>行</strong> を削除する例です。</p>
+
+<pre><code class="language-python">df[df.isna().any(axis=1) == False]
 </code></pre>
 
-<p>すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
-今回は <code>soudegesu</code> にしました。</p>
+<p><code>axis=1</code> とすることで、行に対する <code>True/False</code> を取得している点が肝になります。
+<code>False</code> となっている行、つまり、 <code>NaN</code> が存在しない行のみ表示しています。</p>
 
-<pre><code class="language-bash">+-----------------------------------------------------------+
-| Welcome to puppeth, your Ethereum private network manager |
-|                                                           |
-| This tool lets you create a new Ethereum network down to  |
-| the genesis block, bootnodes, miners and ethstats servers |
-| without the hassle that it would normally entail.         |
-|                                                           |
-| Puppeth uses SSH to dial in to remote servers, and builds |
-| its network components out of Docker containers using the |
-| docker-compose toolset.                                   |
-+-----------------------------------------------------------+
+<p>これは <code>dropna</code> 関数を使った時の以下の処理と等価です。</p>
 
-Please specify a network name to administer (no spaces, please)
-&gt; soudegesu
+<pre><code class="language-python">df.dropna(axis=0)
 </code></pre>
 
-<p>以降も対話形式で入力していきます。まず、 <code>2. Configure new genesis</code> を選択します。</p>
+<p>しかし実際問題、 全ての列においてNaN判定をする処理はあまり見かけないので、 <strong>特定の列がNaNの行を削除</strong> する場合には以下のようにします。</p>
 
-<pre><code class="language-bash">Sweet, you can set this via --network=soudegesu next time!
-
-INFO [03-05|14:24:17] Administering Ethereum network           name=soudegesu
-WARN [03-05|14:24:17] No previous configurations found         path=/Users/xxxxxxxxx/.puppeth/soudegesu
-
-What would you like to do? (default = stats)
- 1. Show network stats
- 2. Configure new genesis
- 3. Track new remote server
- 4. Deploy network components
-&gt; 2
+<pre><code class="language-python"># ここでは「趣味」列を対象にする
+df[df['趣味'].isna() == False]
 </code></pre>
 
-<p>次にコンセンサスルールを決めます。今回は <code>Ethash</code> にしましょう。</p>
+<h3 id="nanに対してデフォルト値を設定する">NaNに対してデフォルト値を設定する</h3>
 
-<pre><code class="language-bash">Which consensus engine to use? (default = clique)
- 1. Ethash - proof-of-work
- 2. Clique - proof-of-authority
-&gt; 1
+<p><code>NaN</code> のデータに対してデフォルト値を設定するには <code>fillna</code> 関数を使います。</p>
+
+<pre><code class="language-python">df.fillna('なし')
 </code></pre>
 
-<p>次はとりあえずデフォルトにしておきます。</p>
+<p>全ての <code>NaN</code> のデータを <code>なし</code> に置換することができます。</p>
 
-<pre><code class="language-bash">Which accounts are allowed to seal? (mandatory at least one)
-&gt; 0x
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>名前</th>
+<th>年齢</th>
+<th>性別</th>
+<th>趣味</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>小林</td>
+<td>20</td>
+<td>男</td>
+<td>野球観戦</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>田中</td>
+<td>35</td>
+<td>女</td>
+<td>飲み会</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>3</td>
+<td>佐藤</td>
+<td>29</td>
+<td>男</td>
+<td>なし</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>4</td>
+<td>鈴木</td>
+<td>44</td>
+<td>女</td>
+<td>編み物</td>
+</tr>
+</tbody>
+</table>
+
+<p>列ごとにデフォルト値を変えたい場合には、引数に辞書型を渡してあげると良いです。</p>
+
+<pre><code class="language-python"># 「趣味」列がNaNであれば「なし」をデフォルト値とする
+df.fillna({'趣味': 'なし'})
 </code></pre>
 
-<p>次に使用するネットワークIDを指定します。
-適当に <code>4224</code> にします。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>名前</th>
+<th>年齢</th>
+<th>性別</th>
+<th>趣味</th>
+</tr>
+</thead>
 
-<pre><code class="language-bash">Specify your chain/network ID if you want an explicit one (default = random)
-&gt; 4224
-</code></pre>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>小林</td>
+<td>20</td>
+<td>男</td>
+<td>野球観戦</td>
+</tr>
 
-<p>なお、代表的なnetwork idは以下のようになっています。
-今回はローカル環境で動かすだけですが、重複しないようにしておきましょう。</p>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>田中</td>
+<td>35</td>
+<td>女</td>
+<td>飲み会</td>
+</tr>
 
-<ul>
-<li><code>1</code>: Mainnet</li>
-<li><code>2</code>: Morden test net(obsolete)</li>
-<li><code>3</code>: Ropsten test net</li>
-<li><code>4</code>: Rinkeby test net</li>
-<li><code>42</code>: Kovan test net</li>
-</ul>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>佐藤</td>
+<td>29</td>
+<td>男</td>
+<td>なし</td>
+</tr>
 
-<p>次にgenesisの設定管理を選択します。</p>
-
-<pre><code class="language-bash">What would you like to do? (default = stats)
- 1. Show network stats
- 2. Manage existing genesis
- 3. Track new remote server
- 4. Deploy network components
-&gt; 2
-</code></pre>
-
-<p>genesisの設定をエクスポートします。</p>
-
-<pre><code class="language-bash"> 1. Modify existing fork rules
- 2. Export genesis configuration
- 3. Remove genesis configuration
-&gt; 2
-</code></pre>
-
-<p>次はデフォルトでOK</p>
-
-<pre><code class="language-bash">Which file to save the genesis into? (default = soudegesu.json)
-&gt;
-</code></pre>
-
-<p>ココまで来ると <code>Exported existing genesis block</code> と表示され、コンソール上の表示が最初に戻ります。
-<code>Ctrl + C</code> にてexitしましょう。</p>
-
-<p><code>soudegesu.json</code> が作成されていることが確認できます。</p>
-
-<pre><code class="language-javascript">cat soudegesu.json
-
-{
-  &quot;config&quot;: {
-    &quot;chainId&quot;: 4224,
-    &quot;homesteadBlock&quot;: 1,
-    &quot;eip150Block&quot;: 2,
-    &quot;eip150Hash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-    &quot;eip155Block&quot;: 3,
-    &quot;eip158Block&quot;: 3,
-    &quot;byzantiumBlock&quot;: 4,
-    &quot;ethash&quot;: {}
-  },
-  &quot;nonce&quot;: &quot;0x0&quot;,
-  &quot;timestamp&quot;: &quot;0x5a9cd72a&quot;,
-  &quot;extraData&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-  &quot;gasLimit&quot;: &quot;0x47b760&quot;,
-  &quot;difficulty&quot;: &quot;0x80000&quot;,
-  &quot;mixHash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-  &quot;coinbase&quot;: &quot;0x0000000000000000000000000000000000000000&quot;,
-  &quot;alloc&quot;: {
-    &quot;0000000000000000000000000000000000000000&quot;: {
-      &quot;balance&quot;: &quot;0x1&quot;
-    },
-    (以下略)
-</code></pre>
-
-<h3 id="プライベートネットワークの初期化">プライベートネットワークの初期化</h3>
-
-<p>次にネットワークの初期化を行います。</p>
-
-<pre><code class="language-bash">geth --datadir ./private init ./soudegesu.json
-
-INFO [03-05|14:54:31] Maximum peer count                       ETH=25 LES=0 total=25
-INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/chaindata cache=16 handles=16
-INFO [03-05|14:54:31] Writing custom genesis block
-INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.10945ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
-INFO [03-05|14:54:31] Successfully wrote genesis state         database=chaindata                                                              hash=25e489…52b7d1
-INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/lightchaindata cache=16 handles=16
-INFO [03-05|14:54:31] Writing custom genesis block
-INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.327455ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
-INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightchaindata                                                              hash=25e489…52b7d1
-</code></pre>
-
-<h3 id="アカウントの作成">アカウントの作成</h3>
-
-<p>ether(wei) をやりとりするためのアカウントを作成します。</p>
-
-<pre><code class="language-bash">geth --datadir . account new
-</code></pre>
-
-<p>適当にパスワードを設定すると <code>Address</code> のところにアカウントのアドレスが表示されます。</p>
-
-<pre><code class="language-bash">Your new account is locked with a password. Please give a password. Do not forget this password.
-Passphrase:
-Repeat passphrase:
-Address: {アカウントA}
-</code></pre>
-
-<p>作成が完了すると <code>keystore</code> ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。</p>
-
-<pre><code class="language-bash">ls keystore
-
-UTC--2018-03-05T06-00-32.829542689Z--アカウントA
-</code></pre>
-
-<p>作成されたアカウントを確認します。</p>
-
-<pre><code class="language-bash">geth --datadir . account list
-Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
-</code></pre>
-
-<p>後の行程で、複数ユーザ間でデータをやりとりする仕組みを試してみるため、
- <code>geth --datadir . account new</code> コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)</p>
-
-<h3 id="マイニングの動作確認をする">マイニングの動作確認をする</h3>
-
-<p>次にマイニングの動作確認をします。</p>
-
-<p>先程作成した <code>keystore</code> の情報を移動します。</p>
-
-<pre><code class="language-bash">cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.
-</code></pre>
-
-<p>作成したユーザのパスワードファイルを作成します。</p>
-
-<pre><code class="language-bash">echo (account new する時に指定したパスワード) &gt; private/password.sec
-</code></pre>
-
-<p>実行してみましょう。</p>
-
-<pre><code class="language-bash">geth --networkid 4224 --mine --minerthreads 1 --datadir &quot;~/workspace/eth_private_net/private&quot; --nodiscover --rpc --rpcport &quot;8545&quot; --port &quot;30303&quot; --rpccorsdomain &quot;*&quot; --nat &quot;any&quot; --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath &quot;~/Library/Ethereum/geth.ipc&quot;
-</code></pre>
-
-<p>その際に、標準出力に表示される <code>ChainID</code> が指定されたIDになっているかを確認しましょう。
-今回であれば <strong>4224</strong> が出ていればOKです。</p>
-
-<p>処理がもりもり走っていきます。ハンマーアイコンが出てくればマイニングできています。
-(もちろんテスト用なので、何の価値もないですが)</p>
-
-<p><img src="/images/20180305/chained.png" alt="mining" /></p>
-
-<h3 id="別アカウントにethを送ってみる">別アカウントにEthを送ってみる</h3>
-
-<p>先程複数アカウントを作成したので、実際にetherを送ってみましょう。
-ターミナル上のマイニングの画面はそのままにして、ターミナルの別ウィンドウを立ち上げましょう。</p>
-
-<p>その後、以下を実行し、Javascriptコンソールを起動します。
-コンソールは対話形式で入力していくことが可能です。</p>
-
-<pre><code class="language-javascript">geth attach
-
-instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
-coinbase: xxxxxxxxxxxxxxxxxxxxxxxxxx
-at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
- datadir: /Users/xxxxxx/workspace/eth_private_net/private
- modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
-</code></pre>
-
-<p>まず存在するアカウントを確認しておきます。</p>
-
-<pre><code class="language-javascript">&gt; eth.accounts
-[&quot;アカウントA&quot;, &quot;アカウントB&quot;, &quot;アカウントC&quot;]
-</code></pre>
-
-<p>マイニング時のメインアカウントを確認します。</p>
-
-<pre><code class="language-javascript">&gt; eth.coinbase
-アカウントA
-</code></pre>
-
-<p>現時点での保有量を確認します。</p>
-
-<pre><code class="language-javascript">&gt; eth.getBalance(eth.accounts[0])
-285000000000000000000
-</code></pre>
-
-<p>単位が <code>wei</code> でわかりにくいので <code>ether</code> にしましょう。</p>
-
-<pre><code class="language-javascript">&gt; web3.fromWei(eth.getBalance(eth.coinbase), &quot;ether&quot;)
-288
-</code></pre>
-
-<p>アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。</p>
-
-<pre><code class="language-javascript"># アカウントA -&gt; アカウントB へ10 ether送る
-eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, &quot;ether&quot;)})
-&gt; ハッシュ値
-# アカウントA -&gt; アカウントC へ6 ether送る
-eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, &quot;ether&quot;)})
-&gt; ハッシュ値
-</code></pre>
-
-<p>以下で確認することができました。</p>
-
-<pre><code class="language-javascript">&gt; web3.fromWei(eth.getBalance(eth.accounts[1]), &quot;ether&quot;)
-10
-&gt; web3.fromWei(eth.getBalance(eth.accounts[2]), &quot;ether&quot;)
-6
-</code></pre>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>鈴木</td>
+<td>44</td>
+<td>女</td>
+<td>編み物</td>
+</tr>
+</tbody>
+</table>
 
 <h2 id="まとめ">まとめ</h2>
 
-<p>駆け足でしたが、今回はざっくり以下まで実施できました。</p>
-
-<ul>
-<li><code>Ethereum</code> のインストール</li>
-<li>開発用のConfigファイルの作成</li>
-<li>アカウントの作成</li>
-<li>マイニング</li>
-<li>複数アカウント間の送金</li>
-</ul>
-
-<p>この後、<code>Ganache</code> や <code>truffle</code> 、 <code>Metamask</code> のセットアップ、 <code>web3</code> での開発作業があるのですが、
-長くなりそうなので、今回はここで一旦切ろうと思います。</p>
-
-<p>ローカルとはいえ、マイニングされていく様を見ると少しそわそわしますね。</p>
-
-<p>genesisファイルやコマンドの細かい部分は完全にすっ飛ばしており、私もまだまだ理解が浅いので、
-様々なソースを見ながら引き続き学習したいと思います。</p>
-
-<p>(いやぁ、しかし、早く <a href="https://github.com/ethereumbook/ethereumbook">Mastering Ethereum</a> 発売されないかな)</p>
-
-<h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
-
-<ul>
-<li><a href="https://blog.ethereum.org/2017/04/14/geth-1-6-puppeth-master/">Ethereum blog</a></li>
-</ul>
+<p><a href="https://pandas.pydata.org/">Pandas</a> を使うことで、欠損値のある行や列に対して、削除を行ったり、デフォルト値を追加したり、処理を行うことができます。
+分析対象データの目的に応じて、<code>NaN</code> をうまく取り扱えるようになりましょう！</p>
 
 		</div>
 		
 <div class="post__tags tags clearfix">
 	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
 	<ul class="tags__list">
-		<li class="tags__item"><a class="tags__link btn" href="/tags/ethereum/" rel="tag">ethereum</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/dapps/" rel="tag">dapps</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/truffle/" rel="tag">truffle</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/ganache/" rel="tag">ganache</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/python/" rel="tag">python</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/pandas/" rel="tag">pandas</a></li>
 	</ul>
 </div>
 	</article>
@@ -543,13 +439,118 @@ eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(
 	
 <nav class="post-nav flex">
 	<div class="post-nav__item post-nav__item--prev">
-		<a class="post-nav__link" href="/security/take-udemy-cyber-security-hacker-exposed/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">Udemyでサイバーセキュリティコース「The Complete Cyber Security Course : Hackers Exposed」を受講した</p></a>
-	</div>
-	<div class="post-nav__item post-nav__item--next">
-		<a class="post-nav__link" href="/ethereum/ethereum-development-with-ganache/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">EthereumでDApps開発のための開発環境を構築する(Truffle&amp;Ganache接続まで)</p></a>
+		<a class="post-nav__link" href="/post/python/pandas-merge-data/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">PandasでDataFrameの追加や結合をする</p></a>
 	</div>
 </nav>
 	
+
+<h3>関連記事</h3>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-merge-data/">
+        <img src="/images/icons/python_icon.png" alt="PandasでDataFrameの追加や結合をする" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-merge-data/" rel="bookmark">PandasでDataFrameの追加や結合をする</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-14T16:31:14">October 14, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-13T06:52:26">October 13, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - セルの読み書き" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/cell-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - セルの読み書き</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-09-02T09:38:14">September 02, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/sheet-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/sheet-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-31T08:53:18">August 31, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/create-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/create-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - ファイルの新規作成、保存、開く</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-30T18:34:52">August 30, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
 
 
 	
