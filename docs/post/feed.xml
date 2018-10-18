@@ -6,10 +6,19 @@
     <description>Recent content in Posts on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Mon, 15 Oct 2018 08:39:08 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 18 Oct 2018 07:45:45 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/post/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Pandasで列データの前処理を行う小技集</title>
+      <link>https://www.soudegesu.com/post/python/pandas-preprocess-columns/</link>
+      <pubDate>Thu, 18 Oct 2018 07:45:45 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/pandas-preprocess-columns/</guid>
+      <description>PandasでNaNの列を処理する では NaN のデータとなってしまう列データの処理に関して説明しました。 今回は、列のデータを前処理するために使う他</description>
+    </item>
     
     <item>
       <title>PandasでNaNの列を処理する</title>

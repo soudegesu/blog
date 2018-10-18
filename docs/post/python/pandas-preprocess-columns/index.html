@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="generator" content="Hugo 0.48" />
+	
+
+
+<title>Pandasで列データの前処理を行う小技集 - そうなんでげす</title>
+<meta name="description" content="Pandasでデータの前処理を行う方法を紹介します。0埋めや、ワンホットエンコーディング、2進数文字列の扱いなどの小技をまとめます">
+<meta property="og:description" content="Pandasでデータの前処理を行う方法を紹介します。0埋めや、ワンホットエンコーディング、2進数文字列の扱いなどの小技をまとめます">
+<meta name="author" content="soudegesu">
+<link rel="canonical" href="https://www.soudegesu.com/post/python/pandas-preprocess-columns/">
+<meta name="twitter:site" content="@alten_manten">
+<meta name="twitter:title" content="Pandasで列データの前処理を行う小技集 - そうなんでげす">
+<meta name="twitter:description" content="Pandasでデータの前処理を行う方法を紹介します。0埋めや、ワンホットエンコーディング、2進数文字列の扱いなどの小技をまとめます">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/python/pandas-preprocess-columns/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@alten_manten">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:site_name" content="Pandasで列データの前処理を行う小技集 - そうなんでげす">
+<meta property="og:title" content="Pandasで列データの前処理を行う小技集 - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/python/pandas-preprocess-columns/">
+  
+<meta property="og:image" content="/images/icons/python_icon.png">
+<meta name="twitter:image" content="/images/icons/python_icon.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-10-18 07:45:45 &#43;0900 JST"><link rel="next" href="Page%28/post/python/pandas_with_nan_columns.md%29">
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" /><meta name="msvalidate.01" content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name="yandex-verification" content="2f79a5310dc24118">
+
+
+	<meta property="og:title" content="Pandasで列データの前処理を行う小技集" />
+<meta property="og:description" content="Pandasでデータの前処理を行う方法を紹介します。0埋めや、ワンホットエンコーディング、2進数文字列の扱いなどの小技をまとめます" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.soudegesu.com/post/python/pandas-preprocess-columns/" /><meta property="article:published_time" content="2018-10-18T07:45:45&#43;09:00"/>
+<meta property="article:modified_time" content="2018-10-18T07:45:45&#43;09:00"/>
+	<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Pandasで列データの前処理を行う小技集"/>
+<meta name="twitter:description" content="Pandasでデータの前処理を行う方法を紹介します。0埋めや、ワンホットエンコーディング、2進数文字列の扱いなどの小技をまとめます"/>
+
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+	<link rel="stylesheet" href="/css/style.css">
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-92599175-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+		
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-5005266309965277",
+          enable_page_level_ads: true
+     });
+</script>
+<script async src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" custom-element="amp-auto-ads"></script>
+<amp-auto-ads type="adsense"data-ad-client="ca-pub-5005266309965277" />
+
+
+
+</head>
+<body class="body">
+	<div class="container container-outer">
+		<header class="header">
+			<div class="container container-inner">
+				<div class="logo" role="banner">
+					<a class="logo__link" href="/" title="そうなんでげす" rel="home">
+						<div class="logo__title">そうなんでげす</div>
+						<div class="logo__tagline">またつまらぬモノを斬ってしまった</div>
+					</a>
+				</div>
+			</div>
+			<div class="divider"></div>
+		</header>
+		<div class="wrapper flex">
+
+<main class="main content">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Pandasで列データの前処理を行う小技集</h1><div class="post__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-18T07:45:45">October 18, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="/images/icons/python_icon.png" alt="Pandasで列データの前処理を行う小技集">
+		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="9690134838"
+     data-ad-format="rectangle"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<div class="post__toc toc">
+	<div class="toc__title">Page content</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#列を0埋めする-zfill">列を0埋めする（zfill）</a></li>
+<li><a href="#カテゴリ変数をワンホットエンコーディングする-get-dummies">カテゴリ変数をワンホットエンコーディングする（get_dummies）</a></li>
+<li><a href="#2進数の文字列を複数の列に分解する-from-records">2進数の文字列を複数の列に分解する（from_records）</a></li>
+<li><a href="#まとめ">まとめ</a></li>
+</ul></li>
+</ul>
+</nav>
+	</div>
+</div>
+<div class="post__content clearfix">
+			
+
+<p><a href="/post/python/pandas_with_nan_columns/">PandasでNaNの列を処理する</a> では <code>NaN</code> のデータとなってしまう列データの処理に関して説明しました。</p>
+
+<p>今回は、列のデータを前処理するために使う他の小技をまとめたいと思います。</p>
+
+<h2 id="列を0埋めする-zfill">列を0埋めする（zfill）</h2>
+
+<p><strong>実はIDは5桁の数字なんだよ！</strong> といった  <strong>固定長の数値文字列</strong> を扱う場面の話をします。</p>
+
+<p>例えば、以下のようなデータがあるとします。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv('./sample.csv')
+df.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>名前</th>
+<th>年齢</th>
+<th>性別</th>
+<th>趣味</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>小林</td>
+<td>20</td>
+<td>男</td>
+<td>野球観戦</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>田中</td>
+<td>35</td>
+<td>女</td>
+<td>飲み会</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>3</td>
+<td>佐藤</td>
+<td>29</td>
+<td>男</td>
+<td>NaN</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>4</td>
+<td>鈴木</td>
+<td>44</td>
+<td>女</td>
+<td>編み物</td>
+</tr>
+</tbody>
+</table>
+
+<p>元のCSVファイル中のID列が <code>00001</code>、 <code>00002</code> のように数値文字列形式でデータを格納しているのであれば、
+<code>read_csv</code> 関数実行時に、列のデータ型を <code>dtype</code> オプションで指定してあげることで安全に取り出すことができます。</p>
+
+<p>しかし、そもそもデータ的に欠落している場合にはどうしようもないので、自前で0埋め処理をする必要があります。</p>
+
+<p>これには <code>zfill</code> 関数を使います。<code>zfill</code> を行う前に <code>astype</code> 関数などで文字列型に変換した上で実施しましょう。</p>
+
+<pre><code class="language-python"># 0埋めで5桁の数字文字列に変更
+df['ID'].astype('str').str.zfill(5)
+
+&gt; 0    00001
+&gt; 1    00002
+&gt; 2    00003
+&gt; 3    00004
+</code></pre>
+
+<h2 id="カテゴリ変数をワンホットエンコーディングする-get-dummies">カテゴリ変数をワンホットエンコーディングする（get_dummies）</h2>
+
+<p>次にデータがカテゴリ変数で表現されている場合です。
+カテゴリ変数とは、<strong>カテゴリを数値で表しているデータ</strong> のことを意味します。</p>
+
+<p>例えば、以下のデータでは <code>性別</code> の列をカテゴリ変数として表しています。</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>名前</th>
+<th>年齢</th>
+<th>性別</th>
+<th>趣味</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>小林</td>
+<td>20</td>
+<td>1</td>
+<td>野球観戦</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>田中</td>
+<td>35</td>
+<td>2</td>
+<td>飲み会</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>3</td>
+<td>佐藤</td>
+<td>29</td>
+<td>1</td>
+<td>NaN</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>4</td>
+<td>鈴木</td>
+<td>44</td>
+<td>2</td>
+<td>編み物</td>
+</tr>
+</tbody>
+</table>
+
+<p>人間は「<code>性別</code> の列は1が男性で2が女性かな（もしくはその逆）」と暗黙的に推測してしまいますが、機械はそうはいきません。
+1と2が「カテゴリ」を表現する数字であることを知るよしがないのです。</p>
+
+<p>そのため、カテゴリを表現するデータをそれぞれ別の列に分解する手法があります。
+ワンホットエンコーディングと呼ばれています。</p>
+
+<p><a href="https://pandas.pydata.org/">Pandas</a> では <code>get_dummies</code> 関数を使って実現します。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+pd.get_dummies(df['性別'], prefix='性別')
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>性別_1</th>
+<th>性別_2</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>これで、性別の値が1かどうか、性別の値が2かどうか、の2つの列に分割することができました。</p>
+
+<h2 id="2進数の文字列を複数の列に分解する-from-records">2進数の文字列を複数の列に分解する（from_records）</h2>
+
+<p>最後に <code>1</code> と <code>0</code> の2進数の文字列でデータを表現している場合です。</p>
+
+<p>少しイメージが湧きにくいですが、例えば以下のように、<strong>1つの質問の中で、複数回答が可能なアンケートのデータを1列で表現している</strong> 場合のデータなどがそうでしょう。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv('./sample2.csv', dtype={'ID': 'int', '好きなスポーツ': 'str'})
+df.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ID</th>
+<th>好きなスポーツ</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>10010</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>00111</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>3</td>
+<td>10101</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>4</td>
+<td>11111</td>
+</tr>
+</tbody>
+</table>
+
+<p>選択した回答項目とビットの位置が連動しています。
+<code>ID=1</code> のユーザが <code>好きなスポーツ</code> の質問を以下のように回答したイメージです。</p>
+
+<p><input type="checkbox" value="1" checked>野球　<input type="checkbox" value="1">サッカー　<input type="checkbox" value="1">水泳　<input type="checkbox" value="1" checked>相撲　<input type="checkbox" value="1">ラグビー</p>
+
+<p>ただし、<code>ID=1</code> のユーザも <code>ID=3</code> のユーザも野球が好きにも関わらず、数字的に等しくない (10010 != 10101) ありません。
+このようなバイナリ形式の文字列は特徴量として扱いにくいのです。</p>
+
+<p>どうするかというと、<code>DataFrame.from_records</code> 関数を使って <strong>1つ1つのビットを別の列として分解してあげれば</strong> 良いでしょう。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+# 「好きなスポーツ」列を分割します
+sport = pd.DataFrame.from_records(df['好きなスポーツ'], columns=['野球', 'サッカー', '水泳', '相撲', 'ラグビー'])
+sport.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>野球</th>
+<th>サッカー</th>
+<th>水泳</th>
+<th>相撲</th>
+<th>ラグビー</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>野球が好きかどうか、サッカーが好きかどうか、の列に分割することができました。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>列のデータがどのような形式か、意味かによって、適切に加工してあげるかは大切ですね。
+他にも何かテクニックがあればまとめていきたいと思います。</p>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4774196479&linkId=9f638725021ad496a17c5219a6672cd2&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117984&linkId=1f44de3fdd307ab42e2ff48aefcde747&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+</iframe>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link btn" href="/tags/python/" rel="tag">python</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/pandas/" rel="tag">pandas</a></li>
+	</ul>
+</div>
+	</article>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="8973386323"
+     data-ad-format="rectangle"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	
+<nav class="post-nav flex">
+	<div class="post-nav__item post-nav__item--prev">
+		<a class="post-nav__link" href="/post/python/pandas_with_nan_columns/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">PandasでNaNの列を処理する</p></a>
+	</div>
+</nav>
+	
+
+<h3>関連記事</h3>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas_with_nan_columns/">
+        <img src="/images/icons/python_icon.png" alt="PandasでNaNの列を処理する" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas_with_nan_columns/" rel="bookmark">PandasでNaNの列を処理する</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-15T08:39:08">October 15, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-merge-data/">
+        <img src="/images/icons/python_icon.png" alt="PandasでDataFrameの追加や結合をする" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-merge-data/" rel="bookmark">PandasでDataFrameの追加や結合をする</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-14T16:31:14">October 14, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-13T06:52:26">October 13, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - セルの読み書き" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/cell-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - セルの読み書き</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-09-02T09:38:14">September 02, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/sheet-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/sheet-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - シートの作成、シート属性値変更</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-08-31T08:53:18">August 31, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+
+
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="soudegesu avatar" src="/images/soudegesu.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About soudegesu</span>
+	</div>
+	<div class="authorbox__description">
+		Software Engineer
+	</div>
+</div>
+	
+<section class="comments">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "soudegesu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+</main>
+
+
+<aside class="sidebar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://www.soudegesu.com" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/python/pandas-preprocess-columns/">Pandasで列データの前処理を行う小技集</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/pandas_with_nan_columns/">PandasでNaNの列を処理する</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/pandas-merge-data/">PandasでDataFrameの追加や結合をする</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/python/pandas-with-openpyxl/">ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/docker/install-minikube/">MinikubeでKubernatesのローカル環境を構築する</a></li>
+		</ul>
+	</div>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="1184942948"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</div>
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/anaconda">Anaconda</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/aws">Aws</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/blog">Blog</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/book">Book</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/continuous-delivery">Continuous delivery</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/dart">Dart</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/design">Design</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker">Docker</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/docker-compose">Docker compose</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/engineer-life">Engineer life</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/ethereum">Ethereum</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/event">Event</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/fish">Fish</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/gcp">Gcp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/go">Go</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/java">Java</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/linux">Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/mysql">Mysql</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/nodejs">Nodejs</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/pyenv">Pyenv</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/python">Python</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/q_sharp">Q sharp</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/security">Security</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/tensorflow">Tensorflow</a></li>
+		</ul>
+	</div>
+</div>
+	
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">Social</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/alten_manten" target="_blank">
+				<svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5 0-78.8 35.3-78.8 78.8 0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6 0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1 0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4 0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9 0 224.1-120 224.1-224.1 0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg>
+				<span>Twitter</span>
+			</a>
+		</div>
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/soudegesu" target="_blank">
+				<svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+	</div>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="1661016284"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/acm" title="Acm">Acm</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/agile" title="Agile">Agile</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/amazonlinux" title="Amazonlinux">Amazonlinux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/anaconda" title="Anaconda">Anaconda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/android" title="Android">Android</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ansible" title="Ansible">Ansible</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/athena" title="Athena">Athena</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aurora" title="Aurora">Aurora</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/aws" title="Aws">Aws</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/batch" title="Batch">Batch</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/beginner" title="Beginner">Beginner</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/blog" title="Blog">Blog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/book" title="Book">Book</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/casperjs" title="Casperjs">Casperjs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudfront" title="Cloudfront">Cloudfront</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cloudwatchlogs" title="Cloudwatchlogs">Cloudwatchlogs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/colaboratory" title="Colaboratory">Colaboratory</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/continuous-delivery" title="Continuous delivery">Continuous delivery</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cyber-security" title="Cyber security">Cyber security</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dapps" title="Dapps">Dapps</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/dart" title="Dart">Dart</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/datadog" title="Datadog">Datadog</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/design" title="Design">Design</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker" title="Docker">Docker</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ec2" title="Ec2">Ec2</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/engineer-life" title="Engineer life">Engineer life</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ethereum" title="Ethereum">Ethereum</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/event" title="Event">Event</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/excel" title="Excel">Excel</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/express" title="Express">Express</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/fish" title="Fish">Fish</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/flutter" title="Flutter">Flutter</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ganache" title="Ganache">Ganache</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gcp" title="Gcp">Gcp</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/glue" title="Glue">Glue</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/go" title="Go">Go</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/gradle" title="Gradle">Gradle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo" title="Hugo">Hugo</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/iam" title="Iam">Iam</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ios" title="Ios">Ios</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/java" title="Java">Java</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jib" title="Jib">Jib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/jpms" title="Jpms">Jpms</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/kubernates" title="Kubernates">Kubernates</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/lambda" title="Lambda">Lambda</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/machine-learning" title="Machine learning">Machine learning</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/matplotlib" title="Matplotlib">Matplotlib</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql" title="Mysql">Mysql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/nodejs" title="Nodejs">Nodejs</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/openpyxl" title="Openpyxl">Openpyxl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/packer" title="Packer">Packer</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pandas" title="Pandas">Pandas</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv" title="Pyenv">Pyenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/pyenv-virtualenv" title="Pyenv virtualenv">Pyenv virtualenv</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/python" title="Python">Python</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/q" title="Q#">Q#</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/rds" title="Rds">Rds</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reactor" title="Reactor">Reactor</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/route53" title="Route53">Route53</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/s3" title="S3">S3</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/serverless" title="Serverless">Serverless</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sh" title="Sh">Sh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/spring" title="Spring">Spring</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/springboot" title="Springboot">Springboot</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sql" title="Sql">Sql</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/ssl" title="Ssl">Ssl</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunction" title="Stepfunction">Stepfunction</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/stepfunctions" title="Stepfunctions">Stepfunctions</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/systemd" title="Systemd">Systemd</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tensorflow" title="Tensorflow">Tensorflow</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/terraform" title="Terraform">Terraform</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tomcat" title="Tomcat">Tomcat</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tool" title="Tool">Tool</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/truffle" title="Truffle">Truffle</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/udemy" title="Udemy">Udemy</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/webflux" title="Webflux">Webflux</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/zsh" title="Zsh">Zsh</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%e7%b5%84%e7%b9%94%e8%ab%96" title="組織論">組織論</a>
+	</div>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="2162982695"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5005266309965277"
+     data-ad-slot="2712150174"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+</aside>
+	</div>
+		<footer class="footer">
+			<div class="container container-inner">
+				<div class="footer__copyright">&copy; 2018 そうなんでげす. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span></div>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script></body>
+</html>
