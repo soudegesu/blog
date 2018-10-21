@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Codebuild on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/codebuild/</link>
+    <description>Recent content in Codebuild on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Sun, 21 Oct 2018 09:22:45 +0900</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/codebuild/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CodeBuildプロジェクトをコード化する時のServiceRoleのハマりポイント</title>
+      <link>https://www.soudegesu.com/post/aws/codebuild_error_with_exceed_policy_num/</link>
+      <pubDate>Sun, 21 Oct 2018 09:22:45 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/aws/codebuild_error_with_exceed_policy_num/</guid>
+      <description>CodeBuild の小ネタです。普段は Terraform を使って、インフラのコード化を行っています。 今回、 CodeBuild をコード化するに当たって発生した困ったことの共有をします。 複数の</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -9,7 +9,6 @@ tags:
   - "aws"
   - "codebuild"
   - "terraform"
-draft: true
 isCJKLanguage: true
 twitter_card_image: /images/icons/codebuild_icon.png
 ---

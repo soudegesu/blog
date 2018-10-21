@@ -86,7 +86,7 @@
     <item>
       <title>Aws</title>
       <link>https://www.soudegesu.com/tags/aws/</link>
-      <pubDate>Mon, 17 Sep 2018 07:00:59 +0900</pubDate>
+      <pubDate>Sun, 21 Oct 2018 09:22:45 +0900</pubDate>
       
       <guid>https://www.soudegesu.com/tags/aws/</guid>
       <description></description>
@@ -152,6 +152,15 @@
       <pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.soudegesu.com/tags/cloudwatchlogs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Codebuild</title>
+      <link>https://www.soudegesu.com/tags/codebuild/</link>
+      <pubDate>Sun, 21 Oct 2018 09:22:45 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/tags/codebuild/</guid>
       <description></description>
     </item>
     
@@ -644,7 +653,7 @@
     <item>
       <title>Terraform</title>
       <link>https://www.soudegesu.com/tags/terraform/</link>
-      <pubDate>Sun, 02 Sep 2018 06:32:25 +0900</pubDate>
+      <pubDate>Sun, 21 Oct 2018 09:22:45 +0900</pubDate>
       
       <guid>https://www.soudegesu.com/tags/terraform/</guid>
       <description></description>
