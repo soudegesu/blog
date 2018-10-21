@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/aws/codebuild_error_with_exceed_policy_num/</loc>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/python/pandas-preprocess-columns/</loc>
     <lastmod>2018-10-18T07:45:45+09:00</lastmod>
   </url>
@@ -378,13 +383,13 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/aws/</loc>
-    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/aws/</loc>
-    <lastmod>2018-09-17T07:00:59+09:00</lastmod>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -445,6 +450,12 @@
   <url>
     <loc>https://www.soudegesu.com/tags/cloudwatchlogs/</loc>
     <lastmod>2018-05-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/codebuild/</loc>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -762,7 +773,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-10-18T07:45:45+09:00</lastmod>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -912,7 +923,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/tags/terraform/</loc>
-    <lastmod>2018-09-02T06:32:25+09:00</lastmod>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -954,7 +965,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-10-18T07:45:45+09:00</lastmod>
+    <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   

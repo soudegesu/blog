@@ -6,10 +6,19 @@
     <description>Recent content in Terraform on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sun, 02 Sep 2018 06:32:25 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 21 Oct 2018 09:22:45 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/terraform/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CodeBuildプロジェクトをコード化する時のServiceRoleのハマりポイント</title>
+      <link>https://www.soudegesu.com/post/aws/codebuild_error_with_exceed_policy_num/</link>
+      <pubDate>Sun, 21 Oct 2018 09:22:45 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/aws/codebuild_error_with_exceed_policy_num/</guid>
+      <description>CodeBuild の小ネタです。普段は Terraform を使って、インフラのコード化を行っています。 今回、 CodeBuild をコード化するに当たって発生した困ったことの共有をします。 複数の</description>
+    </item>
     
     <item>
       <title>Terraformで自身のAWSアカウント番号を取得するにはaws_caller_identityを使うと良い</title>
