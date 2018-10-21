@@ -1,6 +1,6 @@
 ---
 title: "CodeBuildプロジェクトをコード化する時のServiceRoleのハマりポイント"
-description: ""
+description: "CodeBuildをTerraformでコード化するときに直面した問題と、その対応策について。ServiceRoleに複数のポリシーが紐付いてしまったときの対処法について考えます。"
 date: "2018-10-21T09:22:45+09:00"
 thumbnail: /images/icons/codebuild_icon.png
 categories:
