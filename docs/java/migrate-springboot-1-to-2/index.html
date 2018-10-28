@@ -137,7 +137,7 @@ if (!doNotTrack) {
 <li><a href="#モチベーション">モチベーション</a>
 <ul>
 <li><a href="#これからのjava時代に備えて">これからのJava時代に備えて</a></li>
-<li><a href="#2019年1月までにspring-boot2への以降を">2019年1月までにSpring Boot2への以降を</a></li>
+<li><a href="#2019年1月までにspring-boot2への移行を">2019年1月までにSpring Boot2への移行を</a></li>
 </ul></li>
 <li><a href="#マイグレーションに必要な事前準備">マイグレーションに必要な事前準備</a></li>
 <li><a href="#いざマイグレーション">いざマイグレーション!!</a>
@@ -187,7 +187,7 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 <p>その後、Spring Bootの2.0が2018/03にローンチされた後、Java9上で動作することを一応確認しておいたので、
  <strong>Javaの進化に追従していきたいプロダクトは、Spring Boot2にマイグレーションする必要がある</strong> し、 Spring Boot使いは <strong>既にJavaのマイグレーション準備期間に突入した</strong> のだ。</p>
 
-<h3 id="2019年1月までにspring-boot2への以降を">2019年1月までにSpring Boot2への以降を</h3>
+<h3 id="2019年1月までにspring-boot2への移行を">2019年1月までにSpring Boot2への移行を</h3>
 
 <p>「いつまでに何をしないといけないか？」、つまり、スケジュール感の算段を立てる必要がありそうだ。</p>
 
@@ -213,9 +213,12 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 
 <p>がポイントだ。</p>
 
-<p>結論として、
-* <strong>2018/09までに <code>sprignboot 2.0.x</code> にマイグレーションする</strong>
-* <strong>2019/01までに <code>Java 11</code> にマイグレーションする</strong></p>
+<p>結論として、</p>
+
+<ul>
+<li><strong>2018/09までに <code>sprignboot 2.0.x</code> にマイグレーションする</strong></li>
+<li><strong>2019/01までに <code>Java 11</code> にマイグレーションする</strong></li>
+</ul>
 
 <p>という段取りで進めていくとスムーズだと考えている。</p>
 
@@ -225,10 +228,13 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 
 <p>具体的に言うと <strong>テストコード</strong> と <strong>メトリック取得の仕組み</strong> の2つが必要になる。</p>
 
-<p>テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。
-* 単体テスト
-* 結合テスト
-* 負荷テスト</p>
+<p>テストコードは最低でも以下の3種類を準備する。CI基盤と組み合わせるなどして簡単に実行できる工夫をしておくのが好ましい。</p>
+
+<ul>
+<li>単体テスト</li>
+<li>結合テスト</li>
+<li>負荷テスト</li>
+</ul>
 
 <p>メトリック取得の仕組みはなんでも良いが、私は <a href="https://www.datadoghq.com/">Datadog</a> を使っている。</p>
 
