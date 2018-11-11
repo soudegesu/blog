@@ -41,17 +41,17 @@ twitter_card_image: /images/icons/k8s_icon.png
 次に、ローカル環境で [Kubernates](https://kubernetes.io/) を動かすために、
 [Minikube](https://github.com/kubernetes/minikube) をインストールします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 brew cask install minikube
-```
+{{< / highlight >}}
 
 インストールされたかを確認します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube version
 
 > minikube version: v0.29.0
-```
+{{< / highlight >}}
 
 これで `minikube` コマンドが使えるようになりました。
 
@@ -60,7 +60,7 @@ minikube version
 
 `minikube help` コマンドで、サブコマンドを確認してみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 Minikube is a CLI tool that provisions and manages single-node Kubernetes clusters optimized for development workflows.
 
 Usage:
@@ -101,7 +101,7 @@ Flags:
       --stderrthreshold severity         logs at or above this threshold go to stderr (default 2)
   -v, --v Level                          log level for V logs
       --vmodule moduleSpec               comma-separated list of pattern=N settings for file-filtered logging
-```
+{{< / highlight >}}
 
 ## Minikubeの起動/停止
 
@@ -110,43 +110,43 @@ Flags:
 
 初回実行時、`kubelet` や `kubeadm` もダウンロードされていることがわかります。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube start
 
 > Starting local Kubernetes v1.10.0 cluster...
 > Starting VM...
 > Downloading Minikube ISO
 >  166.67 MB / 171.87 MB [== (中略)
-```
+{{< / highlight >}}
 
 余談ですが、 `kubeadm` のダウンロードが終了する前に `minikube logs -f` コマンドを実行してしまうと、以下のエラーメッセージが表示されます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 F1005 08:25:45.623595    4174 logs.go:50] Error getting cluster bootstrapper: getting kubeadm bootstrapper: getting ssh client: Error dialing tcp via ssh client: dial tcp 127.0.0.1:22: connect: connection refused
-```
+{{< / highlight >}}
 
 起動確認をしてみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube status
 
 > minikube: Running
 > cluster: Running
 > kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
-```
+{{< / highlight >}}
 
 停止するときは以下です。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube stop
-```
+{{< / highlight >}}
 
 ## Minikubeの設定ファイルを確認する
 
 `minikube start` にて無事 [Minikube](https://github.com/kubernetes/minikube) の起動が完了すると、`~/.minikube/` 配下にファイルが生成されます。
 
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 /Users/xxxxxxxxxx/.minikube/
 ├── addons
 ├── apiserver.crt
@@ -194,12 +194,12 @@ minikube stop
 ├── proxy-client-ca.key
 ├── proxy-client.crt
 └── proxy-client.key
-```
+{{< / highlight >}}
 
 `profiles/minikube/config.json` には以下のようにVMの設定と、[Kubernates](https://kubernetes.io/) の設定が記載されていました。
 これらは `minikube start` コマンドのオプションとして渡せる値たちですね。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "MachineConfig": {
         "MinikubeISO": "https://storage.googleapis.com/minikube/iso/minikube-v0.29.0.iso",
@@ -239,7 +239,7 @@ minikube stop
         "ShouldLoadCachedImages": false
     }
 }
-```
+{{< / highlight >}}
 
 ## クラスタの削除
 
@@ -255,17 +255,17 @@ minikube stop
 
 例えば、以下のようにしてプロファイル `hoge` を作成した後、起動すると、
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube profile hoge
 
 > minikube profile was successfully set to hoge
 
 minikube start
-```
+{{< / highlight >}}
 
 先程の設定ファイルのディレクトリ内にもプロファイル用の設定が新規で追加されています。なるほどですね。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ├── machines
 │   ├── hoge
 │   │   ├── boot2docker.iso
@@ -296,7 +296,7 @@ minikube start
 │   │   └── config.json
 │   └── minikube
 │       └── config.json
-```
+{{< / highlight >}}
 
 プロファイルをデフォルトに戻すときは `minikube profile default` としてあげます。
 
@@ -306,9 +306,9 @@ minikube start
 
 最後に、ローカル環境で起動した [Kubernates](https://kubernetes.io/) クラスタをダッシュボードで確認しましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 minikube dashboard
-```
+{{< / highlight >}}
 
 {{< figure src="/images/20181003/minikube_dashboard.png" class="center" width="100%" >}}
 

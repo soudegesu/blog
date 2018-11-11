@@ -30,9 +30,9 @@ twitter_card_image: /images/icons/python_icon.png
 
 まずは必要なモジュールをインストールします。
 
-```bash
+{{< highlight bsah "linenos=inline" >}}
 pip install openpyxl pandas
-```
+{{< / highlight >}}
 
 ### サンプルデータの準備
 
@@ -57,7 +57,7 @@ Excelのデータは行と列の2次元データなので、[openpyxl](https://o
 
 ヘッダー行のないシートの場合には、 `DataFrame` に `ws.values` を渡すだけでできます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl import load_workbook
 import pandas as pd
 
@@ -68,14 +68,14 @@ ws = wb['no_header']
 
 # value値をDataFrameに変換
 df = pd.DataFrame(ws.values)
-```
+{{< / highlight >}}
 
 変換できているか確認してみましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # DataFrame内の最初の3行のみ表示
 df.head(3)
-```
+{{< / highlight >}}
 
 |  |0	 |1	   |2  |
 |----|----|----|----|
@@ -93,7 +93,7 @@ df.head(3)
 このとき、 `columns` オプションに与える配列の長さ（=列の数）と、`DataFrame` 生成時の実体データの配列の長さ（=列の数）は
 等しい必要があります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl import load_workbook
 import pandas as pd
 
@@ -105,14 +105,14 @@ data = ws.values
 columns = next(data)[0:]
 # 以降のデータからDataFrameを作成する
 df = pd.DataFrame(data, columns=columns)
-```
+{{< / highlight >}}
 
 同様に結果を見てみましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # DataFrame内の最初の3行のみ表示
 df.head(3)
-```
+{{< / highlight >}}
 
 |  |ID	 |名前	   |性別  |
 |----|----|----|----|
@@ -131,18 +131,18 @@ df.head(3)
 
 内部的には [xlrd](https://github.com/python-excel/xlrd) や [openpyxl](https://openpyxl.readthedocs.io/en/stable/index.html) に依存しているので、モジュールのインストールが必要です。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 pip install openpyxl pandas xlrd
-```
+{{< / highlight >}}
 
 以下のように `read_excel` 関数を呼び出すだけで完了です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 df = pd.read_excel('sample.xlsx', sheet_name='sample')
 df.head()
-```
+{{< / highlight >}}
 
 ## まとめ 
 

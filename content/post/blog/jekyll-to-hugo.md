@@ -80,9 +80,9 @@ twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 
 [Hugo](https://gohugo.io/) には [Jekyll](https://jekyllrb.com/) の [コンテンツをマイグレーションするためのコマンド](https://gohugo.io/commands/hugo_import_jekyll/) が用意されています。素晴らしい。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジェクトのパス}
-```
+{{< / highlight >}}
 
 実行すると、[Hugo](https://gohugo.io/) の基本的なフォルダ構成が生成され、今まで書いたコンテンツも `${Hugoプロジェクトのパス}/content/post` に展開されます。
 
@@ -117,7 +117,7 @@ hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジ
 
 例えば以下のようになります。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 ---
 title: "AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！"
 date: 2018-08-17
@@ -128,21 +128,21 @@ tags:
     - packer
 url: /aws/my-packer-best-practice/
 ---
-```
+{{< / highlight >}}
 
 ### ディレクトリ構成の変更
 
 [Jekyll](https://jekyllrb.com/) で作成した記事は、[Hugo](https://gohugo.io/) で今後作成するコンテンツとは別ディレクトリで管理した方が見通しが良さそうなので、
 `hugo import` した記事は `${Hugoプロジェクトのパス}/content/past` というディレクトリに移動し、`config.toml` で `${Hugoプロジェクトのパス}/content/past` ディレクトリ配下もビルド対象にするように指定しました。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 postSections = ["post", "past"]
-```
+{{< / highlight >}}
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 content --- post  # Hugoで作成した記事
          `- past  # 過去にJekyllで作成した記事
-```
+{{< / highlight >}}
 
 これでようやくそれっぽくなりました。
 

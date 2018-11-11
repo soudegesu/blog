@@ -27,7 +27,7 @@ RouterFunctionのレスポンスを返す部分はもう少しいい実装があ
 
 * `RouterFunction`
 
-```java
+{{< highlight java "linenos=inline" >}}
 @Component
 public class HelloWebClientHandler {
 
@@ -66,13 +66,13 @@ public class HelloWebClientHandler {
                 );
     }
 }
-```
+{{< / highlight >}}
 
 * RouterFunctionを登録する側
 
 作成した `HelloWebClientHandler` を登録します。
 
-```java
+{{< highlight java "linenos=inline" >}}
 @Configuration
 @EnableWebFlux
 public class WebConfig extends DelegatingWebFluxConfiguration {
@@ -83,7 +83,7 @@ public class WebConfig extends DelegatingWebFluxConfiguration {
         return webClientHandler.routes();
     }
 }
-```
+{{< / highlight >}}
 
 あとは `main` メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。
 

@@ -40,20 +40,20 @@ Pythonであれば [pyenv](https://github.com/pyenv/pyenv)、 Rubyであれば [
 
 [goenv](https://github.com/syndbg/goenv) をインストールします。 [Homebrew](https://brew.sh/index_ja) を使えばすぐできます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 brew install goenv
-```
+{{< / highlight >}}
 
 ### 設定ファイルの編集
 
 Bash使いであれば、 `~/.bash_profile` 、 Zsh使いであれば `$ZDOTDIR/.zprofile` に以下を記載します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 export GOENV_ROOT="$HOME/.goenv"
 export PATH="$GOENV_ROOT/bin:$PATH"
 
 eval "$(goenv init --no-rehash -)"
-```
+{{< / highlight >}}
 
 ファイルを保存後、 `source` コマンドで設定ファイルを再読込するか、新規のターミナルを立ち上げ直せば、 環境変数を `export` できます。
 
@@ -62,24 +62,24 @@ eval "$(goenv init --no-rehash -)"
 次に [Go](https://github.com/golang/go) をインストールします。今回は `1.10.1` をインストールします。
 これによって、 使用可能なバージョンに `1.10.1` を追加できます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 goenv install 1.10.1
-```
+{{< / highlight >}}
 
 任意のディレクトリ配下の [Go](https://github.com/golang/go) のバージョンを先程インストールした `1.10.1` に変更します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 cd hoge
 go local 1.10.1
-```
+{{< / highlight >}}
 
 変更されているかを `go version` コマンドで確認します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 go version
 
 > go version go1.10.1 darwin/amd64
-```
+{{< / highlight >}}
 
 `1.10.1` になっていますね。
 

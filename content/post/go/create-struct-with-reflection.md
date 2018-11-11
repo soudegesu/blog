@@ -17,16 +17,16 @@ twitter_card_image: /images/icons/gopher_icon.png
 
 以下の構造体を定義します。
 
-```go
+{{< highlight go "linenos=inline" >}}
 type Msg struct {
 	ID  int    `json:"id"`
 	Msg string `json:"msg"`
 }
-```
+{{< / highlight >}}
 
 通常、json文字列から構造体を作成するには `json.Unmarshal` 、または `json.NewDecoder` を使います。
 
-```go
+{{< highlight go "linenos=inline" >}}
 func main() {
 	str := `{"id":1,"msg":"some message here"}`
 	
@@ -36,7 +36,7 @@ func main() {
 	# main.Msg{ID:1, Msg:"some message here"} が表示される
 	log.Printf("%#v", msg)	
 }
-```
+{{< / highlight >}}
 
 ## `reflect` パッケージと `json.Unmarshal` を使った構造体の生成
 
@@ -45,7 +45,7 @@ func main() {
 
 以下のようになりました。
 
-```go
+{{< highlight go "linenos=inline" >}}
 
 func main() {
 	str := `{"id":1,"msg":"some message here"}`
@@ -71,7 +71,7 @@ func createInstance(str string, typ reflect.Type) interface{} {
 	json.Unmarshal([]byte(str), &obj)
 	return obj
 }
-```
+{{< / highlight >}}
 
 ## NGなパターン（ `Elem` を使う）
 
@@ -80,21 +80,21 @@ func createInstance(str string, typ reflect.Type) interface{} {
 `reflect.New` で生成したインスタンスから `Elem()` で要素を取得した場合には
 `map[string]interface{}` 型のオブジェクトが返却されてしまいました。
 
-```go
+{{< highlight go "linenos=inline" >}}
 func createInstance(str string, typ reflect.Type) interface{} {
 	obj := reflect.New(typ).Elem().Interface()
 	json.Unmarshal([]byte(str), &obj)
 	# map[string]interface{} 型が返却される
 	return obj
 }
-```
+{{< / highlight >}}
 
 これは `Unmarshal` に `interface{}` 型の変数のアドレスを渡したときと同じ挙動です。
 
-```go
+{{< highlight go "linenos=inline" >}}
 var f interface{}
 err := json.Unmarshal(b, &f)
-```
+{{< / highlight >}}
 
 ## 参考にさせていただいたサイト
 

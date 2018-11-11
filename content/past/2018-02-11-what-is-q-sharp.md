@@ -65,9 +65,9 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
 以下のようなエラーが表示され、ビルドに失敗しました。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 Reference to unknown namespace Microsoft.Quantum.Primitive
-```
+{{< / highlight >}}
 
 調査してみたところ `.NETのバージョンが古い` ことが原因でした。
  `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。

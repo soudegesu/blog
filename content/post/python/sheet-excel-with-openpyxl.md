@@ -28,7 +28,7 @@ twitter_card_image: /images/icons/python_icon.png
 
 新規でシートを追加するには `create_sheet` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl.workbook import Workbook
 
 wb = Workbook()
@@ -42,7 +42,7 @@ ws2 = wb.create_sheet("シート2", 0)
 ws2.title = "シート２のタイトル"
 
 wb.save(filename = 'sample_book.xlsx')
-```
+{{< / highlight >}}
 
 `create_sheet` 関数は第2引数に数字を与えることで、 **シートを挿入する位置** を調整できます。
 第2引数を与えない場合には、最後尾に追加されます。
@@ -55,27 +55,27 @@ wb.save(filename = 'sample_book.xlsx')
 
 Excelファイル内に存在するすべてのシート名を確認するには `Workbook` オブジェクトの `sheetnames` プロパティを参照します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 wb.sheetnames
 # 結果はリストで取得できる
 # ['シート２のタイトル', 'Sheet', 'シート1のタイトル']
-```
+{{< / highlight >}}
 
 また、 `Workbook` オブジェクトに対して `for` ループを使うことで、 各シートを `Worksheet` オブジェクトとして取得することもできます。 
 
-```python
+{{< highlight python "linenos=inline" >}}
 for ws in wb:
     print(ws.title)
-```
+{{< / highlight >}}
 
 ## シートの選択
 
 `Workbook` オブジェクトから **シート名を指定する** ことで、操作したい対象のシートを取得できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # wbはWorkbookオブジェクトを表す
 ws1 = wb["シート1のタイトル"]
-```
+{{< / highlight >}}
 
 ## シートの属性値の変更
 
@@ -84,9 +84,9 @@ ws1 = wb["シート1のタイトル"]
 シートのタブの色を変更したい場合には、 シートの属性情報（ `sheet_properties` ）にアクセスして
 `tabColor` プロパティにカラーコードを入力します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 ws1.sheet_properties.tabColor = "1072BA"
-```
+{{< / highlight >}}
 
 ![tab_color](/images/20180831/tab_color.png)
 
@@ -95,9 +95,9 @@ ws1.sheet_properties.tabColor = "1072BA"
 指定したシートに対して、自動でフィルタモードを適用します。
 フィルタが適用可能なシートの構造になっている必要があります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 ws1.sheet_properties.filterMode = True
-```
+{{< / highlight >}}
 
 ### その他の属性値
 

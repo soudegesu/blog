@@ -20,7 +20,7 @@ twitter_card_image: /images/icons/gopher_icon.png
 分かりやすい例として、 **型そのものの情報を使ってインスタンスを生成する**、というのもその一つです。
 Javaで言えば以下のようなコードです。
 
-```java
+{{< highlight java "linenos=inline" >}}
 private <T> T createInstance (Class<T> clazz) {
     T obj = null;
     try {
@@ -31,7 +31,7 @@ private <T> T createInstance (Class<T> clazz) {
     }
     return obj;
 }
-```
+{{< / highlight >}}
 
 ## Goではreflectパッケージを使う
 
@@ -44,13 +44,13 @@ private <T> T createInstance (Class<T> clazz) {
 まずはインスタンス生成処理の本体となる `createInstance` 関数を作成します。
 コードは以下のようになります。
 
-```go
+{{< highlight go "linenos=inline" >}}
 // インスタンスを作るだけの関数
 func createInstance(typ reflect.Type) interface{} {
 	val := reflect.New(typ).Elem()
 	return val.Interface()
 }
-```
+{{< / highlight >}}
 
 ここでポイントをいくつか紹介します。
 
@@ -75,11 +75,11 @@ func createInstance(typ reflect.Type) interface{} {
 
 作成した `createInstance()` 関数の呼び出し元の処理は以下のようになります。
 
-```go
+{{< highlight go "linenos=inline" >}}
 var u User
 obj := createInstance(reflect.TypeOf(u))
 r := obj.(User)
-```
+{{< / highlight >}}
 
 #### `reflect.TypeOf()` で型情報を取得する
 

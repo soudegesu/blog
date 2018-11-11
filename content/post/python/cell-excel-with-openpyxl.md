@@ -23,7 +23,7 @@ twitter_card_image: /images/icons/python_icon.png
 
 例えば、以下のようなコードの場合、2つのセルへ入力を行います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl import Workbook
 from openpyxl.compat import range
 from openpyxl.utils import get_column_letter
@@ -37,7 +37,7 @@ ws['B2'] = 'hogehogehoge'
 ws['F5'] = 'fugafugaufga'
 
 wb.save(filename = 'sample_book.xlsx')
-```
+{{< / highlight >}}
 
 ![fill_cell](/images/20180902/fill_cell.png)
 
@@ -45,10 +45,10 @@ wb.save(filename = 'sample_book.xlsx')
 
 `cell` 関数の場合は列はアルファベットではなく、数字で入力する必要があります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 ws.cell(row=2, column=2, value='hogehogehoge')
 ws.cell(row=5, column=6, value='fugafugaufga')
-```
+{{< / highlight >}}
 
 ## セルの値を読み込む
 
@@ -56,15 +56,15 @@ ws.cell(row=5, column=6, value='fugafugaufga')
 
 例えば、以下のように書くと、変数 `b2` に文字列 `hogehogehoge` が格納されます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 b2 = ws['B2'].value
-```
+{{< / highlight >}}
 
 入力のときと同様に、読み込みについても `cell` 関数で代用できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 b2 = ws.cell(column=2, row=2).value
-```
+{{< / highlight >}}
 
 ## 行を処理する
 
@@ -79,18 +79,18 @@ b2 = ws.cell(column=2, row=2).value
 
 試しに、先程の `sample_book.xlsx` に対して、各行のすべてのセルの値を表示してみます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # 2行目を開始行として、1行単位で処理をする
 for row in ws.iter_rows(min_row=2):
     # 行からセルを1個ずつ取得し、処理をする
     for cell in row:
         print(f"{cell.col_idx}列目：{cell.value}")
     print('------------------------------------------')
-```
+{{< / highlight >}}
 
 結果は以下のようになります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 1列目：None
 2列目：hogehogehoge
 3列目：None
@@ -119,7 +119,7 @@ for row in ws.iter_rows(min_row=2):
 5列目：None
 6列目：fugafugaufga
 ------------------------------------------
-```
+{{< / highlight >}}
 
 ## 列を処理する
 
@@ -127,18 +127,18 @@ for row in ws.iter_rows(min_row=2):
 
 操作感としては `iter_rows` 関数と同様ですが、ループ対象が列になります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # 2列目を開始行として、1列単位で処理をする
 for col in ws.iter_cols(min_row=2):
     # 列からセルを1個ずつ取得し、処理をする
     for cell in col:
         print(f"{cell.row}行目：{cell.value}")
     print('------------------------------------------')
-```
+{{< / highlight >}}
 
 結果は以下のようになります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 2行目：None
 3行目：None
 4行目：None
@@ -169,7 +169,7 @@ for col in ws.iter_cols(min_row=2):
 4行目：None
 5行目：fugafugaufga
 ------------------------------------------
-```
+{{< / highlight >}}
 
 ## 行単位でデータを入力する
 
@@ -177,7 +177,7 @@ for col in ws.iter_cols(min_row=2):
 
 関数への引数にはリスト型のデータを渡してことで、左詰めでデータが入っていきます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 wb = Workbook()
 ws = wb.active
 
@@ -193,7 +193,7 @@ for row in data:
     ws.append(row)
 
 wb.save(filename = 'sample_book.xlsx')
-```
+{{< / highlight >}}
 
 ![bulk_insert](/images/20180902/bulk_insert.png)
 
