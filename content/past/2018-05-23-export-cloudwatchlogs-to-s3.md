@@ -74,7 +74,7 @@ CloudWatch Logsを外部のAWSリソースにストリーム接続させるに�
 
 バケットは普通に作れば良いとして、 **バケットポリシーを以下のように指定する** のがポイントです。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -103,14 +103,14 @@ CloudWatch Logsを外部のAWSリソースにストリーム接続させるに�
         }
     ]
 }
-```
+{{< / highlight >}}
 
 ### Lambdaの実装
 
 次に CloudWatch Logsのexport task apiをコールするためのLambda Functionを作成します。
 以下にコードサンプルを載せます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
@@ -204,7 +204,7 @@ def lambda_handler(event, context):
         "status": "completed",
         "time": event['time']
     }
-```
+{{< / highlight >}}
 
 ポイントは **Lambdaに戻り値を設定する** ことです。
 今までLamdaで戻り値を指定しても使いみちは殆ど無かったのですが、ここでは役に立つのです。
@@ -226,7 +226,7 @@ def lambda_handler(event, context):
 3. `Success` ：ステートマシンの終了
 4. `Wait a minute` ：export taskが終わりそうな時間を適当に待つ
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
   "Comment": "Export Cloudwatch LogStream recursively",
   "StartAt": "Export Awslogs to S3",
@@ -259,7 +259,7 @@ def lambda_handler(event, context):
     }
   }
 }
-```
+{{< / highlight >}}
 
 ポイントとしては、**Waitのステートを入れている** ところです。
 
@@ -283,7 +283,7 @@ Step Functionsのarnを指定するだけなので、そこまで凝った所は
 このときに指定するロールには、信頼関係に `events.amazonaws.com` を指定し、
 最低限以下のポリシーが必要です。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -298,7 +298,7 @@ Step Functionsのarnを指定するだけなので、そこまで凝った所は
         }
     ]
 }
-```
+{{< / highlight >}}
 
 ### 動かしてみる
 

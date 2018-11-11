@@ -124,10 +124,10 @@ MySQL8からセキュリティ強化の目的で、デフォルトの認証プ�
 
 以下のように **default-authentication-plugin=mysql_native_password** を追記した `my.cnf` を準備し、
 
-```
+{{< highlight vim "linenos=inline" >}}
 [mysqld]
 default-authentication-plugin=mysql_native_password
-```
+{{< / highlight >}}
 
 `/etc/my.cnf` にコピーしてあげます。
 
@@ -182,9 +182,9 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
 
 実はこれだと、以下のようなエラーが発生します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials
-```
+{{< / highlight >}}
 
 こちらは [Ansible の isuue](https://github.com/ansible/ansible/issues/41116) にも報告がされていました。
 

@@ -129,12 +129,12 @@ Unnamed Moduleはclasspathを用いてクラスをロードする方式であ�
 
 `Gradle` であれば、例えば以下のようにコンパイル引数を追加しました。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 compileJava.options.compilerArgs += [
     "--add-modules", "java.xml.ws.annotation",
     "--add-modules", "java.xml.bind",
 ]
-```
+{{< / highlight >}}
 
 ### Step 4. Named Moduelにマイグレーションする
 
@@ -149,19 +149,19 @@ Named Moduleはメインモジュールの `module-info.java` に定義され�
 
 [Building Java 9 Modules](https://guides.gradle.org/building-java-9-modules/) を参考にしつつと言ったのですが、こちらも注意点があります。ページでは以下のようサンプルコードが書かれているのですが、試しにやってみたところ、一発でコンパイルは通りませんでした。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 doFirst {
     options.compilerArgs = [
         '--module-path', classpath.asPath,
     ]
     classpath = files()
 }
-```
+{{< / highlight >}}
 
 このコードサンプルではGradleがリポジトリから取得したclasspath上のライブラリを全てmodulepathで読み込むように修正しています。
 そのため、Step 2でも少し触れましたが **modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合** は以下のようなエラーが出力されてしまいます。(例としてspringboot1.5.9が依存している `embed tomcate`のライブラリでパッケージが競合している場合)
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
 エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
 エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
@@ -170,7 +170,7 @@ doFirst {
 エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
 エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
 エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります
-```
+{{< / highlight >}}
 
 これを解決するためのワークアラウンドがそこそこ大変なのですが
 

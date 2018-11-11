@@ -51,10 +51,10 @@ twitter_card_image: /images/icons/flutter_icon.png
 
 ダウンロード終了後に任意のフォルダで解凍します。
 
-```
+{{< highlight bash "linenos=inline" >}}
 cd ~/
 unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip
-```
+{{< / highlight >}}
 
 unzipされていく過程を眺めていると、 `creating: flutter/packages/fuchsia_remote_debug_protocol/` といった `Fuchsia` との関連を匂わせるソースも入っていますね。少しだけテンションが上がりました。
 
@@ -62,33 +62,33 @@ unzipされていく過程を眺めていると、 `creating: flutter/packages/f
 
 毎度 exportコマンドを実行するのも面倒なので、 `~/.zshrc` ファイルに記載をして、`source` コマンドで再読込させます。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 export FLUTTER="${HOME}/flutter/bin"
 export PATH="${FLUTTER}:$PATH"
-```
+{{< / highlight >}}
 
 * 動作確認
 
 `flutter` コマンドの確認をします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 flutter --version
 
 > Flutter 0.5.1 • channel beta • https://github.com/flutter/flutter.git
 > Framework • revision c7ea3ca377 (8 weeks ago) • 2018-05-29 21:07:33 +0200
 > Engine • revision 1ed25ca7b7
 > Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
-```
+{{< / highlight >}}
 
 低いバージョンのflutterを使っていると、このタイミングでバージョンアップが促されます。親切設計です。
 
-```bash
+{{< highlight bash >}}
   ╔════════════════════════════════════════════════════════════════════════════╗
   ║ WARNING: your installation of Flutter is 61 days old.                      ║
   ║                                                                            ║
   ║ To update to the latest version, run "flutter upgrade".                    ║
   ╚════════════════════════════════════════════════════════════════════════════╝
-```
+{{< / highlight >}}
 
 ### Flutterの依存ツールをチェックする
 
@@ -97,7 +97,7 @@ Flutterが依存するツールの状況を確認しましょう。 `flutter doc
 コマンドサンプルも付随しているので、インストールに手間取ることはありませんでした。
 インストールするモジュールの容量が大きくて時間がかかります。
 
-```bash
+{{< highlight bash >}}
 flutter doctor
 
 > Doctor summary (to see all details, run flutter doctor -v):
@@ -128,15 +128,15 @@ flutter doctor
 > [!] VS Code (version 1.25.0)
 > [!] Connected devices
 >     ! No devices available
-```
+{{< / highlight >}}
 
 ### プロジェクトの初期化
 
 `flutter` のプロジェクトの初期化を行います。今回は `sample` という名前のプロジェクトにします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 flutter create sample
-```
+{{< / highlight >}}
 
 こんな感じでプロジェクトツリーが生成されました。 `lib/main.dart` がメインとなるdartのコードっぽいですね。
 
@@ -144,7 +144,7 @@ flutter create sample
 
 ネイティブコードでも拡張できるんでしょね、おそらく。
 
-```bash
+{{< highlight bash >}}
 .
 ├── README.md
 ├── android
@@ -174,7 +174,7 @@ flutter create sample
 ├── sample_android.iml
 └── test
     └── widget_test.dart
-```
+{{< / highlight >}}
 
 ### サンプルアプリケーションの起動
 

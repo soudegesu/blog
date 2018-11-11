@@ -32,7 +32,7 @@ DataFrameを横方向に追加する、つまり、別の列として追加す�
 
 `concat` 関数を用いて、オプション `axis=1` を指定すると、複数の `DataFrame` を横方向に統合できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 # sample シートを読み込む
@@ -43,7 +43,7 @@ df_division = pd.read_excel('sample.xlsx', sheet_name='division')
 # axis=1で横方向に追加
 result = pd.concat([df_sample, df_division], axis=1)
 result.head()
-```
+{{< / highlight >}}
 
 ||ID|	名前|	性別	|部署ID	|部署名|
 |---|---|-----|---|---|---|
@@ -55,7 +55,7 @@ result.head()
 
 逆に縦方向にデータを追加する場合には、 `concat` 関数のオプションで `axis=0` を指定します（デフォルト値なので、省略しても構いません）。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 # sample シートを読み込む
@@ -66,7 +66,7 @@ df_sample = pd.read_excel('sample.xlsx', sheet_name='sample')
 result = pd.concat([df_sample, df_sample], axis=0, ignore_index=True)
 # headはデフォルトで5行しか出力しないため、10行出力に変更
 result.head(10)
-```
+{{< / highlight >}}
 
 |	|ID|	名前|	性別|
 |---|---|---|---|
@@ -95,7 +95,7 @@ result.head(10)
 
 `部署ID` をキーとして、一つのデータに結合してみましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 # sample シートを読み込む
@@ -106,7 +106,7 @@ df_division = pd.read_excel('sample.xlsx', sheet_name='division')
 # 部署IDをキーにJOINする
 result = df_sample.merge(df_division, on='部署ID')
 result.head()
-```
+{{< / highlight >}}
 
 `sample` シートのデータを軸として、`division` シートのデータを結合した行が出力されます。
 
@@ -124,9 +124,9 @@ result.head()
 
 以下のように書くことができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 result = df_sample.join(df_division.set_index('部署ID'), on='部署ID')
-```
+{{< / highlight >}}
 
 ## まとめ
 

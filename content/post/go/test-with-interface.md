@@ -31,7 +31,7 @@ JavaやPythonでは、ライブラリの力を借りることによって、ス�
 まずは、構造体 `Sample` を定義します。構造体には `Client` interface をもたせます。
 外部パッケージからは直接 `client` を操作できないようにする目的で、`doGet` 関数でラップします。
 
-```go
+{{< highlight go "linenos=inline" >}}
 // 構造体を定義する
 type Sample struct {
   // interfaceを定義する
@@ -47,14 +47,14 @@ type Client interface {
 func (sample *Sample) doGet() int {
 	return sample.client.Get()
 }
-```
+{{< / highlight >}}
 
 ### interfaceの実装
 
 次にinterfaceの実装を行います。 [Go](https://github.com/golang/go) のinterfaceは他の言語と異なり、実装する側（ここでいう構造体）による  **「このinterfaceを実装しますよ」 という宣言が不要です** 。 レシーバを使い、interfaceに規定された関数を持った構造体を定義してあげれば良いのです。
 今回は  `hogeClientImpl`  という名前で実装します。
 
-```go
+{{< highlight go "linenos=inline" >}}
 // Client interface の実装をする構造体
 type hogeClientImpl struct {
 }
@@ -63,18 +63,18 @@ type hogeClientImpl struct {
 func (client *hogeClientImpl) Get() int {
 	return 1
 }
-```
+{{< / highlight >}}
 
 これによって、プロダクションコードの実装においては、例えば以下のように、`hogeClientImpl` を外から渡すことができます。
 仮に `hogeClientImpl` の実装がinterfaceの定義を満たしていなければ、コンパイルエラーになります。
 
-```go
+{{< highlight go "linenos=inline" >}}
 func hogeMain() int {
   sample := &Sample{&hogeClientImpl{}}
   // 1が返却される
 	return sample.doGet()
 }
-```
+{{< / highlight >}}
 
 ## テストコード側
 ### interfaceの実装
@@ -82,18 +82,18 @@ func hogeMain() int {
 次にテストコードを作ってみましょう。テストコードファイル側でも同様に interfaceの定義を満たす構造体を定義してあげればOKです。
 ここでは `testClientImpl` とします。
 
-```go
+{{< highlight go "linenos=inline" >}}
 type testClientImpl struct {
 }
 
 func (c *testClientImpl) Get() int {
 	return 2
 }
-```
+{{< / highlight >}}
 
 interfaceと同じ関数を規定したので、`Client` として引数に渡すことが可能となりました。
 
-```go
+{{< highlight go "linenos=inline" >}}
 func TestMainRequest(t *testing.T) {
   // testClientImpl の実体をセットする
   sample := &Sample{&testClientImpl{}}
@@ -103,7 +103,7 @@ func TestMainRequest(t *testing.T) {
 		t.Error("response should be 2")
 	}
 }
-```
+{{< / highlight >}}
 
 ## まとめ
 

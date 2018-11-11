@@ -28,10 +28,10 @@ APIとして提供されている機能もあるのでCLIから実行できた�
 
 ただ、リンク先ではtarballを解凍する手段になるので、 今回は Homebrew を使っています。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 brew tap caskroom/cask
 brew cask install google-cloud-sdk
-```
+{{< / highlight >}}
 
 `gcloud init` で `gcloud` の設定を初期化します。ここからは対話形式で設定が続きます。
 
@@ -39,7 +39,7 @@ brew cask install google-cloud-sdk
 
 今回は新規で作成するので `2` を選択します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 gcloud init
 
 > Welcome! This command will take you through the configuration of gcloud.
@@ -54,20 +54,20 @@ gcloud init
 >  [2] Create a new configuration
 > Please enter your numeric choice:
 
-```
+{{< / highlight >}}
 
 設定名称を要求されるので、入力します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > Enter configuration name. Names start with a lower case letter and
 > contain only lower case letters a-z, digits 0-9, and hyphens '-':
 設定名称を入力する
-```
+{{< / highlight >}}
 
 設定が進むと、紐付けるGoogleアカウントを指定します。
 今回は新規で紐付けるので `2` にします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > Your current configuration has been set to: [(設定名称)]
 >
 > You can skip diagnostics next time by using the following flag:
@@ -85,7 +85,7 @@ gcloud init
 > Please enter your numeric choice:
 
 2
-```
+{{< / highlight >}}
 
 ブラウザが起動し、Googleアカウントの認証が要求されます。
 
@@ -97,7 +97,7 @@ gcloud init
 
 認証が終了した後、ターミナルに戻って、GCP上のプロジェクトを選択します。 既にGCP上でプロジェクトを作成してしまっていたので `1` を選択します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > You are logged in as: [xxxxxxxxxxx@xxxxx.xxx].
 >
 > Pick cloud project to use:
@@ -107,20 +107,20 @@ gcloud init
 > item):
 >
 1
-```
+{{< / highlight >}}
 
 Compute Engineのデフォルトのリージョンの設定有無が聞かれます。とりあえず `Y` にします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > Your current project has been set to: [xxxxxxxx].
 >
 > Do you want to configure a default Compute Region and Zone? (Y/n)?
 Y
-```
+{{< / highlight >}}
 
 リージョン番号のリストの入力を求められるので、日本のある `32`, `33`, `34` のいずれかで選択しておきます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > Which Google Compute Engine zone would you like to use as project
 > default?
 > If you do not specify a zone via a command line flag while working
@@ -137,7 +137,7 @@ Y
 > Too many options [53]. Enter "list" at prompt to print choices fully.
 > Please enter numeric choice or text value (must exactly match list
 32
-```
+{{< / highlight >}}
 
 これで一通り設定が完了しました。
 
@@ -145,23 +145,23 @@ Y
 
 セットアップはできたので、CLIで自然言語APIを試してみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 gcloud ml language analyze-syntax --language=ja-JP \
   --content='子供が嫌いな野菜とか3種類くらい取皿に乗せて、1個だけ残す代わりに残りは全部キレイに食べるルールにしてる。'
-```
+{{< / highlight >}}
 
 権限がないと言われるので、CLI経由でAPIを使う権限を設定します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 > API [language.googleapis.com] not enabled on project [(プロジェクト番号)].
 > Would you like to enable and retry (this will take a few minutes)?
 > (y/N)?
 y
-```
+{{< / highlight >}}
 
 レスポンスが返ってきました。分かってはいましたが `analyze-syntax` の自然言語APIは可視化してあげないとつらいですね笑。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 {
   "language": "ja-JP",
   "sentences": [
@@ -205,7 +205,7 @@ y
     (中略)
   ]
 }
-```
+{{< / highlight >}}
 
 ## まとめ
 

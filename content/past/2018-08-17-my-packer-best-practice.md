@@ -40,7 +40,7 @@ PackerやAnsible、Sererspec自体の解説は割愛します。
 
 まずは、以下のような `Vagrantfile` を準備します。とりあえず `centos/7` を指定しています。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
 
@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
     systemctl restart sshd
   SHELL
 end
-```
+{{< / highlight >}}
 
 公開されているAMIとVagentの `centos/7` には、インストール済みのモジュールや、設定に差分があるため、
 可能なかぎり `config.vm.provision` ブロックで差分を吸収しています。ここはハマると若干時間を取られます。
@@ -81,7 +81,7 @@ end
 
 Packerのtemplateファイルの `builders` を抜粋します。
 
-```json
+{{< highlight json "linenos=inline" >}}
 "builders":[
     {
         "type": "null",
@@ -94,18 +94,18 @@ Packerのtemplateファイルの `builders` を抜粋します。
         "ssh_private_key_file": "{{user `ssh_key`}}"
     }
 ]
-```
+{{< / highlight >}}
 
 templateファイル上で展開される変数は以下を与えます。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "ssh_host": "127.0.0.1",
     "ssh_user": "centos",
     "ssh_key": "../.vagrant/machines/default/virtualbox/private_key",
     "ssh_port": "2222"
 }
-```
+{{< / highlight >}}
 
 なお、ポート `2222` は `Vagrantfile` 内で `22` 番と既にポートフォワードする設定を追加済みです。
 
@@ -135,7 +135,7 @@ Packerのtemplateファイルで記載するprovisionerには [ansible](https://
 
 ここでは `rake` コマンドをラップした `run_spec.sh` を呼び出していて、SSHするために必要な情報を引数として渡しています。
 
-```json
+{{< highlight json "linenos=inline" >}}
     "provisioners": [
         {
             "type": "ansible",
@@ -152,7 +152,7 @@ Packerのtemplateファイルで記載するprovisionerには [ansible](https://
             "command": "cd serverspec && sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}"
         }
     ]
-```
+{{< / highlight >}}
 
 ## 設定ファイルは、roleごと、環境ごとに準備する
 
@@ -184,7 +184,7 @@ Packerのtemplateファイルはプロビジョニングするプラットフォ
 |env-B-variables.json|AWSアカウント Bにプロビジョニングするときに使う設定|
 |env-local-variables.json   |ローカルのVagrantにプロビジョニングするために使う設定|
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "aws_region": "your-region",
     "aws_vpc_id": "vpc-xxxxxxxxxxxxxx",
@@ -194,7 +194,7 @@ Packerのtemplateファイルはプロビジョニングするプラットフォ
     "aws_instance_role": "your-packer-role",
     "aws_keypair_name": "your-keypair-name"
 }
-```
+{{< / highlight >}}
 
 AWSアカウント単位でVPCのIDやキーペアの情報は変わってくるので、そのような情報はここにもたせます。
 
@@ -207,13 +207,13 @@ AWSアカウント単位でVPCのIDやキーペアの情報は変わってくる
 AnsibleのRole（システムコンポーネント）に依存する設定ファイルです。
 ベースとするAMIのインスタンスIDや、作成したAMI名のprefixなど置いておくといいと思います。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "packer_tag_prefix":  "Packer-Hoge-AMI",
     "instance_tag_prefix": "HOGE_OPTIMIZED",
     "aws_source_ami": "ami-xxxxxxxx"
 }
-```
+{{< / highlight >}}
 
 ## 実行コマンドは別ファイルでラップしておく
 
@@ -225,7 +225,7 @@ AnsibleのRole（システムコンポーネント）に依存する設定ファ
 * Ansibleのプロビジョニング対象のRole
 * AnsibleやServerspecがEC2へSSHするためのSSH鍵
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 PACKER = cd packer
 # AnsibleのRole
 ROLE = $1
@@ -255,7 +255,7 @@ create-ami:
 		-var 'aws_key_file=${AWS_KEY_FILE}' \
 		-var 'provision_target=${ROLE}' \
 		ami-aws-template.json
-```
+{{< / highlight >}}
 
 ## まとめ
 

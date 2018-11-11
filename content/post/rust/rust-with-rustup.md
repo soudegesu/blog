@@ -20,48 +20,48 @@ twitter_card_image: /images/icons/rust_icon.png
 
 まずは、 `rustup` をインストールします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 brew install rustup
-```
+{{< / highlight >}}
 
 `rustup` をインストールしただけだと使えないので、以下のコマンドで初期化を行います。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 rustup-init
-```
+{{< / highlight >}}
 
 `${HOME}/.zshrc` や `${HOME}/.bashrc` などにパスを通して `export` します。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 export CARGO_HOME="$HOME/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
-```
+{{< / highlight >}}
 
 コマンドが利用可能かを確認します。
 
 まずはコンパイルに使う `rustc` コマンド。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 rustc -V
 > rustc 1.30.0 (da5f414c2 2018-10-24)
-```
+{{< / highlight >}}
 
 次にビルド兼パッケージマネージャの `cargo` コマンド。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 cargo -V
 > cargo 1.30.0 (36d96825d 2018-10-24)
-```
+{{< / highlight >}}
 
 なお、 `show` のサブコマンドで、現在有効なツールチェーンを確認できます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 rustup show
 > Default host: x86_64-apple-darwin
 >
 > stable-x86_64-apple-darwin (default)
 > rustc 1.30.0 (da5f414c2 2018-10-24)
-```
+{{< / highlight >}}
 
 ## 不足しているコンポーネントをインストールする
 
@@ -73,9 +73,9 @@ rustup show
 
 そのため、 `component` サブコマンドで別途インストールしてあげる必要がありそうです。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 rustup component add rustfmt-preview --toolchain stable-x86_64-apple-darwin
-```
+{{< / highlight >}}
 
 必要なものを適宜追加するスタイルになるので、そもそも差分を考慮するのが面倒であれば、
 `rustup` を `curl https://sh.rustup.rs -sSf | sh`  でインストールした方が良いかもしれません。
@@ -84,9 +84,9 @@ rustup component add rustfmt-preview --toolchain stable-x86_64-apple-darwin
 
 任意のディレクトリ配下をCargoプロジェクトとしたいときには、 `cargo init` コマンドを使います。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 cargo init --vcs git --bin 
-```
+{{< / highlight >}}
 
 `--bin` は、`init` 時にアプリケーション実装のためのテンプレートを出力するオプションです。
 現在の `Cargo` バージョン `1.30.0` ではデフォルトで有効になっているオプションなので、省略することもできます。
@@ -96,7 +96,7 @@ cargo init --vcs git --bin
 
 先程のディレクトリ内に出力された結果を見てみましょう。
 
-```
+{{< highlight bash "linenos=inline" >}}
 #tree -a 
 .
 ├── .git
@@ -109,7 +109,7 @@ cargo init --vcs git --bin
 ├── Cargo.toml
 └── src
     └── main.rs
-```
+{{< / highlight >}}
 
 `src` 配下にコードのエントリポイントとなる `main.rs` が、
 プロジェクトルートに `Cargo.toml` が出力されていることがわかります。
@@ -137,25 +137,25 @@ cargo init --vcs git --bin
 
 早速試してみます。プロジェクトルート直下に `rust-toolchain` ファイルを作成し、以下のフォーマットの文字列を書き込むことでツールチェインを固定できます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 <channel>[-<date>][-<host>]
 
 <channel>       = stable|beta|nightly|<version>
 <date>          = YYYY-MM-DD
 <host>          = <target-triple>
-```
+{{< / highlight >}}
 
 例えば
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 1.20.0
-```                
+{{< / highlight >}}            
 
 と書けば `stable` チャンネル（デフォルト）の `1.20.0` を指定することになります。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 nightly-2018-10-01
-```
+{{< / highlight >}}
 
 と書けば `nightly` の `2018-10-01` を指定することになります。
 
@@ -168,21 +168,21 @@ nightly-2018-10-01
 
 異なる日付を指定して `cargo check` コマンドの標準出力を確認します。以下は一部を抜粋したものです。同じ `1.31.0-nightly` にも関わらず、コミットハッシュが異なることが確認できます。 **指定日付時点での最新のコミット** が採用されている印象を受けます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 # rust-toolchainに nightly-2018-10-10 を書いた場合
 info: latest update on 2018-10-10, rust version 1.31.0-nightly (96cafc53c 2018-10-09)
 
 # rust-toolchainに nightly-2018-10-09 を書いた場合
 info: latest update on 2018-10-09, rust version 1.31.0-nightly (423d81098 2018-10-08)
-```
+{{< / highlight >}}
 
 チャンネルが `nightly` の場合においては、概ねどの日付を指定してもインストールできました。
 
 逆にリリース頻度の低い `stable` チャンネルでは、日付を指定しても取得できない場合がありました。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 error: no release found for 'stable-2018-10-10'
-```
+{{< / highlight >}}
 
 そのため、日付指定は `nightly` 向けの機能と考えた方が良いでしょう。
 

@@ -40,7 +40,7 @@ IntelliJにプラグインをインストールするのも方法論としては
 
 今回試したサンプルコードは [こちら](https://github.com/soudegesu/tomcat-gradle-plugin-test) において置くとして、肝心の `build.gradle` だけ貼り付けておきます。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 buildscript {
     repositories {
         mavenCentral()
@@ -89,7 +89,7 @@ tomcat {
     contextPath = 'soudegesu'
 }
 
-```
+{{< / highlight >}}
 
 tomcat 9を使うときのみ `tomcat-embed-logging-juli` のバージョンが `tomcat-embed-core` と同じにできない所が留意点でしょうか。
 まだ、artifactがpublishされていないようですね。
@@ -99,13 +99,13 @@ tomcat 9を使うときのみ `tomcat-embed-logging-juli` のバージョンが 
 
 アプリケーションは `./gradlew` で起動できます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ./gradlew tomcatRun
-```
+{{< / highlight >}}
 
 サンプルアプリケーションが動いているか確認しましょう。問題なさそうですね。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 curl http://localhost:8080/soudegesu/sample
 
 <!DOCTYPE html>
@@ -117,13 +117,13 @@ curl http://localhost:8080/soudegesu/sample
 Sample !!!
 </body>
 </html>
-```
+{{< / highlight >}}
 
 Tomcatを停止するときは以下でした。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ./gradlew tomcatStop
-```
+{{< / highlight >}}
 
 ## まとめ
 

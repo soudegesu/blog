@@ -24,22 +24,22 @@ twitter_card_image: /images/icons/python_icon.png
 [Pandas](https://pandas.pydata.org/) において `NaN` は **値が欠損している** 場合によく遭遇する表現です。
 具体例で見ていきましょう。以下のようなサンプルデータ（`sample.csv`）を作成します。
 
-```csv
+{{< highlight csv "linenos=inline" >}}
 ID,名前,年齢,性別,趣味
 1,小林,20,男,野球観戦
 2,田中,35,女,飲み会
 3,佐藤,29,男
 4,鈴木,44,女,編み物
-```
+{{< / highlight >}}
 
 データを `read_csv` 関数で読み出して `DataFrame` とした後、表示してみます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 df = pd.read_csv('./sample.csv')
 df.head()
-```
+{{< / highlight >}}
 
 佐藤さんは **趣味** の列のデータが欠損しているので `NaN` と表示されていますね。
 
@@ -61,7 +61,7 @@ df.head()
 
 まずは、各列の中に `NaN` があるかをパッと判断できると嬉しいでしょう。`isna` 関数を使えば簡単に確認できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 df.isna().any()
 
 > ID    False
@@ -69,7 +69,7 @@ df.isna().any()
 > 年齢    False
 > 性別    False
 > 趣味     True
-```
+{{< / highlight >}}
 
 `any()` と組み合わせることで、**1つでもNaNがあればTrue** と出力指定ができます。
 上の出力で言えば、**趣味** のカラムは1つ以上欠損しているので `True` です。
@@ -80,7 +80,7 @@ df.isna().any()
 
 `NaN` の件数を集計したい場合には `sum()` を使えば良いです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 df.isna().sum()
 
 > ID    0
@@ -89,7 +89,7 @@ df.isna().sum()
 > 性別    0
 > 趣味    1
 > dtype: int64
-```
+{{< / highlight >}}
 
 ## NaNの取り扱いを決める
 
@@ -99,33 +99,33 @@ df.isna().sum()
 
 以下は、全ての列に対して1つでも `NaN` がある **行** を削除する例です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 df[df.isna().any(axis=1) == False]
-```
+{{< / highlight >}}
 
 `axis=1` とすることで、行に対する `True/False` を取得している点が肝になります。
 `False` となっている行、つまり、 `NaN` が存在しない行のみ表示しています。
 
 これは `dropna` 関数を使った時の以下の処理と等価です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 df.dropna(axis=0)
-```
+{{< / highlight >}}
 
 しかし実際問題、 全ての列においてNaN判定をする処理はあまり見かけないので、 **特定の列がNaNの行を削除** する場合には以下のようにします。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # ここでは「趣味」列を対象にする
 df[df['趣味'].isna() == False]
-```
+{{< / highlight >}}
 
 ### NaNに対してデフォルト値を設定する
 
 `NaN` のデータに対してデフォルト値を設定するには `fillna` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 df.fillna('なし')
-```
+{{< / highlight >}}
 
 全ての `NaN` のデータを `なし` に置換することができます。
 
@@ -139,10 +139,10 @@ df.fillna('なし')
 
 列ごとにデフォルト値を変えたい場合には、引数に辞書型を渡してあげると良いです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # 「趣味」列がNaNであれば「なし」をデフォルト値とする
 df.fillna({'趣味': 'なし'})
-```
+{{< / highlight >}}
 
 |   |ID	|名前	|年齢	|性別	|趣味|
 |---|---|-----|----|----|---|

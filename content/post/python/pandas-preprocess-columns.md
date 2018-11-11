@@ -22,12 +22,12 @@ twitter_card_image: /images/icons/python_icon.png
 
 例えば、以下のようなデータがあるとします。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 df = pd.read_csv('./sample.csv')
 df.head()
-```
+{{< / highlight >}}
 
 |   |ID	|名前	|年齢	|性別	|趣味|
 |---|---|-----|----|----|---|
@@ -44,7 +44,7 @@ df.head()
 
 これには `zfill` 関数を使います。`zfill` を行う前に `astype` 関数などで文字列型に変換した上で実施しましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # 0埋めで5桁の数字文字列に変更
 df['ID'].astype('str').str.zfill(5)
 
@@ -52,7 +52,7 @@ df['ID'].astype('str').str.zfill(5)
 > 1    00002
 > 2    00003
 > 3    00004
-```
+{{< / highlight >}}
 
 ## カテゴリ変数をワンホットエンコーディングする（get_dummies）
 
@@ -76,11 +76,11 @@ df['ID'].astype('str').str.zfill(5)
 
 [Pandas](https://pandas.pydata.org/) では `get_dummies` 関数を使って実現します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 pd.get_dummies(df['性別'], prefix='性別')
-```
+{{< / highlight >}}
 
 |	|性別_1|	性別_2|
 |---|---|---|
@@ -97,12 +97,12 @@ pd.get_dummies(df['性別'], prefix='性別')
 
 少しイメージが湧きにくいですが、例えば以下のように、**1つの質問の中で、複数回答が可能なアンケートのデータを1列で表現している** 場合のデータなどがそうでしょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 df = pd.read_csv('./sample2.csv', dtype={'ID': 'int', '好きなスポーツ': 'str'})
 df.head()
-```
+{{< / highlight >}}
 
 |	  |ID	|好きなスポーツ|
 |---|---|-------|
@@ -121,13 +121,13 @@ df.head()
 
 どうするかというと、`DataFrame.from_records` 関数を使って **1つ1つのビットを別の列として分解してあげれば** 良いでしょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 # 「好きなスポーツ」列を分割します
 sport = pd.DataFrame.from_records(df['好きなスポーツ'], columns=['野球', 'サッカー', '水泳', '相撲', 'ラグビー'])
 sport.head()
-```
+{{< / highlight >}}
 
 |	| 野球	|サッカー	|水泳	|相撲	|ラグビー|
 |---|---|---|---|---|---|

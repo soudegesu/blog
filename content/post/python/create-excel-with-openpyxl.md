@@ -31,9 +31,9 @@ twitter_card_image: /images/icons/python_icon.png
 
 さっそくインストールしましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 pip install openpyxl
-```
+{{< / highlight >}}
 
 ## 新規Excelファイルの作成
 
@@ -43,18 +43,18 @@ pip install openpyxl
 
 まずは [openpyxl](https://openpyxl.readthedocs.io/en/stable/index.html) が使えるようにモジュールをインポートします。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl import Workbook
-```
+{{< / highlight >}}
 
 ### ワークブックの作成
 
 `Workbook` が **エクセルファイルの実態** を指すオブジェクトになるようですね。 変数 `wb` に格納します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # ワークブックの作成
 wb = Workbook()
-```
+{{< / highlight >}}
 
 ### シート名の変更
 
@@ -62,20 +62,20 @@ wb = Workbook()
 エクセルは新規でファイル作成をすると、最初からシートがついてきます。
 最初のシートの名前を **「シートの名前」** に変更してみましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # アクティブなシートを選択して、シート名を変更
 ws =  wb.active
 ws.title = "シートの名前"
-```
+{{< / highlight >}}
 
 ### ファイルの保存
 
 最後にファイルを保存します。 ファイル名は　`sample_book.xlsx` とかにします。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # sample_bookという名前でファイルを保存
 wb.save(filename = 'sample_book.xlsx')
-```
+{{< / highlight >}}
 
 ### できあがりを確認する
 
@@ -99,12 +99,12 @@ wb.save(filename = 'sample_book.xlsx')
 
 `load_workbook` 関数にファイルのパスを指定することで `Workbook` オブジェクトを簡単に取得できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from openpyxl import load_workbook
 wb = load_workbook('sample_book.xlsx')
 print(wb.sheetnames)
 # ['シートの名前'] が出力されます
-```
+{{< / highlight >}}
 
 ## まとめ
 

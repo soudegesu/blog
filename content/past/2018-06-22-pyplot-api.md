@@ -53,7 +53,7 @@ matplotlibはpythonでデータの可視化をするときに重宝しますが�
 
 **棒グラフ** を描画します。 `xerr` `yerr` オプションを指定すると誤差の指定ができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -63,7 +63,7 @@ width = 0.3
 yerr = (.1, .08, .1, .0, .5)
 
 plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
-```
+{{< / highlight >}}
 
 ![bar](/images/20180622/bar.png)
 
@@ -71,7 +71,7 @@ plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
 
 積み上げるグラフの複数の配列の要素数は同一である必要があり、`bottom` 指定を忘れると、2種類の棒グラフを重ねて描画してしまうので注意が必要です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -85,13 +85,13 @@ p1 = plt.bar(x, y, width, align='center', yerr=yerr, ecolor='r')
 p2 = plt.bar(x, y2, width, align='center', bottom=y, yerr=yerr, ecolor='r')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![bar2](/images/20180622/bar2.png)
 
 **y軸から横に伸びる棒グラフ** は `barh` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -101,14 +101,14 @@ width = 0.3
 xerr = (.1, .08, .1, .0, .5)
 
 plt.barh(x, y, width, align='center', xerr=xerr, ecolor='r')
-```
+{{< / highlight >}}
 
 ![barh](/images/20180622/barh.png)
 
 `broken_barh` 関数では、 **軸に足をつけない棒グラフ** を描画することができます。
 実際には指定領域を矩形描画することになります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -118,7 +118,7 @@ y = (.5, 2.0)
 plt.broken_barh(x, y)
 plt.xlim(0)
 plt.ylim(0)
-```
+{{< / highlight >}}
 
 ![broken_barh](/images/20180622/broken_barh.png)
 
@@ -126,7 +126,7 @@ plt.ylim(0)
 
 **ヒストグラム** を表示します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -136,13 +136,13 @@ mu, sigma = 100, 15
 x = mu + sigma * np.random.randn(100)
 
 plt.hist(x, 50, density=True, alpha=0.75)
-```
+{{< / highlight >}}
 
 ![hist](/images/20180622/hist.png)
 
 **2次元のヒストグラム** を描画するには、 `hist2d` 関数を使用します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -152,7 +152,7 @@ x = np.random.randn(100000)
 y = np.random.randn(100000) + 5
 
 plt.hist2d(x, y, bins=40)
-```
+{{< / highlight >}}
 
 ![hist2d](/images/20180622/hist2d.png)
 
@@ -160,7 +160,7 @@ plt.hist2d(x, y, bins=40)
 
 **円グラフ** を描画します。 `autopct` （円グラフ上に値を表示する）オプションのように、グラフを修飾する多くのオプションが備わっています。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 
@@ -169,7 +169,7 @@ fracs = [15, 30, 45, 10]
 
 plt.pie(fracs, labels=labels, autopct='%1.1f%%')
 plt.show()
-```
+{{< / highlight >}}
 
 ![pie](/images/20180622/pie.png)
 
@@ -177,7 +177,7 @@ plt.show()
 
 **散布図** を描画します。 マーカーの大きさはオプション指定で変更しています。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -190,7 +190,7 @@ area = np.pi * (15 * np.random.rand(N))**2
 
 plt.scatter(x, y, s=area, c=colors, alpha=0.5)
 plt.show()
-```
+{{< / highlight >}}
 
 ![scatter](/images/20180622/scatter.png)
 
@@ -198,7 +198,7 @@ plt.show()
 
 **折り線グラフ** は `plot` で描画できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -208,13 +208,13 @@ x = np.random.rand(100)
 
 plt.plot(x)
 plt.show()
-```
+{{< / highlight >}}
 
 ![plot](/images/20180622/plot.png)
 
 **積み上げの折れ線グラフ** を描画するには `stackplot` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -225,13 +225,13 @@ y3 = [1, 3, 5, 7, 9]
 
 plt.stackplot(x, y1, y2, y3, labels=labels)
 plt.show()
-```
+{{< / highlight >}}
 
 ![stackplot](/images/20180622/stackplot.png)
 
 また、 **x軸が日付データの場合の折れ線グラフ** には `plot_date` 関数を用いることが可能です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 from matplotlib.dates import (DateFormatter, drange)
 import numpy as np
@@ -249,7 +249,7 @@ s = np.random.rand(len(dates))
 
 plt.plot_date(dates, s)
 plt.show()
-```
+{{< / highlight >}}
 
 ![plot_date](/images/20180622/plot_date.png)
 
@@ -258,14 +258,14 @@ plt.show()
 
 **箱ひげ図** （最小値、第1四分位点、中央値、第3四分位点、最大値）を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 import random
 
 a = np.array([1, 3, 0.25, 0.44, 5.88])
 plt.boxplot(a)
-```
+{{< / highlight >}}
 
 ![boxplot](/images/20180622/boxplot.png)
 
@@ -273,7 +273,7 @@ plt.boxplot(a)
 
 **バイオリン図** （箱ひげ図に確率密度表示を加えたもの）を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 import numpy as  np
 from matplotlib import pyplot as plt
@@ -284,7 +284,7 @@ data = [np.random.normal(0, std, size=100) for std in pos]
 
 plt.violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
 plt.show()
-```
+{{< / highlight >}}
 
 ![violinplot](/images/20180622/violinplot.png)
 
@@ -293,7 +293,7 @@ plt.show()
 **等高線** （同じ高さの値の集まり）を描画します。
 `contour` 単体だと値がわかりにくいので、 `clabel` や `colorbar` などで情報を付与すると良いです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -307,13 +307,13 @@ Z = (Z1 - Z2) * 2
 
 plt.figure()
 plt.contour(X, Y, Z)
-```
+{{< / highlight >}}
 
 ![contour](/images/20180622/contour.png)
 
 **等高線の塗りつぶし** には `contourf` を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -327,7 +327,7 @@ Z = (Z1 - Z2) * 2
 
 plt.figure()
 plt.contourf(X, Y, Z)
-```
+{{< / highlight >}}
 
 ![contourf](/images/20180622/contourf.png)
 
@@ -335,7 +335,7 @@ plt.contourf(X, Y, Z)
 
 **非構造三次元データ** を扱う場合には `tricontour` 、 `tricontourf` を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 import numpy as np
@@ -359,7 +359,7 @@ plt.gca().set_aspect('equal')
 plt.tricontourf(triang, z)
 plt.colorbar()
 plt.tricontour(triang, z, colors='k')
-```
+{{< / highlight >}}
 
 ![tricontour](/images/20180622/tricontour.png)
 
@@ -367,7 +367,7 @@ plt.tricontour(triang, z, colors='k')
 
 **極座標** の円状グラフを描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -376,7 +376,7 @@ theta = 2 * np.pi * r
 
 plt.polar(theta, r)
 plt.show()
-```
+{{< / highlight >}}
 
 ![polar](/images/20180622/polar.png)
 
@@ -384,7 +384,7 @@ plt.show()
 
 対数を描画します。 **両対数** の場合には `loglog` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -393,13 +393,13 @@ plt.loglog(t, 20 * np.exp( -t / 10.0), basex=2)
 plt.grid(True)
 plt.title('loglog base 2 on x')
 plt.show()
-```
+{{< / highlight >}}
 
 ![loglog](/images/20180622/loglog.png)
 
 **x軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogx` を使用します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -407,13 +407,13 @@ t = np.arange(0.01, 20.0, 0.01)
 
 plt.semilogx(t, np.sin(2*np.pi*t))
 plt.grid(True)
-```
+{{< / highlight >}}
 
 ![semilogx](/images/20180622/semilogx.png)
 
 **y軸を10を底とする対数スケールでの片対数** を描画する場合には `semilogy` を使用します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -421,7 +421,7 @@ t = np.arange(0.01, 20.0, 0.01)
 
 plt.semilogy(t, np.exp(-t/5.0))
 plt.grid(True)
-```
+{{< / highlight >}}
 
 ![semilogy](/images/20180622/semilogy.png)
 
@@ -429,7 +429,7 @@ plt.grid(True)
 
 **行列データ** を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -439,7 +439,7 @@ mat = np.random.rand(10,10)
 plt.matshow(mat)
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![matshow](/images/20180622/matshow.png)
 
@@ -447,7 +447,7 @@ plt.show()
 
 **スパース行列（疎行列）** を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -456,7 +456,7 @@ x[5] = 0.
 x[:, 12] = 0.
 
 plt.spy(x, markersize=3)
-```
+{{< / highlight >}}
 
 ![spy](/images/20180622/spy.png)
 
@@ -464,7 +464,7 @@ plt.spy(x, markersize=3)
 
 **コヒーレンス（波の可干渉性）** を描画することができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -474,7 +474,7 @@ y = np.random.randn(n)
 
 plt.cohere(x, y, NFFT=128)
 plt.figure()
-```
+{{< / highlight >}}
 
 ![cohere](/images/20180622/cohere.png)
 
@@ -482,7 +482,7 @@ plt.figure()
 
 **x軸から伸びるシーケンスとしてyの値** を描画したい場合に使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -490,7 +490,7 @@ x = np.linspace(0.1, 2 * np.pi, 10)
 plt.stem(x, np.cos(x), '-.')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![stem](/images/20180622/stem.png)
 
@@ -498,7 +498,7 @@ plt.show()
 
 **ステップ応答** を描画します。コンピュータ信号のような離散値とかを扱うときに使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from numpy import ma
 import matplotlib.pyplot as plt
@@ -509,7 +509,7 @@ y = np.sin(x).copy() + 2.5
 plt.step(x, y)
 plt.scatter(x, y) #データを表す座標が見やすいようにしています
 plt.show()
-```
+{{< / highlight >}}
 
 ![step](/images/20180622/step.png)
 
@@ -517,19 +517,19 @@ plt.show()
 
 `acorr` 関数で **自己相関** を描画することができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
 x = np.random.normal(0, 10, 50)
 plt.acorr(x)
-```
+{{< / highlight >}}
 
 ![acorr](/images/20180622/acorr.png)
 
 また、**相互相関** を描画は `xcorr` になります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -539,7 +539,7 @@ x, y = np.random.randn(2, 100)
 plt.xcorr(x, y, usevlines=True, maxlags=50, normed=True, lw=2)
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![xcorr](/images/20180622/xcorr.png)
 
@@ -549,7 +549,7 @@ plt.show()
 
 > This type of plot is commonly used in neuroscience for representing neural events, where it is usually called a spike raster, dot raster, or raster plot.
 
-```
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -562,7 +562,7 @@ linelengths = [10, 2, 1, 1, 3, 1.5]
 plt.figure()
 plt.eventplot(data, lineoffsets=lineoffsets,
               linelengths=linelengths)
-```
+{{< / highlight >}}
 
 ![eventplot](/images/20180622/eventplot.png)
 
@@ -570,7 +570,7 @@ plt.eventplot(data, lineoffsets=lineoffsets,
 
 **hex** でデータを描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -578,7 +578,7 @@ x = np.arange(1, 10, 1)
 y = np.arange(1, 10, 1)
 
 plt.hexbin(x, y, gridsize=10)
-```
+{{< / highlight >}}
 
 ![hexbin](/images/20180622/hexbin.png)
 
@@ -587,7 +587,7 @@ plt.hexbin(x, y, gridsize=10)
 
 2次元配列のデータを **擬似カラー** で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -600,13 +600,13 @@ z = z[:-1, :-1]
 z_min, z_max = -np.abs(z).max(), np.abs(z).max()
 
 plt.pcolor(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
-```
+{{< / highlight >}}
 
 ![pcolor](/images/20180622/pcolor.png)
 
 **メッシュデータを高速に描画したい** 場合には `pcolormesh` 関数を使うと良いそうです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -619,13 +619,13 @@ z = z[:-1, :-1]
 z_min, z_max = -np.abs(z).max(), np.abs(z).max()
 
 plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max)
-```
+{{< / highlight >}}
 
 ![pcolormesh](/images/20180622/pcolormesh.png)
 
 **`tricontour` に対する疑似カラー描画** には `tripcolor` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 import numpy as np
@@ -649,7 +649,7 @@ plt.gca().set_aspect('equal')
 plt.tricontourf(triang, z)
 plt.colorbar()
 plt.tripcolor(triang, z, shading='flat')
-```
+{{< / highlight >}}
 
 ![tripcolor](/images/20180622/tripcolor.png)
 
@@ -657,7 +657,7 @@ plt.tripcolor(triang, z, shading='flat')
 
 信号の強さを表す **振幅スペクトラム** は `magnitude_spectrum` で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -675,13 +675,13 @@ s = 0.1*np.sin(2*np.pi*t) + cnse
 
 plt.magnitude_spectrum(s, Fs=Fs)
 plt.show()
-```
+{{< / highlight >}}
 
 ![magnitude_spectrum](/images/20180622/magnitude_spectrum.png)
 
 **位相スペクトラム** は `phase_spectrum` で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -699,25 +699,25 @@ s = 0.1*np.sin(2*np.pi*t) + cnse
 
 plt.phase_spectrum(s, Fs=Fs)
 plt.show()
-```
+{{< / highlight >}}
 
 ![phase_spectrum](/images/20180622/pcolormesh.png)
 
 **角度スペクトラム** は `angle_spectrum` で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
 x = np.random.normal(0, 10, 50)
 plt.angle_spectrum(x)
-```
+{{< / highlight >}}
 
 ![angle_spectrum](/images/20180622/angle_spectrum.png)
 
 **スペクトログラム** は `specgram` になります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -739,7 +739,7 @@ Fs = int(1.0 / dt)
 
 plt.specgram(x, NFFT=NFFT, Fs=Fs, noverlap=900)
 plt.show()
-```
+{{< / highlight >}}
 
 ![specgram](/images/20180622/specgram.png)
 
@@ -747,7 +747,7 @@ plt.show()
 
 **パワースペクトル密度** は `psd` で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 from matplotlib import mlab as mlab
@@ -765,13 +765,13 @@ s = 0.1 * np.sin(2 * np.pi * t) + cnse
 
 plt.psd(s, 512, 1 / dt)
 plt.show()
-```
+{{< / highlight >}}
 
 ![psd](/images/20180622/psd.png)
 
 **クロススペクトル密度** は `csd` で描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from scipy import signal
 from matplotlib import pyplot as plt
 
@@ -789,7 +789,7 @@ y += np.random.normal(scale=0.1*np.sqrt(noise_power), size=time.shape)
 
 plt.figure()
 plt.csd(x, y)
-```
+{{< / highlight >}}
 
 ![csd](/images/20180622/csd.png)
 
@@ -797,7 +797,7 @@ plt.csd(x, y)
 
 **ベクトル** を描画します。また、 `quiverkey` 関数を使うことで、**ベクトルのキー** も描画することができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -808,7 +808,7 @@ V = np.sin(Y)
 Q = plt.quiver(X, Y, U, V, units='width')
 plt.quiverkey(Q, 0.5, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
 plt.show()
-```
+{{< / highlight >}}
 
 ![quiver](/images/20180622/quiver.png)
 
@@ -816,7 +816,7 @@ plt.show()
 
 **流線** を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -826,7 +826,7 @@ V = 1 + X - Y**2
 speed = np.sqrt(U*U + V*V)
 
 plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
-```
+{{< / highlight >}}
 
 ![streamplot](/images/20180622/streamplot.png)
 
@@ -840,7 +840,7 @@ plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 グラフに **タイトルをつける** には `title` 関数を使います。
 **複数グラフにタイトルをつける** には `suptitle` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -861,7 +861,7 @@ plt.plot(t2, np.cos(2*np.pi*t2), '--')
 plt.title('subplot 2')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![title](/images/20180622/title.png)
 
@@ -869,7 +869,7 @@ plt.show()
 
 **グラフデータの凡例** を追加します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -878,13 +878,13 @@ y_data = (.5, 1.5 , .8)
 
 plt.bar(x_data, y_data)
 plt.legend(['dataA'])
-```
+{{< / highlight >}}
 
 ![legend](/images/20180622/legend.png)
 
 等高線（`contour`）に対する、 **色が表す値の凡例** は `colorbar` 関数で表示します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -899,7 +899,7 @@ Z = (Z1 - Z2) * 2
 plt.figure()
 plt.contourf(X, Y, Z)
 plt.colorbar()
-```
+{{< / highlight >}}
 
 ![colorbar](/images/20180622/colorbar.png)
 
@@ -907,7 +907,7 @@ plt.colorbar()
 
 グラフの軸に **ラベル** を表示します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib
@@ -922,13 +922,13 @@ plt.scatter(x, y, s, c="g", alpha=0.5, label="Luck")
 plt.xlabel("Label X")
 plt.ylabel("Label Y")
 plt.show()
-```
+{{< / highlight >}}
 
 ![xlabel](/images/20180622/xlabel.png)
 
 等高線（`contour`）に対しては `clabel` 関数で **色が表す値のラベル** を表示します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -943,7 +943,7 @@ Z = (Z1 - Z2) * 2
 plt.figure()
 CS = plt.contour(X, Y, Z)
 plt.clabel(CS, inline=1, fontsize=10)
-```
+{{< / highlight >}}
 
 ![clabel](/images/20180622/clabel.png)
 
@@ -951,7 +951,7 @@ plt.clabel(CS, inline=1, fontsize=10)
 
 デフォルトだとデータの範囲に合わせてx軸/y軸の範囲が決まりますが、 **軸の値の範囲** を変更できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -962,7 +962,7 @@ plt.ylim(-0.75, 0.75)
 
 plt.plot(x, np.sin(x),label="y = sinx")
 plt.show()
-```
+{{< / highlight >}}
 
 ![xlim](/images/20180622/xlim.png)
 
@@ -970,7 +970,7 @@ plt.show()
 
 **軸のスケール** を変更します。`linear` `log` `logit` `symlog` を指定でき、対数をとった描画等ができます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -980,11 +980,11 @@ plt.xscale('symlog')
 
 plt.plot(x, np.sin(x))
 plt.show()
-```
+{{< / highlight >}}
 
 ![xscale](/images/20180622/xscale.png)
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -994,7 +994,7 @@ plt.yscale('log')
 
 plt.plot(x, np.sin(x))
 plt.show()
-```
+{{< / highlight >}}
 
 ![yscale](/images/20180622/yscale.png)
 
@@ -1003,7 +1003,7 @@ plt.show()
 
 **目盛り** をカスタマイズするには `xticks` `yticks` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -1013,11 +1013,11 @@ y = [10, 20, 30, 40]
 plt.bar(x, y)
 plt.xticks(x, ('A', 'B', 'C', 'D'))
 plt.show()
-```
+{{< / highlight >}}
 
 ![xticks](/images/20180622/xticks.png)
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -1027,7 +1027,7 @@ y = [10, 20, 30, 40]
 plt.bar(x, y)
 plt.yticks(y, ('10', '20', '30', '40'))
 plt.show()
-```
+{{< / highlight >}}
 
 ![yticks](/images/20180622/yticks.png)
 
@@ -1036,7 +1036,7 @@ plt.show()
 描画データの **表（テーブル）** を表示します。
 パッと見た感じ、表単体で描画するのはできなそうでした。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -1055,7 +1055,7 @@ plt.table(cellText=data,
                       loc='bottom')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![table](/images/20180622/table.png)
 
@@ -1064,7 +1064,7 @@ plt.show()
 同一の軸に対して別のデータを描画します。
 **x軸はそのままに、別のyの値を描画する** には `twinx` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -1083,14 +1083,14 @@ ax2.set_ylabel('sin', color='r')
 ax2.tick_params('y', colors='r')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![twinx](/images/20180622/twinx.png)
 
 
 **y軸はそのままに、別のxの値を描画する** には `twiny` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -1110,7 +1110,7 @@ ax2.set_xlabel('sin', color='r')
 ax2.tick_params('y', colors='r')
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![twiny](/images/20180622/twiny.png)
 
@@ -1120,7 +1120,7 @@ plt.show()
 
 `xycoords` オプションによって、`xy` や `xytext` の振る舞いが変わる点に注意が必要です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1140,7 +1140,7 @@ ax.annotate('max', xy=(4, 1), xytext=(3, 1.5),
 
 ax.set_ylim(-2,2)
 plt.show()
-```
+{{< / highlight >}}
 
 ![annotate](/images/20180622/annotate.png)
 
@@ -1148,7 +1148,7 @@ plt.show()
 
 **矢印を描画** します。 `head_width` `head_length` オプションを記入しないとただの直線として描画されます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1161,7 +1161,7 @@ ax.arrow(x=0.5, y=0.5, dx=1.0, dy=1.0, ls='--', head_width=0.1, head_length=0.1)
 ax.set_xlim(0.25, 1.75)
 ax.set_ylim(0.25, 1.75)
 plt.show()
-```
+{{< / highlight >}}
 
 ![arrow](/images/20180622/arrow.png)
 
@@ -1170,7 +1170,7 @@ plt.show()
 `axhline` 関数は **x軸に対する平行線** を引きます。
 また、 `xmin` `xmax` オプションで、直線を引く区間を指定できるのが便利です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1179,14 +1179,14 @@ ax = fig.add_subplot(111)
 
 plt.axhline(y=.5, xmin=0.25, xmax=0.75)
 plt.show()
-```
+{{< / highlight >}}
 
 ![axhline](/images/20180622/axhline.png)
 
 同様に **x軸に対する平行線を複数引く** には `hlines` 関数が便利です。
 指定された `xmin` や `xmax` は複数の線全てに適用されます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1197,13 +1197,13 @@ xmax =  10
 
 plt.hlines([-1, 1], xmin, xmax)
 plt.show()
-```
+{{< / highlight >}}
 
 ![hlines](/images/20180622/hlines.png)
 
 `axvline`関数は **x軸に対する垂直の線** を引くことが出来ます。オプションの概念は `axhline` と同様です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1212,14 +1212,14 @@ ax = fig.add_subplot(111)
 
 plt.axvline(x=.5, ymin=0.25, ymax=0.75, color='r', linewidth=4)
 plt.show()
-```
+{{< / highlight >}}
 
 ![axvline](/images/20180622/axvline.png)
 
 同様に **x軸に対する垂直の線を複数引く** には `vlines` 関数が便利です。
 指定された `ymin` や `xmax` は複数の線全てに適用されます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1230,7 +1230,7 @@ ymax =  10
 
 plt.vlines([-1, 1], ymin, ymax)
 plt.show()
-```
+{{< / highlight >}}
 
 ![vlines](/images/20180622/vlines.png)
 
@@ -1240,7 +1240,7 @@ plt.show()
 y軸の範囲を表現したいときに使います。
 `xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axvspan` と変わりません。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1250,7 +1250,7 @@ ax = fig.add_subplot(111)
 # yが1.25〜1.55までを一律で塗りつぶし
 plt.axhspan(1.25, 1.55, facecolor='g', alpha=0.5)
 plt.show()
-```
+{{< / highlight >}}
 
 ![axhspan](/images/20180622/axhspan.png)
 
@@ -1258,7 +1258,7 @@ plt.show()
 x軸の範囲を表現したいときに使います。
 `xmin` `xmax` `ymin` `ymax` オプションを指定した場合は矩形を描画するという意味では `axhspan` と変わりません。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1267,7 +1267,7 @@ ax = fig.add_subplot(111)
 
 plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
 plt.show()
-```
+{{< / highlight >}}
 
 ![axvspan](/images/20180622/axvspan.png)
 
@@ -1276,7 +1276,7 @@ plt.show()
 **データの誤差** を棒で表します。
 `uplims` `lolims` オプションで、上下のどちらの誤差か指定することもできます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1291,7 +1291,7 @@ plt.errorbar(x, y, yerr=0.1, uplims=True)
 
 y = np.sin(np.arange(10.0) / 20.0) + 2
 plt.errorbar(x, y, yerr=0.1, lolims=True)
-```
+{{< / highlight >}}
 
 ![errorbar](/images/20180622/errorbar.png)
 
@@ -1301,7 +1301,7 @@ plt.errorbar(x, y, yerr=0.1, lolims=True)
 
 描画位置の指定は座標系に対して行います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 
 plt.text(0.6, 0.5, "hogehoge", size=20, rotation=20.,
@@ -1317,7 +1317,7 @@ plt.text(0.2, 0.5, "fugafuga", size=20, rotation=20.,
          )
 
 plt.show()
-```
+{{< / highlight >}}
 
 ![text](/images/20180622/text.png)
 
@@ -1325,7 +1325,7 @@ plt.show()
 
 描画位置の指定は図に対する相対位置であることに注意が必要です。（座標に依存しません）
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1338,7 +1338,7 @@ plt.errorbar(x, y)
 # y軸方向の1/4(0.25)の場所に
 # 文字「x」を埋め込む
 plt.figtext(0.5, 0.25, '$x$')
-```
+{{< / highlight >}}
 
 ![figtext](/images/20180622/figtext.png)
 
@@ -1347,7 +1347,7 @@ plt.figtext(0.5, 0.25, '$x$')
 グラフ上の **範囲を色で塗りつぶして** 描画します。
 `fill` ではy=0との間の色が塗りつぶされます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1356,13 +1356,13 @@ y = np.sin(2*np.pi*x)
 
 #0〜y or y〜0の間を塗りつぶす
 plt.fill(x, y)
-```
+{{< / highlight >}}
 
 ![fill](/images/20180622/fill.png)
 
 **塗りつぶし範囲のyを指定する** には `fill_between` 関数を使用します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1372,13 +1372,13 @@ y2 = 0.5
 
 #y1〜y2の間を塗りつぶす
 plt.fill_between(x, y1, y2)
-```
+{{< / highlight >}}
 
 ![fill_between](/images/20180622/fill_between.png)
 
 **x軸に対して塗りつぶし範囲を指定する** には `fill_betweenx` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1388,7 +1388,7 @@ x2 = 0.5
 
 #x1〜x2の範囲を塗りつぶす
 plt.fill_betweenx(y, x1, x2)
-```
+{{< / highlight >}}
 
 ![fill_betweenx](/images/20180622/fill_betweenx.png)
 
@@ -1396,7 +1396,7 @@ plt.fill_betweenx(y, x1, x2)
 
 **天気図で使う風向きとその強さ** を表す記号を描画します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1406,7 +1406,7 @@ u = (10,20,-30,40,-50)
 v = (10,20,30,40,50)
 
 plt.barbs(x, y, u, v)
-```
+{{< / highlight >}}
 
 ![barbs](/images/20180622/barbs.png)
 
@@ -1418,7 +1418,7 @@ plt.barbs(x, y, u, v)
 
 **グラフの位置を変更** します。 **複数のグラフを重ね合わせる** ときなどに使用します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -1428,7 +1428,7 @@ plt.acorr(x)
 # 引数は図を描画する位置の [left, bottom, width, height]を表す
 plt.axes([.65, .6, .2, .2], facecolor='k')
 plt.angle_spectrum(x)
-```
+{{< / highlight >}}
 
 ![axes](/images/20180622/axes.png)
 
@@ -1436,7 +1436,7 @@ plt.angle_spectrum(x)
 
 グラフの **枠の表示/非表示** を設定します。デフォルトではTrue（表示する）です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -1446,7 +1446,7 @@ width = 0.3
 
 plt.barh(x, y, width, align='center')
 plt.box(False)
-```
+{{< / highlight >}}
 
 ![box](/images/20180622/box.png)
 
@@ -1454,7 +1454,7 @@ plt.box(False)
 
 グラフ内に **グリッドを表示** します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1465,39 +1465,39 @@ x = mu + sigma * np.random.randn(100)
 
 plt.hist(x, 50, density=True, alpha=0.75)
 plt.grid(linestyle='-', linewidth=1)
-```
+{{< / highlight >}}
 
 ![grid](/images/20180622/grid.png)
 
 **極座標グラフ（polar）にグリッドを表示** するには `rgrids` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
 plt.polar()
 plt.rgrids((0.25, 0.5, 1.0))
 plt.show()
-```
+{{< / highlight >}}
 
 ![rgrids](/images/20180622/rgrids.png)
 
 `rgrids` の代わりに `thetagrids` 関数で、**グリッドとラベルを一緒に設定** することも可能です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
 plt.polar()
 plt.thetagrids(range(45,360,90), ('NE', 'NW', 'SW','SE'))
 plt.show()
-```
+{{< / highlight >}}
 
 ![thetagrids](/images/20180622/thetagrids.png)
 
 **非構造三次元データ （tricontour） にグリッドを表示** するには `triplot` 関数を使います。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
@@ -1512,7 +1512,7 @@ z = np.cos(1.5 * x) * np.cos(1.5 * y)
 plt.tricontourf(triang, z)
 plt.triplot(triang, 'ko-')
 plt.show()
-```
+{{< / highlight >}}
 
 ![triplot](/images/20180622/triplot.png)
 
@@ -1522,7 +1522,7 @@ plt.show()
 `nbins` オプションは2の乗数で指定するといい感じにスケールしてくれます。
 指定された数字通りに分割してくれるときとそうでないときがあり。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1535,7 +1535,7 @@ plt.hist(x, 50, density=True, alpha=0.75)
 # x軸を8分割
 plt.locator_params(axis='x', nbins=8)
 plt.show()
-```
+{{< / highlight >}}
 
 ![locator_params](/images/20180622/locator_params.png)
 
@@ -1543,7 +1543,7 @@ plt.show()
 
 図内の点に対してマージンをとって、データを見やすい位置に調整します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import matplotlib.pyplot as plt
 
 x = [1, 2, 3, 4]
@@ -1552,13 +1552,13 @@ y = [1, 4, 9, 6]
 plt.plot(x, y, 'o')
 plt.margins(0.3)
 plt.show()
-```
+{{< / highlight >}}
 
 ![margins](/images/20180622/margins.png)
 
 `subplots` を使った複数のグラフ描画の場合には `subplots_adjust` が使えます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -1571,7 +1571,7 @@ plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
 
 plt.subplots_adjust(bottom=0.3, right=0.8, top=0.9)
 plt.show()
-```
+{{< / highlight >}}
 
 ![subplots_adjust](/images/20180622/subplots_adjust.png)
 
@@ -1579,7 +1579,7 @@ plt.show()
 
 複数グラフ間のレイアウト設定から、自動で調節してくれます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import itertools
 
@@ -1597,7 +1597,7 @@ example_plot(ax2)
 example_plot(ax3)
 example_plot(ax4)
 plt.tight_layout()
-```
+{{< / highlight >}}
 
 ![tight_layout](/images/20180622/tight_layout.png)
 
@@ -1606,7 +1606,7 @@ plt.tight_layout()
 複数のグラフを描画する場合には、 `subplots` を使います。
 返却された `axes` 配列の要素にアクセスして、データをプロットする関数を実行することで描画が可能です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -1617,7 +1617,7 @@ fig, axes = plt.subplots(2, 1)
 axes[0].plot(x, y)
 axes[1].scatter(x, y)
 plt.show()
-```
+{{< / highlight >}}
 
 ![subplots](/images/20180622/subplots.png)
 
@@ -1625,7 +1625,7 @@ plt.show()
 
 グラフを手書き風にできます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -1634,7 +1634,7 @@ plt.xkcd()
 x = np.linspace(-np.pi, np.pi, 100)
 plt.plot(x, np.sin(x),label="y = sinx")
 plt.show()
-```
+{{< / highlight >}}
 
 ![xkcd](/images/20180622/xkcd.png)
 

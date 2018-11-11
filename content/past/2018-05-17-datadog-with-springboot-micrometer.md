@@ -47,10 +47,10 @@ Spring Bootに [micrometer-registry-datadog](https://mvnrepository.com/artifact/
 `build.gradle` の依存関係に micrometer-registry-datadog を追加します。
 なお、Micrometer自体は `spring-boot-starter-actuator` に含まれています。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.1.RELEASE'
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
-```
+{{< / highlight >}}
 
 ### application.yamlの修正
 
@@ -75,7 +75,7 @@ Datadog上でタグを使ってメトリックを横断的にフィルタでき�
 
 また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに `spring.` のprefixを付与しています。
 
-```java
+{{< highlight java "linenos=inline" >}}
 @Bean
 public MeterRegistryCustomizer<MeterRegistry> customizer() {
     return registry -> {
@@ -95,7 +95,7 @@ public MeterRegistryCustomizer<MeterRegistry> customizer() {
         }
     };
 }
-```
+{{< / highlight >}}
 
 ## Datadog上でJVMのメトリックを見てみよう
 
@@ -159,7 +159,7 @@ JVMの使用メモリ量は `jvm.memory.used` のメトリックで確認でき�
 
 参考までに、エラーは以下のような感じで出ていました。
 
-```java
+{{< highlight java "linenos=inline" >}}
 failed to send metrics
     java.net.SocketTimeoutException: connect timed out
     at java.net.PlainSocketImpl.socketConnect(Native Method)
@@ -174,7 +174,7 @@ failed to send metrics
     at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
     at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
     (以下略)
-```
+{{< / highlight >}}
 
 ## まとめ
 

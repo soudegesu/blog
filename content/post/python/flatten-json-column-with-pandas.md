@@ -24,7 +24,7 @@ twitter_card_image: /images/icons/python_icon.png
 以下のように、列名が `json_col` という `DataFrame` を準備します。
 なお、 `json_col` 列の中身は **`JSON` 形式の文字列** であるとします。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 data = {
@@ -33,7 +33,7 @@ data = {
 
 df = pd.DataFrame(data)
 df.head()
-```
+{{< / highlight >}}
 
 |	   |json_col                             |
 |----|-------------------------------------|
@@ -57,13 +57,13 @@ df.head()
 
 これは、既に読み込まれた `DataFrame` に対して適用する場合に有用です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from pandas.io.json import json_normalize
 import json 
 
 df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
 df_json.head()
-```
+{{< / highlight >}}
 
 |	    |age|	name|
 |-----|-----|-----|
@@ -85,7 +85,7 @@ df_json.head()
 [Pandas](https://pandas.pydata.org/) の [read_csv](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html) 関数にある `converters` というオプションを使います。
 イメージとしては、案１の [apply](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html) での変換処理を、`csv` ファイルのデータを `DataFrame` に変換するタイミングで行う感じです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 from pandas.io.json import json_normalize
 import json 
 import pandas as pd
@@ -97,7 +97,7 @@ df = pd.read_csv(
 
 df_json = json_normalize(df['json_col'])
 df_json.head()
-```
+{{< / highlight >}}
 
 こちらの方法でも変換できました。
 
@@ -112,7 +112,7 @@ df_json.head()
 先程、2つの方法を紹介しましたが、 **ネストしたJSONはどのように展開してくれるのか** 気になりますよね。
 試してみましょう。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 data = {
@@ -121,7 +121,7 @@ data = {
 df = pd.DataFrame(data)
 df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
 df_json.head()
-```
+{{< / highlight >}}
 
 |	  |address.area|	age|	    name|
 |---|------------|-----|----------|
@@ -134,7 +134,7 @@ df_json.head()
 
 最後に **配列が含まれるJSONはどのように展開されるのか** を確認します。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pandas as pd
 
 data = {
@@ -143,7 +143,7 @@ data = {
 df = pd.DataFrame(data)
 df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
 df_json.head()
-```
+{{< / highlight >}}
 
 |	  |age|	name     |	tag                     |
 |---|---|----------|--------------------------|
