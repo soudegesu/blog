@@ -6,10 +6,19 @@
     <description>Recent content in Python on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Thu, 18 Oct 2018 07:45:45 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 10 Nov 2018 07:57:16 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/python/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PandasでJSON形式の列データを複数列に展開する</title>
+      <link>https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/</link>
+      <pubDate>Sat, 10 Nov 2018 07:57:16 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/</guid>
+      <description>過去、Pandas を使った列データの処理について様々書きました。 PandasでNaNの列を処理する Pandasで列データの前処理を行う小技集</description>
+    </item>
     
     <item>
       <title>Pandasで列データの前処理を行う小技集</title>

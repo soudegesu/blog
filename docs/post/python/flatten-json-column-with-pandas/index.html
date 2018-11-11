@@ -8,26 +8,26 @@
 	
 
 
-<title>「ティール組織」はこれからの経営者に読んで欲しい一冊 - そうなんでげす</title>
-<meta name="description" content="巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。">
-<meta property="og:description" content="巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。">
+<title>PandasでJSON形式の列データを複数列に展開する - そうなんでげす</title>
+<meta name="description" content="PandasのDataFrame内の列データがJSON文字列の形式で格納されている場合に複数列にデータを展開したい場合の対処法を紹介します。自前の変換ロジックを挟む必要がありますが、特徴量エンジニアリングを行う上で便利な手法なのでおすすめです。">
+<meta property="og:description" content="PandasのDataFrame内の列データがJSON文字列の形式で格納されている場合に複数列にデータを展開したい場合の対処法を紹介します。自前の変換ロジックを挟む必要がありますが、特徴量エンジニアリングを行う上で便利な手法なのでおすすめです。">
 <meta name="author" content="soudegesu">
-<link rel="canonical" href="https://www.soudegesu.com/book/reinventing-organizations/">
+<link rel="canonical" href="https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/">
 <meta name="twitter:site" content="@alten_manten">
-<meta name="twitter:title" content="「ティール組織」はこれからの経営者に読んで欲しい一冊 - そうなんでげす">
-<meta name="twitter:description" content="巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。">
-<meta name="twitter:url" content="https://www.soudegesu.com/book/reinventing-organizations/">
+<meta name="twitter:title" content="PandasでJSON形式の列データを複数列に展開する - そうなんでげす">
+<meta name="twitter:description" content="PandasのDataFrame内の列データがJSON文字列の形式で格納されている場合に複数列にデータを展開したい場合の対処法を紹介します。自前の変換ロジックを挟む必要がありますが、特徴量エンジニアリングを行う上で便利な手法なのでおすすめです。">
+<meta name="twitter:url" content="https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@alten_manten">
 <meta property="og:locale" content="ja-JP">
-<meta property="og:site_name" content="「ティール組織」はこれからの経営者に読んで欲しい一冊 - そうなんでげす">
-<meta property="og:title" content="「ティール組織」はこれからの経営者に読んで欲しい一冊 - そうなんでげす">
-<meta property="og:url" content="https://www.soudegesu.com/book/reinventing-organizations/">
+<meta property="og:site_name" content="PandasでJSON形式の列データを複数列に展開する - そうなんでげす">
+<meta property="og:title" content="PandasでJSON形式の列データを複数列に展開する - そうなんでげす">
+<meta property="og:url" content="https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/">
   
-<meta property="og:image" content="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4862762263&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=soudegesu-22&#34; &gt;&lt;/a&gt;&lt;img src=&#34;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;l=am2&amp;o=9&amp;a=4862762263">
-<meta name="twitter:image" content="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4862762263&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=soudegesu-22&#34; &gt;&lt;/a&gt;&lt;img src=&#34;//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;l=am2&amp;o=9&amp;a=4862762263">
+<meta property="og:image" content="/images/icons/python_icon.png">
+<meta name="twitter:image" content="/images/icons/python_icon.png">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-05-01 00:00:00 &#43;0000 UTC"><link rel="prev" href="Page%28/past/2018-05-02-colaboratory-is-a-good-tool-for-tensorflow-user.md%29"><link rel="next" href="Page%28/past/2018-04-27-economics-of-hostages.md%29">
+<meta property="article:published_time" content="2018-11-10 07:57:16 &#43;0900 JST"><link rel="next" href="Page%28/post/rust/rust-with-rustup.md%29">
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -47,14 +47,14 @@
 </script><meta name="google-site-verification" content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw" /><meta name="msvalidate.01" content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name="yandex-verification" content="2f79a5310dc24118">
 
 
-	<meta property="og:title" content="「ティール組織」はこれからの経営者に読んで欲しい一冊" />
-<meta property="og:description" content="巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。" />
+	<meta property="og:title" content="PandasでJSON形式の列データを複数列に展開する" />
+<meta property="og:description" content="PandasのDataFrame内の列データがJSON文字列の形式で格納されている場合に複数列にデータを展開したい場合の対処法を紹介します。自前の変換ロジックを挟む必要がありますが、特徴量エンジニアリングを行う上で便利な手法なのでおすすめです。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.soudegesu.com/book/reinventing-organizations/" /><meta property="article:published_time" content="2018-05-01T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2018-05-01T00:00:00&#43;00:00"/>
+<meta property="og:url" content="https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/" /><meta property="article:published_time" content="2018-11-10T07:57:16&#43;09:00"/>
+<meta property="article:modified_time" content="2018-11-10T07:57:16&#43;09:00"/>
 	<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="「ティール組織」はこれからの経営者に読んで欲しい一冊"/>
-<meta name="twitter:description" content="巷で話題の「ティール組織(洋書名:Reinventing Organizations)」をついに読むことができました。簡単な書評と所感を書きたいと思います。以降の内容は若干のネタバレを含みますので、本をまだ読まれていない方は、先に本を読むことをオススメします。"/>
+<meta name="twitter:title" content="PandasでJSON形式の列データを複数列に展開する"/>
+<meta name="twitter:description" content="PandasのDataFrame内の列データがJSON文字列の形式で格納されている場合に複数列にデータを展開したい場合の対処法を紹介します。自前の変換ロジックを挟む必要がありますが、特徴量エンジニアリングを行う上で便利な手法なのでおすすめです。"/>
 
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -106,16 +106,16 @@ if (!doNotTrack) {
 <main class="main content">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">「ティール組織」はこれからの経営者に読んで欲しい一冊</h1><div class="post__meta meta">
+			<h1 class="post__title">PandasでJSON形式の列データを複数列に展開する</h1><div class="post__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-05-01T00:00:00">May 01, 2018</time>
+<time class="post__meta-date meta-date" datetime="2018-11-10T07:57:16">November 10, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/book" rel="category">book</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
 </span></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4862762263&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=soudegesu-22%22%20%3e%3c/a%3e%3cimg%20src=%22//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&amp;l=am2&amp;o=9&amp;a=4862762263" alt="「ティール組織」はこれからの経営者に読んで欲しい一冊">
+			<img src="/images/icons/python_icon.png" alt="PandasでJSON形式の列データを複数列に展開する">
 		</figure><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <ins class="adsbygoogle"
@@ -134,9 +134,14 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#超分厚い一冊には今どき組織論のエッセンスが詰まっていた">超分厚い一冊には今どき組織論のエッセンスが詰まっていた</a></li>
-<li><a href="#この本は経営者向けの本">この本は経営者向けの本</a></li>
-<li><a href="#最後に">最後に</a></li>
+<li><a href="#json文字列が格納されている列データを複数列に展開したい">JSON文字列が格納されている列データを複数列に展開したい</a>
+<ul>
+<li><a href="#案１-apply-と-json-normalize-を使う">案１： <code>apply</code> と <code>json_normalize</code> を使う</a></li>
+<li><a href="#案２-converters-オプションと-json-normalize-を使う">案２：<code>converters</code> オプションと <code>json_normalize</code> を使う</a></li>
+</ul></li>
+<li><a href="#ネストしているjsonはどのように展開されるのか">ネストしているJSONはどのように展開されるのか</a></li>
+<li><a href="#配列が含まれるjsonはどのように展開されるのか">配列が含まれるJSONはどのように展開されるのか</a></li>
+<li><a href="#まとめ">まとめ</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -145,107 +150,291 @@ if (!doNotTrack) {
 <div class="post__content clearfix">
 			
 
-<p>巷で話題の「ティール組織（洋書名:Reinventing Organizations）」をついに読むことができました。
-簡単な書評と所感を書きたいと思います。
-以降の内容は <strong>若干のネタバレを含みます</strong> ので、本をまだ読まれていない方は、先に本を読むことをオススメします。</p>
-
-<div style="text-align: center">
-<a target="_blank"  href="https://www.amazon.co.jp/gp/product/4862762263/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4862762263&linkCode=as2&tag=soudegesu-22&linkId=43e663f0a957755b99c435f78312862e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4862762263&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4862762263" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-</div>
-
-<h2 id="超分厚い一冊には今どき組織論のエッセンスが詰まっていた">超分厚い一冊には今どき組織論のエッセンスが詰まっていた</h2>
-
-<p>この書籍は500ページを超える分厚めの書籍です。私は通勤電車の中で毎日これを読んでいたのですが、持ち運びには向きませんね笑。私はKindle Paperwhiteを所有しているので、Kindle版を購入すれば良かったと後悔しました。</p>
-
-<div style="text-align: center">
-<a target="_blank"  href="https://www.amazon.co.jp/gp/product/B00QJDOM6U/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B00QJDOM6U&linkCode=as2&tag=soudegesu-22&linkId=66b7a77610b78e915e749c4b63d7cfc4"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B00QJDOM6U&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=B00QJDOM6U" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-</div>
-
-<p>ただし、そのページ分量に見合うだけのエッセンスは詰まっています。
-特に今どきの組織論系の本でよく語られている内容は所々に散りばめられており、説明も一貫かつ丁寧になされているため、
-この一冊を読めば組織論に関する知識がない読者でも一から体系的に知識を抑えることができるでしょう。
-過去にリーダーシップ論、組織論、自己啓発の類を読んだことがある人は、自己の知識とマッピングされる箇所が多数あるでしょう。</p>
-
-<p>雑な言い方をすると、</p>
+<p>過去、<a href="https://pandas.pydata.org/">Pandas</a> を使った列データの処理について様々書きました。</p>
 
 <ul>
-<li>組織の基本概念はホラクラシー</li>
-<li>管理職の役割はManagement3.0</li>
-<li>従業員の行動原理はアンソニー・ロビンズ</li>
+<li><a href="/post/python/pandas_with_nan_columns/">PandasでNaNの列を処理する</a></li>
+<li><a href="/post/python/pandas-preprocess-columns/">Pandasで列データの前処理を行う小技集</a></li>
 </ul>
 
-<p>と共通する部分をいくつか感じました。</p>
+<p>今回もデータの下処理のうちの１つ、「列データが<code>JSON</code> 文字列の場合」を考えます。</p>
 
-<p>また、本書のコンテンツはおおまかに以下のような流れにて構成されています。</p>
+<h2 id="json文字列が格納されている列データを複数列に展開したい">JSON文字列が格納されている列データを複数列に展開したい</h2>
+
+<p>以下のように、列名が <code>json_col</code> という <code>DataFrame</code> を準備します。
+なお、 <code>json_col</code> 列の中身は <strong><code>JSON</code> 形式の文字列</strong> であるとします。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+data = {
+    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;}']
+}
+
+df = pd.DataFrame(data)
+df.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>json_col</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>{&ldquo;name&rdquo;: &ldquo;soudegesu&rdquo;, &ldquo;age&rdquo;: &ldquo;30&rdquo;}</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>{&ldquo;name&rdquo;: &ldquo;hogehoge&rdquo;, &ldquo;age&rdquo;: &ldquo;10&rdquo;}</td>
+</tr>
+</tbody>
+</table>
+
+<p>今回のゴールは <code>json_col</code> 列を持った <code>DataFrame</code> を、 <strong>キー毎に別の列へ展開した <code>DataFrame</code> に変換すること</strong> とします。</p>
+
+<p>以下になればOKです。</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>age</th>
+<th>name</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>30</td>
+<td>soudegesu</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>10</td>
+<td>hogehoge</td>
+</tr>
+</tbody>
+</table>
+
+<p>では早速やってみましょう。</p>
+
+<h3 id="案１-apply-と-json-normalize-を使う">案１： <code>apply</code> と <code>json_normalize</code> を使う</h3>
+
+<p>まず、 <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">apply</a> と <a href="https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.io.json.json_normalize.html">json_normalize</a> の2つの関数を使う方法を紹介します。</p>
+
+<p>これは、既に読み込まれた <code>DataFrame</code> に対して適用する場合に有用です。</p>
+
+<pre><code class="language-python">from pandas.io.json import json_normalize
+import json 
+
+df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
+df_json.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>age</th>
+<th>name</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>30</td>
+<td>soudegesu</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>10</td>
+<td>hogehoge</td>
+</tr>
+</tbody>
+</table>
+
+<p>ここでポイントになるのは、 <code>df['json_col']</code> で取得した <code>Series</code> オブジェクトに対して</p>
 
 <ul>
-<li>組織モデルの移り変わり</li>
-<li>ティールとはどのような組織か</li>
-<li>ティール組織に必要なもの</li>
-<li>ティール組織における、経営役員、管理職、従業員の役割</li>
-<li>ティール組織を作るには</li>
-<li>組織の社会的存在意義を明確にする</li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">apply</a> 関数を使って
+各行のデータを辞書型に変換する</li>
+<li><a href="https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.io.json.json_normalize.html">json_normalize</a> を使ってキーを展開した <code>DataFrame</code> に変換する</li>
 </ul>
 
-<p>途中からは実際にティール組織として機能している会社事例を織り交ぜながら話が進んでいきます。
-どの企業も組織内の信頼関係に下支えされた経営を行っており、企業として機能していること自体に凄さを感じえませんでした。</p>
+<p>の2点になります。</p>
 
-<h2 id="この本は経営者向けの本">この本は経営者向けの本</h2>
+<h3 id="案２-converters-オプションと-json-normalize-を使う">案２：<code>converters</code> オプションと <code>json_normalize</code> を使う</h3>
 
-<p>一通り読んで、本書からのメッセージを一言で表現するなら <strong>「『個人』も『組織』も内発的な動機づけによって行動すべきだ」</strong> といったところでしょう。</p>
+<p>次はデータを <code>csv</code> ファイルから読み込むことを前提として話をします。</p>
 
-<p>その理論を実現するための柱となる考え方は以下の3つです。</p>
+<p><a href="https://pandas.pydata.org/">Pandas</a> の <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html">read_csv</a> 関数にある <code>converters</code> というオプションを使います。
+イメージとしては、案１の <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">apply</a> での変換処理を、<code>csv</code> ファイルのデータを <code>DataFrame</code> に変換するタイミングで行う感じです。</p>
+
+<pre><code class="language-python">from pandas.io.json import json_normalize
+import json 
+import pandas as pd
+
+df = pd.read_csv(
+    './hoge.csv',  #元データがhoge.csvに保存されているとします
+    converters={column: json.loads for column in ['json_col']},
+)
+
+df_json = json_normalize(df['json_col'])
+df_json.head()
+</code></pre>
+
+<p>こちらの方法でも変換できました。</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>age</th>
+<th>name</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>30</td>
+<td>soudegesu</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>10</td>
+<td>hogehoge</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="ネストしているjsonはどのように展開されるのか">ネストしているJSONはどのように展開されるのか</h2>
+
+<p>先程、2つの方法を紹介しましたが、 <strong>ネストしたJSONはどのように展開してくれるのか</strong> 気になりますよね。
+試してみましょう。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+data = {
+    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;, &quot;address&quot;: {&quot;area&quot;: &quot;東京&quot;}}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;, &quot;address&quot;: {&quot;area&quot;: &quot;北海道&quot;}}']
+}
+df = pd.DataFrame(data)
+df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
+df_json.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>address.area</th>
+<th>age</th>
+<th>name</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>東京</td>
+<td>30</td>
+<td>soudegesu</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>北海道</td>
+<td>10</td>
+<td>hogehoge</td>
+</tr>
+</tbody>
+</table>
+
+<p>列名が <code>[キー名].[キー名]</code> で展開されることがわかります。</p>
+
+<h2 id="配列が含まれるjsonはどのように展開されるのか">配列が含まれるJSONはどのように展開されるのか</h2>
+
+<p>最後に <strong>配列が含まれるJSONはどのように展開されるのか</strong> を確認します。</p>
+
+<pre><code class="language-python">import pandas as pd
+
+data = {
+    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;, &quot;tag&quot;: [&quot;おっちょこちょい&quot;, &quot;よく寝る&quot;]}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;, &quot;tag&quot;: [&quot;せっかち&quot;, &quot;よく食べる&quot;]}']
+}
+df = pd.DataFrame(data)
+df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
+df_json.head()
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>age</th>
+<th>name</th>
+<th>tag</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>30</td>
+<td>soudegesu</td>
+<td>[おっちょこちょい, よく寝る]</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>10</td>
+<td>hogehoge</td>
+<td>[せっかち, よく食べる]</td>
+</tr>
+</tbody>
+</table>
+
+<p>なるほど。<strong>展開はされるが、列に配列のまま出力される</strong> というところですね。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回は <code>DataFrame</code> の列データが <strong>JSON文字列</strong> の場合の処理の仕方をまとめました。
+ステップとしては以下の2つを踏むことで、JSON内のデータを複数の列に展開することができます。</p>
 
 <ol>
-<li>個人は内発的動機付けによって行動を起こし、周囲と協調しつつ(コンセンサスではない)、自身で意思決定を行う</li>
-<li>組織(企業)は個人を活かすために心理的安全性を確保しなければならない</li>
-<li>組織(企業)は自分達の社会的存在意義を認識すること</li>
+<li>文字列を辞書型に変換する（<code>apply</code> や <code>converters</code> オプション）</li>
+<li>辞書型を複数列に展開する（<code>json_normalize</code>）</li>
 </ol>
 
-<p>この3つのポイントを組織に根付かせるために、ブレークダウンされた論展開がなされていくのですが、
-読めば読むほど、 <strong>「とても良い理論だけど、かなり地ならしが必要」</strong> と感じてしまいます。</p>
+<p>ネストしたJSONでも問題なく展開されますが、JSONに配列が含まれる場合には別途展開するロジックが必要になりそうです。</p>
 
-<p>そして、その「地ならし」を行えるのは <strong>経営者だけ</strong> だと悟るのです。ボトムアップ式では無理である、と。</p>
-
-<p><br><br>
-ゆえに、この本は <strong>「経営者向けの本である」</strong> と私は考えています。
-<br><br><br></p>
-
-<p>なお、「どのような企業がティール組織に向いているか」「既存の組織をティール型にするには」という点に関して、
-本書の中で筆者もきちんと触れています。</p>
-
-<p>その項も納得する部分が多く、納得する部分が多いからこそ、読者が「うちじゃ無理かも」と思わせる。
-特に <strong>日系の大手企業では導入は難しい</strong> と言わざるを得ません。</p>
-
-<p>大体の企業はトップダウン式の階層構造型であり、特に意思決定や権限に対してティール組織の概ね対極に位置するモデルといえます。
-ティールを適用した場合、中間管理職の層が最も不利益を被りやすく、その不公平感から、結果的に社内の心理的安全性が失われ、導入に失敗するのではないか、と私は推察しました。</p>
-
-<p>これが中盤以降に発覚するので、いわば「上げて落とす」ような構成になっています。</p>
-
-<h2 id="最後に">最後に</h2>
-
-<p>いろいろとネガティブなことも書いてしまいましたが、学ぶ所は多い書物です。
-これを読むと、一瞬、「独立して、社長やってみようかな」とすら思ってしまうほど、心清らかな組織論です。</p>
-
-<p>従業員個人の内発的動機を最大限に活かすことをエンジンとしているので、雇われ社長ではなく、
-内発的動機を持った社長で、かつワンマンでない方にとっては心強い転ばぬ先の杖になるのではないでしょうか。</p>
-
-<p>また、私のような一介の従業員の目線としては <strong>「やらされ仕事ではなく、自身の内発的動機に基づく仕事に従事したい」</strong> という意味で、ティールな組織で働いてみたいと思わせてくれました。
-少なくとも、今後の社会人人生の次のステージに向けて、良い影響を与えてくれた良書であることは間違いありません。</p>
-
-<p><br>
-<div style="text-align: center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4862762263&linkId=b694c3ce45ccea6c53975ef370c6bb7d&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-</div></p>
+<p><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=487311845X&linkId=b60ae7aec7f56d1de444c282e90767c0&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+  </iframe>
+  <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873118417&linkId=732ef37c0a2e8ce9f0b90876cd0f35c5&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+  </iframe>
+  <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117984&linkId=cd99b22d583c0f7b93de3fc599cb7ec0&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+  </iframe>
+  <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117380&linkId=58ef591acabd7808b56ee5cfc8eb2d0d&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+  </iframe>
+  <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117941&linkId=dc2bb0024e74ec4b061b8365ec781a98&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+  </iframe></p>
 
 		</div>
 		
 <div class="post__tags tags clearfix">
 	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
 	<ul class="tags__list">
-		<li class="tags__item"><a class="tags__link btn" href="/tags/book/" rel="tag">book</a></li>
-		<li class="tags__item"><a class="tags__link btn" href="/tags/%E7%B5%84%E7%B9%94%E8%AB%96/" rel="tag">組織論</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/python/" rel="tag">python</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/pandas/" rel="tag">pandas</a></li>
 	</ul>
 </div>
 	</article>
@@ -263,10 +452,7 @@ if (!doNotTrack) {
 	
 <nav class="post-nav flex">
 	<div class="post-nav__item post-nav__item--prev">
-		<a class="post-nav__link" href="/book/economics-of-hostages/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">「人質の経済学」を読んだ</p></a>
-	</div>
-	<div class="post-nav__item post-nav__item--next">
-		<a class="post-nav__link" href="/python/colaboratory-is-a-good-tool-for-tensorflow-user/" rel="next"><span class="post-nav__caption">Next&thinsp;»</span><p class="post-nav__post-title">Colaboratoryは機械学習エンジニアための最高のツールだった</p></a>
+		<a class="post-nav__link" href="/post/rust/rust-with-rustup/" rel="prev"><span class="post-nav__caption">«&thinsp;Previous</span><p class="post-nav__post-title">RustupでRustの環境構築をする　- インストールからツールチェインの固定まで</p></a>
 	</div>
 </nav>
 	
@@ -275,20 +461,104 @@ if (!doNotTrack) {
 
 <div class="list__item">
 <figure class="list__thumbnail">
-    <a href="https://www.soudegesu.com/book/economics-of-hostages/">
-        <img src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4163905804&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=soudegesu-22" alt="「人質の経済学」を読んだ" />
+    <a href="https://www.soudegesu.com/post/python/pandas-preprocess-columns/">
+        <img src="/images/icons/python_icon.png" alt="Pandasで列データの前処理を行う小技集" />
     </a>
 </figure>
 <div class="list__content clearfix">
     <header class="list__header">
         <h4 class="list__title post__title ">
-            <a href="/book/economics-of-hostages/" rel="bookmark">「人質の経済学」を読んだ</a>
+            <a href="/post/python/pandas-preprocess-columns/" rel="bookmark">Pandasで列データの前処理を行う小技集</a>
         </h4><div class="list__meta meta">
 <svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
-<time class="post__meta-date meta-date" datetime="2018-04-27T00:00:00">April 27, 2018</time>
+<time class="post__meta-date meta-date" datetime="2018-10-18T07:45:45">October 18, 2018</time>
 <span class="post__meta-categories meta-categories">
 	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
-	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/book" rel="category">book</a></span>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas_with_nan_columns/">
+        <img src="/images/icons/python_icon.png" alt="PandasでNaNの列を処理する" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas_with_nan_columns/" rel="bookmark">PandasでNaNの列を処理する</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-15T08:39:08">October 15, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-merge-data/">
+        <img src="/images/icons/python_icon.png" alt="PandasでDataFrameの追加や結合をする" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-merge-data/" rel="bookmark">PandasでDataFrameの追加や結合をする</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-14T16:31:14">October 14, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/pandas-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/pandas-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - PandasのDataFrameに変換</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-10-13T06:52:26">October 13, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/post/python/cell-excel-with-openpyxl/">
+        <img src="/images/icons/python_icon.png" alt="ExcelをPython（openpyxl）で操作する - セルの読み書き" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/post/python/cell-excel-with-openpyxl/" rel="bookmark">ExcelをPython（openpyxl）で操作する - セルの読み書き</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2018-09-02T09:38:14">September 02, 2018</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/python" rel="category">python</a></span>
 </span></div>
     </header>
 </div>
