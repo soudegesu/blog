@@ -156,11 +156,10 @@ if (!doNotTrack) {
 
 <p>例えば、以下のようなデータがあるとします。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-df = pd.read_csv('./sample.csv')
-df.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;./sample.csv&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>df<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -220,14 +219,13 @@ df.head()
 
 <p>これには <code>zfill</code> 関数を使います。<code>zfill</code> を行う前に <code>astype</code> 関数などで文字列型に変換した上で実施しましょう。</p>
 
-<pre><code class="language-python"># 0埋めで5桁の数字文字列に変更
-df['ID'].astype('str').str.zfill(5)
-
-&gt; 0    00001
-&gt; 1    00002
-&gt; 2    00003
-&gt; 3    00004
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># 0埋めで5桁の数字文字列に変更</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>df[<span style="color:#e6db74">&#39;ID&#39;</span>]<span style="color:#f92672">.</span>astype(<span style="color:#e6db74">&#39;str&#39;</span>)<span style="color:#f92672">.</span>str<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">5</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">00001</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">00002</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>    <span style="color:#ae81ff">00003</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">3</span>    <span style="color:#ae81ff">00004</span></code></pre></div>
 
 <h2 id="カテゴリ変数をワンホットエンコーディングする-get-dummies">カテゴリ変数をワンホットエンコーディングする（get_dummies）</h2>
 
@@ -295,10 +293,9 @@ df['ID'].astype('str').str.zfill(5)
 
 <p><a href="https://pandas.pydata.org/">Pandas</a> では <code>get_dummies</code> 関数を使って実現します。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-pd.get_dummies(df['性別'], prefix='性別')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>pd<span style="color:#f92672">.</span>get_dummies(df[<span style="color:#e6db74">&#39;性別&#39;</span>], prefix<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;性別&#39;</span>)</code></pre></div>
 
 <table>
 <thead>
@@ -344,11 +341,10 @@ pd.get_dummies(df['性別'], prefix='性別')
 
 <p>少しイメージが湧きにくいですが、例えば以下のように、<strong>1つの質問の中で、複数回答が可能なアンケートのデータを1列で表現している</strong> 場合のデータなどがそうでしょう。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-df = pd.read_csv('./sample2.csv', dtype={'ID': 'int', '好きなスポーツ': 'str'})
-df.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;./sample2.csv&#39;</span>, dtype<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;ID&#39;</span>: <span style="color:#e6db74">&#39;int&#39;</span>, <span style="color:#e6db74">&#39;好きなスポーツ&#39;</span>: <span style="color:#e6db74">&#39;str&#39;</span>})
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>df<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -396,12 +392,11 @@ df.head()
 
 <p>どうするかというと、<code>DataFrame.from_records</code> 関数を使って <strong>1つ1つのビットを別の列として分解してあげれば</strong> 良いでしょう。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-# 「好きなスポーツ」列を分割します
-sport = pd.DataFrame.from_records(df['好きなスポーツ'], columns=['野球', 'サッカー', '水泳', '相撲', 'ラグビー'])
-sport.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#75715e"># 「好きなスポーツ」列を分割します</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>sport <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame<span style="color:#f92672">.</span>from_records(df[<span style="color:#e6db74">&#39;好きなスポーツ&#39;</span>], columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;野球&#39;</span>, <span style="color:#e6db74">&#39;サッカー&#39;</span>, <span style="color:#e6db74">&#39;水泳&#39;</span>, <span style="color:#e6db74">&#39;相撲&#39;</span>, <span style="color:#e6db74">&#39;ラグビー&#39;</span>])
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>sport<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>

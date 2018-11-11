@@ -203,9 +203,8 @@ Javaアプリケーションのメトリック取得がいい感じだったの�
 <p><code>build.gradle</code> の依存関係に micrometer-registry-datadog を追加します。
 なお、Micrometer自体は <code>spring-boot-starter-actuator</code> に含まれています。</p>
 
-<pre><code class="language-groovy">compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.1.RELEASE'
-compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>compile group: <span style="color:#e6db74">&#39;org.springframework.boot&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;spring-boot-starter-actuator&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;2.0.1.RELEASE&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>compile group: <span style="color:#e6db74">&#39;io.micrometer&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;micrometer-registry-datadog&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;1.0.3&#39;</span></code></pre></div>
 
 <h3 id="application-yamlの修正">application.yamlの修正</h3>
 
@@ -229,26 +228,25 @@ compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1
 
 <p>また、Spring Bootから取得しているメトリックであることを識別するために、メトリックに <code>spring.</code> のprefixを付与しています。</p>
 
-<pre><code class="language-java">@Bean
-public MeterRegistryCustomizer&lt;MeterRegistry&gt; customizer() {
-    return registry -&gt; {
-        try {
-            registry.config()
-            .meterFilter(new MeterFilter() {
-                @Override
-                public Meter.Id map(Meter.Id id) {
-                    return id.withName(&quot;spring.&quot; + id.getName());
-                }
-            })
-            .commonTags(&quot;env&quot;, &quot;local&quot;)
-            .commonTags(&quot;monitoring_group&quot;, &quot;system_component_a&quot;)
-            .commonTags(&quot;host&quot;, InetAddress.getLocalHost().getHostName());
-        } catch (UnknownHostException e) {
-            LOGGER.error(&quot;fail to resolve hostname.&quot;, e);
-        }
-    };
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">@Bean</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#66d9ef">public</span> MeterRegistryCustomizer<span style="color:#f92672">&lt;</span>MeterRegistry<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">customizer</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#66d9ef">return</span> registry <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            registry<span style="color:#f92672">.</span><span style="color:#a6e22e">config</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#f92672">.</span><span style="color:#a6e22e">meterFilter</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MeterFilter<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>                <span style="color:#a6e22e">@Override</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>                <span style="color:#66d9ef">public</span> Meter<span style="color:#f92672">.</span><span style="color:#a6e22e">Id</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Meter<span style="color:#f92672">.</span><span style="color:#a6e22e">Id</span> id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>                    <span style="color:#66d9ef">return</span> id<span style="color:#f92672">.</span><span style="color:#a6e22e">withName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;spring.&#34;</span> <span style="color:#f92672">+</span> id<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>                <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>            <span style="color:#f92672">})</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>            <span style="color:#f92672">.</span><span style="color:#a6e22e">commonTags</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;env&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;local&#34;</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>            <span style="color:#f92672">.</span><span style="color:#a6e22e">commonTags</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;monitoring_group&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;system_component_a&#34;</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>            <span style="color:#f92672">.</span><span style="color:#a6e22e">commonTags</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;host&#34;</span><span style="color:#f92672">,</span> InetAddress<span style="color:#f92672">.</span><span style="color:#a6e22e">getLocalHost</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getHostName</span><span style="color:#f92672">());</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>UnknownHostException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>            LOGGER<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;fail to resolve hostname.&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>    <span style="color:#f92672">};</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#f92672">}</span></code></pre></div>
 
 <h2 id="datadog上でjvmのメトリックを見てみよう">Datadog上でJVMのメトリックを見てみよう</h2>
 
@@ -366,21 +364,20 @@ public MeterRegistryCustomizer&lt;MeterRegistry&gt; customizer() {
 
 <p>参考までに、エラーは以下のような感じで出ていました。</p>
 
-<pre><code class="language-java">failed to send metrics
-    java.net.SocketTimeoutException: connect timed out
-    at java.net.PlainSocketImpl.socketConnect(Native Method)
-    at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
-    at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
-    at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
-    at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-    at java.net.Socket.connect(Socket.java:589)
-    at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:673)
-    at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
-    at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
-    at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
-    at sun.net.www.protocol.https.HttpsClient.&lt;init&gt;(HttpsClient.java:264)
-    (以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>failed to send metrics
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SocketTimeoutException</span><span style="color:#f92672">:</span> connect timed out
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">PlainSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">socketConnect</span><span style="color:#f92672">(</span>Native Method<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AbstractPlainSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">doConnect</span><span style="color:#f92672">(</span>AbstractPlainSocketImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>350<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AbstractPlainSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connectToAddress</span><span style="color:#f92672">(</span>AbstractPlainSocketImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>206<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AbstractPlainSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connect</span><span style="color:#f92672">(</span>AbstractPlainSocketImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>188<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SocksSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connect</span><span style="color:#f92672">(</span>SocksSocketImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>392<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    at java<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Socket</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connect</span><span style="color:#f92672">(</span>Socket<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>589<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    at sun<span style="color:#f92672">.</span><span style="color:#a6e22e">security</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ssl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SSLSocketImpl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connect</span><span style="color:#f92672">(</span>SSLSocketImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>673<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    at sun<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">NetworkClient</span><span style="color:#f92672">.</span><span style="color:#a6e22e">doConnect</span><span style="color:#f92672">(</span>NetworkClient<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>175<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    at sun<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">www</span><span style="color:#f92672">.</span><span style="color:#a6e22e">http</span><span style="color:#f92672">.</span><span style="color:#a6e22e">HttpClient</span><span style="color:#f92672">.</span><span style="color:#a6e22e">openServer</span><span style="color:#f92672">(</span>HttpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>463<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    at sun<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">www</span><span style="color:#f92672">.</span><span style="color:#a6e22e">http</span><span style="color:#f92672">.</span><span style="color:#a6e22e">HttpClient</span><span style="color:#f92672">.</span><span style="color:#a6e22e">openServer</span><span style="color:#f92672">(</span>HttpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>558<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    at sun<span style="color:#f92672">.</span><span style="color:#a6e22e">net</span><span style="color:#f92672">.</span><span style="color:#a6e22e">www</span><span style="color:#f92672">.</span><span style="color:#a6e22e">protocol</span><span style="color:#f92672">.</span><span style="color:#a6e22e">https</span><span style="color:#f92672">.</span><span style="color:#a6e22e">HttpsClient</span><span style="color:#f92672">.&lt;</span>init<span style="color:#f92672">&gt;(</span>HttpsClient<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>264<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    <span style="color:#f92672">(</span>以下略<span style="color:#f92672">)</span></code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

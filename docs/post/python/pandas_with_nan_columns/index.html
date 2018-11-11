@@ -163,20 +163,18 @@ if (!doNotTrack) {
 <p><a href="https://pandas.pydata.org/">Pandas</a> において <code>NaN</code> は <strong>値が欠損している</strong> 場合によく遭遇する表現です。
 具体例で見ていきましょう。以下のようなサンプルデータ（<code>sample.csv</code>）を作成します。</p>
 
-<pre><code class="language-csv">ID,名前,年齢,性別,趣味
-1,小林,20,男,野球観戦
-2,田中,35,女,飲み会
-3,佐藤,29,男
-4,鈴木,44,女,編み物
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csv" data-lang="csv"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>ID,名前,年齢,性別,趣味
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>1,小林,20,男,野球観戦
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>2,田中,35,女,飲み会
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>3,佐藤,29,男
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>4,鈴木,44,女,編み物</code></pre></div>
 
 <p>データを <code>read_csv</code> 関数で読み出して <code>DataFrame</code> とした後、表示してみます。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-df = pd.read_csv('./sample.csv')
-df.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;./sample.csv&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>df<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <p>佐藤さんは <strong>趣味</strong> の列のデータが欠損しているので <code>NaN</code> と表示されていますね。</p>
 
@@ -240,14 +238,13 @@ df.head()
 
 <p>まずは、各列の中に <code>NaN</code> があるかをパッと判断できると嬉しいでしょう。<code>isna</code> 関数を使えば簡単に確認できます。</p>
 
-<pre><code class="language-python">df.isna().any()
-
-&gt; ID    False
-&gt; 名前    False
-&gt; 年齢    False
-&gt; 性別    False
-&gt; 趣味     True
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>df<span style="color:#f92672">.</span>isna()<span style="color:#f92672">.</span>any()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#f92672">&gt;</span> ID    False
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">名前</span>    False
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">年齢</span>    False
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">性別</span>    False
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">趣味</span>     True</code></pre></div>
 
 <p><code>any()</code> と組み合わせることで、<strong>1つでもNaNがあればTrue</strong> と出力指定ができます。
 上の出力で言えば、<strong>趣味</strong> のカラムは1つ以上欠損しているので <code>True</code> です。</p>
@@ -258,15 +255,14 @@ df.head()
 
 <p><code>NaN</code> の件数を集計したい場合には <code>sum()</code> を使えば良いです。</p>
 
-<pre><code class="language-python">df.isna().sum()
-
-&gt; ID    0
-&gt; 名前    0
-&gt; 年齢    0
-&gt; 性別    0
-&gt; 趣味    1
-&gt; dtype: int64
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>df<span style="color:#f92672">.</span>isna()<span style="color:#f92672">.</span>sum()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#f92672">&gt;</span> ID    <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">名前</span>    <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">年齢</span>    <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">性別</span>    <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#f92672">&gt;</span> <span style="color:#960050;background-color:#1e0010">趣味</span>    <span style="color:#ae81ff">1</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span><span style="color:#f92672">&gt;</span> dtype: int64</code></pre></div>
 
 <h2 id="nanの取り扱いを決める">NaNの取り扱いを決める</h2>
 
@@ -276,29 +272,25 @@ df.head()
 
 <p>以下は、全ての列に対して1つでも <code>NaN</code> がある <strong>行</strong> を削除する例です。</p>
 
-<pre><code class="language-python">df[df.isna().any(axis=1) == False]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>df[df<span style="color:#f92672">.</span>isna()<span style="color:#f92672">.</span>any(axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> False]</code></pre></div>
 
 <p><code>axis=1</code> とすることで、行に対する <code>True/False</code> を取得している点が肝になります。
 <code>False</code> となっている行、つまり、 <code>NaN</code> が存在しない行のみ表示しています。</p>
 
 <p>これは <code>dropna</code> 関数を使った時の以下の処理と等価です。</p>
 
-<pre><code class="language-python">df.dropna(axis=0)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>df<span style="color:#f92672">.</span>dropna(axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)</code></pre></div>
 
 <p>しかし実際問題、 全ての列においてNaN判定をする処理はあまり見かけないので、 <strong>特定の列がNaNの行を削除</strong> する場合には以下のようにします。</p>
 
-<pre><code class="language-python"># ここでは「趣味」列を対象にする
-df[df['趣味'].isna() == False]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># ここでは「趣味」列を対象にする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>df[df[<span style="color:#e6db74">&#39;趣味&#39;</span>]<span style="color:#f92672">.</span>isna() <span style="color:#f92672">==</span> False]</code></pre></div>
 
 <h3 id="nanに対してデフォルト値を設定する">NaNに対してデフォルト値を設定する</h3>
 
 <p><code>NaN</code> のデータに対してデフォルト値を設定するには <code>fillna</code> 関数を使います。</p>
 
-<pre><code class="language-python">df.fillna('なし')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>df<span style="color:#f92672">.</span>fillna(<span style="color:#e6db74">&#39;なし&#39;</span>)</code></pre></div>
 
 <p>全ての <code>NaN</code> のデータを <code>なし</code> に置換することができます。</p>
 
@@ -355,9 +347,8 @@ df[df['趣味'].isna() == False]
 
 <p>列ごとにデフォルト値を変えたい場合には、引数に辞書型を渡してあげると良いです。</p>
 
-<pre><code class="language-python"># 「趣味」列がNaNであれば「なし」をデフォルト値とする
-df.fillna({'趣味': 'なし'})
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># 「趣味」列がNaNであれば「なし」をデフォルト値とする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>df<span style="color:#f92672">.</span>fillna({<span style="color:#e6db74">&#39;趣味&#39;</span>: <span style="color:#e6db74">&#39;なし&#39;</span>})</code></pre></div>
 
 <table>
 <thead>

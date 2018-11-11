@@ -174,8 +174,7 @@ if (!doNotTrack) {
 
 <p>さっそくインストールしましょう。</p>
 
-<pre><code class="language-bash">pip install openpyxl
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>pip install openpyxl</code></pre></div>
 
 <h2 id="新規excelファイルの作成">新規Excelファイルの作成</h2>
 
@@ -185,16 +184,14 @@ if (!doNotTrack) {
 
 <p>まずは <a href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a> が使えるようにモジュールをインポートします。</p>
 
-<pre><code class="language-python">from openpyxl import Workbook
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">from</span> openpyxl <span style="color:#f92672">import</span> Workbook</code></pre></div>
 
 <h3 id="ワークブックの作成">ワークブックの作成</h3>
 
 <p><code>Workbook</code> が <strong>エクセルファイルの実態</strong> を指すオブジェクトになるようですね。 変数 <code>wb</code> に格納します。</p>
 
-<pre><code class="language-python"># ワークブックの作成
-wb = Workbook()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># ワークブックの作成</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>wb <span style="color:#f92672">=</span> Workbook()</code></pre></div>
 
 <h3 id="シート名の変更">シート名の変更</h3>
 
@@ -202,18 +199,16 @@ wb = Workbook()
 エクセルは新規でファイル作成をすると、最初からシートがついてきます。
 最初のシートの名前を <strong>「シートの名前」</strong> に変更してみましょう。</p>
 
-<pre><code class="language-python"># アクティブなシートを選択して、シート名を変更
-ws =  wb.active
-ws.title = &quot;シートの名前&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># アクティブなシートを選択して、シート名を変更</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>ws <span style="color:#f92672">=</span>  wb<span style="color:#f92672">.</span>active
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>ws<span style="color:#f92672">.</span>title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;シートの名前&#34;</span></code></pre></div>
 
 <h3 id="ファイルの保存">ファイルの保存</h3>
 
 <p>最後にファイルを保存します。 ファイル名は　<code>sample_book.xlsx</code> とかにします。</p>
 
-<pre><code class="language-python"># sample_bookという名前でファイルを保存
-wb.save(filename = 'sample_book.xlsx')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># sample_bookという名前でファイルを保存</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>wb<span style="color:#f92672">.</span>save(filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sample_book.xlsx&#39;</span>)</code></pre></div>
 
 <h3 id="できあがりを確認する">できあがりを確認する</h3>
 
@@ -237,11 +232,10 @@ wb.save(filename = 'sample_book.xlsx')
 
 <p><code>load_workbook</code> 関数にファイルのパスを指定することで <code>Workbook</code> オブジェクトを簡単に取得できます。</p>
 
-<pre><code class="language-python">from openpyxl import load_workbook
-wb = load_workbook('sample_book.xlsx')
-print(wb.sheetnames)
-# ['シートの名前'] が出力されます
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">from</span> openpyxl <span style="color:#f92672">import</span> load_workbook
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>wb <span style="color:#f92672">=</span> load_workbook(<span style="color:#e6db74">&#39;sample_book.xlsx&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#66d9ef">print</span>(wb<span style="color:#f92672">.</span>sheetnames)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#75715e"># [&#39;シートの名前&#39;] が出力されます</span></code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

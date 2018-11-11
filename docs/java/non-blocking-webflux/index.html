@@ -173,45 +173,44 @@ RouterFunctionのレスポンスを返す部分はもう少しいい実装があ
 <li><code>RouterFunction</code></li>
 </ul>
 
-<pre><code class="language-java">@Component
-public class HelloWebClientHandler {
-
-    @Value(&quot;${app.backend.uri}&quot;)
-    private String baseUri;
-
-    private static final String PATH = &quot;/test&quot;;
-
-    public RouterFunction&lt;ServerResponse&gt; routes() {
-        return RouterFunctions.route(
-                RequestPredicates.GET(&quot;/hello&quot;)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON))
-                , this::webclient);
-    }
-
-    private Mono&lt;ServerResponse&gt; webclient(ServerRequest req) {
-        return WebClient.builder()
-                .baseUrl(baseUri)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .build()
-                .get()
-                .uri(uriBuilder -&gt; {
-                    uriBuilder.path(PATH);
-                    if (req.queryParam(&quot;time&quot;).isPresent()) {
-                        uriBuilder.queryParam(&quot;time&quot;, req.queryParam(&quot;time&quot;).get());
-                    }
-                    return uriBuilder.build();
-                })
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .flatMap(response -&gt;
-                    ServerResponse.ok()
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(response.bodyToMono(User.class), User.class)
-                            .switchIfEmpty(ServerResponse.notFound().build())
-                );
-    }
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">@Component</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HelloWebClientHandler</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${app.backend.uri}&#34;</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#66d9ef">private</span> String baseUri<span style="color:#f92672">;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String PATH <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/test&#34;</span><span style="color:#f92672">;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#66d9ef">public</span> RouterFunction<span style="color:#f92672">&lt;</span>ServerResponse<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">routes</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        <span style="color:#66d9ef">return</span> RouterFunctions<span style="color:#f92672">.</span><span style="color:#a6e22e">route</span><span style="color:#f92672">(</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>                RequestPredicates<span style="color:#f92672">.</span><span style="color:#a6e22e">GET</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/hello&#34;</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>                        <span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">(</span>RequestPredicates<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>MediaType<span style="color:#f92672">.</span><span style="color:#a6e22e">APPLICATION_JSON</span><span style="color:#f92672">))</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>                <span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">::</span>webclient<span style="color:#f92672">);</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    <span style="color:#66d9ef">private</span> Mono<span style="color:#f92672">&lt;</span>ServerResponse<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">webclient</span><span style="color:#f92672">(</span>ServerRequest req<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        <span style="color:#66d9ef">return</span> WebClient<span style="color:#f92672">.</span><span style="color:#a6e22e">builder</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">baseUrl</span><span style="color:#f92672">(</span>baseUri<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">defaultHeader</span><span style="color:#f92672">(</span>HttpHeaders<span style="color:#f92672">.</span><span style="color:#a6e22e">CONTENT_TYPE</span><span style="color:#f92672">,</span> MediaType<span style="color:#f92672">.</span><span style="color:#a6e22e">APPLICATION_JSON</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">())</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">uri</span><span style="color:#f92672">(</span>uriBuilder <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>                    uriBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">path</span><span style="color:#f92672">(</span>PATH<span style="color:#f92672">);</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>req<span style="color:#f92672">.</span><span style="color:#a6e22e">queryParam</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;time&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">isPresent</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>                        uriBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">queryParam</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;time&#34;</span><span style="color:#f92672">,</span> req<span style="color:#f92672">.</span><span style="color:#a6e22e">queryParam</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;time&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">get</span><span style="color:#f92672">());</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>                    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>                    <span style="color:#66d9ef">return</span> uriBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>                <span style="color:#f92672">})</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>MediaType<span style="color:#f92672">.</span><span style="color:#a6e22e">APPLICATION_JSON</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">exchange</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>                <span style="color:#f92672">.</span><span style="color:#a6e22e">flatMap</span><span style="color:#f92672">(</span>response <span style="color:#f92672">-&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>                    ServerResponse<span style="color:#f92672">.</span><span style="color:#a6e22e">ok</span><span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>                            <span style="color:#f92672">.</span><span style="color:#a6e22e">contentType</span><span style="color:#f92672">(</span>MediaType<span style="color:#f92672">.</span><span style="color:#a6e22e">APPLICATION_JSON</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>                            <span style="color:#f92672">.</span><span style="color:#a6e22e">body</span><span style="color:#f92672">(</span>response<span style="color:#f92672">.</span><span style="color:#a6e22e">bodyToMono</span><span style="color:#f92672">(</span>User<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">),</span> User<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>                            <span style="color:#f92672">.</span><span style="color:#a6e22e">switchIfEmpty</span><span style="color:#f92672">(</span>ServerResponse<span style="color:#f92672">.</span><span style="color:#a6e22e">notFound</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>                <span style="color:#f92672">);</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span><span style="color:#f92672">}</span></code></pre></div>
 
 <ul>
 <li>RouterFunctionを登録する側</li>
@@ -219,17 +218,16 @@ public class HelloWebClientHandler {
 
 <p>作成した <code>HelloWebClientHandler</code> を登録します。</p>
 
-<pre><code class="language-java">@Configuration
-@EnableWebFlux
-public class WebConfig extends DelegatingWebFluxConfiguration {
-    // ~中略~
-
-    @Bean
-    RouterFunction&lt;ServerResponse&gt; route7(HelloWebClientHandler webClientHandler) {
-        return webClientHandler.routes();
-    }
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">@Configuration</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#a6e22e">@EnableWebFlux</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebConfig</span> <span style="color:#66d9ef">extends</span> DelegatingWebFluxConfiguration <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    <span style="color:#75715e">// ~中略~
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"></span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#a6e22e">@Bean</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    RouterFunction<span style="color:#f92672">&lt;</span>ServerResponse<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">route7</span><span style="color:#f92672">(</span>HelloWebClientHandler webClientHandler<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        <span style="color:#66d9ef">return</span> webClientHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">routes</span><span style="color:#f92672">();</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#f92672">}</span></code></pre></div>
 
 <p>あとは <code>main</code> メソッドを持ったクラスを作ってあげればspringbootアプリケーションは作成完了です。</p>
 

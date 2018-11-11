@@ -198,9 +198,8 @@ if (!doNotTrack) {
 
 <p>ダウンロード終了後に任意のフォルダで解凍します。</p>
 
-<pre><code>cd ~/
-unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>cd ~/
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip</code></pre></div>
 
 <p>unzipされていく過程を眺めていると、 <code>creating: flutter/packages/fuchsia_remote_debug_protocol/</code> といった <code>Fuchsia</code> との関連を匂わせるソースも入っていますね。少しだけテンションが上がりました。</p>
 
@@ -210,9 +209,8 @@ unzip ~/Downloads/flutter_macos_v0.5.1-beta.zip
 
 <p>毎度 exportコマンドを実行するのも面倒なので、 <code>~/.zshrc</code> ファイルに記載をして、<code>source</code> コマンドで再読込させます。</p>
 
-<pre><code class="language-vim">export FLUTTER=&quot;${HOME}/flutter/bin&quot;
-export PATH=&quot;${FLUTTER}:$PATH&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">export</span> <span style="color:#a6e22e">FLUTTER</span>=<span style="color:#75715e">&#34;${HOME}/flutter/bin&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">export</span> <span style="color:#a6e22e">PATH</span>=<span style="color:#75715e">&#34;${FLUTTER}:$PATH&#34;</span></code></pre></div>
 
 <ul>
 <li>動作確認</li>
@@ -220,22 +218,20 @@ export PATH=&quot;${FLUTTER}:$PATH&quot;
 
 <p><code>flutter</code> コマンドの確認をします。</p>
 
-<pre><code class="language-bash">flutter --version
-
-&gt; Flutter 0.5.1 • channel beta • https://github.com/flutter/flutter.git
-&gt; Framework • revision c7ea3ca377 (8 weeks ago) • 2018-05-29 21:07:33 +0200
-&gt; Engine • revision 1ed25ca7b7
-&gt; Tools • Dart 2.0.0-dev.58.0.flutter-f981f09760
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>flutter --version
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&gt; Flutter <span style="color:#ae81ff">0</span>.5.1 • channel beta • https://github.com/flutter/flutter.git
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>&gt; Framework • revision c7ea3ca377 <span style="color:#f92672">(</span><span style="color:#ae81ff">8</span> weeks ago<span style="color:#f92672">)</span> • <span style="color:#ae81ff">2018</span>-05-29 <span style="color:#ae81ff">21</span>:07:33 +0200
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>&gt; Engine • revision 1ed25ca7b7
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>&gt; Tools • Dart <span style="color:#ae81ff">2</span>.0.0-dev.58.0.flutter-f981f09760</code></pre></div>
 
 <p>低いバージョンのflutterを使っていると、このタイミングでバージョンアップが促されます。親切設計です。</p>
 
-<pre><code class="language-bash">  ╔════════════════════════════════════════════════════════════════════════════╗
-  ║ WARNING: your installation of Flutter is 61 days old.                      ║
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  ╔════════════════════════════════════════════════════════════════════════════╗
+  ║ WARNING: your installation of Flutter is <span style="color:#ae81ff">61</span> days old.                      ║
   ║                                                                            ║
-  ║ To update to the latest version, run &quot;flutter upgrade&quot;.                    ║
-  ╚════════════════════════════════════════════════════════════════════════════╝
-</code></pre>
+  ║ To update to the latest version, run <span style="color:#e6db74">&#34;flutter upgrade&#34;</span>.                    ║
+  ╚════════════════════════════════════════════════════════════════════════════╝</code></pre></div>
 
 <h3 id="flutterの依存ツールをチェックする">Flutterの依存ツールをチェックする</h3>
 
@@ -244,44 +240,42 @@ export PATH=&quot;${FLUTTER}:$PATH&quot;
 <p>コマンドサンプルも付随しているので、インストールに手間取ることはありませんでした。
 インストールするモジュールの容量が大きくて時間がかかります。</p>
 
-<pre><code class="language-bash">flutter doctor
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">flutter doctor
 
-&gt; Doctor summary (to see all details, run flutter doctor -v):
-&gt; [✓] Flutter (Channel beta, v0.5.1, on Mac OS X 10.13.2 17C88, locale ja-JP)
-&gt; [!] Android toolchain - develop for Android devices (Android SDK 26.0.2)
+&gt; Doctor summary <span style="color:#f92672">(</span>to see all details, run flutter doctor -v<span style="color:#f92672">)</span>:
+&gt; <span style="color:#f92672">[</span>✓<span style="color:#f92672">]</span> Flutter <span style="color:#f92672">(</span>Channel beta, v0.5.1, on Mac OS X <span style="color:#ae81ff">10</span>.13.2 17C88, locale ja-JP<span style="color:#f92672">)</span>
+&gt; <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Android toolchain - develop <span style="color:#66d9ef">for</span> Android devices <span style="color:#f92672">(</span>Android SDK <span style="color:#ae81ff">26</span>.0.2<span style="color:#f92672">)</span>
 &gt;     ! Some Android licenses not accepted.  To resolve this, run: flutter doctor --android-licenses
-&gt; [!] iOS toolchain - develop for iOS devices (Xcode 9.2)
-&gt;     ✗ Missing Xcode dependency: Python module &quot;six&quot;.
-&gt;       Install via 'pip install six' or 'sudo easy_install six'.
+&gt; <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> iOS toolchain - develop <span style="color:#66d9ef">for</span> iOS devices <span style="color:#f92672">(</span>Xcode <span style="color:#ae81ff">9</span>.2<span style="color:#f92672">)</span>
+&gt;     ✗ Missing Xcode dependency: Python module <span style="color:#e6db74">&#34;six&#34;</span>.
+&gt;       Install via <span style="color:#e6db74">&#39;pip install six&#39;</span> or <span style="color:#e6db74">&#39;sudo easy_install six&#39;</span>.
 &gt;     ✗ libimobiledevice and ideviceinstaller are not installed. To install, run:
 &gt;         brew install --HEAD libimobiledevice
 &gt;         brew install ideviceinstaller
 &gt;     ✗ ios-deploy not installed. To install:
 &gt;         brew install ios-deploy
 &gt;     ✗ CocoaPods not installed.
-&gt;         CocoaPods is used to retrieve the iOS platform side's plugin code that responds to your plugin usage on the Dart side.
+&gt;         CocoaPods is used to retrieve the iOS platform side<span style="color:#960050;background-color:#1e0010">&#39;</span>s plugin code that responds to your plugin usage on the Dart side.
 &gt;         Without resolving iOS dependencies with CocoaPods, plugins will not work on iOS.
 &gt;         For more info, see https://flutter.io/platform-plugins
 &gt;       To install:
 &gt;         brew install cocoapods
 &gt;         pod setup
-&gt; [✓] Android Studio (version 3.0)
+&gt; <span style="color:#f92672">[</span>✓<span style="color:#f92672">]</span> Android Studio <span style="color:#f92672">(</span>version <span style="color:#ae81ff">3</span>.0<span style="color:#f92672">)</span>
 &gt;     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
 &gt;     ✗ Dart plugin not installed; this adds Dart specific functionality.
-&gt; [!] IntelliJ IDEA Ultimate Edition (version 2017.3)
+&gt; <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> IntelliJ IDEA Ultimate Edition <span style="color:#f92672">(</span>version <span style="color:#ae81ff">2017</span>.3<span style="color:#f92672">)</span>
 &gt;     ✗ Flutter plugin not installed; this adds Flutter specific functionality.
 &gt;     ✗ Dart plugin not installed; this adds Dart specific functionality.
-&gt; [!] VS Code (version 1.25.0)
-&gt; [!] Connected devices
-&gt;     ! No devices available
-</code></pre>
+&gt; <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> VS Code <span style="color:#f92672">(</span>version <span style="color:#ae81ff">1</span>.25.0<span style="color:#f92672">)</span>
+&gt; <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Connected devices
+&gt;     ! No devices available</code></pre></div>
 
 <h3 id="プロジェクトの初期化">プロジェクトの初期化</h3>
 
 <p><code>flutter</code> のプロジェクトの初期化を行います。今回は <code>sample</code> という名前のプロジェクトにします。</p>
 
-<pre><code class="language-bash">flutter create sample
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>flutter create sample</code></pre></div>
 
 <p>こんな感じでプロジェクトツリーが生成されました。 <code>lib/main.dart</code> がメインとなるdartのコードっぽいですね。</p>
 
@@ -289,7 +283,7 @@ export PATH=&quot;${FLUTTER}:$PATH&quot;
 
 <p>ネイティブコードでも拡張できるんでしょね、おそらく。</p>
 
-<pre><code class="language-bash">.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">.
 ├── README.md
 ├── android
 │   ├── app
@@ -317,8 +311,7 @@ export PATH=&quot;${FLUTTER}:$PATH&quot;
 ├── sample.iml
 ├── sample_android.iml
 └── test
-    └── widget_test.dart
-</code></pre>
+    └── widget_test.dart</code></pre></div>
 
 <h3 id="サンプルアプリケーションの起動">サンプルアプリケーションの起動</h3>
 

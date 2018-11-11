@@ -159,42 +159,36 @@ if (!doNotTrack) {
 
 <p>まずは、 <code>rustup</code> をインストールします。</p>
 
-<pre><code class="language-bash">brew install rustup
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>brew install rustup</code></pre></div>
 
 <p><code>rustup</code> をインストールしただけだと使えないので、以下のコマンドで初期化を行います。</p>
 
-<pre><code class="language-bash">rustup-init
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>rustup-init</code></pre></div>
 
 <p><code>${HOME}/.zshrc</code> や <code>${HOME}/.bashrc</code> などにパスを通して <code>export</code> します。</p>
 
-<pre><code class="language-vim">export CARGO_HOME=&quot;$HOME/.cargo&quot;
-export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">export</span> <span style="color:#a6e22e">CARGO_HOME</span>=<span style="color:#75715e">&#34;$HOME/.cargo&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">export</span> <span style="color:#a6e22e">PATH</span>=<span style="color:#75715e">&#34;$CARGO_HOME/bin:$PATH&#34;</span></code></pre></div>
 
 <p>コマンドが利用可能かを確認します。</p>
 
 <p>まずはコンパイルに使う <code>rustc</code> コマンド。</p>
 
-<pre><code class="language-bash">rustc -V
-&gt; rustc 1.30.0 (da5f414c2 2018-10-24)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>rustc -V
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>&gt; rustc <span style="color:#ae81ff">1</span>.30.0 <span style="color:#f92672">(</span>da5f414c2 <span style="color:#ae81ff">2018</span>-10-24<span style="color:#f92672">)</span></code></pre></div>
 
 <p>次にビルド兼パッケージマネージャの <code>cargo</code> コマンド。</p>
 
-<pre><code class="language-bash">cargo -V
-&gt; cargo 1.30.0 (36d96825d 2018-10-24)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>cargo -V
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>&gt; cargo <span style="color:#ae81ff">1</span>.30.0 <span style="color:#f92672">(</span>36d96825d <span style="color:#ae81ff">2018</span>-10-24<span style="color:#f92672">)</span></code></pre></div>
 
 <p>なお、 <code>show</code> のサブコマンドで、現在有効なツールチェーンを確認できます。</p>
 
-<pre><code class="language-bash">rustup show
-&gt; Default host: x86_64-apple-darwin
-&gt;
-&gt; stable-x86_64-apple-darwin (default)
-&gt; rustc 1.30.0 (da5f414c2 2018-10-24)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>rustup show
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>&gt; Default host: x86_64-apple-darwin
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>&gt; stable-x86_64-apple-darwin <span style="color:#f92672">(</span>default<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>&gt; rustc <span style="color:#ae81ff">1</span>.30.0 <span style="color:#f92672">(</span>da5f414c2 <span style="color:#ae81ff">2018</span>-10-24<span style="color:#f92672">)</span></code></pre></div>
 
 <h2 id="不足しているコンポーネントをインストールする">不足しているコンポーネントをインストールする</h2>
 
@@ -206,8 +200,7 @@ export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
 
 <p>そのため、 <code>component</code> サブコマンドで別途インストールしてあげる必要がありそうです。</p>
 
-<pre><code class="language-bash">rustup component add rustfmt-preview --toolchain stable-x86_64-apple-darwin
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>rustup component add rustfmt-preview --toolchain stable-x86_64-apple-darwin</code></pre></div>
 
 <p>必要なものを適宜追加するスタイルになるので、そもそも差分を考慮するのが面倒であれば、
 <code>rustup</code> を <code>curl https://sh.rustup.rs -sSf | sh</code>  でインストールした方が良いかもしれません。</p>
@@ -216,8 +209,7 @@ export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
 
 <p>任意のディレクトリ配下をCargoプロジェクトとしたいときには、 <code>cargo init</code> コマンドを使います。</p>
 
-<pre><code class="language-bash">cargo init --vcs git --bin 
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>cargo init --vcs git --bin </code></pre></div>
 
 <p><code>--bin</code> は、<code>init</code> 時にアプリケーション実装のためのテンプレートを出力するオプションです。
 現在の <code>Cargo</code> バージョン <code>1.30.0</code> ではデフォルトで有効になっているオプションなので、省略することもできます。</p>
@@ -227,19 +219,18 @@ export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
 
 <p>先程のディレクトリ内に出力された結果を見てみましょう。</p>
 
-<pre><code>#tree -a 
-.
-├── .git
-│   ├── HEAD
-│  (中略)
-│   └── refs
-│       ├── heads
-│       └── tags
-├── .gitignore
-├── Cargo.toml
-└── src
-    └── main.rs
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#75715e">#tree -a 
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#75715e"></span>.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>├── .git
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>│   ├── HEAD
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>│  <span style="color:#f92672">(</span>中略<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>│   └── refs
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>│       ├── heads
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>│       └── tags
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>├── .gitignore
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>├── Cargo.toml
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>└── src
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    └── main.rs</code></pre></div>
 
 <p><code>src</code> 配下にコードのエントリポイントとなる <code>main.rs</code> が、
 プロジェクトルートに <code>Cargo.toml</code> が出力されていることがわかります。</p>
@@ -271,22 +262,19 @@ export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
 
 <p>早速試してみます。プロジェクトルート直下に <code>rust-toolchain</code> ファイルを作成し、以下のフォーマットの文字列を書き込むことでツールチェインを固定できます。</p>
 
-<pre><code class="language-bash">&lt;channel&gt;[-&lt;date&gt;][-&lt;host&gt;]
-
-&lt;channel&gt;       = stable|beta|nightly|&lt;version&gt;
-&lt;date&gt;          = YYYY-MM-DD
-&lt;host&gt;          = &lt;target-triple&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>&lt;channel&gt;<span style="color:#f92672">[</span>-&lt;date&gt;<span style="color:#f92672">][</span>-&lt;host&gt;<span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&lt;channel&gt;       <span style="color:#f92672">=</span> stable|beta|nightly|&lt;version&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>&lt;date&gt;          <span style="color:#f92672">=</span> YYYY-MM-DD
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>&lt;host&gt;          <span style="color:#f92672">=</span> &lt;target-triple&gt;</code></pre></div>
 
 <p>例えば</p>
 
-<pre><code class="language-bash">1.20.0
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#ae81ff">1</span>.20.0</code></pre></div>
 
 <p>と書けば <code>stable</code> チャンネル（デフォルト）の <code>1.20.0</code> を指定することになります。</p>
 
-<pre><code class="language-vim">nightly-2018-10-01
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">nightly</span><span style="color:#ae81ff">-2018-10-01</span></code></pre></div>
 
 <p>と書けば <code>nightly</code> の <code>2018-10-01</code> を指定することになります。</p>
 
@@ -299,19 +287,17 @@ export PATH=&quot;$CARGO_HOME/bin:$PATH&quot;
 
 <p>異なる日付を指定して <code>cargo check</code> コマンドの標準出力を確認します。以下は一部を抜粋したものです。同じ <code>1.31.0-nightly</code> にも関わらず、コミットハッシュが異なることが確認できます。 <strong>指定日付時点での最新のコミット</strong> が採用されている印象を受けます。</p>
 
-<pre><code class="language-bash"># rust-toolchainに nightly-2018-10-10 を書いた場合
-info: latest update on 2018-10-10, rust version 1.31.0-nightly (96cafc53c 2018-10-09)
-
-# rust-toolchainに nightly-2018-10-09 を書いた場合
-info: latest update on 2018-10-09, rust version 1.31.0-nightly (423d81098 2018-10-08)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># rust-toolchainに nightly-2018-10-10 を書いた場合
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"></span>info: latest update on <span style="color:#ae81ff">2018</span>-10-10, rust version <span style="color:#ae81ff">1</span>.31.0-nightly <span style="color:#f92672">(</span>96cafc53c <span style="color:#ae81ff">2018</span>-10-09<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#75715e"># rust-toolchainに nightly-2018-10-09 を書いた場合
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#75715e"></span>info: latest update on <span style="color:#ae81ff">2018</span>-10-09, rust version <span style="color:#ae81ff">1</span>.31.0-nightly <span style="color:#f92672">(</span>423d81098 <span style="color:#ae81ff">2018</span>-10-08<span style="color:#f92672">)</span></code></pre></div>
 
 <p>チャンネルが <code>nightly</code> の場合においては、概ねどの日付を指定してもインストールできました。</p>
 
 <p>逆にリリース頻度の低い <code>stable</code> チャンネルでは、日付を指定しても取得できない場合がありました。</p>
 
-<pre><code class="language-bash">error: no release found for 'stable-2018-10-10'
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>error: no release found <span style="color:#66d9ef">for</span> <span style="color:#e6db74">&#39;stable-2018-10-10&#39;</span></code></pre></div>
 
 <p>そのため、日付指定は <code>nightly</code> 向けの機能と考えた方が良いでしょう。</p>
 

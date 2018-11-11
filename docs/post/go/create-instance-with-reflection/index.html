@@ -167,17 +167,16 @@ if (!doNotTrack) {
 分かりやすい例として、 <strong>型そのものの情報を使ってインスタンスを生成する</strong>、というのもその一つです。
 Javaで言えば以下のようなコードです。</p>
 
-<pre><code class="language-java">private &lt;T&gt; T createInstance (Class&lt;T&gt; clazz) {
-    T obj = null;
-    try {
-        // クラス情報を基にインスタンスを生成
-        obj = (T)(Class.forName(clazz.getName()));
-    } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-    }
-    return obj;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#66d9ef">private</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> T <span style="color:#a6e22e">createInstance</span> <span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> clazz<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    T obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#75715e">// クラス情報を基にインスタンスを生成
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"></span>        obj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>T<span style="color:#f92672">)(</span>Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span>clazz<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()));</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#66d9ef">return</span> obj<span style="color:#f92672">;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#f92672">}</span></code></pre></div>
 
 <h2 id="goではreflectパッケージを使う">Goではreflectパッケージを使う</h2>
 
@@ -190,12 +189,11 @@ Javaで言えば以下のようなコードです。</p>
 <p>まずはインスタンス生成処理の本体となる <code>createInstance</code> 関数を作成します。
 コードは以下のようになります。</p>
 
-<pre><code class="language-go">// インスタンスを作るだけの関数
-func createInstance(typ reflect.Type) interface{} {
-	val := reflect.New(typ).Elem()
-	return val.Interface()
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e">// インスタンスを作るだけの関数
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">createInstance</span>(<span style="color:#a6e22e">typ</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Type</span>) <span style="color:#66d9ef">interface</span>{} {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>	<span style="color:#a6e22e">val</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">typ</span>).<span style="color:#a6e22e">Elem</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">val</span>.<span style="color:#a6e22e">Interface</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}</code></pre></div>
 
 <p>ここでポイントをいくつか紹介します。</p>
 
@@ -220,10 +218,9 @@ func createInstance(typ reflect.Type) interface{} {
 
 <p>作成した <code>createInstance()</code> 関数の呼び出し元の処理は以下のようになります。</p>
 
-<pre><code class="language-go">var u User
-obj := createInstance(reflect.TypeOf(u))
-r := obj.(User)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">u</span> <span style="color:#a6e22e">User</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#a6e22e">obj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createInstance</span>(<span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">u</span>))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">obj</span>.(<span style="color:#a6e22e">User</span>)</code></pre></div>
 
 <h4 id="reflect-typeof-で型情報を取得する"><code>reflect.TypeOf()</code> で型情報を取得する</h4>
 

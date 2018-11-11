@@ -158,20 +158,19 @@ if (!doNotTrack) {
 
 <p>例えば、以下のようなコードの場合、2つのセルへ入力を行います。</p>
 
-<pre><code class="language-python">from openpyxl import Workbook
-from openpyxl.compat import range
-from openpyxl.utils import get_column_letter
-
-wb = Workbook()
-ws = wb.active
-
-# `B` 列の `2` 行目に `hogehogehoge` を入力
-ws['B2'] = 'hogehogehoge'
-# `F` 列の `5` 行目に `fugafugaufga` を入力
-ws['F5'] = 'fugafugaufga'
-
-wb.save(filename = 'sample_book.xlsx')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">from</span> openpyxl <span style="color:#f92672">import</span> Workbook
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#f92672">from</span> openpyxl.compat <span style="color:#f92672">import</span> range
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#f92672">from</span> openpyxl.utils <span style="color:#f92672">import</span> get_column_letter
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>wb <span style="color:#f92672">=</span> Workbook()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>ws <span style="color:#f92672">=</span> wb<span style="color:#f92672">.</span>active
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#75715e"># `B` 列の `2` 行目に `hogehogehoge` を入力</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>ws[<span style="color:#e6db74">&#39;B2&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;hogehogehoge&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#75715e"># `F` 列の `5` 行目に `fugafugaufga` を入力</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>ws[<span style="color:#e6db74">&#39;F5&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;fugafugaufga&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>wb<span style="color:#f92672">.</span>save(filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sample_book.xlsx&#39;</span>)</code></pre></div>
 
 <p><img src="/images/20180902/fill_cell.png" alt="fill_cell" /></p>
 
@@ -179,9 +178,8 @@ wb.save(filename = 'sample_book.xlsx')
 
 <p><code>cell</code> 関数の場合は列はアルファベットではなく、数字で入力する必要があります。</p>
 
-<pre><code class="language-python">ws.cell(row=2, column=2, value='hogehogehoge')
-ws.cell(row=5, column=6, value='fugafugaufga')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>ws<span style="color:#f92672">.</span>cell(row<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, column<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, value<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;hogehogehoge&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>ws<span style="color:#f92672">.</span>cell(row<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>, column<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span>, value<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;fugafugaufga&#39;</span>)</code></pre></div>
 
 <h2 id="セルの値を読み込む">セルの値を読み込む</h2>
 
@@ -189,13 +187,11 @@ ws.cell(row=5, column=6, value='fugafugaufga')
 
 <p>例えば、以下のように書くと、変数 <code>b2</code> に文字列 <code>hogehogehoge</code> が格納されます。</p>
 
-<pre><code class="language-python">b2 = ws['B2'].value
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>b2 <span style="color:#f92672">=</span> ws[<span style="color:#e6db74">&#39;B2&#39;</span>]<span style="color:#f92672">.</span>value</code></pre></div>
 
 <p>入力のときと同様に、読み込みについても <code>cell</code> 関数で代用できます。</p>
 
-<pre><code class="language-python">b2 = ws.cell(column=2, row=2).value
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>b2 <span style="color:#f92672">=</span> ws<span style="color:#f92672">.</span>cell(column<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, row<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">.</span>value</code></pre></div>
 
 <h2 id="行を処理する">行を処理する</h2>
 
@@ -210,45 +206,43 @@ ws.cell(row=5, column=6, value='fugafugaufga')
 
 <p>試しに、先程の <code>sample_book.xlsx</code> に対して、各行のすべてのセルの値を表示してみます。</p>
 
-<pre><code class="language-python"># 2行目を開始行として、1行単位で処理をする
-for row in ws.iter_rows(min_row=2):
-    # 行からセルを1個ずつ取得し、処理をする
-    for cell in row:
-        print(f&quot;{cell.col_idx}列目：{cell.value}&quot;)
-    print('------------------------------------------')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># 2行目を開始行として、1行単位で処理をする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> ws<span style="color:#f92672">.</span>iter_rows(min_row<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#75715e"># 行からセルを1個ずつ取得し、処理をする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#66d9ef">for</span> cell <span style="color:#f92672">in</span> row:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>        <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;{cell.col_idx}列目：{cell.value}&#34;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;------------------------------------------&#39;</span>)</code></pre></div>
 
 <p>結果は以下のようになります。</p>
 
-<pre><code class="language-python">1列目：None
-2列目：hogehogehoge
-3列目：None
-4列目：None
-5列目：None
-6列目：None
-------------------------------------------
-1列目：None
-2列目：None
-3列目：None
-4列目：None
-5列目：None
-6列目：None
-------------------------------------------
-1列目：None
-2列目：None
-3列目：None
-4列目：None
-5列目：None
-6列目：None
-------------------------------------------
-1列目：None
-2列目：None
-3列目：None
-4列目：None
-5列目：None
-6列目：fugafugaufga
-------------------------------------------
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">列目：</span>hogehogehoge
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span><span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">列目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span><span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">列目：</span>fugafugaufga
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span><span style="color:#f92672">------------------------------------------</span></code></pre></div>
 
 <h2 id="列を処理する">列を処理する</h2>
 
@@ -256,47 +250,45 @@ for row in ws.iter_rows(min_row=2):
 
 <p>操作感としては <code>iter_rows</code> 関数と同様ですが、ループ対象が列になります。</p>
 
-<pre><code class="language-python"># 2列目を開始行として、1列単位で処理をする
-for col in ws.iter_cols(min_row=2):
-    # 列からセルを1個ずつ取得し、処理をする
-    for cell in col:
-        print(f&quot;{cell.row}行目：{cell.value}&quot;)
-    print('------------------------------------------')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># 2列目を開始行として、1列単位で処理をする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#66d9ef">for</span> col <span style="color:#f92672">in</span> ws<span style="color:#f92672">.</span>iter_cols(min_row<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#75715e"># 列からセルを1個ずつ取得し、処理をする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#66d9ef">for</span> cell <span style="color:#f92672">in</span> col:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>        <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;{cell.row}行目：{cell.value}&#34;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;------------------------------------------&#39;</span>)</code></pre></div>
 
 <p>結果は以下のようになります。</p>
 
-<pre><code class="language-python">2行目：None
-3行目：None
-4行目：None
-5行目：None
-------------------------------------------
-2行目：hogehogehoge
-3行目：None
-4行目：None
-5行目：None
-------------------------------------------
-2行目：None
-3行目：None
-4行目：None
-5行目：None
-------------------------------------------
-2行目：None
-3行目：None
-4行目：None
-5行目：None
-------------------------------------------
-2行目：None
-3行目：None
-4行目：None
-5行目：None
-------------------------------------------
-2行目：None
-3行目：None
-4行目：None
-5行目：fugafugaufga
-------------------------------------------
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>hogehogehoge
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span><span style="color:#f92672">------------------------------------------</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">行目：</span>None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">行目：</span>fugafugaufga
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span><span style="color:#f92672">------------------------------------------</span></code></pre></div>
 
 <h2 id="行単位でデータを入力する">行単位でデータを入力する</h2>
 
@@ -304,22 +296,21 @@ for col in ws.iter_cols(min_row=2):
 
 <p>関数への引数にはリスト型のデータを渡してことで、左詰めでデータが入っていきます。</p>
 
-<pre><code class="language-python">wb = Workbook()
-ws = wb.active
-
-data = [
-        ['A', 100, 1.0],
-        ['B', 200, 2.0],
-        ['C', 300, 3.0],    
-        ['D', 400, 4.0],        
-]
-
-for row in data:
-    # 1行ずつデータが挿入される
-    ws.append(row)
-
-wb.save(filename = 'sample_book.xlsx')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>wb <span style="color:#f92672">=</span> Workbook()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>ws <span style="color:#f92672">=</span> wb<span style="color:#f92672">.</span>active
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>data <span style="color:#f92672">=</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        [<span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1.0</span>],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>        [<span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">200</span>, <span style="color:#ae81ff">2.0</span>],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        [<span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">300</span>, <span style="color:#ae81ff">3.0</span>],    
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        [<span style="color:#e6db74">&#39;D&#39;</span>, <span style="color:#ae81ff">400</span>, <span style="color:#ae81ff">4.0</span>],        
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> data:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    <span style="color:#75715e"># 1行ずつデータが挿入される</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    ws<span style="color:#f92672">.</span>append(row)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>wb<span style="color:#f92672">.</span>save(filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sample_book.xlsx&#39;</span>)</code></pre></div>
 
 <p><img src="/images/20180902/bulk_insert.png" alt="bulk_insert" /></p>
 

@@ -220,135 +220,133 @@ S3にログを集積し、そこをDWHにしてETL処理を施して可視化し
 
 <p>バケットは普通に作れば良いとして、 <strong>バケットポリシーを以下のように指定する</strong> のがポイントです。</p>
 
-<pre><code class="language-json">{
-    &quot;Version&quot;: &quot;2012-10-17&quot;,
-    &quot;Statement&quot;: [
-        {
-            &quot;Sid&quot;: &quot;1&quot;,
-            &quot;Effect&quot;: &quot;Allow&quot;,
-            &quot;Principal&quot;: {
-                &quot;Service&quot;: &quot;logs.${リージョン名}.amazonaws.com&quot;
-            },
-            &quot;Action&quot;: &quot;s3:PutObject&quot;,
-            &quot;Resource&quot;: &quot;arn:aws:s3:::${バケット名}/*&quot;,
-            &quot;Condition&quot;: {
-                &quot;StringEquals&quot;: {
-                    &quot;s3:x-amz-acl&quot;: &quot;bucket-owner-full-control&quot;
-                }
-            }
-        },
-        {
-            &quot;Sid&quot;: &quot;2&quot;,
-            &quot;Effect&quot;: &quot;Allow&quot;,
-            &quot;Principal&quot;: {
-                &quot;Service&quot;: &quot;logs.${リージョン名}.amazonaws.com&quot;
-            },
-            &quot;Action&quot;: &quot;s3:GetBucketAcl&quot;,
-            &quot;Resource&quot;: &quot;arn:aws:s3:::${バケット名}&quot;
-        }
-    ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#f92672">&#34;Statement&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;1&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>            <span style="color:#f92672">&#34;Principal&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>                <span style="color:#f92672">&#34;Service&#34;</span>: <span style="color:#e6db74">&#34;logs.${リージョン名}.amazonaws.com&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>            },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>            <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:PutObject&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::${バケット名}/*&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>            <span style="color:#f92672">&#34;Condition&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>                <span style="color:#f92672">&#34;StringEquals&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>                    <span style="color:#f92672">&#34;s3:x-amz-acl&#34;</span>: <span style="color:#e6db74">&#34;bucket-owner-full-control&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>                }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>            }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>            <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;2&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>            <span style="color:#f92672">&#34;Principal&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>                <span style="color:#f92672">&#34;Service&#34;</span>: <span style="color:#e6db74">&#34;logs.${リージョン名}.amazonaws.com&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>            },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>            <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:GetBucketAcl&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::${バケット名}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>    ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>}</code></pre></div>
 
 <h3 id="lambdaの実装">Lambdaの実装</h3>
 
 <p>次に CloudWatch Logsのexport task apiをコールするためのLambda Functionを作成します。
 以下にコードサンプルを載せます。</p>
 
-<pre><code class="language-python">#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-
-import logging
-import boto3
-from datetime import datetime
-from datetime import timedelta
-from dateutil.parser import parse
-import pytz
-import time
-import os
-
-def _is_executing_export_tasks():
-    '''
-    export taskが実行中かどうかチェック
-    '''
-    client = boto3.client('logs')
-    for status in ['PENDING', 'PENDING_CANCEL', 'RUNNING']:
-        response = client.describe_export_tasks(limit = 50, statusCode=status)
-        if 'exportTasks' in response and len(response['exportTasks']) &gt; 0:
-            return True
-    return False
-
-def _get_target_date(event):
-    '''
-    CloudWatch Eventsの(実行日時 - 1)日をエクスポート対象にする
-    '''
-    target = None
-    tokyo_timezone = pytz.timezone('Asia/Tokyo')
-
-    utc_dt = datetime.strptime(event['time'], '%Y-%m-%dT%H:%M:%SZ')
-    tokyo_time = utc_dt.astimezone(tokyo_timezone)
-    target = tokyo_time - timedelta(days=1)
-    t = target.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    target_date = t.strftime('%Y%m%d')
-    from_time = int(t.timestamp() * 1000)
-    to_time = int((t + timedelta(days=1) - timedelta(milliseconds=1)).timestamp() * 1000)
-    return from_time, to_time, target_date
-
-def _get_log_group(next_token):
-    '''
-    ロググループを取得する
-    '''
-    client = boto3.client('logs')
-    if next_token is not None and next_token != '':
-        response = client.describe_log_groups(limit = 50, nextToken = next_token)
-    else:
-        # nextTokenは空文字を受け付けない
-        response = client.describe_log_groups(limit = 50)
-
-    if 'logGroups' in response:
-        yield from response['logGroups']
-    # ロググループが多くて50件(最大)を超えるようなら再帰呼出し
-    if 'nextToken' in response:
-        yield from _get_log_group(next_token = response['nextToken'])
-
-def _is_bucket_object_exists(bucket_name, bucket_dir):
-    client = boto3.client('s3')
-    response = client.list_objects_v2(Bucket = bucket_name, Prefix = (bucket_dir))
-    return 'Contents' in response and len(response['Contents']) &gt; 0
-
-def _export_logs_to_s3(bucket_name, bucket_dir, from_time, to_time, log_group_name):
-    client = boto3.client('logs')
-    response = client.create_export_task(taskName = bucket_dir, logGroupName = log_group_name, fromTime = from_time, to = to_time, destination = bucket_name, destinationPrefix = bucket_dir)
-
-def lambda_handler(event, context):
-    bucket_name = os.environ['BUCKET_NAME']
-    from_time, to_time, target_date = _get_target_date(event=event)
-
-    if _is_executing_export_tasks():
-        return {
-            &quot;status&quot;: &quot;running&quot;,
-            &quot;time&quot;: event['time']
-        }
-
-    for log_group in _get_log_group(next_token=None):
-        bucket_dir = log_group['logGroupName'] + '/' +target_date
-        if log_group['logGroupName'].find('/') == 0:
-            bucket_dir = log_group['logGroupName'][1:]
-
-        if _is_bucket_object_exists(bucket_name = bucket_name, bucket_dir = bucket_dir):
-            continue
-        _export_logs_to_s3(bucket_name = bucket_name, log_group_name = log_group['logGroupName'], from_time= from_time, to_time = to_time, bucket_dir = bucket_dir)
-        return {
-            &quot;status&quot;: &quot;running&quot;,
-            &quot;time&quot;: event['time']
-        }
-
-    return {
-        &quot;status&quot;: &quot;completed&quot;,
-        &quot;time&quot;: event['time']
-    }
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#75715e">#!/usr/bin/env python</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#75715e"># -*- coding:utf-8 -*-</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#f92672">import</span> logging
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#f92672">import</span> boto3
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> timedelta
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#f92672">from</span> dateutil.parser <span style="color:#f92672">import</span> parse
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#f92672">import</span> pytz
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#f92672">import</span> time
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#f92672">import</span> os
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_is_executing_export_tasks</span>():
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#e6db74">    export taskが実行中かどうかチェック
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#e6db74">    &#39;&#39;&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>    client <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74">&#39;logs&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>    <span style="color:#66d9ef">for</span> status <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;PENDING&#39;</span>, <span style="color:#e6db74">&#39;PENDING_CANCEL&#39;</span>, <span style="color:#e6db74">&#39;RUNNING&#39;</span>]:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>        response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>describe_export_tasks(limit <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>, statusCode<span style="color:#f92672">=</span>status)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;exportTasks&#39;</span> <span style="color:#f92672">in</span> response <span style="color:#f92672">and</span> len(response[<span style="color:#e6db74">&#39;exportTasks&#39;</span>]) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>            <span style="color:#66d9ef">return</span> True
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    <span style="color:#66d9ef">return</span> False
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_get_target_date</span>(event):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span><span style="color:#e6db74">    CloudWatch Eventsの(実行日時 - 1)日をエクスポート対象にする
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span><span style="color:#e6db74">    &#39;&#39;&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    target <span style="color:#f92672">=</span> None
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>    tokyo_timezone <span style="color:#f92672">=</span> pytz<span style="color:#f92672">.</span>timezone(<span style="color:#e6db74">&#39;Asia/Tokyo&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>    utc_dt <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>strptime(event[<span style="color:#e6db74">&#39;time&#39;</span>], <span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">T%H:%M:%SZ&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>    tokyo_time <span style="color:#f92672">=</span> utc_dt<span style="color:#f92672">.</span>astimezone(tokyo_timezone)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>    target <span style="color:#f92672">=</span> tokyo_time <span style="color:#f92672">-</span> timedelta(days<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>    t <span style="color:#f92672">=</span> target<span style="color:#f92672">.</span>replace(hour<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, minute<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, second<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, microsecond<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>    target_date <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y%m</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>    from_time <span style="color:#f92672">=</span> int(t<span style="color:#f92672">.</span>timestamp() <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>    to_time <span style="color:#f92672">=</span> int((t <span style="color:#f92672">+</span> timedelta(days<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">-</span> timedelta(milliseconds<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>))<span style="color:#f92672">.</span>timestamp() <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>    <span style="color:#66d9ef">return</span> from_time, to_time, target_date
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_get_log_group</span>(next_token):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>    <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span><span style="color:#e6db74">    ロググループを取得する
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44</span><span style="color:#e6db74">    &#39;&#39;&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45</span>    client <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74">&#39;logs&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46</span>    <span style="color:#66d9ef">if</span> next_token <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> None <span style="color:#f92672">and</span> next_token <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;&#39;</span>:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47</span>        response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>describe_log_groups(limit <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>, nextToken <span style="color:#f92672">=</span> next_token)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">48</span>    <span style="color:#66d9ef">else</span>:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">49</span>        <span style="color:#75715e"># nextTokenは空文字を受け付けない</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">50</span>        response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>describe_log_groups(limit <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">51</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">52</span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;logGroups&#39;</span> <span style="color:#f92672">in</span> response:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">53</span>        <span style="color:#66d9ef">yield</span> <span style="color:#f92672">from</span> response[<span style="color:#e6db74">&#39;logGroups&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">54</span>    <span style="color:#75715e"># ロググループが多くて50件(最大)を超えるようなら再帰呼出し</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">55</span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;nextToken&#39;</span> <span style="color:#f92672">in</span> response:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">56</span>        <span style="color:#66d9ef">yield</span> <span style="color:#f92672">from</span> _get_log_group(next_token <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;nextToken&#39;</span>])
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">57</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">58</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_is_bucket_object_exists</span>(bucket_name, bucket_dir):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">59</span>    client <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74">&#39;s3&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">60</span>    response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>list_objects_v2(Bucket <span style="color:#f92672">=</span> bucket_name, Prefix <span style="color:#f92672">=</span> (bucket_dir))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">61</span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Contents&#39;</span> <span style="color:#f92672">in</span> response <span style="color:#f92672">and</span> len(response[<span style="color:#e6db74">&#39;Contents&#39;</span>]) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">62</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">63</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_export_logs_to_s3</span>(bucket_name, bucket_dir, from_time, to_time, log_group_name):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">64</span>    client <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74">&#39;logs&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">65</span>    response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>create_export_task(taskName <span style="color:#f92672">=</span> bucket_dir, logGroupName <span style="color:#f92672">=</span> log_group_name, fromTime <span style="color:#f92672">=</span> from_time, to <span style="color:#f92672">=</span> to_time, destination <span style="color:#f92672">=</span> bucket_name, destinationPrefix <span style="color:#f92672">=</span> bucket_dir)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">66</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">67</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lambda_handler</span>(event, context):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">68</span>    bucket_name <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;BUCKET_NAME&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">69</span>    from_time, to_time, target_date <span style="color:#f92672">=</span> _get_target_date(event<span style="color:#f92672">=</span>event)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">70</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">71</span>    <span style="color:#66d9ef">if</span> _is_executing_export_tasks():
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">72</span>        <span style="color:#66d9ef">return</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">73</span>            <span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;running&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">74</span>            <span style="color:#e6db74">&#34;time&#34;</span>: event[<span style="color:#e6db74">&#39;time&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">75</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">76</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">77</span>    <span style="color:#66d9ef">for</span> log_group <span style="color:#f92672">in</span> _get_log_group(next_token<span style="color:#f92672">=</span>None):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">78</span>        bucket_dir <span style="color:#f92672">=</span> log_group[<span style="color:#e6db74">&#39;logGroupName&#39;</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">+</span>target_date
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">79</span>        <span style="color:#66d9ef">if</span> log_group[<span style="color:#e6db74">&#39;logGroupName&#39;</span>]<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;/&#39;</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">80</span>            bucket_dir <span style="color:#f92672">=</span> log_group[<span style="color:#e6db74">&#39;logGroupName&#39;</span>][<span style="color:#ae81ff">1</span>:]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">81</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">82</span>        <span style="color:#66d9ef">if</span> _is_bucket_object_exists(bucket_name <span style="color:#f92672">=</span> bucket_name, bucket_dir <span style="color:#f92672">=</span> bucket_dir):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">83</span>            <span style="color:#66d9ef">continue</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">84</span>        _export_logs_to_s3(bucket_name <span style="color:#f92672">=</span> bucket_name, log_group_name <span style="color:#f92672">=</span> log_group[<span style="color:#e6db74">&#39;logGroupName&#39;</span>], from_time<span style="color:#f92672">=</span> from_time, to_time <span style="color:#f92672">=</span> to_time, bucket_dir <span style="color:#f92672">=</span> bucket_dir)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">85</span>        <span style="color:#66d9ef">return</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">86</span>            <span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;running&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">87</span>            <span style="color:#e6db74">&#34;time&#34;</span>: event[<span style="color:#e6db74">&#39;time&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">88</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">89</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">90</span>    <span style="color:#66d9ef">return</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">91</span>        <span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;completed&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">92</span>        <span style="color:#e6db74">&#34;time&#34;</span>: event[<span style="color:#e6db74">&#39;time&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">93</span>    }</code></pre></div>
 
 <p>ポイントは <strong>Lambdaに戻り値を設定する</strong> ことです。
 今までLamdaで戻り値を指定しても使いみちは殆ど無かったのですが、ここでは役に立つのです。</p>
@@ -372,39 +370,38 @@ def lambda_handler(event, context):
 <li><code>Wait a minute</code> ：export taskが終わりそうな時間を適当に待つ</li>
 </ol>
 
-<pre><code class="language-json">{
-  &quot;Comment&quot;: &quot;Export Cloudwatch LogStream recursively&quot;,
-  &quot;StartAt&quot;: &quot;Export Awslogs to S3&quot;,
-  &quot;TimeoutSeconds&quot;: 86400,
-  &quot;States&quot;: {
-    &quot;Export Awslogs to S3&quot;: {
-      &quot;Type&quot;: &quot;Task&quot;,
-      &quot;Resource&quot;: &quot;${Lambdaのarn}&quot;,
-      &quot;Next&quot;: &quot;Finished exporting?&quot;
-    },
-    &quot;Finished exporting?&quot;: {
-      &quot;Type&quot;: &quot;Choice&quot;,
-      &quot;Choices&quot;:[{
-        &quot;Variable&quot;: &quot;$.status&quot;,
-        &quot;StringEquals&quot;: &quot;running&quot;,
-        &quot;Next&quot;: &quot;Wait a minute&quot;
-      },{
-        &quot;Variable&quot;: &quot;$.status&quot;,
-        &quot;StringEquals&quot;: &quot;completed&quot;,
-        &quot;Next&quot;: &quot;Success&quot;
-      }]
-    },
-    &quot;Wait a minute&quot;: {
-      &quot;Type&quot;: &quot;Wait&quot;,
-      &quot;Seconds&quot;: 5,
-      &quot;Next&quot;: &quot;Export Awslogs to S3&quot;
-    },
-    &quot;Success&quot;: {
-      &quot;Type&quot;: &quot;Succeed&quot;
-    }
-  }
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  <span style="color:#f92672">&#34;Comment&#34;</span>: <span style="color:#e6db74">&#34;Export Cloudwatch LogStream recursively&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  <span style="color:#f92672">&#34;StartAt&#34;</span>: <span style="color:#e6db74">&#34;Export Awslogs to S3&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>  <span style="color:#f92672">&#34;TimeoutSeconds&#34;</span>: <span style="color:#ae81ff">86400</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>  <span style="color:#f92672">&#34;States&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#f92672">&#34;Export Awslogs to S3&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;Task&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>      <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;${Lambdaのarn}&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>      <span style="color:#f92672">&#34;Next&#34;</span>: <span style="color:#e6db74">&#34;Finished exporting?&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    <span style="color:#f92672">&#34;Finished exporting?&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;Choice&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>      <span style="color:#f92672">&#34;Choices&#34;</span>:[{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>        <span style="color:#f92672">&#34;Variable&#34;</span>: <span style="color:#e6db74">&#34;$.status&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: <span style="color:#e6db74">&#34;running&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        <span style="color:#f92672">&#34;Next&#34;</span>: <span style="color:#e6db74">&#34;Wait a minute&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>      },{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        <span style="color:#f92672">&#34;Variable&#34;</span>: <span style="color:#e6db74">&#34;$.status&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: <span style="color:#e6db74">&#34;completed&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>        <span style="color:#f92672">&#34;Next&#34;</span>: <span style="color:#e6db74">&#34;Success&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>      }]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>    <span style="color:#f92672">&#34;Wait a minute&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;Wait&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>      <span style="color:#f92672">&#34;Seconds&#34;</span>: <span style="color:#ae81ff">5</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>      <span style="color:#f92672">&#34;Next&#34;</span>: <span style="color:#e6db74">&#34;Export Awslogs to S3&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    <span style="color:#f92672">&#34;Success&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;Succeed&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>  }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>}</code></pre></div>
 
 <p>ポイントとしては、<strong>Waitのステートを入れている</strong> ところです。</p>
 
@@ -428,21 +425,20 @@ def lambda_handler(event, context):
 <p>このときに指定するロールには、信頼関係に <code>events.amazonaws.com</code> を指定し、
 最低限以下のポリシーが必要です。</p>
 
-<pre><code class="language-json">{
-    &quot;Version&quot;: &quot;2012-10-17&quot;,
-    &quot;Statement&quot;: [
-        {
-            &quot;Effect&quot;: &quot;Allow&quot;,
-            &quot;Action&quot;: [
-                &quot;states:StartExecution&quot;
-            ],
-            &quot;Resource&quot;: [
-                &quot;${Step Functionsのarn}&quot;
-            ]
-        }
-    ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#f92672">&#34;Statement&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#f92672">&#34;Action&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>                <span style="color:#e6db74">&#34;states:StartExecution&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>            ],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>            <span style="color:#f92672">&#34;Resource&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>                <span style="color:#e6db74">&#34;${Step Functionsのarn}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>            ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>}</code></pre></div>
 
 <h3 id="動かしてみる">動かしてみる</h3>
 

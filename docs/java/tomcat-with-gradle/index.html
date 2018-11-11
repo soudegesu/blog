@@ -177,55 +177,53 @@ if (!doNotTrack) {
 
 <p>今回試したサンプルコードは <a href="https://github.com/soudegesu/tomcat-gradle-plugin-test">こちら</a> において置くとして、肝心の <code>build.gradle</code> だけ貼り付けておきます。</p>
 
-<pre><code class="language-groovy">buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath group: 'com.bmuschko', name:'gradle-tomcat-plugin', version:'2.5'
-    }
-}
-
-ext {
-    tomcatVersion = '9.0.10'
-}
-
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'com.bmuschko.tomcat'
-
-sourceSets {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-    providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1'
-    compile group: 'org.apache.taglibs', name: 'taglibs-standard-impl', version: '1.2.5'
-
-    tomcat &quot;org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}&quot;
-    tomcat &quot;org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6&quot;
-    tomcat(&quot;org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}&quot;) {
-        exclude group: &quot;org.eclipse.jdt.core.compiler&quot;, module: &quot;ecj&quot;
-    }
-}
-
-tomcat {
-    httpProtocol = 'org.apache.coyote.http11.Http11Nio2Protocol'
-    ajpProtocol  = 'org.apache.coyote.ajp.AjpNio2Protocol'
-    contextPath = 'soudegesu'
-}
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>buildscript <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    repositories <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>        mavenCentral<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        jcenter<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    dependencies <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        classpath group: <span style="color:#e6db74">&#39;com.bmuschko&#39;</span><span style="color:#f92672">,</span> name:<span style="color:#e6db74">&#39;gradle-tomcat-plugin&#39;</span><span style="color:#f92672">,</span> version:<span style="color:#e6db74">&#39;2.5&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>ext <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    tomcatVersion <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;9.0.10&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>apply plugin: <span style="color:#e6db74">&#39;eclipse&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>apply plugin: <span style="color:#e6db74">&#39;idea&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>apply plugin: <span style="color:#e6db74">&#39;java&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>apply plugin: <span style="color:#e6db74">&#39;com.bmuschko.tomcat&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>sourceSets <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    sourceCompatibility <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    targetCompatibility <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>    <span style="color:#f92672">[</span>compileJava<span style="color:#f92672">,</span> compileTestJava<span style="color:#f92672">]*.</span><span style="color:#a6e22e">options</span><span style="color:#f92672">*.</span><span style="color:#a6e22e">encoding</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UTF-8&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>repositories <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    mavenCentral<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>dependencies <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>    providedCompile group: <span style="color:#e6db74">&#39;javax.servlet&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;javax.servlet-api&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;4.0.1&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>    providedCompile group: <span style="color:#e6db74">&#39;javax.servlet.jsp&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;javax.servlet.jsp-api&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;2.3.1&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>    compile group: <span style="color:#e6db74">&#39;org.apache.taglibs&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;taglibs-standard-impl&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;1.2.5&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>    tomcat <span style="color:#e6db74">&#34;org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>    tomcat <span style="color:#e6db74">&#34;org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>    tomcat<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>        exclude group: <span style="color:#e6db74">&#34;org.eclipse.jdt.core.compiler&#34;</span><span style="color:#f92672">,</span> module: <span style="color:#e6db74">&#34;ecj&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span>tomcat <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44</span>    httpProtocol <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;org.apache.coyote.http11.Http11Nio2Protocol&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45</span>    ajpProtocol  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;org.apache.coyote.ajp.AjpNio2Protocol&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46</span>    contextPath <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;soudegesu&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47</span><span style="color:#f92672">}</span></code></pre></div>
 
 <p>tomcat 9を使うときのみ <code>tomcat-embed-logging-juli</code> のバージョンが <code>tomcat-embed-core</code> と同じにできない所が留意点でしょうか。
 まだ、artifactがpublishされていないようですね。</p>
@@ -235,28 +233,25 @@ tomcat {
 
 <p>アプリケーションは <code>./gradlew</code> で起動できます。</p>
 
-<pre><code class="language-bash">./gradlew tomcatRun
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>./gradlew tomcatRun</code></pre></div>
 
 <p>サンプルアプリケーションが動いているか確認しましょう。問題なさそうですね。</p>
 
-<pre><code class="language-bash">curl http://localhost:8080/soudegesu/sample
-
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;Sample&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-Sample !!!
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>curl http://localhost:8080/soudegesu/sample
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&lt;!DOCTYPE html&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&lt;html&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>&lt;head&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>&lt;title&gt;Sample&lt;/title&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>&lt;/head&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>&lt;body&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>Sample !!!
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>&lt;/body&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>&lt;/html&gt;</code></pre></div>
 
 <p>Tomcatを停止するときは以下でした。</p>
 
-<pre><code class="language-bash">./gradlew tomcatStop
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>./gradlew tomcatStop</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

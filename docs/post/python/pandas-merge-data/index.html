@@ -180,17 +180,16 @@ if (!doNotTrack) {
 
 <p><code>concat</code> 関数を用いて、オプション <code>axis=1</code> を指定すると、複数の <code>DataFrame</code> を横方向に統合できます。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-# sample シートを読み込む
-df_sample = pd.read_excel('sample.xlsx', sheet_name='sample')
-# division シートを読み込む
-df_division = pd.read_excel('sample.xlsx', sheet_name='division')
-
-# axis=1で横方向に追加
-result = pd.concat([df_sample, df_division], axis=1)
-result.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#75715e"># sample シートを読み込む</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>df_sample <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_excel(<span style="color:#e6db74">&#39;sample.xlsx&#39;</span>, sheet_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sample&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"># division シートを読み込む</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>df_division <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_excel(<span style="color:#e6db74">&#39;sample.xlsx&#39;</span>, sheet_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;division&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#75715e"># axis=1で横方向に追加</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>result <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>concat([df_sample, df_division], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>result<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -238,17 +237,16 @@ result.head()
 
 <p>逆に縦方向にデータを追加する場合には、 <code>concat</code> 関数のオプションで <code>axis=0</code> を指定します（デフォルト値なので、省略しても構いません）。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-# sample シートを読み込む
-df_sample = pd.read_excel('sample.xlsx', sheet_name='sample')
-
-# axis=0で行を追加
-# 今回は df_sample のDataFrameを2回縦に繋げる
-result = pd.concat([df_sample, df_sample], axis=0, ignore_index=True)
-# headはデフォルトで5行しか出力しないため、10行出力に変更
-result.head(10)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#75715e"># sample シートを読み込む</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>df_sample <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_excel(<span style="color:#e6db74">&#39;sample.xlsx&#39;</span>, sheet_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sample&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#75715e"># axis=0で行を追加</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#75715e"># 今回は df_sample のDataFrameを2回縦に繋げる</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>result <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>concat([df_sample, df_sample], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, ignore_index<span style="color:#f92672">=</span>True)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#75715e"># headはデフォルトで5行しか出力しないため、10行出力に変更</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>result<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">10</span>)</code></pre></div>
 
 <table>
 <thead>
@@ -337,17 +335,16 @@ result.head(10)
 
 <p><code>部署ID</code> をキーとして、一つのデータに結合してみましょう。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-# sample シートを読み込む
-df_sample = pd.read_excel('sample.xlsx', sheet_name='sample')
-# division シートを読み込む
-df_division = pd.read_excel('sample.xlsx', sheet_name='division')
-
-# 部署IDをキーにJOINする
-result = df_sample.merge(df_division, on='部署ID')
-result.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#75715e"># sample シートを読み込む</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>df_sample <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_excel(<span style="color:#e6db74">&#39;sample.xlsx&#39;</span>, sheet_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sample&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"># division シートを読み込む</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>df_division <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_excel(<span style="color:#e6db74">&#39;sample.xlsx&#39;</span>, sheet_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;division&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#75715e"># 部署IDをキーにJOINする</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>result <span style="color:#f92672">=</span> df_sample<span style="color:#f92672">.</span>merge(df_division, on<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;部署ID&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>result<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <p><code>sample</code> シートのデータを軸として、<code>division</code> シートのデータを結合した行が出力されます。</p>
 
@@ -401,8 +398,7 @@ result.head()
 
 <p>以下のように書くことができます。</p>
 
-<pre><code class="language-python">result = df_sample.join(df_division.set_index('部署ID'), on='部署ID')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>result <span style="color:#f92672">=</span> df_sample<span style="color:#f92672">.</span>join(df_division<span style="color:#f92672">.</span>set_index(<span style="color:#e6db74">&#39;部署ID&#39;</span>), on<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;部署ID&#39;</span>)</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

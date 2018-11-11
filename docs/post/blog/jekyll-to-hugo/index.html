@@ -231,8 +231,7 @@ if (!doNotTrack) {
 
 <p><a href="https://gohugo.io/">Hugo</a> には <a href="https://jekyllrb.com/">Jekyll</a> の <a href="https://gohugo.io/commands/hugo_import_jekyll/">コンテンツをマイグレーションするためのコマンド</a> が用意されています。素晴らしい。</p>
 
-<pre><code class="language-bash">hugo import jekyll --forece ${Jekyllプロジェクトのパス} ${Hugoプロジェクトのパス}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>hugo import jekyll --forece <span style="color:#e6db74">${</span>Jekyllプロジェクトのパス<span style="color:#e6db74">}</span> <span style="color:#e6db74">${</span>Hugoプロジェクトのパス<span style="color:#e6db74">}</span></code></pre></div>
 
 <p>実行すると、<a href="https://gohugo.io/">Hugo</a> の基本的なフォルダ構成が生成され、今まで書いたコンテンツも <code>${Hugoプロジェクトのパス}/content/post</code> に展開されます。</p>
 
@@ -269,29 +268,26 @@ if (!doNotTrack) {
 
 <p>例えば以下のようになります。</p>
 
-<pre><code class="language-vim">---
-title: &quot;AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！&quot;
-date: 2018-08-17
-categories:
-    - aws
-tags:
-    - aws
-    - packer
-url: /aws/my-packer-best-practice/
----
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>---<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">title</span>:<span style="color:#75715e"> &#34;AMI作成のPackerプロジェクトのワタシ的ベストプラクティス！&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">date</span>: <span style="color:#ae81ff">2018-08-17</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">categories</span>:<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#960050;background-color:#1e0010"></span>    - <span style="color:#a6e22e">aws</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">tags</span>:<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#960050;background-color:#1e0010"></span>    - <span style="color:#a6e22e">aws</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#960050;background-color:#1e0010"></span>    - <span style="color:#a6e22e">packer</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">url</span>: <span style="color:#e6db74">/aws/</span><span style="color:#a6e22e">my</span>-<span style="color:#a6e22e">packer</span>-<span style="color:#a6e22e">best</span>-<span style="color:#a6e22e">practice</span>/<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#960050;background-color:#1e0010"></span>---</code></pre></div>
 
 <h3 id="ディレクトリ構成の変更">ディレクトリ構成の変更</h3>
 
 <p><a href="https://jekyllrb.com/">Jekyll</a> で作成した記事は、<a href="https://gohugo.io/">Hugo</a> で今後作成するコンテンツとは別ディレクトリで管理した方が見通しが良さそうなので、
 <code>hugo import</code> した記事は <code>${Hugoプロジェクトのパス}/content/past</code> というディレクトリに移動し、<code>config.toml</code> で <code>${Hugoプロジェクトのパス}/content/past</code> ディレクトリ配下もビルド対象にするように指定しました。</p>
 
-<pre><code class="language-vim">postSections = [&quot;post&quot;, &quot;past&quot;]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">postSections</span> = [<span style="color:#75715e">&#34;post&#34;, &#34;past&#34;]</span></code></pre></div>
 
-<pre><code class="language-bash">content --- post  # Hugoで作成した記事
-         `- past  # 過去にJekyllで作成した記事
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>content --- post  <span style="color:#75715e"># Hugoで作成した記事
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"></span>         <span style="color:#e6db74">`</span>- past  # 過去にJekyllで作成した記事</code></pre></div>
 
 <p>これでようやくそれっぽくなりました。</p>
 

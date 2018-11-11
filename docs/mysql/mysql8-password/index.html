@@ -265,9 +265,8 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
 
 <p>以下のように <strong>default-authentication-plugin=mysql_native_password</strong> を追記した <code>my.cnf</code> を準備し、</p>
 
-<pre><code>[mysqld]
-default-authentication-plugin=mysql_native_password
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>[<span style="color:#a6e22e">mysqld</span>]<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">default</span>-<span style="color:#a6e22e">authentication</span>-<span style="color:#a6e22e">plugin</span>=<span style="color:#a6e22e">mysql_native_password</span></code></pre></div>
 
 <p><code>/etc/my.cnf</code> にコピーしてあげます。</p>
 
@@ -318,8 +317,7 @@ default-authentication-plugin=mysql_native_password
 
 <p>実はこれだと、以下のようなエラーが発生します。</p>
 
-<pre><code class="language-bash">unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials</code></pre></div>
 
 <p>こちらは <a href="https://github.com/ansible/ansible/issues/41116">Ansible の isuue</a> にも報告がされていました。</p>
 

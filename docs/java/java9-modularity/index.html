@@ -350,11 +350,10 @@ Unnamed Moduleはclasspathを用いてクラスをロードする方式であ�
 
 <p><code>Gradle</code> であれば、例えば以下のようにコンパイル引数を追加しました。</p>
 
-<pre><code class="language-groovy">compileJava.options.compilerArgs += [
-    &quot;--add-modules&quot;, &quot;java.xml.ws.annotation&quot;,
-    &quot;--add-modules&quot;, &quot;java.xml.bind&quot;,
-]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>compileJava<span style="color:#f92672">.</span><span style="color:#a6e22e">options</span><span style="color:#f92672">.</span><span style="color:#a6e22e">compilerArgs</span> <span style="color:#f92672">+=</span> <span style="color:#f92672">[</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#e6db74">&#34;--add-modules&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;java.xml.ws.annotation&#34;</span><span style="color:#f92672">,</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#e6db74">&#34;--add-modules&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;java.xml.bind&#34;</span><span style="color:#f92672">,</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#f92672">]</span></code></pre></div>
 
 <h3 id="step-4-named-moduelにマイグレーションする">Step 4. Named Moduelにマイグレーションする</h3>
 
@@ -369,26 +368,24 @@ Unnamed Moduleはclasspathを用いてクラスをロードする方式であ�
 
 <p><a href="https://guides.gradle.org/building-java-9-modules/">Building Java 9 Modules</a> を参考にしつつと言ったのですが、こちらも注意点があります。ページでは以下のようサンプルコードが書かれているのですが、試しにやってみたところ、一発でコンパイルは通りませんでした。</p>
 
-<pre><code class="language-groovy">doFirst {
-    options.compilerArgs = [
-        '--module-path', classpath.asPath,
-    ]
-    classpath = files()
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>doFirst <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    options<span style="color:#f92672">.</span><span style="color:#a6e22e">compilerArgs</span> <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>        <span style="color:#e6db74">&#39;--module-path&#39;</span><span style="color:#f92672">,</span> classpath<span style="color:#f92672">.</span><span style="color:#a6e22e">asPath</span><span style="color:#f92672">,</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    classpath <span style="color:#f92672">=</span> files<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#f92672">}</span></code></pre></div>
 
 <p>このコードサンプルではGradleがリポジトリから取得したclasspath上のライブラリを全てmodulepathで読み込むように修正しています。
 そのため、Step 2でも少し触れましたが <strong>modulepath上で同じjavaのパッケージを持った複数のモジュールが存在する場合</strong> は以下のようなエラーが出力されてしまいます。(例としてspringboot1.5.9が依存している <code>embed tomcate</code>のライブラリでパッケージが競合している場合)</p>
 
-<pre><code class="language-bash">エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
-エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
-エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
-エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.criteriaを読み取ります
-エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.metamodelを読み取ります
-エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
-エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
-エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juliを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>エラー: モジュールhttpclientはtomcat.embed.coreとtomcat.juliの両方からパッケージorg.apache.juli.loggingを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.spiを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.criteriaを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistence.metamodelを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>エラー: モジュールhttpclientはjava.persistenceとhibernate.jpaの両方からパッケージjavax.persistenceを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>エラー: モジュールhttpclientはjava.persistenceとtomcat.annotations.apiの両方からパッケージjavax.persistenceを読み取ります
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>エラー: モジュールhttpclientはjavax.transaction.apiとjava.sqlの両方からパッケージjavax.transaction.xaを読み取ります</code></pre></div>
 
 <p>これを解決するためのワークアラウンドがそこそこ大変なのですが</p>
 

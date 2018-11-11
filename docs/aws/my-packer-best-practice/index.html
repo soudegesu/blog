@@ -193,34 +193,33 @@ if (!doNotTrack) {
 
 <p>まずは、以下のような <code>Vagrantfile</code> を準備します。とりあえず <code>centos/7</code> を指定しています。</p>
 
-<pre><code class="language-vim">Vagrant.configure(&quot;2&quot;) do |config|
-  config.vm.box = &quot;centos/7&quot;
-
-  config.vm.network :forwarded_port, id: &quot;ssh&quot;, guest: 22, host: 2222
-
-  config.vm.provider &quot;virtualbox&quot; do |vb|
-    vb.memory = &quot;1024&quot;
-  end
-  config.vm.provision &quot;shell&quot;, inline: &lt;&lt;-SHELL
-    #yum -y update
-    # add user centos
-    useradd centos
-    passwd -f -u centos
-    echo &quot;centos ALL = NOPASSWD: ALL&quot; &gt;&gt; /etc/sudoers.d/centos
-    echo &quot;centos ALL=(ALL) NOPASSWD:ALL&quot; &gt;&gt; /etc/sudoers.d/centos
-    # setup SSH
-    mkdir -p /home/centos/.ssh; chown centos /home/centos/.ssh; chmod 700 /home/centos/.ssh
-    cp /home/vagrant/.ssh/authorized_keys /home/centos/.ssh/authorized_keys
-    chown centos /home/centos/.ssh/authorized_keys
-    chmod 600 /home/centos/.ssh/authorized_keys
-    # setup sshd config
-    sed -ri 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
-    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-    sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
-    systemctl restart sshd
-  SHELL
-end
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">Vagrant</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#75715e">&#34;2&#34;) do |config|</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">vm</span>.<span style="color:#a6e22e">box</span> =<span style="color:#75715e"> &#34;centos/7&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">vm</span>.<span style="color:#a6e22e">network</span> :<span style="color:#a6e22e">forwarded_port</span>, <span style="color:#a6e22e">id</span>:<span style="color:#75715e"> &#34;ssh&#34;, guest: 22, host: 2222</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">vm</span>.<span style="color:#a6e22e">provider</span><span style="color:#75715e"> &#34;virtualbox&#34; do |vb|</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">vb</span>.<span style="color:#a6e22e">memory</span> =<span style="color:#75715e"> &#34;1024&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">end</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">vm</span>.<span style="color:#a6e22e">provision</span><span style="color:#75715e"> &#34;shell&#34;, inline: &lt;&lt;-SHELL</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#960050;background-color:#1e0010"></span>    #<span style="color:#a6e22e">yum</span> -<span style="color:#a6e22e">y</span> <span style="color:#a6e22e">update</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#960050;background-color:#1e0010"></span>    # <span style="color:#a6e22e">add</span> <span style="color:#a6e22e">user</span> <span style="color:#a6e22e">centos</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">useradd</span> <span style="color:#a6e22e">centos</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">passwd</span> -<span style="color:#a6e22e">f</span> -<span style="color:#a6e22e">u</span> <span style="color:#a6e22e">centos</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">echo</span><span style="color:#75715e"> &#34;centos ALL = NOPASSWD: ALL&#34; &gt;&gt; /etc/sudoers.d/centos</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">echo</span><span style="color:#75715e"> &#34;centos ALL=(ALL) NOPASSWD:ALL&#34; &gt;&gt; /etc/sudoers.d/centos</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#960050;background-color:#1e0010"></span>    # <span style="color:#a6e22e">setup</span> <span style="color:#a6e22e">SSH</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">mkdir</span> -<span style="color:#a6e22e">p</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">centos</span><span style="color:#e6db74">/.ssh; chown centos /</span><span style="color:#a6e22e">home</span><span style="color:#e6db74">/centos/</span>.<span style="color:#a6e22e">ssh</span>; <span style="color:#a6e22e">chmod</span> <span style="color:#ae81ff">700</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">centos</span>/.<span style="color:#a6e22e">ssh</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">cp</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">vagrant</span><span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">authorized_keys</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">centos</span><span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">authorized_keys</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">chown</span> <span style="color:#a6e22e">centos</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">centos</span><span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">authorized_keys</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">chmod</span> <span style="color:#ae81ff">600</span> <span style="color:#e6db74">/home/</span><span style="color:#a6e22e">centos</span><span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">authorized_keys</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span><span style="color:#960050;background-color:#1e0010"></span>    # <span style="color:#a6e22e">setup</span> <span style="color:#a6e22e">sshd</span> <span style="color:#a6e22e">config</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">sed</span> -<span style="color:#a6e22e">ri</span> <span style="color:#e6db74">&#39;s/#PermitRootLogin yes/PermitRootLogin yes/g&#39;</span> <span style="color:#e6db74">/etc/</span><span style="color:#a6e22e">ssh</span>/<span style="color:#a6e22e">sshd_config</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">sed</span> -<span style="color:#a6e22e">ri</span> <span style="color:#e6db74">&#39;s/UsePAM yes/#UsePAM yes/g&#39;</span> <span style="color:#e6db74">/etc/</span><span style="color:#a6e22e">ssh</span>/<span style="color:#a6e22e">sshd_config</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">sed</span> -<span style="color:#a6e22e">ri</span> <span style="color:#e6db74">&#39;s/#UsePAM no/UsePAM no/g&#39;</span> <span style="color:#e6db74">/etc/</span><span style="color:#a6e22e">ssh</span>/<span style="color:#a6e22e">sshd_config</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">systemctl</span> <span style="color:#a6e22e">restart</span> <span style="color:#a6e22e">sshd</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#a6e22e">SHELL</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">end</span></code></pre></div>
 
 <p>公開されているAMIとVagentの <code>centos/7</code> には、インストール済みのモジュールや、設定に差分があるため、
 可能なかぎり <code>config.vm.provision</code> ブロックで差分を吸収しています。ここはハマると若干時間を取られます。</p>
@@ -233,29 +232,27 @@ end
 
 <p>Packerのtemplateファイルの <code>builders</code> を抜粋します。</p>
 
-<pre><code class="language-json">&quot;builders&quot;:[
-    {
-        &quot;type&quot;: &quot;null&quot;,
-        &quot;communicator&quot;: &quot;ssh&quot;,
-        &quot;ssh_pty&quot;: true,
-        &quot;ssh_timeout&quot; : &quot;1m&quot;,
-        &quot;ssh_host&quot;: &quot;{{user `ssh_host`}}&quot;,
-        &quot;ssh_port&quot;: &quot;{{user `ssh_port`}}&quot; ,
-        &quot;ssh_username&quot;: &quot;{{user `ssh_user`}}&quot;,
-        &quot;ssh_private_key_file&quot;: &quot;{{user `ssh_key`}}&quot;
-    }
-]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#e6db74">&#34;builders&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>[
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>        <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;null&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#f92672">&#34;communicator&#34;</span>: <span style="color:#e6db74">&#34;ssh&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        <span style="color:#f92672">&#34;ssh_pty&#34;</span>: <span style="color:#66d9ef">true</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>        <span style="color:#f92672">&#34;ssh_timeout&#34;</span> : <span style="color:#e6db74">&#34;1m&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        <span style="color:#f92672">&#34;ssh_host&#34;</span>: <span style="color:#e6db74">&#34;{{user `ssh_host`}}&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        <span style="color:#f92672">&#34;ssh_port&#34;</span>: <span style="color:#e6db74">&#34;{{user `ssh_port`}}&#34;</span> ,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>        <span style="color:#f92672">&#34;ssh_username&#34;</span>: <span style="color:#e6db74">&#34;{{user `ssh_user`}}&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        <span style="color:#f92672">&#34;ssh_private_key_file&#34;</span>: <span style="color:#e6db74">&#34;{{user `ssh_key`}}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>]</code></pre></div>
 
 <p>templateファイル上で展開される変数は以下を与えます。</p>
 
-<pre><code class="language-json">{
-    &quot;ssh_host&quot;: &quot;127.0.0.1&quot;,
-    &quot;ssh_user&quot;: &quot;centos&quot;,
-    &quot;ssh_key&quot;: &quot;../.vagrant/machines/default/virtualbox/private_key&quot;,
-    &quot;ssh_port&quot;: &quot;2222&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#f92672">&#34;ssh_host&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#f92672">&#34;ssh_user&#34;</span>: <span style="color:#e6db74">&#34;centos&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">&#34;ssh_key&#34;</span>: <span style="color:#e6db74">&#34;../.vagrant/machines/default/virtualbox/private_key&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    <span style="color:#f92672">&#34;ssh_port&#34;</span>: <span style="color:#e6db74">&#34;2222&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>}</code></pre></div>
 
 <p>なお、ポート <code>2222</code> は <code>Vagrantfile</code> 内で <code>22</code> 番と既にポートフォワードする設定を追加済みです。</p>
 
@@ -285,23 +282,22 @@ Packer実行前に毎回 <code>restore</code> するようにします。</p>
 
 <p>ここでは <code>rake</code> コマンドをラップした <code>run_spec.sh</code> を呼び出していて、SSHするために必要な情報を引数として渡しています。</p>
 
-<pre><code class="language-json">    &quot;provisioners&quot;: [
-        {
-            &quot;type&quot;: &quot;ansible&quot;,
-            &quot;playbook_file&quot; : &quot;ansible/playbook-{{user `provision_target`}}.yml&quot;,
-            &quot;user&quot;: &quot;centos&quot;,
-            &quot;ssh_host_key_file&quot;: &quot;{{user `ssh_key`}}&quot;,
-            &quot;ansible_env_vars&quot;: [
-                &quot;ANSIBLE_HOST_KEY_CHECKING=False&quot;,
-                &quot;ANSIBLE_NOCOLOR=True&quot;
-            ]
-        },
-        {
-            &quot;type&quot;: &quot;shell-local&quot;,
-            &quot;command&quot;: &quot;cd serverspec &amp;&amp; sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}&quot;
-        }
-    ]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>    <span style="color:#e6db74">&#34;provisioners&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;ansible&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>            <span style="color:#f92672">&#34;playbook_file&#34;</span> : <span style="color:#e6db74">&#34;ansible/playbook-{{user `provision_target`}}.yml&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            <span style="color:#f92672">&#34;user&#34;</span>: <span style="color:#e6db74">&#34;centos&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#f92672">&#34;ssh_host_key_file&#34;</span>: <span style="color:#e6db74">&#34;{{user `ssh_key`}}&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>            <span style="color:#f92672">&#34;ansible_env_vars&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>                <span style="color:#e6db74">&#34;ANSIBLE_HOST_KEY_CHECKING=False&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>                <span style="color:#e6db74">&#34;ANSIBLE_NOCOLOR=True&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>            ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;shell-local&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>            <span style="color:#f92672">&#34;command&#34;</span>: <span style="color:#e6db74">&#34;cd serverspec &amp;&amp; sh ./run_spec.sh {{user `ssh_host`}} {{user `ssh_port`}} {{user `ssh_key`}} {{user `provision_target`}} {{user `ssh_user`}}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    ]</code></pre></div>
 
 <h2 id="設定ファイルは-roleごと-環境ごとに準備する">設定ファイルは、roleごと、環境ごとに準備する</h2>
 
@@ -369,16 +365,15 @@ Packer実行前に毎回 <code>restore</code> するようにします。</p>
 </tbody>
 </table>
 
-<pre><code class="language-json">{
-    &quot;aws_region&quot;: &quot;your-region&quot;,
-    &quot;aws_vpc_id&quot;: &quot;vpc-xxxxxxxxxxxxxx&quot;,
-    &quot;aws_subnet_id&quot;: &quot;subnet-xxxxxxxxxxx&quot;,
-    &quot;ssh_user&quot;: &quot;centos&quot;,
-    &quot;use_profile&quot;: &quot;your-profile&quot;,
-    &quot;aws_instance_role&quot;: &quot;your-packer-role&quot;,
-    &quot;aws_keypair_name&quot;: &quot;your-keypair-name&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#f92672">&#34;aws_region&#34;</span>: <span style="color:#e6db74">&#34;your-region&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#f92672">&#34;aws_vpc_id&#34;</span>: <span style="color:#e6db74">&#34;vpc-xxxxxxxxxxxxxx&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">&#34;aws_subnet_id&#34;</span>: <span style="color:#e6db74">&#34;subnet-xxxxxxxxxxx&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    <span style="color:#f92672">&#34;ssh_user&#34;</span>: <span style="color:#e6db74">&#34;centos&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    <span style="color:#f92672">&#34;use_profile&#34;</span>: <span style="color:#e6db74">&#34;your-profile&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    <span style="color:#f92672">&#34;aws_instance_role&#34;</span>: <span style="color:#e6db74">&#34;your-packer-role&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>    <span style="color:#f92672">&#34;aws_keypair_name&#34;</span>: <span style="color:#e6db74">&#34;your-keypair-name&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">9</span>}</code></pre></div>
 
 <p>AWSアカウント単位でVPCのIDやキーペアの情報は変わってくるので、そのような情報はここにもたせます。</p>
 
@@ -403,12 +398,11 @@ Packer実行前に毎回 <code>restore</code> するようにします。</p>
 <p>AnsibleのRole（システムコンポーネント）に依存する設定ファイルです。
 ベースとするAMIのインスタンスIDや、作成したAMI名のprefixなど置いておくといいと思います。</p>
 
-<pre><code class="language-json">{
-    &quot;packer_tag_prefix&quot;:  &quot;Packer-Hoge-AMI&quot;,
-    &quot;instance_tag_prefix&quot;: &quot;HOGE_OPTIMIZED&quot;,
-    &quot;aws_source_ami&quot;: &quot;ami-xxxxxxxx&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#f92672">&#34;packer_tag_prefix&#34;</span>:  <span style="color:#e6db74">&#34;Packer-Hoge-AMI&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#f92672">&#34;instance_tag_prefix&#34;</span>: <span style="color:#e6db74">&#34;HOGE_OPTIMIZED&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">&#34;aws_source_ami&#34;</span>: <span style="color:#e6db74">&#34;ami-xxxxxxxx&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}</code></pre></div>
 
 <h2 id="実行コマンドは別ファイルでラップしておく">実行コマンドは別ファイルでラップしておく</h2>
 
@@ -422,36 +416,35 @@ Packer実行前に毎回 <code>restore</code> するようにします。</p>
 <li>AnsibleやServerspecがEC2へSSHするためのSSH鍵</li>
 </ul>
 
-<pre><code class="language-bash">PACKER = cd packer
-# AnsibleのRole
-ROLE = $1
-# EC2へのSSH鍵（絶対パス）
-AWS_KEY_FILE = $2
-
-# Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存
-init-vagrant:
-	vagrant halt &amp;&amp; vagrant destroy -f &amp;&amp; vagrant up --provision &amp;&amp; \
-		vagrant snapshot save initial-save
-
-# Vagrantに対して先程のNull Builderでプロビジョニングします
-test-local:
-	@${PACKER} &amp;&amp; \
-		vagrant snapshot restore initial-save &amp;&amp; \
-		packer build -var-file=env-local-variables.json \
-		-var 'ssh_key=$(CURDIR)/.vagrant/machines/default/virtualbox/private_key' \
-		-var 'provision_target=${ROLE}' \
-		ami-local-template.json
-
-# AWSのAMIを作成します
-create-ami:
-	@${PACKER} &amp;&amp; \
-		packer build \
-		-var-file=env-aws-variables.json \
-		-var-file=role-${ROLE}-variables.json \
-		-var 'aws_key_file=${AWS_KEY_FILE}' \
-		-var 'provision_target=${ROLE}' \
-		ami-aws-template.json
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>PACKER <span style="color:#f92672">=</span> cd packer
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#75715e"># AnsibleのRole
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#75715e"></span>ROLE <span style="color:#f92672">=</span> $1
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#75715e"># EC2へのSSH鍵（絶対パス）
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"></span>AWS_KEY_FILE <span style="color:#f92672">=</span> $2
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#75715e"># Vagrant初期化時に make init-vagrant を実行します。 initial-saveという名前でスナップショットを保存
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#75715e"></span>init-vagrant:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>	vagrant halt <span style="color:#f92672">&amp;&amp;</span> vagrant destroy -f <span style="color:#f92672">&amp;&amp;</span> vagrant up --provision <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#ae81ff"></span>		vagrant snapshot save initial-save
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#75715e"># Vagrantに対して先程のNull Builderでプロビジョニングします
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#75715e"></span>test-local:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>	@<span style="color:#e6db74">${</span>PACKER<span style="color:#e6db74">}</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#ae81ff"></span>		vagrant snapshot restore initial-save <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#ae81ff"></span>		packer build -var-file<span style="color:#f92672">=</span>env-local-variables.json <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span><span style="color:#ae81ff"></span>		-var <span style="color:#e6db74">&#39;ssh_key=$(CURDIR)/.vagrant/machines/default/virtualbox/private_key&#39;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span><span style="color:#ae81ff"></span>		-var <span style="color:#e6db74">&#39;provision_target=${ROLE}&#39;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#ae81ff"></span>		ami-local-template.json
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span><span style="color:#75715e"># AWSのAMIを作成します
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span><span style="color:#75715e"></span>create-ami:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>	@<span style="color:#e6db74">${</span>PACKER<span style="color:#e6db74">}</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#ae81ff"></span>		packer build <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span><span style="color:#ae81ff"></span>		-var-file<span style="color:#f92672">=</span>env-aws-variables.json <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span><span style="color:#ae81ff"></span>		-var-file<span style="color:#f92672">=</span>role-<span style="color:#e6db74">${</span>ROLE<span style="color:#e6db74">}</span>-variables.json <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span><span style="color:#ae81ff"></span>		-var <span style="color:#e6db74">&#39;aws_key_file=${AWS_KEY_FILE}&#39;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span><span style="color:#ae81ff"></span>		-var <span style="color:#e6db74">&#39;provision_target=${ROLE}&#39;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span><span style="color:#ae81ff"></span>		ami-aws-template.json</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

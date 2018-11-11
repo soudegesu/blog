@@ -180,18 +180,16 @@ if (!doNotTrack) {
 
 <p><a href="https://github.com/syndbg/goenv">goenv</a> をインストールします。 <a href="https://brew.sh/index_ja">Homebrew</a> を使えばすぐできます。</p>
 
-<pre><code class="language-bash">brew install goenv
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>brew install goenv</code></pre></div>
 
 <h3 id="設定ファイルの編集">設定ファイルの編集</h3>
 
 <p>Bash使いであれば、 <code>~/.bash_profile</code> 、 Zsh使いであれば <code>$ZDOTDIR/.zprofile</code> に以下を記載します。</p>
 
-<pre><code class="language-bash">export GOENV_ROOT=&quot;$HOME/.goenv&quot;
-export PATH=&quot;$GOENV_ROOT/bin:$PATH&quot;
-
-eval &quot;$(goenv init --no-rehash -)&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>export GOENV_ROOT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$HOME<span style="color:#e6db74">/.goenv&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>export PATH<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$GOENV_ROOT<span style="color:#e6db74">/bin:</span>$PATH<span style="color:#e6db74">&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>eval <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>goenv init --no-rehash -<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span></code></pre></div>
 
 <p>ファイルを保存後、 <code>source</code> コマンドで設定ファイルを再読込するか、新規のターミナルを立ち上げ直せば、 環境変数を <code>export</code> できます。</p>
 
@@ -200,21 +198,18 @@ eval &quot;$(goenv init --no-rehash -)&quot;
 <p>次に <a href="https://github.com/golang/go">Go</a> をインストールします。今回は <code>1.10.1</code> をインストールします。
 これによって、 使用可能なバージョンに <code>1.10.1</code> を追加できます。</p>
 
-<pre><code class="language-bash">goenv install 1.10.1
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>goenv install <span style="color:#ae81ff">1</span>.10.1</code></pre></div>
 
 <p>任意のディレクトリ配下の <a href="https://github.com/golang/go">Go</a> のバージョンを先程インストールした <code>1.10.1</code> に変更します。</p>
 
-<pre><code class="language-bash">cd hoge
-go local 1.10.1
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>cd hoge
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>go local <span style="color:#ae81ff">1</span>.10.1</code></pre></div>
 
 <p>変更されているかを <code>go version</code> コマンドで確認します。</p>
 
-<pre><code class="language-bash">go version
-
-&gt; go version go1.10.1 darwin/amd64
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>go version
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&gt; go version go1.10.1 darwin/amd64</code></pre></div>
 
 <p><code>1.10.1</code> になっていますね。</p>
 

@@ -164,15 +164,14 @@ if (!doNotTrack) {
 <p>以下のように、列名が <code>json_col</code> という <code>DataFrame</code> を準備します。
 なお、 <code>json_col</code> 列の中身は <strong><code>JSON</code> 形式の文字列</strong> であるとします。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-data = {
-    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;}']
-}
-
-df = pd.DataFrame(data)
-df.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>data <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#e6db74">&#39;json_col&#39;</span>: [<span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;soudegesu&#34;, &#34;age&#34;: &#34;30&#34;}&#39;</span>, <span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;hogehoge&#34;, &#34;age&#34;: &#34;10&#34;}&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(data)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>df<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -231,12 +230,11 @@ df.head()
 
 <p>これは、既に読み込まれた <code>DataFrame</code> に対して適用する場合に有用です。</p>
 
-<pre><code class="language-python">from pandas.io.json import json_normalize
-import json 
-
-df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
-df_json.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">from</span> pandas.io.json <span style="color:#f92672">import</span> json_normalize
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#f92672">import</span> json 
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>df_json <span style="color:#f92672">=</span> json_normalize(df[<span style="color:#e6db74">&#39;json_col&#39;</span>]<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> x: json<span style="color:#f92672">.</span>loads(x)))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>df_json<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -279,18 +277,17 @@ df_json.head()
 <p><a href="https://pandas.pydata.org/">Pandas</a> の <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html">read_csv</a> 関数にある <code>converters</code> というオプションを使います。
 イメージとしては、案１の <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">apply</a> での変換処理を、<code>csv</code> ファイルのデータを <code>DataFrame</code> に変換するタイミングで行う感じです。</p>
 
-<pre><code class="language-python">from pandas.io.json import json_normalize
-import json 
-import pandas as pd
-
-df = pd.read_csv(
-    './hoge.csv',  #元データがhoge.csvに保存されているとします
-    converters={column: json.loads for column in ['json_col']},
-)
-
-df_json = json_normalize(df['json_col'])
-df_json.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">from</span> pandas.io.json <span style="color:#f92672">import</span> json_normalize
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#f92672">import</span> json 
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#e6db74">&#39;./hoge.csv&#39;</span>,  <span style="color:#75715e">#元データがhoge.csvに保存されているとします</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    converters<span style="color:#f92672">=</span>{column: json<span style="color:#f92672">.</span>loads <span style="color:#66d9ef">for</span> column <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;json_col&#39;</span>]},
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>df_json <span style="color:#f92672">=</span> json_normalize(df[<span style="color:#e6db74">&#39;json_col&#39;</span>])
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>df_json<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <p>こちらの方法でも変換できました。</p>
 
@@ -323,15 +320,14 @@ df_json.head()
 <p>先程、2つの方法を紹介しましたが、 <strong>ネストしたJSONはどのように展開してくれるのか</strong> 気になりますよね。
 試してみましょう。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-data = {
-    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;, &quot;address&quot;: {&quot;area&quot;: &quot;東京&quot;}}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;, &quot;address&quot;: {&quot;area&quot;: &quot;北海道&quot;}}']
-}
-df = pd.DataFrame(data)
-df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
-df_json.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>data <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#e6db74">&#39;json_col&#39;</span>: [<span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;soudegesu&#34;, &#34;age&#34;: &#34;30&#34;, &#34;address&#34;: {&#34;area&#34;: &#34;東京&#34;}}&#39;</span>, <span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;hogehoge&#34;, &#34;age&#34;: &#34;10&#34;, &#34;address&#34;: {&#34;area&#34;: &#34;北海道&#34;}}&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(data)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>df_json <span style="color:#f92672">=</span> json_normalize(df[<span style="color:#e6db74">&#39;json_col&#39;</span>]<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> x: json<span style="color:#f92672">.</span>loads(x)))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>df_json<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>
@@ -366,15 +362,14 @@ df_json.head()
 
 <p>最後に <strong>配列が含まれるJSONはどのように展開されるのか</strong> を確認します。</p>
 
-<pre><code class="language-python">import pandas as pd
-
-data = {
-    'json_col': ['{&quot;name&quot;: &quot;soudegesu&quot;, &quot;age&quot;: &quot;30&quot;, &quot;tag&quot;: [&quot;おっちょこちょい&quot;, &quot;よく寝る&quot;]}', '{&quot;name&quot;: &quot;hogehoge&quot;, &quot;age&quot;: &quot;10&quot;, &quot;tag&quot;: [&quot;せっかち&quot;, &quot;よく食べる&quot;]}']
-}
-df = pd.DataFrame(data)
-df_json = json_normalize(df['json_col'].apply(lambda x: json.loads(x)))
-df_json.head()
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>data <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#e6db74">&#39;json_col&#39;</span>: [<span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;soudegesu&#34;, &#34;age&#34;: &#34;30&#34;, &#34;tag&#34;: [&#34;おっちょこちょい&#34;, &#34;よく寝る&#34;]}&#39;</span>, <span style="color:#e6db74">&#39;{&#34;name&#34;: &#34;hogehoge&#34;, &#34;age&#34;: &#34;10&#34;, &#34;tag&#34;: [&#34;せっかち&#34;, &#34;よく食べる&#34;]}&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(data)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>df_json <span style="color:#f92672">=</span> json_normalize(df[<span style="color:#e6db74">&#39;json_col&#39;</span>]<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> x: json<span style="color:#f92672">.</span>loads(x)))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>df_json<span style="color:#f92672">.</span>head()</code></pre></div>
 
 <table>
 <thead>

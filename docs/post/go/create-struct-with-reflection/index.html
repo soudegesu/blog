@@ -152,24 +152,22 @@ if (!doNotTrack) {
 
 <p>以下の構造体を定義します。</p>
 
-<pre><code class="language-go">type Msg struct {
-	ID  int    `json:&quot;id&quot;`
-	Msg string `json:&quot;msg&quot;`
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Msg</span> <span style="color:#66d9ef">struct</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>	<span style="color:#a6e22e">ID</span>  <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;id&#34;`</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>	<span style="color:#a6e22e">Msg</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;msg&#34;`</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>}</code></pre></div>
 
 <p>通常、json文字列から構造体を作成するには <code>json.Unmarshal</code> 、または <code>json.NewDecoder</code> を使います。</p>
 
-<pre><code class="language-go">func main() {
-	str := `{&quot;id&quot;:1,&quot;msg&quot;:&quot;some message here&quot;}`
-	
-	var msg Msg
-	json.Unmarshal([]byte(str), &amp;msg)
-
-	# main.Msg{ID:1, Msg:&quot;some message here&quot;} が表示される
-	log.Printf(&quot;%#v&quot;, msg)	
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>	<span style="color:#a6e22e">str</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">`{&#34;id&#34;:1,&#34;msg&#34;:&#34;some message here&#34;}`</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>	
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">msg</span> <span style="color:#a6e22e">Msg</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>	<span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>([]byte(<span style="color:#a6e22e">str</span>), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">msg</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>	<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">main</span>.<span style="color:#a6e22e">Msg</span>{<span style="color:#a6e22e">ID</span>:<span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">Msg</span>:<span style="color:#e6db74">&#34;some message here&#34;</span>} <span style="color:#a6e22e">が表示される</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%#v&#34;</span>, <span style="color:#a6e22e">msg</span>)	
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">9</span>}</code></pre></div>
 
 <h2 id="reflect-パッケージと-json-unmarshal-を使った構造体の生成"><code>reflect</code> パッケージと <code>json.Unmarshal</code> を使った構造体の生成</h2>
 
@@ -178,32 +176,30 @@ if (!doNotTrack) {
 
 <p>以下のようになりました。</p>
 
-<pre><code class="language-go">
-func main() {
-	str := `{&quot;id&quot;:1,&quot;msg&quot;:&quot;some message here&quot;}`
-
-	var msg Msg
-	# *Msg型が格納される
-	res := createInstance(str, reflect.TypeOf(msg))
-
-	# main.Msg{ID:1, Msg:&quot;some message here&quot;} が表示される
-	log.Printf(&quot;%#v&quot;, res)
-
-	# 構造体の各フィールドにアクセスするには型アサーションが必要
-	r := res.(*Msg)
-	log.Printf(&quot;%#v&quot;, r)
-	log.Print(&quot;%s&quot;, r.ID)
-	log.Print(&quot;%s&quot;, r.Msg)
-}
-
-# Typeからオブジェクトを生成して、interfaceをUnmarshalに渡す
-func createInstance(str string, typ reflect.Type) interface{} {
-
-	obj := reflect.New(typ).Interface()	
-	json.Unmarshal([]byte(str), &amp;obj)
-	return obj
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>	<span style="color:#a6e22e">str</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">`{&#34;id&#34;:1,&#34;msg&#34;:&#34;some message here&#34;}`</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">msg</span> <span style="color:#a6e22e">Msg</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>	<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Msg型が格納される</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>	<span style="color:#a6e22e">res</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createInstance</span>(<span style="color:#a6e22e">str</span>, <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">msg</span>))
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>	<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">main</span>.<span style="color:#a6e22e">Msg</span>{<span style="color:#a6e22e">ID</span>:<span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">Msg</span>:<span style="color:#e6db74">&#34;some message here&#34;</span>} <span style="color:#a6e22e">が表示される</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%#v&#34;</span>, <span style="color:#a6e22e">res</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>	<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">構造体の各フィールドにアクセスするには型アサーションが必要</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">res</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">Msg</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%#v&#34;</span>, <span style="color:#a6e22e">r</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">ID</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Msg</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span><span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">Typeからオブジェクトを生成して</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">interfaceをUnmarshalに渡す</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">createInstance</span>(<span style="color:#a6e22e">str</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">typ</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Type</span>) <span style="color:#66d9ef">interface</span>{} {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>	<span style="color:#a6e22e">obj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">typ</span>).<span style="color:#a6e22e">Interface</span>()	
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>	<span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>([]byte(<span style="color:#a6e22e">str</span>), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">obj</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">obj</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>}</code></pre></div>
 
 <h2 id="ngなパターン-elem-を使う">NGなパターン（ <code>Elem</code> を使う）</h2>
 
@@ -212,19 +208,17 @@ func createInstance(str string, typ reflect.Type) interface{} {
 <p><code>reflect.New</code> で生成したインスタンスから <code>Elem()</code> で要素を取得した場合には
 <code>map[string]interface{}</code> 型のオブジェクトが返却されてしまいました。</p>
 
-<pre><code class="language-go">func createInstance(str string, typ reflect.Type) interface{} {
-	obj := reflect.New(typ).Elem().Interface()
-	json.Unmarshal([]byte(str), &amp;obj)
-	# map[string]interface{} 型が返却される
-	return obj
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">createInstance</span>(<span style="color:#a6e22e">str</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">typ</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Type</span>) <span style="color:#66d9ef">interface</span>{} {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>	<span style="color:#a6e22e">obj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">typ</span>).<span style="color:#a6e22e">Elem</span>().<span style="color:#a6e22e">Interface</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>	<span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>([]byte(<span style="color:#a6e22e">str</span>), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">obj</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>	<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">interface</span>{} <span style="color:#a6e22e">型が返却される</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">obj</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>}</code></pre></div>
 
 <p>これは <code>Unmarshal</code> に <code>interface{}</code> 型の変数のアドレスを渡したときと同じ挙動です。</p>
 
-<pre><code class="language-go">var f interface{}
-err := json.Unmarshal(b, &amp;f)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">f</span> <span style="color:#66d9ef">interface</span>{}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">b</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">f</span>)</code></pre></div>
 
 <h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
 

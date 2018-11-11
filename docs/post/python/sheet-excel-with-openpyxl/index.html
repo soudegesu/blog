@@ -170,20 +170,19 @@ if (!doNotTrack) {
 
 <p>新規でシートを追加するには <code>create_sheet</code> 関数を使います。</p>
 
-<pre><code class="language-python">from openpyxl.workbook import Workbook
-
-wb = Workbook()
-
-# 最後尾にシートを追加
-ws1 = wb.create_sheet(&quot;シート1&quot;)
-ws1.title = &quot;シート1のタイトル&quot;
-
-# 先頭にシートを追加
-ws2 = wb.create_sheet(&quot;シート2&quot;, 0)
-ws2.title = &quot;シート２のタイトル&quot;
-
-wb.save(filename = 'sample_book.xlsx')
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">from</span> openpyxl.workbook <span style="color:#f92672">import</span> Workbook
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>wb <span style="color:#f92672">=</span> Workbook()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#75715e"># 最後尾にシートを追加</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>ws1 <span style="color:#f92672">=</span> wb<span style="color:#f92672">.</span>create_sheet(<span style="color:#e6db74">&#34;シート1&#34;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>ws1<span style="color:#f92672">.</span>title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;シート1のタイトル&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#75715e"># 先頭にシートを追加</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>ws2 <span style="color:#f92672">=</span> wb<span style="color:#f92672">.</span>create_sheet(<span style="color:#e6db74">&#34;シート2&#34;</span>, <span style="color:#ae81ff">0</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>ws2<span style="color:#f92672">.</span>title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;シート２のタイトル&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>wb<span style="color:#f92672">.</span>save(filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sample_book.xlsx&#39;</span>)</code></pre></div>
 
 <p><code>create_sheet</code> 関数は第2引数に数字を与えることで、 <strong>シートを挿入する位置</strong> を調整できます。
 第2引数を与えない場合には、最後尾に追加されます。</p>
@@ -196,24 +195,21 @@ wb.save(filename = 'sample_book.xlsx')
 
 <p>Excelファイル内に存在するすべてのシート名を確認するには <code>Workbook</code> オブジェクトの <code>sheetnames</code> プロパティを参照します。</p>
 
-<pre><code class="language-python">wb.sheetnames
-# 結果はリストで取得できる
-# ['シート２のタイトル', 'Sheet', 'シート1のタイトル']
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>wb<span style="color:#f92672">.</span>sheetnames
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"># 結果はリストで取得できる</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#75715e"># [&#39;シート２のタイトル&#39;, &#39;Sheet&#39;, &#39;シート1のタイトル&#39;]</span></code></pre></div>
 
 <p>また、 <code>Workbook</code> オブジェクトに対して <code>for</code> ループを使うことで、 各シートを <code>Worksheet</code> オブジェクトとして取得することもできます。</p>
 
-<pre><code class="language-python">for ws in wb:
-    print(ws.title)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">for</span> ws <span style="color:#f92672">in</span> wb:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#66d9ef">print</span>(ws<span style="color:#f92672">.</span>title)</code></pre></div>
 
 <h2 id="シートの選択">シートの選択</h2>
 
 <p><code>Workbook</code> オブジェクトから <strong>シート名を指定する</strong> ことで、操作したい対象のシートを取得できます。</p>
 
-<pre><code class="language-python"># wbはWorkbookオブジェクトを表す
-ws1 = wb[&quot;シート1のタイトル&quot;]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e"># wbはWorkbookオブジェクトを表す</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>ws1 <span style="color:#f92672">=</span> wb[<span style="color:#e6db74">&#34;シート1のタイトル&#34;</span>]</code></pre></div>
 
 <h2 id="シートの属性値の変更">シートの属性値の変更</h2>
 
@@ -222,8 +218,7 @@ ws1 = wb[&quot;シート1のタイトル&quot;]
 <p>シートのタブの色を変更したい場合には、 シートの属性情報（ <code>sheet_properties</code> ）にアクセスして
 <code>tabColor</code> プロパティにカラーコードを入力します。</p>
 
-<pre><code class="language-python">ws1.sheet_properties.tabColor = &quot;1072BA&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>ws1<span style="color:#f92672">.</span>sheet_properties<span style="color:#f92672">.</span>tabColor <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1072BA&#34;</span></code></pre></div>
 
 <p><img src="/images/20180831/tab_color.png" alt="tab_color" /></p>
 
@@ -232,8 +227,7 @@ ws1 = wb[&quot;シート1のタイトル&quot;]
 <p>指定したシートに対して、自動でフィルタモードを適用します。
 フィルタが適用可能なシートの構造になっている必要があります。</p>
 
-<pre><code class="language-python">ws1.sheet_properties.filterMode = True
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>ws1<span style="color:#f92672">.</span>sheet_properties<span style="color:#f92672">.</span>filterMode <span style="color:#f92672">=</span> True</code></pre></div>
 
 <h3 id="その他の属性値">その他の属性値</h3>
 

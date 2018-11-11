@@ -174,47 +174,44 @@ if (!doNotTrack) {
 <p>まずは、構造体 <code>Sample</code> を定義します。構造体には <code>Client</code> interface をもたせます。
 外部パッケージからは直接 <code>client</code> を操作できないようにする目的で、<code>doGet</code> 関数でラップします。</p>
 
-<pre><code class="language-go">// 構造体を定義する
-type Sample struct {
-  // interfaceを定義する
-	client Client
-}
-
-// 振る舞いをモックしたい
-type Client interface {
-	Get() int
-}
-
-// interfaceのGet()をラップする
-func (sample *Sample) doGet() int {
-	return sample.client.Get()
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#75715e">// 構造体を定義する
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Sample</span> <span style="color:#66d9ef">struct</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  <span style="color:#75715e">// interfaceを定義する
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">client</span> <span style="color:#a6e22e">Client</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#75715e">// 振る舞いをモックしたい
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Client</span> <span style="color:#66d9ef">interface</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>	<span style="color:#a6e22e">Get</span>() <span style="color:#66d9ef">int</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#75715e">// interfaceのGet()をラップする
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">sample</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Sample</span>) <span style="color:#a6e22e">doGet</span>() <span style="color:#66d9ef">int</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sample</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Get</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>}</code></pre></div>
 
 <h3 id="interfaceの実装">interfaceの実装</h3>
 
 <p>次にinterfaceの実装を行います。 <a href="https://github.com/golang/go">Go</a> のinterfaceは他の言語と異なり、実装する側（ここでいう構造体）による  <strong>「このinterfaceを実装しますよ」 という宣言が不要です</strong> 。 レシーバを使い、interfaceに規定された関数を持った構造体を定義してあげれば良いのです。
 今回は  <code>hogeClientImpl</code>  という名前で実装します。</p>
 
-<pre><code class="language-go">// Client interface の実装をする構造体
-type hogeClientImpl struct {
-}
-
-// レシーバで実装する
-func (client *hogeClientImpl) Get() int {
-	return 1
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e">// Client interface の実装をする構造体
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">hogeClientImpl</span> <span style="color:#66d9ef">struct</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#75715e">// レシーバで実装する
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">client</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">hogeClientImpl</span>) <span style="color:#a6e22e">Get</span>() <span style="color:#66d9ef">int</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>}</code></pre></div>
 
 <p>これによって、プロダクションコードの実装においては、例えば以下のように、<code>hogeClientImpl</code> を外から渡すことができます。
 仮に <code>hogeClientImpl</code> の実装がinterfaceの定義を満たしていなければ、コンパイルエラーになります。</p>
 
-<pre><code class="language-go">func hogeMain() int {
-  sample := &amp;Sample{&amp;hogeClientImpl{}}
-  // 1が返却される
-	return sample.doGet()
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">hogeMain</span>() <span style="color:#66d9ef">int</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  <span style="color:#a6e22e">sample</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Sample</span>{<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">hogeClientImpl</span>{}}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>  <span style="color:#75715e">// 1が返却される
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sample</span>.<span style="color:#a6e22e">doGet</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>}</code></pre></div>
 
 <h2 id="テストコード側">テストコード側</h2>
 
@@ -223,26 +220,24 @@ func (client *hogeClientImpl) Get() int {
 <p>次にテストコードを作ってみましょう。テストコードファイル側でも同様に interfaceの定義を満たす構造体を定義してあげればOKです。
 ここでは <code>testClientImpl</code> とします。</p>
 
-<pre><code class="language-go">type testClientImpl struct {
-}
-
-func (c *testClientImpl) Get() int {
-	return 2
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">testClientImpl</span> <span style="color:#66d9ef">struct</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testClientImpl</span>) <span style="color:#a6e22e">Get</span>() <span style="color:#66d9ef">int</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>}</code></pre></div>
 
 <p>interfaceと同じ関数を規定したので、<code>Client</code> として引数に渡すことが可能となりました。</p>
 
-<pre><code class="language-go">func TestMainRequest(t *testing.T) {
-  // testClientImpl の実体をセットする
-  sample := &amp;Sample{&amp;testClientImpl{}}
-  // testClientImpl#Getが呼ばれ、2が返却される
-	res := sample.doGet()
-	if res != 2 {
-		t.Error(&quot;response should be 2&quot;)
-	}
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TestMainRequest</span>(<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testing</span>.<span style="color:#a6e22e">T</span>) {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  <span style="color:#75715e">// testClientImpl の実体をセットする
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">sample</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Sample</span>{<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">testClientImpl</span>{}}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>  <span style="color:#75715e">// testClientImpl#Getが呼ばれ、2が返却される
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">res</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sample</span>.<span style="color:#a6e22e">doGet</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">res</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>		<span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;response should be 2&#34;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>	}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">9</span>}</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

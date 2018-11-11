@@ -234,8 +234,7 @@ Wikipediaなどを見てみると、<strong>Q#</strong> はどちらかといえ
 <p>サンプルコードを動かした後、新規のプロジェクトでプログラムを実行しようと思ったのですが、
 以下のようなエラーが表示され、ビルドに失敗しました。</p>
 
-<pre><code class="language-bash">Reference to unknown namespace Microsoft.Quantum.Primitive
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>Reference to unknown namespace Microsoft.Quantum.Primitive</code></pre></div>
 
 <p>調査してみたところ <code>.NETのバージョンが古い</code> ことが原因でした。
  <code>.NET Framework</code> を <code>4.6.1</code> に変更することで namespaceの解決ができるようになりました。</p>
