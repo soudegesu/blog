@@ -57,7 +57,7 @@ AuroraというよりはMySQLの仕様に関する説明も多いのでご了承
 以下のようなクエリを発行し `hoge` テーブルを作成します。
 加えて、パーティション名のルールは `p` + `yyyyMMdd` として、`create_at` カラムでRANGEパーティション指定をします。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 -- create hoge table
 DROP TABLE IF EXISTS hoge;
 CREATE TABLE hoge (
@@ -71,13 +71,13 @@ CREATE TABLE hoge (
 ALTER TABLE hoge PARTITION BY RANGE (UNIX_TIMESTAMP(create_at)) (
   PARTITION p20180219 VALUES LESS THAN (UNIX_TIMESTAMP('2018-02-19 00:00:00'))
 );
-```
+{{< / highlight >}}
 
 ### パーティション追加用のプロシージャを作成
 次にパーティションを追加するためのプロシージャを登録します。
 可視性の観点でバリデーション等は省略しています。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 --
 -- hogeテーブルにパーティションを追加するストアドプロシージャ
 -- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
@@ -117,16 +117,16 @@ CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
   END$$
 DELIMITER ;
 
-```
+{{< / highlight >}}
 
 ### 初期パーティションを作成する
 登録したプロシージャ `add_hoge_partition` を使用して、初期パーティションを追加します。
 
 とりあえず、現在日付から365日ぶんのパーティションを追加しましょう。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 CALL add_hoge_partition(CURDATE(), DATE_ADD(CURDATE(), INTERVAL 365 DAY));
-```
+{{< / highlight >}}
 
 なお、パーティションは **追加しかできない** ことに注意してください。
 
@@ -141,7 +141,7 @@ MySQLには `CREATE EVENT` 構文にてイベントをスケジュール実行�
 その後以下のようなクエリを発行し、日次でパーティションを追加できるようにしましょう。
 少々見づらいですが、`INFORMATION_SCHEMA` から既に存在するパーティションの情報を取得し、それに +1日してパーティションを追加しています。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 CREATE EVENT add_hoge_partition
 ON SCHEDULE EVERY 1 DAY STARTS '2018-02-19 00:00:00'
 COMMENT 'hogeテーブルに対して1日毎に1日分のパーティションを追加します'
@@ -151,7 +151,7 @@ DO CALL
             (select from_unixtime(max(PARTITION_DESCRIPTION)) from INFORMATION_SCHEMA.PARTITIONS where TABLE_NAME = 'hoge'),INTERVAL 1 DAY)
         );
 
-```
+{{< / highlight >}}
 
 これで、毎日0時にパーティション追加のプロシージャが実行されるようになりました。
 
@@ -166,17 +166,17 @@ Clusterを組んだ場合においては、「WriterとReaderの両方で実行�
 
 * WriterでEVENTを確認
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
 > 1	event_scheduler	localhost		Daemon	40803	Waiting for next activation
-```
+{{< / highlight >}}
 
 * ReaderでEVENTを確認
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limit 10;
 > Empty set (0.01 sec)
-```
+{{< / highlight >}}
 
 Failoverさせた状態でも、翌日にもパーティションが作成されていることも確認できたため、Writerのみが実行できているといえます。
 
@@ -195,11 +195,11 @@ Auroraからlambdaを実行するために、別途権限を付与する必要�
 IAMのメニューから専用のIAM Roleを作成しましょう(今回は `rdsToLambdaRole` という名前にします)。
 `rdsToLambdaRole` には
 
-```json
+{{< highlight json "linenos=inline" >}}
 "Action": [
   "lambda:InvokeFunction"
 ]
-```
+{{< / highlight >}}
 
 が許可されていれば良いので、AWSから提供されている `AWSLambdaRole` ポリシーを適用すればOKです。
 
@@ -219,7 +219,7 @@ lambda関数 `rds_monitor` を `mysql.lambda_async` プロシージャで呼び�
 
 追記箇所は以下のようになります。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
     -- 失敗したらlambdaで通知する
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
       BEGIN
@@ -231,11 +231,11 @@ lambda関数 `rds_monitor` を `mysql.lambda_async` プロシージャで呼び�
         );
       END;
 
-```
+{{< / highlight >}}
 
 先程のプロシージャに組み込んだ場合は以下のようになります。
 
-```sql
+{{< highlight mysql "linenos=inline" >}}
 --
 -- hogeテーブルにパーティションを追加するストアドプロシージャ
 -- 引数 from_date: パーティション作成の開始日時 to_date: パーティション作成の終了日時
@@ -285,7 +285,7 @@ CREATE PROCEDURE add_hoge_partition(IN from_date DATE, IN to_date DATE)
   END$$
 DELIMITER ;
 
-```
+{{< / highlight >}}
 
 `mysql.lambda_async`の引数には**lambdaのARN指定が必要**という点が注意ポイントです。
 

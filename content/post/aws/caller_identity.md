@@ -18,16 +18,16 @@ twitter_card_image: /images/icons/terraform_icon.png
 
 ってありますよね。 例えば、AWSアカウント番号がそうです。 [Terraform Module](https://www.terraform.io/docs/modules/usage.html) を使って、それなりのサイズ感のシステムコンポーネント定義を書いていくと、モジュール毎の `variables.tf` ファイルに
 
-```terraform
+{{< highlight go "linenos=inline" >}}
 variable "account_id" {
 }
-```
+{{< / highlight >}}
 
 と定義した後、 `.tfvars` ファイルに
 
-```
+{{< highlight go "linenos=inline" >}}
 account_id = "XXXXXXXXXXX"
-```
+{{< / highlight >}}
 
 という記載が増えて冗長に感じます。
 
@@ -35,7 +35,7 @@ account_id = "XXXXXXXXXXX"
 
 こんな感じだったり、
 
-```
+{{< highlight go "linenos=inline" >}}
 data "aws_iam_policy_document" "xxxxx" {
     statement {
         effect = "Allow"
@@ -56,13 +56,13 @@ data "aws_iam_policy_document" "xxxxx" {
         }
     }
 }
-```
+{{< / highlight >}}
 
 こんな感じで使ったりしていました。
 
-```
+{{< highlight python "linenos=inline" >}}
 ${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/xxxxxxxxx:${var.image_tag},
-```
+{{< / highlight >}}
 
 ## aws_caller_identity を使う
 
@@ -72,20 +72,20 @@ ${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/xxxxxxxxx:${var.image_tag
 
 以下のように `data` 定義をします。
 
-```
+{{< highlight go "linenos=inline" >}}
 data "aws_caller_identity" "current" {}
-```
+{{< / highlight >}}
 
 `aws_caller_identity` から `account_id` の属性値が参照できるので、以下のようにアクセスできます。
 
-```
+{{< highlight go "linenos=inline" >}}
 principals = {
   type = "AWS"
   identifiers = [
     "${data.aws_caller_identity.current.account_id}"
   ]
 }
-```
+{{< / highlight >}}
 
 こうすることで、 `.tfvars` ファイルの変数定義も減らせてすっきりですね！
 

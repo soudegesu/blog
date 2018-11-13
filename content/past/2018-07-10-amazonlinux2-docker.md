@@ -39,7 +39,7 @@ Amazon Linux2から [Extras Library](https://docs.aws.amazon.com/ja_jp/AWSEC2/la
 
 どのようなライブラリがインストールできるか確認してみましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 amazon-linux-extras list
 
   0  ansible2                 available  [ =2.4.2 ]
@@ -64,13 +64,13 @@ amazon-linux-extras list
  18  mate-desktop1.x          available  [ =1.19.0  =1.20.0 ]
  19  GraphicsMagick1.3        available  [ =1.3.29 ]
  20  tomcat8.5                available  [ =8.5.31 ]
-```
+{{< / highlight >}}
 
 `docker` が含まれていますね。
 
 早速インストールを試してみましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 amazon-linux-extras install docker
 
 (中略)
@@ -104,13 +104,13 @@ amazon-linux-extras install docker
  18  mate-desktop1.x          available  [ =1.19.0  =1.20.0 ]
  19  GraphicsMagick1.3        available  [ =1.3.29 ]
  20  tomcat8.5                available  [ =8.5.31 ]
-```
+{{< / highlight >}}
 
 実運用の際にはバージョン固定や `-y` オプションを入れたりします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 amazon-linux-extras install -y docker=18.03.1
-```
+{{< / highlight >}}
 
 Extras Library に関する説明は [クラスメソッドさんがまとめてくれている](https://dev.classmethod.jp/cloud/aws/how-to-work-with-amazon-linux2-amazon-linux-extras/) ので、こちらを参考にすると良いでしょう。
 

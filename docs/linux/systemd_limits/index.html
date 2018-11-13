@@ -176,7 +176,7 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 
 <p>Ansibleの <a href="https://docs.ansible.com/ansible/2.3/pam_limits_module.html">pam_limits</a> を使うと、このファイルに追記がされます。</p>
 
-<pre><code class="language-bash">cat /etc/security/limits.conf
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /etc/security/limits.conf
 
 # /etc/security/limits.conf
 #
@@ -204,8 +204,8 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 #                 for maxlogin limit
 #
 #&lt;type&gt; can have the two values:
-#        - &quot;soft&quot; for enforcing the soft limits
-#        - &quot;hard&quot; for enforcing hard limits
+#        - &#34;soft&#34; for enforcing the soft limits
+#        - &#34;hard&#34; for enforcing hard limits
 #
 #&lt;item&gt; can be one of the following:
 #        - core - limits the core file size (KB)
@@ -238,8 +238,7 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 #ftp             hard    nproc           0
 #@student        -       maxlogins       4
 
-# End of file
-</code></pre>
+# End of file</code></pre></div>
 
 <h3 id="limits-confよりも優先されるファイル">limits.confよりも優先されるファイル</h3>
 
@@ -251,15 +250,14 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 
 <p>アクシデンタルなフォーク爆弾を防ぐために、とも書かれていますね。</p>
 
-<pre><code class="language-bash">cat /etc/security/limits.d/20-nproc.conf
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /etc/security/limits.d/20-nproc.conf
 
-&gt; # Default limit for number of user's processes to prevent
+&gt; # Default limit for number of user&#39;s processes to prevent
 &gt; # accidental fork bombs.
 &gt; # See rhbz #432903 for reasoning.
 &gt;
 &gt; *          soft    nproc     4096
-&gt; root       soft    nproc     unlimited
-</code></pre>
+&gt; root       soft    nproc     unlimited</code></pre></div>
 
 <h3 id="設定値の確認方法">設定値の確認方法</h3>
 
@@ -269,7 +267,7 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 <p>注意点として、<code>ulimit</code> で表示されるのは、カレントユーザの設定値であることです。
 別のユーザの設定値を確認したければ <code>su</code> を使うなどする必要があります。</p>
 
-<pre><code class="language-bash">ulimit -a
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">ulimit -a
 
 &gt; core file size          (blocks, -c) 0
 &gt; data seg size           (kbytes, -d) unlimited
@@ -286,8 +284,7 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 &gt; cpu time               (seconds, -t) unlimited
 &gt; max user processes              (-u) 3828
 &gt; virtual memory          (kbytes, -v) unlimited
-&gt; file locks                      (-x) unlimited
-</code></pre>
+&gt; file locks                      (-x) unlimited</code></pre></div>
 
 <h2 id="デーモンへの設定">デーモンへの設定</h2>
 
@@ -306,10 +303,9 @@ Linuxではユーザやプロセスごとに利用できるリソースを制限
 <p>systemdにてコントロールされるプロセスのデフォルト値を変更するには <code>/etc/systemd/system.conf</code> ファイルを編集します。
 例えば、プロセス数やファイルディスクリプタ数を変更するには以下のように記述をします。</p>
 
-<pre><code class="language-bash">[Manager]
-DefaultLimitNOFILE=65536
-DefaultLimitNPROC=65536
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>[<span style="color:#a6e22e">Manager</span>]<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">DefaultLimitNOFILE</span>=<span style="color:#ae81ff">65536</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">DefaultLimitNPROC</span>=<span style="color:#ae81ff">65536</span></code></pre></div>
 
 <h3 id="デーモンごとの設定をする">デーモンごとの設定をする</h3>
 
@@ -321,21 +317,19 @@ DefaultLimitNPROC=65536
 
 <p>以下ではファイルディスクリプタの数を定義しています。</p>
 
-<pre><code class="language-vim">[Service]
-LimitNOFILE=40000
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>[<span style="color:#a6e22e">Service</span>]<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">LimitNOFILE</span>=<span style="color:#ae81ff">40000</span></code></pre></div>
 
 <p>その後、デーモンを再起動して</p>
 
-<pre><code class="language-bash">systemctl daemon-reload
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">systemctl daemon-reload
 
 systemctl stop (サービス)
-systemctl start (サービス)
-</code></pre>
+systemctl start (サービス)</code></pre></div>
 
 <p>設定が反映されているか確認しましょう。</p>
 
-<pre><code class="language-bash">cat /proc/${プロセス番号}/limits
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /proc/${プロセス番号}/limits
 
 Limit                     Soft Limit           Hard Limit           Units
 Max cpu time              unlimited            unlimited            seconds
@@ -353,8 +347,7 @@ Max pending signals       29779                29779                signals
 Max msgqueue size         819200               819200               bytes
 Max nice priority         0                    0
 Max realtime priority     0                    0
-Max realtime timeout      unlimited            unlimited            us
-</code></pre>
+Max realtime timeout      unlimited            unlimited            us</code></pre></div>
 
 <p>ファルディスクリプタ（Max open files）が40000になっていますね。</p>
 

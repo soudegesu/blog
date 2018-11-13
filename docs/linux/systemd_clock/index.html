@@ -152,16 +152,15 @@ if (!doNotTrack) {
 <p>システムクロックは <code>/etc/adjtime</code> を使ってハードウェアクロックから算出されます。
 <code>systemd</code> の場合、 <code>/etc/adjtime</code> が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。</p>
 
-<pre><code class="language-bash">cat /etc/adjtime
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /etc/adjtime
 
 &gt; 0.0 0 0.0
 &gt; 0
-&gt; UTC
-</code></pre>
+&gt; UTC</code></pre></div>
 
 <p>システムクロックを確認しましょう。 <code>timedatectl</code> コマンドを実行してみます。</p>
 
-<pre><code class="language-bash">timedatectl
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">timedatectl
 
 &gt;       Local time: Sat 2018-06-09 05:16:29 UTC
 &gt;   Universal time: Sat 2018-06-09 05:16:29 UTC
@@ -170,19 +169,17 @@ if (!doNotTrack) {
 &gt;      NTP enabled: yes
 &gt; NTP synchronized: no
 &gt;  RTC in local TZ: no
-&gt;      DST active: n/a
-</code></pre>
+&gt;      DST active: n/a</code></pre></div>
 
 <p>何もしていないので、UTCのままですね。</p>
 
 <p>次にtimezoneを <code>Asia/Tokyo</code> にしてみましょう。こちらも <code>timedatectl</code> コマンドで設定可能です。</p>
 
-<pre><code class="language-bash">timedatectl set-timezone Asia/Tokyo
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">timedatectl set-timezone Asia/Tokyo</code></pre></div>
 
 <p>設定がされたか確認してみましょう。 <code>timedatectl</code> コマンドを実行したら、 Time zoneがJSTになっていることが確認できます。</p>
 
-<pre><code class="language-bash">timedatectl
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">timedatectl
 
 &gt;       Local time: Sat 2018-06-09 14:57:45 JST
 &gt;   Universal time: Sat 2018-06-09 05:57:45 UTC
@@ -191,27 +188,24 @@ if (!doNotTrack) {
 &gt;      NTP enabled: yes
 &gt; NTP synchronized: no
 &gt;  RTC in local TZ: no
-&gt;       DST active: n/a
-</code></pre>
+&gt;       DST active: n/a</code></pre></div>
 
 <p>タイムゾーンを変更すると、 <code>/etc/localtime</code> にその設定が反映されます。
 ファイルを見てみましょう。 <code>cat</code> してみましょう。</p>
 
-<pre><code class="language-bash">cat /etc/localtime
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /etc/localtime
 
 &gt; TZif2
 &gt;         ��&gt;p��K����p��-���ۭ�����݌�����~~LMTJDTJSTTZif2
 &gt;
-&gt; �����e¤p�����&gt;p������K��������p������-�����������ۭ�������������݌�����~~LMTJDTJST
-</code></pre>
+&gt; �����e¤p�����&gt;p������K��������p������-�����������ۭ�������������݌�����~~LMTJDTJST</code></pre></div>
 
 <p>文字化けしてしまいましたね。代わりに、 <code>zdump</code> コマンドを使うことで <code>/etc/localtime</code> が指すタイムゾーンの情報を確認してみましょう。
 これで JST になっていることを確認できました。</p>
 
-<pre><code class="language-bash">zdump /etc/localtime
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">zdump /etc/localtime
 
-&gt; /etc/localtime  Sat Jun  9 14:57:54 2018 JST
-</code></pre>
+&gt; /etc/localtime  Sat Jun  9 14:57:54 2018 JST</code></pre></div>
 
 <p>ちなみに <code>timedatectl set-time　&quot;2018-06-09 12:00:00&quot;</code> のように、
 直接引数に与えられた時刻に設定することができますが、個人的に使った経験はありません。</p>
@@ -222,7 +216,7 @@ if (!doNotTrack) {
 
 <p>ハードウェアクロックの情報は <code>hwclock</code> コマンドで確認できます。</p>
 
-<pre><code class="language-bash">hwclock --debug
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hwclock --debug
 
 &gt; hwclock from util-linux 2.30.2
 &gt; Trying to open: /dev/rtc0
@@ -237,15 +231,13 @@ if (!doNotTrack) {
 &gt; Hw clock time : 2018/06/09 06:09:22 = 1528524562 seconds since 1969
 &gt; Time since last adjustment is 1528524562 seconds
 &gt; Calculated Hardware Clock drift is 0.000000 seconds
-&gt; 2018-06-09 15:09:21.645250+0900
-</code></pre>
+&gt; 2018-06-09 15:09:21.645250+0900</code></pre></div>
 
 <p>デバッグオプションなしで、 <code>hwclock</code> だけ実行すると、ハードウェアに記録されている時刻が表示されます。</p>
 
-<pre><code class="language-bash">hwclock
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hwclock
 
-&gt; 2018-06-09 15:09:21.645250+0900
-</code></pre>
+&gt; 2018-06-09 15:09:21.645250+0900</code></pre></div>
 
 <h2 id="参考にさせていただいたサイト">参考にさせていただいたサイト</h2>
 

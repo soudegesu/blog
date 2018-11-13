@@ -49,42 +49,42 @@ TOPページに「このスクリプトをターミナルで叩きなさい」�
 
 `pyenv` と `pyenv-virtualenv` をインストールします。
 
-```bash
+{{< highlight "linenos=inline" >}}
 brew install pyenv pyenv-virtualenv
-```
+{{< / highlight >}}
 
 ### .bashrc を書き換える
 
 bashであれば `.bashrc` 、 zsh であれば `.zshrc` に以下を追記します。
 ターミナルを起動する時に `rehash` してほしくなければ `--no-rehash` を入れます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="$PATH:${PYENV_ROOT}/bin:${PYENV_ROOT}/shims"
 
 eval "$(pyenv init --no-rehash -)"
 eval "$(pyenv virtualenv-init -)"
-```
+{{< / highlight >}}
 
 ### pythonをインストールして仮想環境を作る
 
 ベースになるPythonをインストールします。
 
-```bash
+{{< highlight "linenos=inline" >}}
 pyenv install 3.6.1
-```
+{{< / highlight >}}
 
 その後、対象のプロジェクト専用の仮想環境を準備します。
 仮想環境の名前は `test_project` にしておきます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 pyenv virtualenv 3.6.1 test_project
-```
+{{< / highlight >}}
 
 次に `test_project` ディレクトリを作成して、
 そのディレクトリ配下では `Python 3.6.1` のである仮想環境 `test_project` を使うように設定します。
 
-```bash
+{{< highlight "linenos=inline" >}}
 mkdir test_project
 cd test_project
 
@@ -92,15 +92,15 @@ pyenv local 3.6.1/envs/test_project
 
 python -V
 >> Python 3.6.1
-```
+{{< / highlight >}}
 
 試しにディレクトリから出てみましょう。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cd ../
 python -V
 >> Python 2.7.14
-```
+{{< / highlight >}}
 
 できました。
 
@@ -120,20 +120,20 @@ python -V
 
 * Pythonのダウンロード
 
-```bash
+{{< highlight "linenos=inline" >}}
 curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
 tar zxf Python-(バージョン).tgz
-```
+{{< / highlight >}}
 
 * ソースからインストール
 
-```bash
+{{< highlight "linenos=inline" >}}
 cd Python-(バージョン)
 
 ./configure --prefix=/opt/local
 make
 make altinstall
-```
+{{< / highlight >}}
 
 ただし、警告のところに書かれているように **Linuxには予めPythonがインストールされているため、それを破壊しないように** `make altinstall` の方が良いです。
 

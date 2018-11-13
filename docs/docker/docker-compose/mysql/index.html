@@ -162,36 +162,34 @@ if (!doNotTrack) {
 
 <p>例えば、以下のようなDockerfileがあったとします。</p>
 
-<pre><code class="language-Dockerfile">FROM mysql:latest
-
-RUN { \
-   echo '[mysqld]'; \
-   echo 'character-set-server=utf8'; \
-   echo 'collation-server=utf8_general_ci'; \
-   echo '[client]'; \
-   echo 'default-character-set=utf8'; \
-} &gt; /etc/mysql/conf.d/charset.cnf
-
-EXPOSE 3306
-CMD [&quot;mysqld&quot;]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">FROM</span> <span style="color:#a6e22e">mysql</span>:<span style="color:#a6e22e">latest</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">RUN</span> { \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#39;[mysqld]&#39;</span>; \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#39;character-set-server=utf8&#39;</span>; \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#39;collation-server=utf8_general_ci&#39;</span>; \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#39;[client]&#39;</span>; \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#39;default-character-set=utf8&#39;</span>; \<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#960050;background-color:#1e0010"></span>} &gt; <span style="color:#e6db74">/etc/</span><span style="color:#a6e22e">mysql</span><span style="color:#e6db74">/conf.d/</span><span style="color:#a6e22e">charset</span>.<span style="color:#a6e22e">cnf</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">EXPOSE</span> <span style="color:#ae81ff">3306</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">CMD</span> [<span style="color:#75715e">&#34;mysqld&#34;]</span></code></pre></div>
 
 <p>それを呼び出すdocker-compose.ymlを作成します。</p>
 
-<pre><code class="language-Dockerfile">mysql:
-  build: .
-  dockerfile: Dockerfile
-  ports:
-    - &quot;3306:3306&quot;
-  environment:
-    - MYSQL_ROOT_USER=root
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=soudegesu
-    - MYSQL_USER=soudegesu
-    - MYSQL_PASSWORD=soudegesu
-  volumes:
-    - ./init.d:/docker-entrypoint-initdb.d
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>mysql:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  build: .
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  dockerfile: Dockerfile
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>  ports:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    - <span style="color:#e6db74">&#34;3306:3306&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>  environment:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    - MYSQL_ROOT_USER=root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    - MYSQL_ROOT_PASSWORD=root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    - MYSQL_DATABASE=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    - MYSQL_USER=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    - MYSQL_PASSWORD=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>  volumes:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    - ./init.d:/docker-entrypoint-initdb.d</code></pre></div>
 
 <p>dockerfileの箇所に作成したDockerfileを指定しておくことで、起動時にimageをビルドし、そのイメージを使ってコンテナを起動します。</p>
 
@@ -201,86 +199,80 @@ CMD [&quot;mysqld&quot;]
 
 <p>それでは起動してみましょう。</p>
 
-<pre><code class="language-bash">#docker-compose up
-Starting soudegesu_mysql_1
-Attaching to soudegesu_mysql_1
-mysql_1  | 2017-01-31T07:09:28.026908Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
-mysql_1  | 2017-01-31T07:09:28.038354Z 0 [Note] mysqld (mysqld 5.7.17) starting as process 1 ...
-mysql_1  | 2017-01-31T07:09:28.053912Z 0 [Note] InnoDB: PUNCH HOLE support available
-mysql_1  | 2017-01-31T07:09:28.054031Z 0 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
-mysql_1  | 2017-01-31T07:09:28.054043Z 0 [Note] InnoDB: Uses event mutexes
-mysql_1  | 2017-01-31T07:09:28.054055Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
-〜以下略〜
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>docker-compose up
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>Starting soudegesu_mysql_1
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>Attaching to soudegesu_mysql_1
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.026908Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Warning<span style="color:#f92672">]</span> TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option <span style="color:#f92672">(</span>see documentation <span style="color:#66d9ef">for</span> more details<span style="color:#f92672">)</span>.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.038354Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Note<span style="color:#f92672">]</span> mysqld <span style="color:#f92672">(</span>mysqld <span style="color:#ae81ff">5</span>.7.17<span style="color:#f92672">)</span> starting as process <span style="color:#ae81ff">1</span> ...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.053912Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Note<span style="color:#f92672">]</span> InnoDB: PUNCH HOLE support available
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.054031Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Note<span style="color:#f92672">]</span> InnoDB: Mutexes and rw_locks use GCC atomic builtins
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.054043Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Note<span style="color:#f92672">]</span> InnoDB: Uses event mutexes
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>mysql_1  | <span style="color:#ae81ff">2017</span>-01-31T07:09:28.054055Z <span style="color:#ae81ff">0</span> <span style="color:#f92672">[</span>Note<span style="color:#f92672">]</span> InnoDB: GCC builtin __atomic_thread_fence<span style="color:#f92672">()</span> is used <span style="color:#66d9ef">for</span> memory barrier
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>〜以下略〜</code></pre></div>
 
 <p>mysqlコマンドで接続してみます。</p>
 
-<pre><code class="language-bash">mysql -h 127.0.0.1 -P 3306 -u root -proot
-mysql: [Warning] Using a password on the command line interface can be insecure.
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 3
-Server version: 5.7.17 MySQL Community Server (GPL)
-
-Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql&gt;
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>mysql -h <span style="color:#ae81ff">127</span>.0.0.1 -P <span style="color:#ae81ff">3306</span> -u root -proot
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>mysql: <span style="color:#f92672">[</span>Warning<span style="color:#f92672">]</span> Using a password on the command line interface can be insecure.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>Welcome to the MySQL monitor.  Commands end with ; or <span style="color:#ae81ff">\g</span>.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>Your MySQL connection id is <span style="color:#ae81ff">3</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>Server version: <span style="color:#ae81ff">5</span>.7.17 MySQL Community Server <span style="color:#f92672">(</span>GPL<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>Copyright <span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#ae81ff">2000</span>, <span style="color:#ae81ff">2016</span>, Oracle and/or its affiliates. All rights reserved.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>Oracle is a registered trademark of Oracle Corporation and/or its
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>affiliates. Other names may be trademarks of their respective
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>owners.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>Type <span style="color:#e6db74">&#39;help;&#39;</span> or <span style="color:#e6db74">&#39;\h&#39;</span> <span style="color:#66d9ef">for</span> help. Type <span style="color:#e6db74">&#39;\c&#39;</span> to clear the current input statement.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>mysql&gt;</code></pre></div>
 
 <p>できました。
 起動時のsqlファイルの実行結果も確認しましょう。</p>
 
-<pre><code class="language-bash">mysql&gt; show databases;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| soudegesu              |
-| mysql              |
-| performance_schema |
-| sys                |
-+--------------------+
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>mysql&gt; show databases;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>+--------------------+
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>| Database           |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>+--------------------+
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>| information_schema |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>| soudegesu              |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>| mysql              |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>| performance_schema |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>| sys                |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>+--------------------+</code></pre></div>
 
-<pre><code class="language-bash">mysql&gt; use soudegesu;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
-Database changed
-mysql&gt; show tables;
-+-----------------+
-| Tables_in_soudegesu |
-+-----------------+
-| aaaa            |
-| bbbb            |
-+-----------------+
-2 rows in set (0.00 sec)
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>mysql&gt; use soudegesu;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>Reading table information <span style="color:#66d9ef">for</span> completion of table and column names
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>You can turn off this feature to get a quicker startup with -A
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>Database changed
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>mysql&gt; show tables;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>+-----------------+
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>| Tables_in_soudegesu |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>+-----------------+
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>| aaaa            |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>| bbbb            |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>+-----------------+
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#ae81ff">2</span> rows in set <span style="color:#f92672">(</span><span style="color:#ae81ff">0</span>.00 sec<span style="color:#f92672">)</span></code></pre></div>
 
 <h2 id="ちなみに">ちなみに</h2>
 
 <p>既存のimageを使用して <code>docker-compose up</code> を実行することも可能です。場合に応じて設定を変更してください。</p>
 
-<pre><code class="language-Dockerfile">mysql:
-  image: mysql:latest ←これ
-  ports:
-    - &quot;3306:3306&quot;
-  environment:
-    - MYSQL_ROOT_USER=root
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=soudegesu
-    - MYSQL_USER=soudegesu
-    - MYSQL_PASSWORD=soudegesu
-  volumes:
-    - ./init.d:/docker-entrypoint-initdb.d
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>mysql:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  image: mysql:latest ←これ
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  ports:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    - <span style="color:#e6db74">&#34;3306:3306&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>  environment:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    - MYSQL_ROOT_USER=root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    - MYSQL_ROOT_PASSWORD=root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    - MYSQL_DATABASE=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    - MYSQL_USER=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    - MYSQL_PASSWORD=soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>  volumes:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    - ./init.d:/docker-entrypoint-initdb.d</code></pre></div>
 
 		</div>
 		

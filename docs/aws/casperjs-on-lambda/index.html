@@ -247,13 +247,13 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 <p>CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
 <strong>CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい</strong> ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。</p>
 
-<pre><code class="language-javascript">// Change browser lang
-casper.on('started', function () {
-    this.page.customHeaders = {
-        &quot;Accept-Language&quot;: &quot;en-US&quot;
-    }
-});
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e">// Change browser lang
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e"></span><span style="color:#a6e22e">casper</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;started&#39;</span>, <span style="color:#66d9ef">function</span> () {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">customHeaders</span> <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>        <span style="color:#e6db74">&#34;Accept-Language&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;en-US&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span></code></pre></div>
 
 <p><strong>ランタイムに依存しない</strong> という意味でも設定しておいた方が良いと思います。</p>
 

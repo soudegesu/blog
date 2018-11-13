@@ -80,7 +80,7 @@ Lambdaに付与するIAM Roleを作成します。
 まず、以下のようなAssume Role Policy を作成します。
  `Lambda` と `Lambda@Edge` は別ものとして扱われているため、 `edgelambda.amazonaws.com` の記載が必要です。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -97,7 +97,7 @@ Lambdaに付与するIAM Roleを作成します。
     }
   ]
 }
-```
+{{< / highlight >}}
 
 作成したPolicyと `CloudWatchLogsFullAccess` のポリシーをアタッチしたRoleを作成します。
 名前はとりあえず **EdgeLambdaForCloudfrontRole** としましょう。
@@ -143,7 +143,7 @@ Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイ
 #### Lambda@EdgeからCloudfrontへのレスポンス形式に注意する
 `オリジンリクエスト` の場合、Lambda@EdgeからCloudfrontに返却するレスポンスの形式が以下のように定められているため、そちらに準拠する必要があります。
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 {
     body: 'content',
     bodyEncoding: 'text' | 'base64',
@@ -157,7 +157,7 @@ Lambda@EdgeとCloudfrontを連携させる場合に、Lambda@Edgeの実行タイ
     status: 'HTTP status code',
     statusDescription: 'status description'
 }
-```
+{{< / highlight >}}
 
 これを愚直に実装するのは少々手間がかかるので、 [aws-serverless-express-edge](https://github.com/jgautheron/aws-serverless-express-edge) というnpmモジュールを使ってしまうのが早いです。
 
@@ -176,7 +176,7 @@ Cloudfrontは設定項目が多いためTerraformに書き起こすのに時間�
 
 * LambdaのTerraformサンプル
 
-```bash
+{{< highlight go "linenos=inline" >}}
 resource "aws_lambda_function" "hogehoge" {
     filename = "../hogehoge.zip"
     function_name = "hoeghoge"
@@ -194,11 +194,11 @@ data "archive_file" "hogehoge" {
     output_path = "../hogehoge.zip"
 }
 
-```
+{{< / highlight >}}
 
 * CloudfrontのTerraformサンプル
 
-```bash
+{{< highlight go "linenos=inline" >}}
 resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
     origin {
         domain_name = "xxxx.soudegesu.com"
@@ -251,17 +251,16 @@ resource "aws_cloudfront_distribution" "hogehogefront_cloudfront" {
         }
     }
 }
-```
+{{< / highlight >}}
 
 ポイントなのは Cloudfront側の以下の部分で、
 
-```bash
+{{< highlight go "linenos=inline" >}}
     lambda_function_association {
         event_type = "origin-request"
         lambda_arn = "${aws_lambda_function.hogehoge.qualified_arn}"
     }
-
-```
+{{< / highlight >}}
 
 `qualified_arn` を指定すると、バージョン込のフルのARNにて変数展開がされます。
 これにより、terraformを実行するだけで、LambdaのデプロイとCloudfrontの更新の両方ができるようになります。
@@ -280,9 +279,8 @@ AWSコンソールからCloudfrontのInvalidationsのタブを押します。
 
 なお、このキャッシュクリアに関してCloudfrontの料金ページでは、
 
-```
-月間で無効をリクエストしたパスの最初の 1,000 パスまでは追加料金なし。それ以降は、無効をリクエストしたパスごとに 0.005 USD かかります。
-```
+
+> 月間で無効をリクエストしたパスの最初の 1,000 パスまでは追加料金なし。それ以降は、無効をリクエストしたパスごとに 0.005 USD かかります。
 
 と記載されているので、URLのパターンが増えてきたら、削除対象の指定パターンはもう少し工夫した方がいいかもしれません。
 

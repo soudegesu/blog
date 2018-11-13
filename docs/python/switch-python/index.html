@@ -196,52 +196,46 @@ Python 2で書かれたコードをPython 3のランタイムで動かすこと�
 
 <p><code>pyenv</code> と <code>pyenv-virtualenv</code> をインストールします。</p>
 
-<pre><code class="language-bash">brew install pyenv pyenv-virtualenv
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew install pyenv pyenv-virtualenv</code></pre></div>
 
 <h3 id="bashrc-を書き換える">.bashrc を書き換える</h3>
 
 <p>bashであれば <code>.bashrc</code> 、 zsh であれば <code>.zshrc</code> に以下を追記します。
 ターミナルを起動する時に <code>rehash</code> してほしくなければ <code>--no-rehash</code> を入れます。</p>
 
-<pre><code class="language-bash">export PYENV_ROOT=&quot;${HOME}/.pyenv&quot;
-export PATH=&quot;$PATH:${PYENV_ROOT}/bin:${PYENV_ROOT}/shims&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">export PYENV_ROOT=&#34;${HOME}/.pyenv&#34;
+export PATH=&#34;$PATH:${PYENV_ROOT}/bin:${PYENV_ROOT}/shims&#34;
 
-eval &quot;$(pyenv init --no-rehash -)&quot;
-eval &quot;$(pyenv virtualenv-init -)&quot;
-</code></pre>
+eval &#34;$(pyenv init --no-rehash -)&#34;
+eval &#34;$(pyenv virtualenv-init -)&#34;</code></pre></div>
 
 <h3 id="pythonをインストールして仮想環境を作る">pythonをインストールして仮想環境を作る</h3>
 
 <p>ベースになるPythonをインストールします。</p>
 
-<pre><code class="language-bash">pyenv install 3.6.1
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv install 3.6.1</code></pre></div>
 
 <p>その後、対象のプロジェクト専用の仮想環境を準備します。
 仮想環境の名前は <code>test_project</code> にしておきます。</p>
 
-<pre><code class="language-bash">pyenv virtualenv 3.6.1 test_project
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv virtualenv 3.6.1 test_project</code></pre></div>
 
 <p>次に <code>test_project</code> ディレクトリを作成して、
 そのディレクトリ配下では <code>Python 3.6.1</code> のである仮想環境 <code>test_project</code> を使うように設定します。</p>
 
-<pre><code class="language-bash">mkdir test_project
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">mkdir test_project
 cd test_project
 
 pyenv local 3.6.1/envs/test_project
 
 python -V
-&gt;&gt; Python 3.6.1
-</code></pre>
+&gt;&gt; Python 3.6.1</code></pre></div>
 
 <p>試しにディレクトリから出てみましょう。</p>
 
-<pre><code class="language-bash">cd ../
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cd ../
 python -V
-&gt;&gt; Python 2.7.14
-</code></pre>
+&gt;&gt; Python 2.7.14</code></pre></div>
 
 <p>できました。</p>
 
@@ -261,20 +255,18 @@ python -V
 <li>Pythonのダウンロード</li>
 </ul>
 
-<pre><code class="language-bash">curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
-tar zxf Python-(バージョン).tgz
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">curl -O https://www.python.org/ftp/python/(バージョン)/Python-(バージョン).tgz
+tar zxf Python-(バージョン).tgz</code></pre></div>
 
 <ul>
 <li>ソースからインストール</li>
 </ul>
 
-<pre><code class="language-bash">cd Python-(バージョン)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cd Python-(バージョン)
 
 ./configure --prefix=/opt/local
 make
-make altinstall
-</code></pre>
+make altinstall</code></pre></div>
 
 <p>ただし、警告のところに書かれているように <strong>Linuxには予めPythonがインストールされているため、それを破壊しないように</strong> <code>make altinstall</code> の方が良いです。</p>
 

@@ -193,14 +193,12 @@ if (!doNotTrack) {
 <p>Homebrewを使用してfishをインストールします。
 (これ以外にもMacportsやインストーラー、Windows版、tarboll等様々サポートしていますので公式サイトを確認してください)</p>
 
-<pre><code>brew install fish
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew install fish</code></pre></div>
 
 <h3 id="デフォルトのシェル切り替え">デフォルトのシェル切り替え</h3>
 
-<p><code>/etc/shells</code> を確認すると、使用可能なshellを確認できます。</p>
-
-<pre><code>&gt; cat /etc/shells
+<p><code>/etc/shells</code> を確認すると、使用可能なshellを確認できます。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat /etc/shells
 # List of acceptable shells for chpass(1).
 # Ftpd will not allow users to connect who are not using
 # one of these shells.
@@ -210,19 +208,16 @@ if (!doNotTrack) {
 /bin/ksh
 /bin/sh
 /bin/tcsh
-/bin/zsh
-</code></pre>
+/bin/zsh</code></pre></div></p>
 
 <p>今のままでは <code>fish</code> は使用できませんので末尾に1行fishのパスを追記しましょう。</p>
 
-<pre><code>&gt;which fish
-/usr/local/bin/fish  #これを/etc/shellsに追記
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">which fish
+/usr/local/bin/fish  #これを/etc/shellsに追記</code></pre></div>
 
 <p>以下のコマンドでターミナル起動時のログインシェルをfishに切り替えることができます。</p>
 
-<pre><code>chsh -s /usr/local/bin/fish
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">chsh -s /usr/local/bin/fish</code></pre></div>
 
 <h3 id="ターミナルを再起動する">ターミナルを再起動する</h3>
 
@@ -235,15 +230,12 @@ if (!doNotTrack) {
 
 <h3 id="fisherman-のインストール">fisherman のインストール</h3>
 
-<pre><code>curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher</code></pre></div>
 
 <h3 id="プラグインのインストール">プラグインのインストール</h3>
 
-<p>まずはプロンプトのテーマをインストールします。今回はjokerのテーマをインストールしてみます。</p>
-
-<pre><code>fisher joker
-</code></pre>
+<p>まずはプロンプトのテーマをインストールします。今回はjokerのテーマをインストールしてみます。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">fisher joker</code></pre></div></p>
 
 <h3 id="powerlineのインストール">powerlineのインストール</h3>
 
@@ -254,9 +246,8 @@ if (!doNotTrack) {
 <p>加えてfontsも別途インストールしなくてはいけないようです。(やること増えてきてしまった。。。)
 <a href="https://powerline.readthedocs.io/en/latest/installation/linux.html#font-installation">fontsのインストール手順</a> を参考にインストールするとpip を使用する方法が紹介されていて微妙なので、<a href="https://github.com/powerline/fonts">gitリポジトリ</a> からcloneしてきてシェルでフォントを一括でインストールします。</p>
 
-<pre><code>git clone https://github.com/powerline/fonts
-sh ./install.sh
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">git clone https://github.com/powerline/fonts
+sh ./install.sh</code></pre></div>
 
 <h3 id="iterm2-ターミナル-の設定">iTerm2(ターミナル)の設定</h3>
 
@@ -278,46 +269,34 @@ fish起動時にconfig.fishを読み込んで、変数のexportやaliasの登録
 
 <ul>
 <li>zshの場合
-<code>
-export ANT_HOME=/usr/bin/apache-ant-1.9.4
-</code></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">export ANT_HOME=/usr/bin/apache-ant-1.9.4</code></pre></div></li>
 <li>fishの場合
-<code>
-set -x ANT_HOME /usr/bin/apache-ant-1.9.4
-</code></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">set -x ANT_HOME /usr/bin/apache-ant-1.9.4</code></pre></div></li>
 </ul>
 
 <h3 id="コマンドのalias">コマンドのalias</h3>
 
 <ul>
 <li>zshの場合
-<code>
-alias la='ls -a'
-</code></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">alias la=&#39;ls -a&#39;</code></pre></div></li>
 <li>fishの場合
-<code>
-alias la='ls -a'
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">alias la=&#39;ls -a&#39;
 function la
- ls -a $argv
-end
-</code></li>
+     ls -a $argv
+end</code></pre></div></li>
 </ul>
 
 <p>aliasの登録がかなり面倒な感じになってしまっていますね。</p>
 
 <h2 id="おまけ-bashを使えるようにする">おまけ: bashを使えるようにする</h2>
 
-<p>fishの場合、bashとは文法が異なるため</p>
-
-<pre><code>bash hoge.sh
-</code></pre>
-
-<p>のように実行する必要があるため、少々不便です。</p>
+<p>fishの場合、bashとは文法が異なるため
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">bash hoge.sh</code></pre></div>
+のように実行する必要があるため、少々不便です。</p>
 
 <p>そのため、fishでもbashのシェルが実行できるよう、プラグインを入れてあげる必要があります。</p>
 
-<pre><code>fisher edc/bass
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">fisher edc/bass</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

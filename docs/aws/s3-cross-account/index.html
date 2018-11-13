@@ -191,38 +191,37 @@ AWS CLIのインストールも嫌がられてしまったため、 <strong>「A
 <p>アカウントAで <code>soudegesu-bucket-foo</code> というS3バケットを作成し、以下のようにバケットポリシーを作成することで
 アカウントBにバケット共有の設定をしました。</p>
 
-<pre><code class="language-json">{
-    &quot;Version&quot;: &quot;2012-10-17&quot;,
-    &quot;Statement&quot;: [
-        {
-            &quot;Sid&quot;: &quot;GetObject&quot;,
-            &quot;Action&quot;: [
-                &quot;s3:GetObject&quot;
-            ],
-            &quot;Effect&quot;: &quot;Allow&quot;,
-            &quot;Resource&quot;: &quot;arn:aws:s3:::soudegesu-bucket-foo/*&quot;,
-            &quot;Principal&quot;: {
-                &quot;AWS&quot;: [
-                    &quot;アカウントBのAWSアカウントID&quot;
-                ]
-            }
-        },
-        {
-            &quot;Sid&quot;: &quot;ListBucket&quot;,
-            &quot;Action&quot;: [
-                &quot;s3:ListBucket&quot;
-            ],
-            &quot;Effect&quot;: &quot;Allow&quot;,
-            &quot;Resource&quot;: &quot;arn:aws:s3:::soudegesu-bucket-foo&quot;,
-            &quot;Principal&quot;: {
-                &quot;AWS&quot;: [
-                    &quot;アカウントBのAWSアカウントID&quot;
-                ]
-            }
-        }
-    ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#f92672">&#34;Statement&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;GetObject&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#f92672">&#34;Action&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>                <span style="color:#e6db74">&#34;s3:GetObject&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>            ],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::soudegesu-bucket-foo/*&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>            <span style="color:#f92672">&#34;Principal&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>                <span style="color:#f92672">&#34;AWS&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>                    <span style="color:#e6db74">&#34;アカウントBのAWSアカウントID&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>                ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>            }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>            <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;ListBucket&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>            <span style="color:#f92672">&#34;Action&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>                <span style="color:#e6db74">&#34;s3:ListBucket&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>            ],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::soudegesu-bucket-foo&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>            <span style="color:#f92672">&#34;Principal&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>                <span style="color:#f92672">&#34;AWS&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>                    <span style="color:#e6db74">&#34;アカウントBのAWSアカウントID&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>                ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>            }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>    ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>}</code></pre></div>
 
 <p>アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、</p>
 
@@ -245,13 +244,11 @@ AWS CLIのインストールも嫌がられてしまったため、 <strong>「A
 <p>AWSコンソール上のS3のURLのルールは以下のようになっていて、
 AWSコンソールにログインしたセッション上で直叩きするとブラウザ上で表示することができます。</p>
 
-<pre><code class="language-bash">https://s3.console.aws.amazon.com/s3/buckets/{バケット名}/
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>https://s3.console.aws.amazon.com/s3/buckets/<span style="color:#f92672">{</span>バケット名<span style="color:#f92672">}</span>/</code></pre></div>
 
 <p>今回の例で言えば、AWSアカウントBにログインした状態で下のURLを直叩きします。</p>
 
-<pre><code class="language-bash">https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/</code></pre></div>
 
 <p><img src="/images/20180413/find_bucket_b.png" alt="find_bucket" /></p>
 

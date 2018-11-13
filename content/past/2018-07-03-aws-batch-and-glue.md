@@ -72,7 +72,7 @@ Batchと言いつつも、内部的にはECSが起動して処理を行うため
 今回は前処理をPython 3.6で実行させたいので、 `python:3.6.5-alpine` のイメージを使ってDockerfileを作成します。
 コンテナ内の `/opt/etl` 配下にpythonプログラムを置くイメージです。
 
-```
+{{< highlight vim "linenos=inline" >}}
 FROM python:3.6.5-alpine
 
 MAINTAINER soudegesu
@@ -82,7 +82,7 @@ COPY ./requirements.txt /opt/requirements.txt
 
 RUN pip install --upgrade pip
 RUN pip install -r /opt/requirements.txt
-```
+{{< / highlight >}}
 
 ビルドしたdocker imageをECRにpushすればOKです。
 
@@ -93,7 +93,7 @@ AWS Batchから起動させるコンピューティング環境の設定をし�
 
 Terraformで設定例を書くと以下のようになります。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_batch_compute_environment" "etl" {
     compute_environment_name = "etl"
     compute_resources {
@@ -111,7 +111,7 @@ resource "aws_batch_compute_environment" "etl" {
     service_role = "arn:aws:iam::${アカウント番号}:role/service-role/AWSBatchServiceRole"
     type = "MANAGED"
 }
-```
+{{< / highlight >}}
 
 #### ジョブキューの作成
 
@@ -119,7 +119,7 @@ resource "aws_batch_compute_environment" "etl" {
 
 Terraformで設定例を書くと以下のようになります。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_batch_job_queue" "etl" {
     name = "etl"
     state = "ENABLED"
@@ -128,7 +128,7 @@ resource "aws_batch_job_queue" "etl" {
         "${aws_batch_compute_environment.etl.arn}"
     ]
 }
-```
+{{< / highlight >}}
 
 #### バッチのジョブ定義
 
@@ -141,7 +141,7 @@ Terraformで設定例を書くと以下のようになります。
 コンテナ内で任意のプログラムを実行する場合には `command` プロパティ部に設定を行います。
 引数部分に `Ref::` という見慣れないものがありますが、これは後述します。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_batch_job_definition" "etl" {
     name = "etl"
     type = "container"
@@ -178,7 +178,7 @@ resource "aws_batch_job_definition" "etl" {
 EOF
 
 }
-```
+{{< / highlight >}}
 
 なお、ここで実行される `main.py` の処理概要は以下になります。
 
@@ -192,7 +192,7 @@ EOF
 
 AWS Batchのジョブを実行するだけのサンプルコードを書きます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import json
 import boto3
 import logging
@@ -224,7 +224,7 @@ def lambda_handler(event, context):
         logger.error(e)
         raise Exception('Error submitting Batch Job')
 
-```
+{{< / highlight >}}
 
 要点としては `submit_job` 関数の `parameters` 引数で渡されたデータが、
 先程のバッチジョブ定義の `Ref::` を置換することで、動的なデータの受け渡しを実現しています。
@@ -232,7 +232,7 @@ def lambda_handler(event, context):
 （今回のケースで言えば `bucket` と `objKey` が置換されます）
 
 
-```json
+{{< highlight json "linenos=inline" >}}
     "command": ["python",
         "/opt/etl/main.py",
         "-b",
@@ -240,7 +240,7 @@ def lambda_handler(event, context):
         "-k",
         "Ref::objKey"
     ],
-```
+{{< / highlight >}}
 
 ここまで来れば、ETL済みのバケットへ以下のような構成でデータがアップロードされているはずです。
 
@@ -255,11 +255,11 @@ Terraform AWS Providerが2018/06にGlue Crawlerに対応したこともあり、
 
 まずはデータベースの設定です。これはAthenaのデータベースになります。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_glue_catalog_database" "sample" {
     name = "${データベース名}"
 }
-```
+{{< / highlight >}}
 
 次にCrawlerの設定です。
 
@@ -268,7 +268,7 @@ resource "aws_glue_catalog_database" "sample" {
 `schedule` にてCrawlerが対象のS3のパスを見に行くスケジュールの指定ができますし、
 スキーマ変更があった場合の振る舞いを定義（今回は「データが無くなっていたら削除する」に指定）できます。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_glue_crawler" "sample" {
     database_name = "${aws_glue_catalog_database.sample.name}"
     name = "${Crawler名}"
@@ -284,7 +284,7 @@ resource "aws_glue_crawler" "sample" {
         delete_behavior = "DELETE_FROM_DATABASE"
     }
 }
-```
+{{< / highlight >}}
 
 Crawlerを実行すると、「Databases」 > 「Tables」 の中にいくつかデータテーブルができていることがわかります。
 これがAthenaのテーブルとリンクします。

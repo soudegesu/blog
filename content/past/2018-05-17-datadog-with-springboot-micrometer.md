@@ -58,14 +58,14 @@ application.yaml に設定を追加します。
 公式ドキュメントだと指定可能なプロパティが全て列挙されていないので、
 `io.micrometer.datadog.DatadogConfig` クラスの中を見ることで確認できます。
 
-```yaml
+{{< highlight yaml "linenos=inline" >}}
 management:
   metrics:
     export:
       datadog:
         api-key: ${datadogのAPIキー}
         step: 15s # メトリックの収集間隔
-```
+{{< / highlight >}}
 
 ### メトリックに情報を付与する
 

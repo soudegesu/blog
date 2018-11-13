@@ -45,7 +45,7 @@ AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS
 アカウントAで `soudegesu-bucket-foo` というS3バケットを作成し、以下のようにバケットポリシーを作成することで
 アカウントBにバケット共有の設定をしました。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -77,7 +77,7 @@ AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS
         }
     ]
 }
-```
+{{< / highlight >}}
 
 アカウントAのS3コンソールからは共有対象のバケットを確認できるのですが、
 
@@ -100,15 +100,15 @@ AWS CLIのインストールも嫌がられてしまったため、 **「AWSのS
 AWSコンソール上のS3のURLのルールは以下のようになっていて、
 AWSコンソールにログインしたセッション上で直叩きするとブラウザ上で表示することができます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 https://s3.console.aws.amazon.com/s3/buckets/{バケット名}/
-```
+{{< / highlight >}}
 
 今回の例で言えば、AWSアカウントBにログインした状態で下のURLを直叩きします。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 https://s3.console.aws.amazon.com/s3/buckets/soudegesu-bucket-foo/
-```
+{{< / highlight >}}
 
 ![find_bucket](/images/20180413/find_bucket_b.png)
 

@@ -186,14 +186,12 @@ if (!doNotTrack) {
 
 <p>Homebrewを使用するとHUGOを簡単にインストールできます。</p>
 
-<pre><code class="language-bash">#brew install hugo
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew install hugo</code></pre></div>
 
 <p>HUGOのバージョンを確認してみましょう。</p>
 
-<pre><code class="language-bash">#hugo version
-Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+09:00
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hugo version
+&gt; Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+09:00</code></pre></div>
 
 <p>v0.20.7(2017/05時点で最新)がインストールされていることがわかります。</p>
 
@@ -203,21 +201,19 @@ Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+0
 
 <p><code>hugo new site</code>のサブコマンドを実行するだけで静的サイトのテンプレートをgenerateしてくれます。今回は <code>hoge</code> というディレクトリ配下に作成します。</p>
 
-<pre><code>#hugo new site hoge
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hugo new site hoge</code></pre></div>
 
 <p><code>hoge</code> 配下で <code>tree</code> コマンドを実行すると以下のようなファイルレイアウトが生成されていることがわかります。</p>
 
-<pre><code>#cd hoge
-#tree -L 1                                                          .
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cd hoge
+tree -L 1                                                          .
 ├── archetypes
 ├── config.toml
 ├── content
 ├── data
 ├── layouts
 ├── static
-└── themes
-</code></pre>
+└── themes</code></pre></div>
 
 <table>
 <thead>
@@ -275,50 +271,47 @@ Hugo Static Site Generator v0.20.7 darwin/amd64 BuildDate: 2017-05-05T22:14:37+0
 
 <p><code>themes</code> ディレクトリに移動し、直接themeを <code>git clone</code> します。</p>
 
-<pre><code>#cd themes
-#git clone https://github.com/lubang/hugo-hello-programmer-theme
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cd themes
+git clone https://github.com/lubang/hugo-hello-programmer-theme</code></pre></div>
 
 <h4 id="themeを設定する">themeを設定する</h4>
 
 <p>設定ファイル(config.toml)を開いて、以下のように編集をします。</p>
 
-<pre><code>#vi config.toml
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">vi config.toml</code></pre></div>
 
-<pre><code>baseurl = &quot;https://www.soudegesu.com/diary&quot;
-title = &quot;そうでげす diary&quot;
-DefaultContentLanguage = &quot;ja&quot;
-languageCode = &quot;ja-JP&quot;
-
-contentDir = &quot;content/ja&quot;
-publishDir = &quot;public/ja&quot;
-
-theme = &quot;hugo-hello-programmer-theme&quot;
-
-paginate = 2
-
-disqusShortname = &quot;XXXX&quot;
-googleAnalytics = &quot;UA-XXXXXXXX-X&quot;
-
-[author]
-    name = &quot;soudegesu&quot;
-
-[permalinks]
-  post = &quot;/blog/:year/:month/:day/:slug/&quot;
-  page = &quot;/:slug/&quot;
-
-[taxonomies]
-  tag = &quot;tags&quot;
-  category = &quot;categories&quot;
-
-[indexes]
-    category = &quot;categories&quot;
-    tag = &quot;tags&quot;
-
-[params]
-    locale = &quot;ja-JP&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">baseurl</span> = <span style="color:#e6db74">&#34;https://www.soudegesu.com/diary&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;そうでげす diary&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#a6e22e">DefaultContentLanguage</span> = <span style="color:#e6db74">&#34;ja&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#34;ja-JP&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#a6e22e">contentDir</span> = <span style="color:#e6db74">&#34;content/ja&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#a6e22e">publishDir</span> = <span style="color:#e6db74">&#34;public/ja&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#a6e22e">theme</span> = <span style="color:#e6db74">&#34;hugo-hello-programmer-theme&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#a6e22e">paginate</span> = <span style="color:#ae81ff">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#a6e22e">disqusShortname</span> = <span style="color:#e6db74">&#34;XXXX&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#a6e22e">googleAnalytics</span> = <span style="color:#e6db74">&#34;UA-XXXXXXXX-X&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>[<span style="color:#a6e22e">author</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;soudegesu&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>[<span style="color:#a6e22e">permalinks</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>  <span style="color:#a6e22e">post</span> = <span style="color:#e6db74">&#34;/blog/:year/:month/:day/:slug/&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>  <span style="color:#a6e22e">page</span> = <span style="color:#e6db74">&#34;/:slug/&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>[<span style="color:#a6e22e">taxonomies</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>  <span style="color:#a6e22e">tag</span> = <span style="color:#e6db74">&#34;tags&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>  <span style="color:#a6e22e">category</span> = <span style="color:#e6db74">&#34;categories&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>[<span style="color:#a6e22e">indexes</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    <span style="color:#a6e22e">category</span> = <span style="color:#e6db74">&#34;categories&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>    <span style="color:#a6e22e">tag</span> = <span style="color:#e6db74">&#34;tags&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>[<span style="color:#a6e22e">params</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>    <span style="color:#a6e22e">locale</span> = <span style="color:#e6db74">&#34;ja-JP&#34;</span></code></pre></div>
 
 <p><code>theme</code> の項目には <code>themes</code> ディレクトリ配下にある適用したいthemeのディレクトリ名を指定する必要があります。</p>
 
@@ -331,46 +324,42 @@ googleAnalytics = &quot;UA-XXXXXXXX-X&quot;
 <li><code>hugo new (ファイル名)</code> でファイルを生成する</li>
 </ul>
 
-<pre><code>#hugo new post/sample.md
-/絶対パス/post/sample.md created
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hugo new post/sample.md
+/絶対パス/post/sample.md created</code></pre></div>
 
 <ul>
 <li>ファイルが生成されたことを <code>tree</code> コマンドにて確認</li>
 </ul>
 
-<pre><code>#tree -a content
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">tree -a content
 content
 └── ja
     └── post
-        └── sample.md
-</code></pre>
+        └── sample.md</code></pre></div>
 
 <ul>
 <li>date と title のみ記載がされているファイルが生成されたことを確認</li>
 </ul>
 
-<pre><code>#cat content/ja/post/sample.md
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cat content/ja/post/sample.md
 +++
-date = &quot;2017-05-06T11:11:46+09:00&quot;
-title = &quot;sample&quot;
+date = &#34;2017-05-06T11:11:46+09:00&#34;
+title = &#34;sample&#34;
 
-+++
-</code></pre>
++++</code></pre></div>
 
 <h3 id="余談-archetypes-defaults-md-を利用して手間を減らす">(余談)archetypes/defaults.md を利用して手間を減らす</h3>
 
 <p>HUGOをインストールした直後に<code>hugo new (ファイル名)</code> コマンドで記事ファイルを作成すると、<code>date</code>と<code>title</code>しか埋め込まれていません。
 <code>archetypes/defaults.md</code> を以下のように予め作成しておくことで、<code>hugo new</code> した際に、定義されている内容を雛形として、新規ファイルを作成してくれるようになります。</p>
 
-<pre><code>+++
-draft = true
-slug = &quot;&quot;
-tags = [&quot;&quot;, &quot;&quot;]
-categories = [&quot;&quot;, &quot;&quot;]
-
-+++
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-md" data-lang="md"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>+++<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span>draft = true<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#960050;background-color:#1e0010"></span>slug = &#34;&#34;<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#960050;background-color:#1e0010"></span>tags = [&#34;&#34;, &#34;&#34;]<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#960050;background-color:#1e0010"></span>categories = [&#34;&#34;, &#34;&#34;]<span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#960050;background-color:#1e0010"></span>+++</code></pre></div>
 
 <p><em>最新バージョンでは <code>date</code> や <code>title</code> を default.md に記載する必要はなくなりました。</em></p>
 
@@ -379,8 +368,7 @@ categories = [&quot;&quot;, &quot;&quot;]
 <p><code>hugo serve</code> のサブコマンドを実行すると、ローカル環境で内容の確認ができます。
 ブラウザから <code>http://localhost:1313/</code> を入力してビルドされたコンテンツにアクセスできるようになります。</p>
 
-<pre><code>#hugo serve -D
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hugo serve -D</code></pre></div>
 
 <p>なお、<code>-D</code> オプションを付けることで、下書き扱いのコンテンツもページ出力対象にすることができます。</p>
 
@@ -388,8 +376,7 @@ categories = [&quot;&quot;, &quot;&quot;]
 
 <p><code>hugo</code> コマンドを実行することで、コンテンツのビルドが行われます。</p>
 
-<pre><code>#hugo
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">hugo</code></pre></div>
 
 <p><code>public</code> ディレクトリが生成され、その中に静的ファイルが生成されていることを確認できます。</p>
 

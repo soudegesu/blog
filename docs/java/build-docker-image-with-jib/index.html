@@ -227,106 +227,100 @@ if (!doNotTrack) {
 
 <p>まずは、 <code>build.gradle</code> を編集しましょう。以下のような感じで <code>build.gradle</code> を編集します。</p>
 
-<pre><code class="language-gradle">buildscript {
-    repositories {
-        maven {
-            url 'http://repo.spring.io/plugins-release'
-        }
-        maven {
-            url &quot;https://plugins.gradle.org/m2/&quot;
-        }
-    }
-    dependencies {
-        classpath &quot;gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.6&quot;
-        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: &quot;2.0.3.RELEASE&quot;
-    }
-}
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'com.google.cloud.tools.jib'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-[ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
-
-repositories {
-    mavenCentral()
-}
-
-jib {
-    from {
-        image = 'openjdk:alpine'
-    }
-    to {
-        image = getProperty('aws.accountid') + &quot;.dkr.ecr.&quot; + getProperty('aws.region') + &quot;.amazonaws.com/jib-test&quot;
-        credHelper = 'ecr-login'
-    }
-    container {
-        jvmFlags = ['-Xms512m', '-Xms1g', '-Xmx1g', '-Xss10m', '-XX:MaxMetaspaceSize=1g']
-        mainClass = 'com.soudegesu.example.MainApplication'
-        args = []
-        ports = ['8080']
-        format = 'OCI'
-    }
-}
-
-ext {
-    verSpringboot = '2.0.3.RELEASE'
-}
-
-dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: verSpringboot
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>buildscript <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    repositories <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>        maven <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>            url <span style="color:#e6db74">&#39;http://repo.spring.io/plugins-release&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>        maven <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>            url <span style="color:#e6db74">&#34;https://plugins.gradle.org/m2/&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    dependencies <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        classpath <span style="color:#e6db74">&#34;gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.6&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        classpath group: <span style="color:#e6db74">&#39;org.springframework.boot&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;spring-boot-gradle-plugin&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#34;2.0.3.RELEASE&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>apply plugin: <span style="color:#e6db74">&#39;java&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>apply plugin: <span style="color:#e6db74">&#39;idea&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>apply plugin: <span style="color:#e6db74">&#39;eclipse&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>apply plugin: <span style="color:#e6db74">&#39;org.springframework.boot&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>apply plugin: <span style="color:#e6db74">&#39;com.google.cloud.tools.jib&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>sourceCompatibility <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>targetCompatibility <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#f92672">[</span> compileJava<span style="color:#f92672">,</span> compileTestJava <span style="color:#f92672">]*.</span><span style="color:#a6e22e">options</span><span style="color:#f92672">*.</span><span style="color:#a6e22e">encoding</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UTF-8&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>repositories <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>    mavenCentral<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>jib <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>    from <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>        image <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;openjdk:alpine&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>    to <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>        image <span style="color:#f92672">=</span> getProperty<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;aws.accountid&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.dkr.ecr.&#34;</span> <span style="color:#f92672">+</span> getProperty<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;aws.region&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.amazonaws.com/jib-test&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>        credHelper <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;ecr-login&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>    container <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>        jvmFlags <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;-Xms512m&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;-Xms1g&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;-Xmx1g&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;-Xss10m&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;-XX:MaxMetaspaceSize=1g&#39;</span><span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>        mainClass <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;com.soudegesu.example.MainApplication&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span>        args <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>        ports <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;8080&#39;</span><span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span>        format <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;OCI&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44</span>    <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47</span>ext <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">48</span>    verSpringboot <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2.0.3.RELEASE&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">49</span><span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">50</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">51</span>dependencies <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">52</span>    compile group: <span style="color:#e6db74">&#39;org.springframework.boot&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;spring-boot-starter-web&#39;</span><span style="color:#f92672">,</span> version: verSpringboot
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">53</span><span style="color:#f92672">}</span></code></pre></div>
 
 <h3 id="dockerイメージのビルド">Dockerイメージのビルド</h3>
 
 <p>まずは、Dockerイメージのビルドをしてみましょう。
 イメージのビルドには不要ですが、ビルドが失敗するので実行引数にプロファイルを指定します。</p>
 
-<pre><code class="language-bash">./gradlew jibDockerBuild -Paws.accountid=${awsアカウントID} -Paws.region=${awsのリージョン}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>./gradlew jibDockerBuild -Paws.accountid<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>awsアカウントID<span style="color:#e6db74">}</span> -Paws.region<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>awsのリージョン<span style="color:#e6db74">}</span></code></pre></div>
 
 <p>完成したイメージを確認します。</p>
 
-<pre><code class="language-bash">docker images
-
-&gt; REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
-&gt; jib-test                    unspecified         155f1b17a8bc        48 years ago        119MB
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>docker images
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&gt; REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>&gt; jib-test                    unspecified         155f1b17a8bc        <span style="color:#ae81ff">48</span> years ago        119MB</code></pre></div>
 
 <p>「CREATED」が <strong>48 years ago</strong> なのが少し気になりますが、そのうち改善されるでしょう。（きっと）</p>
 
 <p>作成したイメージからコンテナをローカルで起動してみます。</p>
 
-<pre><code class="language-bash">docker run -p 8080:8080 -it 155f1b17a8bc
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::        (v2.0.3.RELEASE)
-
-2018-07-18 00:34:52.773  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : Starting MainApplication on 1b3277472466 with PID 1 (/app/classes started by root in /)
-2018-07-18 00:34:52.780  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : No active profile set, falling back to default profiles: default
-(以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>docker run -p <span style="color:#ae81ff">8080</span>:8080 -it 155f1b17a8bc
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  .   ____          _            __ _ _
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span> /<span style="color:#ae81ff">\\</span> / ___<span style="color:#e6db74">&#39;_ __ _ _(_)_ __  __ _ \ \ \ \
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#e6db74">( ( )\___ | &#39;</span>_ | <span style="color:#e6db74">&#39;_| | &#39;</span>_ <span style="color:#ae81ff">\/</span> _<span style="color:#e6db74">`</span> | <span style="color:#ae81ff">\ \ \ \
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#ae81ff"></span> <span style="color:#ae81ff">\\</span>/  ___<span style="color:#f92672">)</span>| |_<span style="color:#f92672">)</span>| | | | | <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>_| |  <span style="color:#f92672">)</span> <span style="color:#f92672">)</span> <span style="color:#f92672">)</span> <span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>  <span style="color:#960050;background-color:#1e0010">&#39;</span>  |____| .__|_| |_|_| |_<span style="color:#ae81ff">\_</span>_, | / / / /
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span> <span style="color:#f92672">=========</span>|_|<span style="color:#f92672">==============</span>|___/<span style="color:#f92672">=</span>/_/_/_/
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span> :: Spring Boot ::        <span style="color:#f92672">(</span>v2.0.3.RELEASE<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#ae81ff">2018</span>-07-18 <span style="color:#ae81ff">00</span>:34:52.773  INFO <span style="color:#ae81ff">1</span> --- <span style="color:#f92672">[</span>           main<span style="color:#f92672">]</span> com.soudegesu.example.MainApplication    : Starting MainApplication on 1b3277472466 with PID <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>/app/classes started by root in /<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#ae81ff">2018</span>-07-18 <span style="color:#ae81ff">00</span>:34:52.780  INFO <span style="color:#ae81ff">1</span> --- <span style="color:#f92672">[</span>           main<span style="color:#f92672">]</span> com.soudegesu.example.MainApplication    : No active profile set, falling back to default profiles: default
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#f92672">(</span>以下略<span style="color:#f92672">)</span></code></pre></div>
 
 <h3 id="プロセスを見てみる">プロセスを見てみる</h3>
 
 <p>springbootで実装したアプリケーションをイメージに入れたわけですが、特に executable-jar を作るタスクを実行したわけではありません。
 dockerコンテナの中に入って、プロセスを確認してみましょう。</p>
 
-<pre><code class="language-bash">ps ax | grep java
-
-&gt; java -Xms512m -Xms1g -Xmx1g -Xss10m -XX:MaxMetaspaceSize=1g -cp /app/libs/*:/app/resources/:/app/classes/ com.soudegesu.example.MainApplication
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>ps ax | grep java
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>&gt; java -Xms512m -Xms1g -Xmx1g -Xss10m -XX:MaxMetaspaceSize<span style="color:#f92672">=</span>1g -cp /app/libs/*:/app/resources/:/app/classes/ com.soudegesu.example.MainApplication</code></pre></div>
 
 <p>なるほど。 <code>/app</code> の各ディレクトリ配下にクラスパスを通して、指定されたMainクラスを実行しているのですね。</p>
 
@@ -340,28 +334,27 @@ dockerコンテナの中に入って、プロセスを確認してみましょ�
 
 <p>以下コマンドを実行してみます。</p>
 
-<pre><code class="language-bash">./gradlew jib -Paws.accountid=${awsアカウントID} -Paws.region=${awsのリージョン} --stacktrace
-
-&gt; Containerizing application to ${awsアカウントID}.dkr.ecr.${awsのリージョン}.amazonaws.com/jib-test...
-&gt;
-&gt; Retrieving registry credentials for ${awsアカウントID}.dkr.${awsのリージョン}.amazonaws.com...
-&gt; Getting base image openjdk:alpine...
-&gt; Building dependencies layer...
-&gt; Building resources layer...
-&gt; Building classes layer...
-&gt; Retrieving registry credentials for registry.hub.docker.com...
-&gt; Finalizing...
-&gt;
-&gt; Container entrypoint set to [java, -Xms512m, -Xms1g, -Xmx1g, -Xss10m, -XX:MaxMetaspaceSize=1g, -cp, /app/libs/*:/app/resources/:/app/classes/, &gt; com.soudegesu.example.MainApplication]
-&gt;
-&gt; Built and pushed image as ${awsアカウントID}.dkr.${awsのリージョン}.amazonaws.com/jib-test
-&gt;
-&gt; Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
-&gt; See https://docs.gradle.org/4.8/userguide/command_line_interface.html#sec:command_line_warnings
-&gt;
-&gt; BUILD SUCCESSFUL in 22s
-&gt; 2 actionable tasks: 1 executed, 1 up-to-date
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>./gradlew jib -Paws.accountid<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>awsアカウントID<span style="color:#e6db74">}</span> -Paws.region<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>awsのリージョン<span style="color:#e6db74">}</span> --stacktrace
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&gt; Containerizing application to <span style="color:#e6db74">${</span>awsアカウントID<span style="color:#e6db74">}</span>.dkr.ecr.<span style="color:#e6db74">${</span>awsのリージョン<span style="color:#e6db74">}</span>.amazonaws.com/jib-test...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>&gt; Retrieving registry credentials <span style="color:#66d9ef">for</span> <span style="color:#e6db74">${</span>awsアカウントID<span style="color:#e6db74">}</span>.dkr.<span style="color:#e6db74">${</span>awsのリージョン<span style="color:#e6db74">}</span>.amazonaws.com...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>&gt; Getting base image openjdk:alpine...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>&gt; Building dependencies layer...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>&gt; Building resources layer...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>&gt; Building classes layer...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>&gt; Retrieving registry credentials <span style="color:#66d9ef">for</span> registry.hub.docker.com...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>&gt; Finalizing...
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>&gt; Container entrypoint set to <span style="color:#f92672">[</span>java, -Xms512m, -Xms1g, -Xmx1g, -Xss10m, -XX:MaxMetaspaceSize<span style="color:#f92672">=</span>1g, -cp, /app/libs/*:/app/resources/:/app/classes/, &gt; com.soudegesu.example.MainApplication<span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>&gt; Built and pushed image as <span style="color:#e6db74">${</span>awsアカウントID<span style="color:#e6db74">}</span>.dkr.<span style="color:#e6db74">${</span>awsのリージョン<span style="color:#e6db74">}</span>.amazonaws.com/jib-test
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>&gt; Deprecated Gradle features were used in this build, making it incompatible with Gradle <span style="color:#ae81ff">5</span>.0.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>&gt; See https://docs.gradle.org/4.8/userguide/command_line_interface.html#sec:command_line_warnings
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>&gt; BUILD SUCCESSFUL in 22s
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>&gt; <span style="color:#ae81ff">2</span> actionable tasks: <span style="color:#ae81ff">1</span> executed, <span style="color:#ae81ff">1</span> up-to-date</code></pre></div>
 
 <p>イメージをAWSコンソール上から確認してみましょう。</p>
 

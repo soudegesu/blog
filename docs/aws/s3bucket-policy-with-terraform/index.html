@@ -155,32 +155,31 @@ if (!doNotTrack) {
 <p>Terraform公式の <a href="https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html">aws_s3_bucket_policy</a>
 のリソースは <code>policy</code> の部分がヒアドキュメントで書かれています。</p>
 
-<pre><code class="language-terraform">resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
-  bucket = &quot;my_tf_test_bucket&quot;
-}
-
-resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
-  bucket = &quot;${aws_s3_bucket.b.id}&quot;
-  policy =&lt;&lt;POLICY
-{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Id&quot;: &quot;MYBUCKETPOLICY&quot;,
-  &quot;Statement&quot;: [
-    {
-      &quot;Sid&quot;: &quot;IPAllow&quot;,
-      &quot;Effect&quot;: &quot;Deny&quot;,
-      &quot;Principal&quot;: &quot;*&quot;,
-      &quot;Action&quot;: &quot;s3:*&quot;,
-      &quot;Resource&quot;: &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;,
-      &quot;Condition&quot;: {
-         &quot;IpAddress&quot;: {&quot;aws:SourceIp&quot;: &quot;8.8.8.8/32&quot;}
-      }
-    }
-  ]
-}
-POLICY
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_s3_bucket&#34;</span> <span style="color:#e6db74">&#34;b&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  <span style="color:#a6e22e">bucket</span> = <span style="color:#e6db74">&#34;my_tf_test_bucket&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_s3_bucket_policy&#34;</span> <span style="color:#e6db74">&#34;b&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>  <span style="color:#a6e22e">bucket</span> = <span style="color:#e6db74">&#34;${aws_s3_bucket.b.id}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>  <span style="color:#a6e22e">policy</span> =<span style="color:#f92672">&lt;&lt;</span><span style="color:#a6e22e">POLICY</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>  <span style="color:#e6db74">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>  <span style="color:#e6db74">&#34;Id&#34;</span>: <span style="color:#e6db74">&#34;MYBUCKETPOLICY&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>  <span style="color:#e6db74">&#34;Statement&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>      <span style="color:#e6db74">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;IPAllow&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>      <span style="color:#e6db74">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Deny&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>      <span style="color:#e6db74">&#34;Principal&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>      <span style="color:#e6db74">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:*&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>      <span style="color:#e6db74">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::my_tf_test_bucket/*&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>      <span style="color:#e6db74">&#34;Condition&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>         <span style="color:#e6db74">&#34;IpAddress&#34;</span>: {<span style="color:#e6db74">&#34;aws:SourceIp&#34;</span>: <span style="color:#e6db74">&#34;8.8.8.8/32&#34;</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>      }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>  ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#a6e22e">POLICY</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>}</code></pre></div>
 
 <p>だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。</p>
 
@@ -191,41 +190,39 @@ POLICY
 
 <p>データソース名から 「IAMにしか適用できないのでは？」 と思うかもしれませんが、結局はポリシードキュメントなので使えます。</p>
 
-<pre><code>resource &quot;aws_s3_bucket&quot; &quot;b&quot; {
-  bucket = &quot;my_tf_test_bucket&quot;
-}
-
-resource &quot;aws_s3_bucket_policy&quot; &quot;b&quot; {
-  bucket = &quot;${aws_s3_bucket.b.id}&quot;
-  policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;
-}
-
-data &quot;aws_iam_policy_document&quot; &quot;bucket_policy_document&quot; {
-
-    statement {
-        sid = &quot;IPAllow&quot;
-        effect = &quot;Deny&quot;
-        principals {
-            type = &quot;*&quot;
-            identifiers = [&quot;*&quot;]
-        }
-        actions = [
-            &quot;s3:*&quot;
-        ]
-        resources = [
-            &quot;arn:aws:s3:::my_tf_test_bucket/*&quot;
-        ]
-        condition {
-            test = &quot;IpAddress&quot;
-            variable = &quot;aws:SourceIp&quot;
-            values = [
-              &quot;8.8.8.8/32&quot;
-            ]
-        }
-    }
-}
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_s3_bucket&#34;</span> <span style="color:#e6db74">&#34;b&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  <span style="color:#a6e22e">bucket</span> = <span style="color:#e6db74">&#34;my_tf_test_bucket&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_s3_bucket_policy&#34;</span> <span style="color:#e6db74">&#34;b&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>  <span style="color:#a6e22e">bucket</span> = <span style="color:#e6db74">&#34;${aws_s3_bucket.b.id}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>  <span style="color:#a6e22e">policy</span> = <span style="color:#e6db74">&#34;${aws_iam_policy_document.bucket_policy_document.json}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#a6e22e">data</span> <span style="color:#e6db74">&#34;aws_iam_policy_document&#34;</span> <span style="color:#e6db74">&#34;bucket_policy_document&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    <span style="color:#a6e22e">statement</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>        <span style="color:#a6e22e">sid</span> = <span style="color:#e6db74">&#34;IPAllow&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>        <span style="color:#a6e22e">effect</span> = <span style="color:#e6db74">&#34;Deny&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        <span style="color:#a6e22e">principals</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>            <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>            <span style="color:#a6e22e">identifiers</span> = [<span style="color:#e6db74">&#34;*&#34;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>        <span style="color:#a6e22e">actions</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>            <span style="color:#e6db74">&#34;s3:*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>        ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>        <span style="color:#a6e22e">resources</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>            <span style="color:#e6db74">&#34;arn:aws:s3:::my_tf_test_bucket/*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>        ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>        <span style="color:#a6e22e">condition</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>            <span style="color:#a6e22e">test</span> = <span style="color:#e6db74">&#34;IpAddress&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>            <span style="color:#a6e22e">variable</span> = <span style="color:#e6db74">&#34;aws:SourceIp&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>            <span style="color:#a6e22e">values</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>              <span style="color:#e6db74">&#34;8.8.8.8/32&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>            ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>}</code></pre></div>
 
 <p>ポイントは <code>policy = &quot;${aws_iam_policy_document.bucket_policy_document.json}&quot;</code> の所です。</p>
 
@@ -236,16 +233,14 @@ data &quot;aws_iam_policy_document&quot; &quot;bucket_policy_document&quot; {
 
 <p>強いてクセを挙げるとしたら、</p>
 
-<pre><code>&quot;Principal&quot;: &quot;*&quot;,
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#e6db74">&#34;Principal&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,</code></pre></div>
 
 <p>を表現するために</p>
 
-<pre><code>principals {
-    type = &quot;*&quot;
-    identifiers = [&quot;*&quot;]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">principals</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#a6e22e">identifiers</span> = [<span style="color:#e6db74">&#34;*&#34;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>}</code></pre></div>
 
 <p>と記述しないといけない所でしょうか。</p>
 

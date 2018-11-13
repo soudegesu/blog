@@ -161,15 +161,12 @@ if (!doNotTrack) {
 
 <p>tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。</p>
 
-<pre><code class="language-bash">pip3 install tensorflow
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>pip3 install tensorflow</code></pre></div>
 
 <h2 id="解決策">解決策</h2>
 
-<p>そのため、以下のようにコマンドを変更します。</p>
-
-<pre><code class="language-bash">pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl
-</code></pre>
+<p>そのため、以下のようにコマンドを変更します。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl</code></pre></div></p>
 
 <h2 id="備考">備考</h2>
 
@@ -179,65 +176,62 @@ if (!doNotTrack) {
 <li>pypi</li>
 </ul>
 
-<pre><code class="language-bash">anaconda search -t pypi tensorflow
-
-&gt;Using Anaconda API: https://api.anaconda.org
-&gt;Run 'anaconda show &lt;USER/PACKAGE&gt;' to get more details:
-&gt;Packages:
-&gt;     Name                      |  Version | Package Types   | Platforms
-&gt;     ------------------------- |   ------ | --------------- | ---------------
-&gt;     dustindorroh/tensorflow   |    0.6.0 | pypi            |
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>anaconda search -t pypi tensorflow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&gt;Using Anaconda API: https://api.anaconda.org
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&gt;Run <span style="color:#e6db74">&#39;anaconda show &lt;USER/PACKAGE&gt;&#39;</span> to get more details:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>&gt;Packages:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>&gt;     Name                      |  Version | Package Types   | Platforms
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>&gt;     ------------------------- |   ------ | --------------- | ---------------
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>&gt;     dustindorroh/tensorflow   |    <span style="color:#ae81ff">0</span>.6.0 | pypi            |
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>&gt;     jjhelmus/tensorflow       | <span style="color:#ae81ff">0</span>.12.0rc0 | conda, pypi     | linux-64, osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>&gt;                                          : TensorFlow helps the tensors flow</code></pre></div>
 
 <ul>
 <li>conda</li>
 </ul>
 
-<pre><code class="language-bash">anaconda search -t conda tensorflow
-
-&gt;Using Anaconda API: https://api.anaconda.org
-&gt;Run 'anaconda show &lt;USER/PACKAGE&gt;' to get more details:
-&gt;Packages:
-&gt;     Name                      |  Version | Package Types   | Platforms
-&gt;     ------------------------- |   ------ | --------------- | ---------------
-&gt;     HCC/tensorflow            |    1.0.0 | conda           | linux-64
-&gt;     HCC/tensorflow-cpucompat  |    1.0.0 | conda           | linux-64
-&gt;     HCC/tensorflow-fma        |    1.0.0 | conda           | linux-64
-&gt;     SentientPrime/tensorflow  |    0.6.0 | conda           | osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     acellera/tensorflow-cuda  |   0.12.1 | conda           | linux-64
-&gt;     anaconda-backup/tensorflow | 0.10.0rc0 | conda           | linux-64
-&gt;     anaconda/tensorflow       | 0.10.0rc0 | conda           | linux-64
-&gt;     conda-forge/tensorflow    |    1.0.0 | conda           | linux-64, win-64, osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     creditx/tensorflow        |    0.9.0 | conda           | linux-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     derickl/tensorflow        |   0.12.1 | conda           | osx-64
-&gt;     dhirschfeld/tensorflow    | 0.12.0rc0 | conda           | win-64
-&gt;     dseuss/tensorflow         | 0.11.0rc0 | conda           | osx-64
-&gt;     ijstokes/tensorflow       | 2017.03.03.1349 | conda, ipynb    | linux-64
-&gt;     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     kevin-keraudren/tensorflow |    0.9.0 | conda           | linux-64
-&gt;     lcls-rhel7/tensorflow     |   0.12.1 | conda           | linux-64
-&gt;     marta-sd/tensorflow       |   0.12.0 | conda           | linux-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     memex/tensorflow          |    0.5.0 | conda           | linux-64, osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     mhworth/tensorflow        |    0.7.1 | conda           | osx-64
-&gt;                                          : TensorFlow helps the tensors flow
-&gt;     miovision/tensorflow      | 0.10.0.gpu | conda           | linux-64, osx-64
-&gt;     msarahan/tensorflow       | 1.0.0rc2 | conda           | linux-64
-&gt;     mutirri/tensorflow        | 0.10.0rc0 | conda           | linux-64
-&gt;     mwojcikowski/tensorflow   |   0.11.0 | conda           | linux-64
-&gt;     rdonnelly/tensorflow      |    0.9.0 | conda           | linux-64
-&gt;     rdonnellyr/r-tensorflow   |    0.4.0 | conda           | osx-64
-&gt;     test_org_002/tensorflow   | 0.10.0rc0 | conda           |
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>anaconda search -t conda tensorflow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&gt;Using Anaconda API: https://api.anaconda.org
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&gt;Run <span style="color:#e6db74">&#39;anaconda show &lt;USER/PACKAGE&gt;&#39;</span> to get more details:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>&gt;Packages:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>&gt;     Name                      |  Version | Package Types   | Platforms
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>&gt;     ------------------------- |   ------ | --------------- | ---------------
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>&gt;     HCC/tensorflow            |    <span style="color:#ae81ff">1</span>.0.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>&gt;     HCC/tensorflow-cpucompat  |    <span style="color:#ae81ff">1</span>.0.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>&gt;     HCC/tensorflow-fma        |    <span style="color:#ae81ff">1</span>.0.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>&gt;     SentientPrime/tensorflow  |    <span style="color:#ae81ff">0</span>.6.0 | conda           | osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>&gt;     acellera/tensorflow-cuda  |   <span style="color:#ae81ff">0</span>.12.1 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>&gt;     anaconda-backup/tensorflow | <span style="color:#ae81ff">0</span>.10.0rc0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>&gt;     anaconda/tensorflow       | <span style="color:#ae81ff">0</span>.10.0rc0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>&gt;     conda-forge/tensorflow    |    <span style="color:#ae81ff">1</span>.0.0 | conda           | linux-64, win-64, osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>&gt;     creditx/tensorflow        |    <span style="color:#ae81ff">0</span>.9.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>&gt;     derickl/tensorflow        |   <span style="color:#ae81ff">0</span>.12.1 | conda           | osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>&gt;     dhirschfeld/tensorflow    | <span style="color:#ae81ff">0</span>.12.0rc0 | conda           | win-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>&gt;     dseuss/tensorflow         | <span style="color:#ae81ff">0</span>.11.0rc0 | conda           | osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>&gt;     ijstokes/tensorflow       | <span style="color:#ae81ff">2017</span>.03.03.1349 | conda, ipynb    | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>&gt;     jjhelmus/tensorflow       | <span style="color:#ae81ff">0</span>.12.0rc0 | conda, pypi     | linux-64, osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>&gt;     kevin-keraudren/tensorflow |    <span style="color:#ae81ff">0</span>.9.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>&gt;     lcls-rhel7/tensorflow     |   <span style="color:#ae81ff">0</span>.12.1 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>&gt;     marta-sd/tensorflow       |   <span style="color:#ae81ff">0</span>.12.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>&gt;     memex/tensorflow          |    <span style="color:#ae81ff">0</span>.5.0 | conda           | linux-64, osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>&gt;     mhworth/tensorflow        |    <span style="color:#ae81ff">0</span>.7.1 | conda           | osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>&gt;                                          : TensorFlow helps the tensors flow
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>&gt;     miovision/tensorflow      | <span style="color:#ae81ff">0</span>.10.0.gpu | conda           | linux-64, osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>&gt;     msarahan/tensorflow       | <span style="color:#ae81ff">1</span>.0.0rc2 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>&gt;     mutirri/tensorflow        | <span style="color:#ae81ff">0</span>.10.0rc0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>&gt;     mwojcikowski/tensorflow   |   <span style="color:#ae81ff">0</span>.11.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>&gt;     rdonnelly/tensorflow      |    <span style="color:#ae81ff">0</span>.9.0 | conda           | linux-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>&gt;     rdonnellyr/r-tensorflow   |    <span style="color:#ae81ff">0</span>.4.0 | conda           | osx-64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>&gt;     test_org_002/tensorflow   | <span style="color:#ae81ff">0</span>.10.0rc0 | conda           |</code></pre></div>
 
 <p>配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは <code>storage.googleapis.com</code> を参照する形でインストールを行いたいと思います。</p>
 
@@ -247,6 +241,7 @@ if (!doNotTrack) {
 	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373 0-.74-.24-1-.5L1 8a2.853 2.853 0 0 1-.7-1C.113 6.55 0 5.973 0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034 0 1.4 0h4.2c.373 0 .95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item"><a class="tags__link btn" href="/tags/tensorflow/" rel="tag">tensorflow</a></li>
+		<li class="tags__item"><a class="tags__link btn" href="/tags/anaconda/" rel="tag">anaconda</a></li>
 	</ul>
 </div>
 	</article>
@@ -271,6 +266,30 @@ if (!doNotTrack) {
 	</div>
 </nav>
 	
+
+<h3>関連記事</h3>
+
+<div class="list__item">
+<figure class="list__thumbnail">
+    <a href="https://www.soudegesu.com/python/pyenv/anaconda/">
+        <img src="/images/icons/python_icon.png" alt="pyenvとpyenv-virtualenvでanacondaと共存する" />
+    </a>
+</figure>
+<div class="list__content clearfix">
+    <header class="list__header">
+        <h4 class="list__title post__title ">
+            <a href="/python/pyenv/anaconda/" rel="bookmark">pyenvとpyenv-virtualenvでanacondaと共存する</a>
+        </h4><div class="list__meta meta">
+<svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+<time class="post__meta-date meta-date" datetime="2017-02-28T00:00:00">February 28, 2017</time>
+<span class="post__meta-categories meta-categories">
+	<svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+	<span class="meta-categories__list"><a class="meta-categories__link" href="/categories/pyenv" rel="category">pyenv</a>, <a class="meta-categories__link" href="/categories/anaconda" rel="category">anaconda</a></span>
+</span></div>
+    </header>
+</div>
+</div>
+
 
 
 	

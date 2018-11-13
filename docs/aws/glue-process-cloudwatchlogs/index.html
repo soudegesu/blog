@@ -211,10 +211,9 @@ Glueには <strong>Crawler</strong> という設定があり、指定したデ�
 
 <p>そう思って、S3上の .gz ファイルの中身を見てみると以下のような形式になっていました。</p>
 
-<pre><code>2018-05-27T00:00:00.107Z {ログのJSON文字列}
-2018-05-27T00:01:36.107Z {ログのJSON文字列}
-(以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#ae81ff">2018</span>-05-27T00:00:00.107Z <span style="color:#f92672">{</span>ログのJSON文字列<span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#ae81ff">2018</span>-05-27T00:01:36.107Z <span style="color:#f92672">{</span>ログのJSON文字列<span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#f92672">(</span>以下略<span style="color:#f92672">)</span></code></pre></div>
 
 <p><strong>CloudWatch Logsからログデータをエクスポートすると、タイムスタンプ情報も出力されてしまい、 JSON形式でなくなっていた</strong> わけですね。</p>
 

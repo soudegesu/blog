@@ -22,7 +22,7 @@ twitter_card_image: /images/icons/terraform_icon.png
 Terraform公式の [aws_s3_bucket_policy](https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html)
 のリソースは `policy` の部分がヒアドキュメントで書かれています。
 
-```terraform
+{{< highlight go "linenos=inline" >}}
 resource "aws_s3_bucket" "b" {
   bucket = "my_tf_test_bucket"
 }
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_policy" "b" {
 }
 POLICY
 }
-```
+{{< / highlight >}}
 
 だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。
 
@@ -59,7 +59,7 @@ POLICY
 
 データソース名から 「IAMにしか適用できないのでは？」 と思うかもしれませんが、結局はポリシードキュメントなので使えます。
 
-```
+{{< highlight go "linenos=inline" >}}
 resource "aws_s3_bucket" "b" {
   bucket = "my_tf_test_bucket"
 }
@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "bucket_policy_document" {
     }
 }
 
-```
+{{< / highlight >}}
 
 ポイントは `policy = "${aws_iam_policy_document.bucket_policy_document.json}"` の所です。
 
@@ -105,18 +105,18 @@ AWS公式の [IAM JSON ポリシーエレメント: 条件演算子](https://doc
 
 強いてクセを挙げるとしたら、
 
-```
+{{< highlight go "linenos=inline" >}}
 "Principal": "*",
-```
+{{< / highlight >}}
 
 を表現するために
 
-```
+{{< highlight go "linenos=inline" >}}
 principals {
     type = "*"
     identifiers = ["*"]
 }
-```
+{{< / highlight >}}
 
 と記述しないといけない所でしょうか。
 

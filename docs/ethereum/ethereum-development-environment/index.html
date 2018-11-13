@@ -188,21 +188,19 @@ if (!doNotTrack) {
 <li>リポジトリを追加</li>
 </ul>
 
-<pre><code class="language-bash">brew tap ethereum/ethereum
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew tap ethereum/ethereum</code></pre></div>
 
 <ul>
 <li>Ethereum をインストール</li>
 </ul>
 
-<pre><code class="language-bash">brew install ethereum
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew install ethereum</code></pre></div>
 
 <ul>
 <li>バージョンを確認</li>
 </ul>
 
-<pre><code class="language-bash">geth -h
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth -h
 
 &gt; NAME:
 &gt;    geth - the go-ethereum command line interface
@@ -214,29 +212,26 @@ if (!doNotTrack) {
 &gt;
 &gt; VERSION:
 &gt;    1.8.1-stable
-(以下略)
-</code></pre>
+(以下略)</code></pre></div>
 
 <p><code>1.8.1</code> がインストールされているようですね。</p>
 
 <p>以降の作業は以下のディレクトリにて実施します。(誤解を招かないように念のため)</p>
 
-<pre><code class="language-bash">pwd
-&gt; /Users/xxxxxx/workspace/eth_private_net
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pwd
+&gt; /Users/xxxxxx/workspace/eth_private_net</code></pre></div>
 
 <h3 id="設定ファイルの作成">設定ファイルの作成</h3>
 
 <p><code>Ethereum</code> の 1.6から <code>puppeth</code> コマンドが追加されました。
 これを使って初期化を行います。</p>
 
-<pre><code class="language-bash">puppeth
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">puppeth</code></pre></div>
 
 <p>すると以下のようなメッセージが出てくるので、とりあえずネットワーク名を任意の名前にします。
 今回は <code>soudegesu</code> にしました。</p>
 
-<pre><code class="language-bash">+-----------------------------------------------------------+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">+-----------------------------------------------------------+
 | Welcome to puppeth, your Ethereum private network manager |
 |                                                           |
 | This tool lets you create a new Ethereum network down to  |
@@ -249,12 +244,11 @@ if (!doNotTrack) {
 +-----------------------------------------------------------+
 
 Please specify a network name to administer (no spaces, please)
-&gt; soudegesu
-</code></pre>
+&gt; soudegesu</code></pre></div>
 
 <p>以降も対話形式で入力していきます。まず、 <code>2. Configure new genesis</code> を選択します。</p>
 
-<pre><code class="language-bash">Sweet, you can set this via --network=soudegesu next time!
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Sweet, you can set this via --network=soudegesu next time!
 
 INFO [03-05|14:24:17] Administering Ethereum network           name=soudegesu
 WARN [03-05|14:24:17] No previous configurations found         path=/Users/xxxxxxxxx/.puppeth/soudegesu
@@ -264,29 +258,25 @@ What would you like to do? (default = stats)
  2. Configure new genesis
  3. Track new remote server
  4. Deploy network components
-&gt; 2
-</code></pre>
+&gt; 2</code></pre></div>
 
 <p>次にコンセンサスルールを決めます。今回は <code>Ethash</code> にしましょう。</p>
 
-<pre><code class="language-bash">Which consensus engine to use? (default = clique)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Which consensus engine to use? (default = clique)
  1. Ethash - proof-of-work
  2. Clique - proof-of-authority
-&gt; 1
-</code></pre>
+&gt; 1</code></pre></div>
 
 <p>次はとりあえずデフォルトにしておきます。</p>
 
-<pre><code class="language-bash">Which accounts are allowed to seal? (mandatory at least one)
-&gt; 0x
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Which accounts are allowed to seal? (mandatory at least one)
+&gt; 0x</code></pre></div>
 
 <p>次に使用するネットワークIDを指定します。
 適当に <code>4224</code> にします。</p>
 
-<pre><code class="language-bash">Specify your chain/network ID if you want an explicit one (default = random)
-&gt; 4224
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Specify your chain/network ID if you want an explicit one (default = random)
+&gt; 4224</code></pre></div>
 
 <p>なお、代表的なnetwork idは以下のようになっています。
 今回はローカル環境で動かすだけですが、重複しないようにしておきましょう。</p>
@@ -301,65 +291,61 @@ What would you like to do? (default = stats)
 
 <p>次にgenesisの設定管理を選択します。</p>
 
-<pre><code class="language-bash">What would you like to do? (default = stats)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">What would you like to do? (default = stats)
  1. Show network stats
  2. Manage existing genesis
  3. Track new remote server
  4. Deploy network components
-&gt; 2
-</code></pre>
+&gt; 2</code></pre></div>
 
 <p>genesisの設定をエクスポートします。</p>
 
-<pre><code class="language-bash"> 1. Modify existing fork rules
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline"> 1. Modify existing fork rules
  2. Export genesis configuration
  3. Remove genesis configuration
-&gt; 2
-</code></pre>
+&gt; 2</code></pre></div>
 
 <p>次はデフォルトでOK</p>
 
-<pre><code class="language-bash">Which file to save the genesis into? (default = soudegesu.json)
-&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Which file to save the genesis into? (default = soudegesu.json)
+&gt;</code></pre></div>
 
 <p>ココまで来ると <code>Exported existing genesis block</code> と表示され、コンソール上の表示が最初に戻ります。
 <code>Ctrl + C</code> にてexitしましょう。</p>
 
 <p><code>soudegesu.json</code> が作成されていることが確認できます。</p>
 
-<pre><code class="language-javascript">cat soudegesu.json
-
-{
-  &quot;config&quot;: {
-    &quot;chainId&quot;: 4224,
-    &quot;homesteadBlock&quot;: 1,
-    &quot;eip150Block&quot;: 2,
-    &quot;eip150Hash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-    &quot;eip155Block&quot;: 3,
-    &quot;eip158Block&quot;: 3,
-    &quot;byzantiumBlock&quot;: 4,
-    &quot;ethash&quot;: {}
-  },
-  &quot;nonce&quot;: &quot;0x0&quot;,
-  &quot;timestamp&quot;: &quot;0x5a9cd72a&quot;,
-  &quot;extraData&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-  &quot;gasLimit&quot;: &quot;0x47b760&quot;,
-  &quot;difficulty&quot;: &quot;0x80000&quot;,
-  &quot;mixHash&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-  &quot;coinbase&quot;: &quot;0x0000000000000000000000000000000000000000&quot;,
-  &quot;alloc&quot;: {
-    &quot;0000000000000000000000000000000000000000&quot;: {
-      &quot;balance&quot;: &quot;0x1&quot;
-    },
-    (以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#960050;background-color:#1e0010">cat</span> <span style="color:#960050;background-color:#1e0010">soudegesu.json</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>  <span style="color:#f92672">&#34;config&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#f92672">&#34;chainId&#34;</span>: <span style="color:#ae81ff">4224</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#f92672">&#34;homesteadBlock&#34;</span>: <span style="color:#ae81ff">1</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    <span style="color:#f92672">&#34;eip150Block&#34;</span>: <span style="color:#ae81ff">2</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#f92672">&#34;eip150Hash&#34;</span>: <span style="color:#e6db74">&#34;0x0000000000000000000000000000000000000000000000000000000000000000&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#f92672">&#34;eip155Block&#34;</span>: <span style="color:#ae81ff">3</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    <span style="color:#f92672">&#34;eip158Block&#34;</span>: <span style="color:#ae81ff">3</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    <span style="color:#f92672">&#34;byzantiumBlock&#34;</span>: <span style="color:#ae81ff">4</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    <span style="color:#f92672">&#34;ethash&#34;</span>: {}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>  },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>  <span style="color:#f92672">&#34;nonce&#34;</span>: <span style="color:#e6db74">&#34;0x0&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>  <span style="color:#f92672">&#34;timestamp&#34;</span>: <span style="color:#e6db74">&#34;0x5a9cd72a&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>  <span style="color:#f92672">&#34;extraData&#34;</span>: <span style="color:#e6db74">&#34;0x0000000000000000000000000000000000000000000000000000000000000000&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>  <span style="color:#f92672">&#34;gasLimit&#34;</span>: <span style="color:#e6db74">&#34;0x47b760&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>  <span style="color:#f92672">&#34;difficulty&#34;</span>: <span style="color:#e6db74">&#34;0x80000&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>  <span style="color:#f92672">&#34;mixHash&#34;</span>: <span style="color:#e6db74">&#34;0x0000000000000000000000000000000000000000000000000000000000000000&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>  <span style="color:#f92672">&#34;coinbase&#34;</span>: <span style="color:#e6db74">&#34;0x0000000000000000000000000000000000000000&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>  <span style="color:#f92672">&#34;alloc&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    <span style="color:#f92672">&#34;0000000000000000000000000000000000000000&#34;</span>: {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>      <span style="color:#f92672">&#34;balance&#34;</span>: <span style="color:#e6db74">&#34;0x1&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    <span style="color:#960050;background-color:#1e0010">(以下略)</span></code></pre></div>
 
 <h3 id="プライベートネットワークの初期化">プライベートネットワークの初期化</h3>
 
 <p>次にネットワークの初期化を行います。</p>
 
-<pre><code class="language-bash">geth --datadir ./private init ./soudegesu.json
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth --datadir ./private init ./soudegesu.json
 
 INFO [03-05|14:54:31] Maximum peer count                       ETH=25 LES=0 total=25
 INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/chaindata cache=16 handles=16
@@ -369,36 +355,31 @@ INFO [03-05|14:54:31] Successfully wrote genesis state         database=chaindat
 INFO [03-05|14:54:31] Allocated cache and file handles         database=/Users/xxxxxx/workspace/eth_private_net/private/geth/lightchaindata cache=16 handles=16
 INFO [03-05|14:54:31] Writing custom genesis block
 INFO [03-05|14:54:31] Persisted trie from memory database      nodes=354 size=65.02kB time=1.327455ms gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
-INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightchaindata                                                              hash=25e489…52b7d1
-</code></pre>
+INFO [03-05|14:54:31] Successfully wrote genesis state         database=lightchaindata                                                              hash=25e489…52b7d1</code></pre></div>
 
 <h3 id="アカウントの作成">アカウントの作成</h3>
 
 <p>ether(wei) をやりとりするためのアカウントを作成します。</p>
 
-<pre><code class="language-bash">geth --datadir . account new
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth --datadir . account new</code></pre></div>
 
 <p>適当にパスワードを設定すると <code>Address</code> のところにアカウントのアドレスが表示されます。</p>
 
-<pre><code class="language-bash">Your new account is locked with a password. Please give a password. Do not forget this password.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">Your new account is locked with a password. Please give a password. Do not forget this password.
 Passphrase:
 Repeat passphrase:
-Address: {アカウントA}
-</code></pre>
+Address: {アカウントA}</code></pre></div>
 
 <p>作成が完了すると <code>keystore</code> ディレクトリ下にユーザ情報が記載されたjsonファイルが出力されます。</p>
 
-<pre><code class="language-bash">ls keystore
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">ls keystore
 
-UTC--2018-03-05T06-00-32.829542689Z--アカウントA
-</code></pre>
+UTC--2018-03-05T06-00-32.829542689Z--アカウントA</code></pre></div>
 
 <p>作成されたアカウントを確認します。</p>
 
-<pre><code class="language-bash">geth --datadir . account list
-Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth --datadir . account list
+Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net/keystore/UTC--2018-03-05T06-00-32.829542689Z--アカウントA</code></pre></div>
 
 <p>後の行程で、複数ユーザ間でデータをやりとりする仕組みを試してみるため、
  <code>geth --datadir . account new</code> コマンドを複数実行し、アカウントを複数作っておきましょう。(とりあえず3つくらい)</p>
@@ -409,18 +390,14 @@ Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net
 
 <p>先程作成した <code>keystore</code> の情報を移動します。</p>
 
-<pre><code class="language-bash">cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">cp ~/workspace/eth_private_net/keystore/* ~/workspace/eth_private_net/private/keystore/.</code></pre></div>
 
-<p>作成したユーザのパスワードファイルを作成します。</p>
-
-<pre><code class="language-bash">echo (account new する時に指定したパスワード) &gt; private/password.sec
-</code></pre>
+<p>作成したユーザのパスワードファイルを作成します。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">echo (account new する時に指定したパスワード) &gt; private/password.sec</code></pre></div></p>
 
 <p>実行してみましょう。</p>
 
-<pre><code class="language-bash">geth --networkid 4224 --mine --minerthreads 1 --datadir &quot;~/workspace/eth_private_net/private&quot; --nodiscover --rpc --rpcport &quot;8545&quot; --port &quot;30303&quot; --rpccorsdomain &quot;*&quot; --nat &quot;any&quot; --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath &quot;~/Library/Ethereum/geth.ipc&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth --networkid 4224 --mine --minerthreads 1 --datadir &#34;~/workspace/eth_private_net/private&#34; --nodiscover --rpc --rpcport &#34;8545&#34; --port &#34;30303&#34; --rpccorsdomain &#34;*&#34; --nat &#34;any&#34; --rpcapi eth,web3,personal,net --unlock 0 --password ~/workspace/eth_private_net/private/password.sec --ipcpath &#34;~/Library/Ethereum/geth.ipc&#34;</code></pre></div>
 
 <p>その際に、標準出力に表示される <code>ChainID</code> が指定されたIDになっているかを確認しましょう。
 今回であれば <strong>4224</strong> が出ていればOKです。</p>
@@ -438,56 +415,49 @@ Account #0: {アカウントA} keystore:///Users/xxxxx/workspace/eth_private_net
 <p>その後、以下を実行し、Javascriptコンソールを起動します。
 コンソールは対話形式で入力していくことが可能です。</p>
 
-<pre><code class="language-javascript">geth attach
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">geth attach
 
 instance: Geth/v1.8.1-stable/darwin-amd64/go1.10
 coinbase: xxxxxxxxxxxxxxxxxxxxxxxxxx
 at block: 23 (Mon, 05 Mar 2018 15:39:56 JST)
  datadir: /Users/xxxxxx/workspace/eth_private_net/private
- modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
-</code></pre>
+ modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0</code></pre></div>
 
 <p>まず存在するアカウントを確認しておきます。</p>
 
-<pre><code class="language-javascript">&gt; eth.accounts
-[&quot;アカウントA&quot;, &quot;アカウントB&quot;, &quot;アカウントC&quot;]
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt; eth.accounts
+[&#34;アカウントA&#34;, &#34;アカウントB&#34;, &#34;アカウントC&#34;]</code></pre></div>
 
 <p>マイニング時のメインアカウントを確認します。</p>
 
-<pre><code class="language-javascript">&gt; eth.coinbase
-アカウントA
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt; eth.coinbase
+アカウントA</code></pre></div>
 
 <p>現時点での保有量を確認します。</p>
 
-<pre><code class="language-javascript">&gt; eth.getBalance(eth.accounts[0])
-285000000000000000000
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt; eth.getBalance(eth.accounts[0])
+285000000000000000000</code></pre></div>
 
 <p>単位が <code>wei</code> でわかりにくいので <code>ether</code> にしましょう。</p>
 
-<pre><code class="language-javascript">&gt; web3.fromWei(eth.getBalance(eth.coinbase), &quot;ether&quot;)
-288
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt; web3.fromWei(eth.getBalance(eth.coinbase), &#34;ether&#34;)
+288</code></pre></div>
 
 <p>アカウントAから他のアカウントBとアカウントCにそれぞれ送りつけてみましょう。</p>
 
-<pre><code class="language-javascript"># アカウントA -&gt; アカウントB へ10 ether送る
-eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, &quot;ether&quot;)})
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline"># アカウントA -&gt; アカウントB へ10 ether送る
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:web3.toWei(10, &#34;ether&#34;)})
 &gt; ハッシュ値
 # アカウントA -&gt; アカウントC へ6 ether送る
-eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, &quot;ether&quot;)})
-&gt; ハッシュ値
-</code></pre>
+eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:web3.toWei(6, &#34;ether&#34;)})
+&gt; ハッシュ値</code></pre></div>
 
 <p>以下で確認することができました。</p>
 
-<pre><code class="language-javascript">&gt; web3.fromWei(eth.getBalance(eth.accounts[1]), &quot;ether&quot;)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt; web3.fromWei(eth.getBalance(eth.accounts[1]), &#34;ether&#34;)
 10
-&gt; web3.fromWei(eth.getBalance(eth.accounts[2]), &quot;ether&quot;)
-6
-</code></pre>
+&gt; web3.fromWei(eth.getBalance(eth.accounts[2]), &#34;ether&#34;)
+6</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

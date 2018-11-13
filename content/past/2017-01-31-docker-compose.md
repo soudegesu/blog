@@ -24,7 +24,7 @@ twitter_card_image: /images/icons/docker_icon.png
 
 例えば、以下のようなDockerfileがあったとします。
 
-```Dockerfile
+{{< highlight vim "linenos=inline" >}}
 FROM mysql:latest
 
 RUN { \
@@ -37,11 +37,11 @@ RUN { \
 
 EXPOSE 3306
 CMD ["mysqld"]
-```
+{{< / highlight >}}
 
 それを呼び出すdocker-compose.ymlを作成します。
 
-```Dockerfile
+{{< highlight yaml "linenos=inline" >}}
 mysql:
   build: .
   dockerfile: Dockerfile
@@ -55,7 +55,7 @@ mysql:
     - MYSQL_PASSWORD=soudegesu
   volumes:
     - ./init.d:/docker-entrypoint-initdb.d
-```
+{{< / highlight >}}
 
 dockerfileの箇所に作成したDockerfileを指定しておくことで、起動時にimageをビルドし、そのイメージを使ってコンテナを起動します。
 
@@ -64,8 +64,9 @@ dockerfileの箇所に作成したDockerfileを指定しておくことで、起
 ## docker-compose で起動する
 それでは起動してみましょう。
 
-```bash
-#docker-compose up
+{{< highlight bash "linenos=inline" >}}
+docker-compose up
+
 Starting soudegesu_mysql_1
 Attaching to soudegesu_mysql_1
 mysql_1  | 2017-01-31T07:09:28.026908Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
@@ -75,11 +76,11 @@ mysql_1  | 2017-01-31T07:09:28.054031Z 0 [Note] InnoDB: Mutexes and rw_locks use
 mysql_1  | 2017-01-31T07:09:28.054043Z 0 [Note] InnoDB: Uses event mutexes
 mysql_1  | 2017-01-31T07:09:28.054055Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
 〜以下略〜
-```
+{{< / highlight >}}
 
 mysqlコマンドで接続してみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 mysql -h 127.0.0.1 -P 3306 -u root -proot
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -96,12 +97,12 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql>
 
-```
+{{< / highlight >}}
 
 できました。
 起動時のsqlファイルの実行結果も確認しましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -112,10 +113,10 @@ mysql> show databases;
 | performance_schema |
 | sys                |
 +--------------------+
-```
+{{< / highlight >}}
 
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 mysql> use soudegesu;
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
@@ -130,12 +131,12 @@ mysql> show tables;
 +-----------------+
 2 rows in set (0.00 sec)
 
-```
+{{< / highlight >}}
 
 ## ちなみに
 既存のimageを使用して `docker-compose up` を実行することも可能です。場合に応じて設定を変更してください。
 
-```Dockerfile
+{{< highlight yaml "linenos=inline" >}}
 mysql:
   image: mysql:latest ←これ
   ports:
@@ -148,4 +149,4 @@ mysql:
     - MYSQL_PASSWORD=soudegesu
   volumes:
     - ./init.d:/docker-entrypoint-initdb.d
-```
+{{< / highlight >}}

@@ -19,17 +19,17 @@ url: /linux/systemd_clock/
 システムクロックは `/etc/adjtime` を使ってハードウェアクロックから算出されます。
 `systemd` の場合、 `/etc/adjtime` が存在しないとデフォルトでUTCを使うそうですが、今回は存在していました。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cat /etc/adjtime
 
 > 0.0 0 0.0
 > 0
 > UTC
-```
+{{< / highlight >}}
 
 システムクロックを確認しましょう。 `timedatectl` コマンドを実行してみます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 timedatectl
 
 >       Local time: Sat 2018-06-09 05:16:29 UTC
@@ -40,19 +40,19 @@ timedatectl
 > NTP synchronized: no
 >  RTC in local TZ: no
 >      DST active: n/a
-```
+{{< / highlight >}}
 
 何もしていないので、UTCのままですね。
 
 次にtimezoneを `Asia/Tokyo` にしてみましょう。こちらも `timedatectl` コマンドで設定可能です。
 
-```bash
+{{< highlight "linenos=inline" >}}
 timedatectl set-timezone Asia/Tokyo
-```
+{{< / highlight >}}
 
 設定がされたか確認してみましょう。 `timedatectl` コマンドを実行したら、 Time zoneがJSTになっていることが確認できます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 timedatectl
 
 >       Local time: Sat 2018-06-09 14:57:45 JST
@@ -63,28 +63,28 @@ timedatectl
 > NTP synchronized: no
 >  RTC in local TZ: no
 >       DST active: n/a
-```
+{{< / highlight >}}
 
 タイムゾーンを変更すると、 `/etc/localtime` にその設定が反映されます。
 ファイルを見てみましょう。 `cat` してみましょう。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cat /etc/localtime
 
 > TZif2
 >         ��>p��K����p��-���ۭ�����݌�����~~LMTJDTJSTTZif2
 >
 > �����e¤p�����>p������K��������p������-�����������ۭ�������������݌�����~~LMTJDTJST
-```
+{{< / highlight >}}
 
 文字化けしてしまいましたね。代わりに、 `zdump` コマンドを使うことで `/etc/localtime` が指すタイムゾーンの情報を確認してみましょう。
 これで JST になっていることを確認できました。
 
-```bash
+{{< highlight "linenos=inline" >}}
 zdump /etc/localtime
 
 > /etc/localtime  Sat Jun  9 14:57:54 2018 JST
-```
+{{< / highlight >}}
 
 ちなみに `timedatectl set-time　"2018-06-09 12:00:00"` のように、
 直接引数に与えられた時刻に設定することができますが、個人的に使った経験はありません。
@@ -95,7 +95,7 @@ Linuxが起動するときにシステムクロックを設定するため、ハ
 
 ハードウェアクロックの情報は `hwclock` コマンドで確認できます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 hwclock --debug
 
 > hwclock from util-linux 2.30.2
@@ -112,15 +112,15 @@ hwclock --debug
 > Time since last adjustment is 1528524562 seconds
 > Calculated Hardware Clock drift is 0.000000 seconds
 > 2018-06-09 15:09:21.645250+0900
-```
+{{< / highlight >}}
 
 デバッグオプションなしで、 `hwclock` だけ実行すると、ハードウェアに記録されている時刻が表示されます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 hwclock
 
 > 2018-06-09 15:09:21.645250+0900
-```
+{{< / highlight >}}
 
 ## 参考にさせていただいたサイト
 

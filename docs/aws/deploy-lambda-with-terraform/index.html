@@ -191,21 +191,20 @@ AWS Lambdaは <a href="https://aws.amazon.com/jp/cloud9/">Cloud9</a> がコン�
 
 <p>またディレクトリ構成はこんな感じです。</p>
 
-<pre><code class="language-bash">.
-├── Makefile
-├── README.md
-├── build.sh
-├── lambda-src
-│   ├── __init__.py
-│   └── main.py
-├── requirements.txt
-└── terraform
-    ├── backend.tf
-    ├── dev.tfvars
-    ├── lambda.tf
-    ├── provider.tf
-    └── variables.tf
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>.
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>├── Makefile
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>├── README.md
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>├── build.sh
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>├── lambda-src
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>│   ├── __init__.py
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>│   └── main.py
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>├── requirements.txt
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>└── terraform
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    ├── backend.tf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    ├── dev.tfvars
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    ├── lambda.tf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    ├── provider.tf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    └── variables.tf</code></pre></div>
 
 <p><code>lambda-src</code> ディレクトリにはLambdaで実行するPythonコード、 <code>terraform</code> ディレクトリにはLmabdaのデプロイに使用するterraformの設定が格納されています。
 めんどい前処理の類はシェル(<code>build.sh</code>)でラップしてあって、開発者は <code>make</code> のサブコマンドだけ意識しておけば良い、という作りにしています。
@@ -253,20 +252,19 @@ AWS Lambdaは <a href="https://aws.amazon.com/jp/cloud9/">Cloud9</a> がコン�
 <li><code>build.sh</code></li>
 </ul>
 
-<pre><code class="language-bash">#!/usr/bin/env bash
-
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
-WORKSPACE=${SCRIPT_DIR}/workspace
-SRC_DIR=${SCRIPT_DIR}/lambda-src
-
-if [ -d ${WORKSPACE} ]; then
-    rm -rf ${WORKSPACE}
-fi
-mkdir ${WORKSPACE}
-
-pip3 install -r ${SCRIPT_DIR}/requirements.txt -t ${WORKSPACE}
-cp -rf ${SRC_DIR}/* ${WORKSPACE}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#75715e">#!/usr/bin/env bash
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#75715e"></span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>SCRIPT_DIR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cd <span style="color:#66d9ef">$(</span>dirname $0<span style="color:#66d9ef">)</span>; pwd<span style="color:#66d9ef">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>WORKSPACE<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>SCRIPT_DIR<span style="color:#e6db74">}</span>/workspace
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>SRC_DIR<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>SCRIPT_DIR<span style="color:#e6db74">}</span>/lambda-src
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -d <span style="color:#e6db74">${</span>WORKSPACE<span style="color:#e6db74">}</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    rm -rf <span style="color:#e6db74">${</span>WORKSPACE<span style="color:#e6db74">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#66d9ef">fi</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>mkdir <span style="color:#e6db74">${</span>WORKSPACE<span style="color:#e6db74">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>pip3 install -r <span style="color:#e6db74">${</span>SCRIPT_DIR<span style="color:#e6db74">}</span>/requirements.txt -t <span style="color:#e6db74">${</span>WORKSPACE<span style="color:#e6db74">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>cp -rf <span style="color:#e6db74">${</span>SRC_DIR<span style="color:#e6db74">}</span>/* <span style="color:#e6db74">${</span>WORKSPACE<span style="color:#e6db74">}</span></code></pre></div>
 
 <h3 id="terraformでzip圧縮-デプロイ">Terraformでzip圧縮&amp;デプロイ</h3>
 
@@ -274,25 +272,24 @@ cp -rf ${SRC_DIR}/* ${WORKSPACE}
 terraformで <code>archive_file</code> というデータリソースを使用することで、指定されたディレクトリをzip圧縮して出力することができます。
 加えて、Lambda関数の作成の際に <code>aws_lambda_function</code> リソースの <code>source_code_hash</code> プロパティに、zipアーカイブしたデータリソースのbase64エンコードを指定することができるので、これでzipのデプロイコードの完成です。</p>
 
-<pre><code class="language-bash">#####################################
-#Lambda
-#####################################
-resource &quot;aws_lambda_function&quot; &quot;auth_log_monitoring&quot; {
-    filename = &quot;../lambda.zip&quot;
-    function_name = &quot;do_something&quot;
-    role = &quot;arn:aws:iam::${var.account_id}:role/XXXXXXRole&quot;
-    handler = &quot;main.lambda_handler&quot;
-    source_code_hash = &quot;${data.archive_file.lambda_zip.output_base64sha256}&quot;
-    runtime = &quot;python3.6&quot;
-    timeout = 150
-}
-
-data &quot;archive_file&quot; &quot;lambda_zip&quot; {
-    type = &quot;zip&quot;
-    source_dir  = &quot;../workspace&quot;
-    output_path = &quot;../lambda.zip&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#960050;background-color:#1e0010">#####################################</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#960050;background-color:#1e0010">#</span><span style="color:#a6e22e">Lambda</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#960050;background-color:#1e0010">#####################################</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_lambda_function&#34;</span> <span style="color:#e6db74">&#34;auth_log_monitoring&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#a6e22e">filename</span> = <span style="color:#e6db74">&#34;../lambda.zip&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#a6e22e">function_name</span> = <span style="color:#e6db74">&#34;do_something&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    <span style="color:#a6e22e">role</span> = <span style="color:#e6db74">&#34;arn:aws:iam::${var.account_id}:role/XXXXXXRole&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#a6e22e">handler</span> = <span style="color:#e6db74">&#34;main.lambda_handler&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#a6e22e">source_code_hash</span> = <span style="color:#e6db74">&#34;${data.archive_file.lambda_zip.output_base64sha256}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    <span style="color:#a6e22e">runtime</span> = <span style="color:#e6db74">&#34;python3.6&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    <span style="color:#a6e22e">timeout</span> = <span style="color:#ae81ff">150</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#a6e22e">data</span> <span style="color:#e6db74">&#34;archive_file&#34;</span> <span style="color:#e6db74">&#34;lambda_zip&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>    <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;zip&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    <span style="color:#a6e22e">source_dir</span>  = <span style="color:#e6db74">&#34;../workspace&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>    <span style="color:#a6e22e">output_path</span> = <span style="color:#e6db74">&#34;../lambda.zip&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>}</code></pre></div>
 
 <h3 id="ビルド-デプロイをつなげる">ビルド&amp;デプロイをつなげる</h3>
 
@@ -303,13 +300,12 @@ data &quot;archive_file&quot; &quot;lambda_zip&quot; {
 <li><code>Makefile</code></li>
 </ul>
 
-<pre><code class="language-bash">deploy:
-	@${CD} &amp;&amp; \
-		sh ../build.sh &amp;&amp; \
-		terraform workspace select ${ENV} &amp;&amp; \
-		terraform apply \
-        -var-file=${VARS}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>deploy:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>	@<span style="color:#e6db74">${</span>CD<span style="color:#e6db74">}</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#ae81ff"></span>		sh ../build.sh <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#ae81ff"></span>		terraform workspace <span style="color:#66d9ef">select</span> <span style="color:#e6db74">${</span>ENV<span style="color:#e6db74">}</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#ae81ff"></span>		terraform apply <span style="color:#ae81ff">\
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#ae81ff"></span>        -var-file<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>VARS<span style="color:#e6db74">}</span></code></pre></div>
 
 <p>あとは <code>make deploy</code> を打てば実行できます。(リポジトリ的にはterraformのリモートバケットの初期化を先に行う必要はあります。)</p>
 

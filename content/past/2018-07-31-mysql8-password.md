@@ -36,7 +36,7 @@ ansible playbookのサンプルは以下のようになりました。
 
 なお、今回はメインのタスク定義の部分だけとし、その他の部分やPackerは冗長になるので割愛しています。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 ---
 - name: download epel-release
   yum:
@@ -80,7 +80,7 @@ ansible playbookのサンプルは以下のようになりました。
     host: '%'
   with_items:
     - "{{ mysql.users }}"
-```
+{{< / highlight >}}
 
 ## ポイント解説
 
@@ -91,12 +91,12 @@ ansible playbookのサンプルは以下のようになりました。
 CentOS 7にデフォルトでインストールされている mariadbのモジュールは削除しましょう。
 MySQLインストール時にモジュールの競合を起こしてうまくいきません。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: delete mariadb
   yum:
     name: mariadb-libs
     state: removed
-```
+{{< / highlight >}}
 
 ### MySQL-pythonをインストールする
 
@@ -104,7 +104,7 @@ ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-pytho
 
 なお、 `MySQL-python` はPython2上でしか動作しない点も注意してください。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: install mysql
   yum:
     name: "{{ item }}"
@@ -113,7 +113,7 @@ ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-pytho
     - mysql-community-devel*
     - mysql-community-server*
     - MySQL-python # これ
-```
+{{< / highlight >}}
 
 ### MySQLのデフォルト認証プラグインの変更
 
@@ -131,23 +131,23 @@ default-authentication-plugin=mysql_native_password
 
 `/etc/my.cnf` にコピーしてあげます。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: copy my.cnf
   copy:
     src: ../files/etc/my.cnf
     dest: /etc/my.cnf
     mode: 0644
-```
+{{< / highlight >}}
 
 変更を反映するために、`mysqld` を再起動してあげます。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: enable mysql
   systemd:
     name: mysqld
     state: restarted
     enabled: yes
-```
+{{< / highlight >}}
 
 ### ログファイルからrootのパスワードを取得して初期化する
 
@@ -157,19 +157,19 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
 
 初期パスワードをログファイルから抽出して変数に登録した後( `register` )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: get root password
   shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
   register: root_password # これで一回変数登録
 - name: update expired root user password
   command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"
-```
+{{< / highlight >}}
 
 **なぜ `mysql_user` ではなく `command` モジュールを使うの？** と思うことでしょう。
 
 例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 -  mysql_user:
     login_user: root
     login_password: "{{ root_password }}"
@@ -178,7 +178,7 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
     priv: '*.*:ALL,GRANT'
     state: present
     host: '%'
-```
+{{< / highlight >}}
 
 実はこれだと、以下のようなエラーが発生します。
 
@@ -198,7 +198,7 @@ unable to connect to database, check login_user and login_password are correct o
 これはMySQL自体の話ですが、 `host` は接続元のホストを適切に設定してください。今回は研修用途のどうでもいいサーバなので `%` としています。
 逆に `host` が未設定だと、localhostからの接続しか許可されません。
 
-```yml
+{{< highlight yaml "linenos=inline" >}}
 - name: create mysql client user
   mysql_user:
     login_user: root
@@ -210,7 +210,7 @@ unable to connect to database, check login_user and login_password are correct o
     host: '%' # hostを設定しないと、localhostからの接続しか受け付けない
   with_items:
     - "{{ mysql.users }}"
-```
+{{< / highlight >}}
 
 ## まとめ
 

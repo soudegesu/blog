@@ -24,7 +24,7 @@ anacondaを使用する機会も増えてきたので、`pyenv install`からの
 1. *anaconda* と *pyenv* の `activate` の競合を解決したい
     1. *anaconda* を`activate`する際にフルパスで指定するのを避けたい
 
-1と2は*pyenv*で、3は *pyenv-virtualenv* で解決できることになります。
+1と2は *pyenv* で、3は *pyenv-virtualenv* で解決できることになります。
 
 ## 環境
 * MacOSX Yosemite
@@ -33,16 +33,19 @@ anacondaを使用する機会も増えてきたので、`pyenv install`からの
 
 ## セットアップ手順
 ### 仮想環境切り替え用のモジュールをインストール
-``` bash
+
+{{< highlight "linenos=inline" >}}
 # pyenvをインストールする
 brew install pyenv
 #pyenv-virtualenvをインストールする
 brew install pyenv-virtualenv
-```
+{{< / highlight >}}
 
 ### シェル起動時の設定ファイルを修正
+
 * .zshrcに以下を追記する
-``` bash
+
+{{< highlight "linenos=inline" >}}
 # pyenvの設定
 export PYENV_ROOT="${HOME}/.pyenv"
 if [ -d "${PYENV_ROOT}" ]; then
@@ -51,85 +54,100 @@ if [ -d "${PYENV_ROOT}" ]; then
 fi
 # pyenv-virtualenvの設定
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-```
+{{< / highlight >}}
+
 * ターミナルを再起動する(sourceコマンドでの再読込でも可)
 
 ## Pythonの仮想環境を作成する
 ### テスト用のディレクトリを作成
 *hoge* ディレクトリ配下を任意のpythonバージョンで動作するようにしましょう。
 pythonのバージョンを確認しておきます。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 mkdir hoge
 cd hoge
 python -V
 > Python 2.7.6
-```
+{{< / highlight >}}
 
 ### pythonのバージョンを設定
 pyenvで使用可能なpythonを指定します。
-今回は3.6.0をインストールした後、*hoge*ディレクトリ配下を3.6.0にします。
-``` bash
+今回は3.6.0をインストールした後、*hoge* ディレクトリ配下を3.6.0にします。
+
+{{< highlight "linenos=inline" >}}
 pyenv install 3.6.0
 pyenv local 3.6.0
 python -V
 > Python 3.6.0
-```
+{{< / highlight >}}
 
 ### 仮想環境の構築
 pythonのvenvモジュールを呼び出し、仮想環境を構築します。
 今回は便宜的にカレントディレクトリに仮想環境を展開します。
 `activate`を読み込むことで、仮想環境に切り替わります。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 python3 -m venv .
 source bin/activate
-```
+{{< / highlight >}}
+
 `deactivate`する場合には`deactivate`コマンドを入力するだけです。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 deactivate
-```
+{{< / highlight >}}
 
 ## Pythonの仮想環境を作成する(anacondaの場合)
 ### テスト用のディレクトリを作成
 同様にして、anaconda環境を構築するために、*fuga*ディレクトリを作成します。
 pythonのバージョンがデフォルトであることも確認しておきましょう。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 mkdir fuga
 cd fuga
 python -V
 Python 2.7.6
-```
+{{< / highlight >}}
 
 ### anacondaのバージョンを設定
 こちらも手順としては同様です。
 pyenvではインストールするpythonのディストリビューションが選択できます。
 `anaconda`以外にも`miniconda`や`pypy`、`jython`等でも構築が可能です。
-```
+
+{{< highlight "linenos=inline" >}}
 pyenv install anaconda3-4.1.0
 pyenv local anaconda3-4.1.0
 python -V
 > Python 3.5.1 :: Anaconda 4.1.0 (x86_64)
-```
+{{< / highlight >}}
 
 ### 仮想環境の構築
 `conda`コマンドを使用して、存在している環境情報を確認することができます。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 conda info -e
 > root                  *  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0
-```
+{{< / highlight >}}
+
 次に、anacondaの仮想環境を構築します。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 conda create -n fuga python=3.5 anaconda
-```
+{{< / highlight >}}
+
 `-n` オプションは構築する仮想環境の名前、`python=3.5`は使用するpythonのバージョン、`anaconda`は仮想環境上で使用するモジュールになります。
 
 `pyenv activate`コマンドを使用することで、anacondaの環境をactivateできます。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 pyenv activate anaconda3-4.1.0/envs/fuga
-```
+{{< / highlight >}}
+
 deactivateも同様ですね。
-``` bash
+
+{{< highlight "linenos=inline" >}}
 pyenv deactivate
-```
+{{< / highlight >}}
 
 ## まとめ
 * `pyenv`と`pyenv-virtualenv`を使用することで、pythonの仮想環境の切り替えができるようになりました。

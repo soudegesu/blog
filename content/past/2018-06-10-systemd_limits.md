@@ -32,7 +32,7 @@ Linuxへのログインユーザへの設定は `/etc/security/limits.conf` フ�
 
 Ansibleの [pam_limits](https://docs.ansible.com/ansible/2.3/pam_limits_module.html) を使うと、このファイルに追記がされます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cat /etc/security/limits.conf
 
 # /etc/security/limits.conf
@@ -96,7 +96,7 @@ cat /etc/security/limits.conf
 #@student        -       maxlogins       4
 
 # End of file
-```
+{{< / highlight >}}
 
 ### limits.confよりも優先されるファイル
 
@@ -108,7 +108,7 @@ Amazon Linux2（CentOS系）の場合には `/etc/security/limits.d/20-nproc.con
 
 アクシデンタルなフォーク爆弾を防ぐために、とも書かれていますね。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cat /etc/security/limits.d/20-nproc.conf
 
 > # Default limit for number of user's processes to prevent
@@ -117,7 +117,7 @@ cat /etc/security/limits.d/20-nproc.conf
 >
 > *          soft    nproc     4096
 > root       soft    nproc     unlimited
-```
+{{< / highlight >}}
 
 ### 設定値の確認方法
 
@@ -127,7 +127,7 @@ cat /etc/security/limits.d/20-nproc.conf
 注意点として、`ulimit` で表示されるのは、カレントユーザの設定値であることです。
 別のユーザの設定値を確認したければ `su` を使うなどする必要があります。
 
-```bash
+{{< highlight "linenos=inline" >}}
 ulimit -a
 
 > core file size          (blocks, -c) 0
@@ -146,7 +146,7 @@ ulimit -a
 > max user processes              (-u) 3828
 > virtual memory          (kbytes, -v) unlimited
 > file locks                      (-x) unlimited
-```
+{{< / highlight >}}
 
 ## デーモンへの設定
 
@@ -163,11 +163,11 @@ ulimit -a
 systemdにてコントロールされるプロセスのデフォルト値を変更するには `/etc/systemd/system.conf` ファイルを編集します。
 例えば、プロセス数やファイルディスクリプタ数を変更するには以下のように記述をします。
 
-```bash
+{{< highlight vim "linenos=inline" >}}
 [Manager]
 DefaultLimitNOFILE=65536
 DefaultLimitNPROC=65536
-```
+{{< / highlight >}}
 
 ### デーモンごとの設定をする
 
@@ -179,23 +179,23 @@ DefaultLimitNPROC=65536
 
 以下ではファイルディスクリプタの数を定義しています。
 
-```vim
+{{< highlight vim "linenos=inline" >}}
 [Service]
 LimitNOFILE=40000
-```
+{{< / highlight >}}
 
 その後、デーモンを再起動して
 
-```bash
+{{< highlight "linenos=inline" >}}
 systemctl daemon-reload
 
 systemctl stop (サービス)
 systemctl start (サービス)
-```
+{{< / highlight >}}
 
 設定が反映されているか確認しましょう。
 
-```bash
+{{< highlight "linenos=inline" >}}
 cat /proc/${プロセス番号}/limits
 
 Limit                     Soft Limit           Hard Limit           Units
@@ -215,7 +215,7 @@ Max msgqueue size         819200               819200               bytes
 Max nice priority         0                    0
 Max realtime priority     0                    0
 Max realtime timeout      unlimited            unlimited            us
-```
+{{< / highlight >}}
 
 ファルディスクリプタ（Max open files）が40000になっていますね。
 

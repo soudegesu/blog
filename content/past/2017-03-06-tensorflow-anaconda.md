@@ -6,6 +6,7 @@ categories:
     - tensorflow
 tags:
     - tensorflow
+    - anaconda
 url: /tensorflow/tensorflow-anaconda/
 twitter_card_image: /images/icons/python_icon.png
 ---
@@ -21,23 +22,23 @@ twitter_card_image: /images/icons/python_icon.png
 ## 発生した問題
 tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。
 
-``` bash
+{{< highlight bash "linenos=inline" >}}
 pip3 install tensorflow
-```
+{{< / highlight >}}
 
 ## 解決策
 
 そのため、以下のようにコマンドを変更します。
-``` bash
+{{< highlight bash "linenos=inline" >}}
 pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl
-```
+{{< / highlight >}}
 
 ## 備考
 anaconda の方でのパッケージ管理でインストール可能かを調べてみました。
 
 * pypi
 
-``` bash
+{{< highlight bash "linenos=inline" >}}
 anaconda search -t pypi tensorflow
 
 >Using Anaconda API: https://api.anaconda.org
@@ -49,11 +50,11 @@ anaconda search -t pypi tensorflow
 >                                          : TensorFlow helps the tensors flow
 >     jjhelmus/tensorflow       | 0.12.0rc0 | conda, pypi     | linux-64, osx-64
 >                                          : TensorFlow helps the tensors flow
-```
+{{< / highlight >}}
 
 * conda
 
-``` bash
+{{< highlight bash "linenos=inline" >}}
 anaconda search -t conda tensorflow
 
 >Using Anaconda API: https://api.anaconda.org
@@ -95,6 +96,6 @@ anaconda search -t conda tensorflow
 >     rdonnellyr/r-tensorflow   |    0.4.0 | conda           | osx-64
 >     test_org_002/tensorflow   | 0.10.0rc0 | conda           |
 
-```
+{{< / highlight >}}
 
 配布元が微妙だったり、バージョンが最新に対応していなかったりの様子なので、しばらくは `storage.googleapis.com` を参照する形でインストールを行いたいと思います。

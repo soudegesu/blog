@@ -181,7 +181,7 @@ anacondaを使用する機会も増えてきたので、<code>pyenv install</cod
 </ol></li>
 </ol>
 
-<p>1と2は*pyenv*で、3は <em>pyenv-virtualenv</em> で解決できることになります。</p>
+<p>1と2は <em>pyenv</em> で、3は <em>pyenv-virtualenv</em> で解決できることになります。</p>
 
 <h2 id="環境">環境</h2>
 
@@ -195,28 +195,28 @@ anacondaを使用する機会も増えてきたので、<code>pyenv install</cod
 
 <h3 id="仮想環境切り替え用のモジュールをインストール">仮想環境切り替え用のモジュールをインストール</h3>
 
-<pre><code class="language-bash"># pyenvをインストールする
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline"># pyenvをインストールする
 brew install pyenv
 #pyenv-virtualenvをインストールする
-brew install pyenv-virtualenv
-</code></pre>
+brew install pyenv-virtualenv</code></pre></div>
 
 <h3 id="シェル起動時の設定ファイルを修正">シェル起動時の設定ファイルを修正</h3>
 
 <ul>
-<li><p>.zshrcに以下を追記する</p>
+<li>.zshrcに以下を追記する</li>
+</ul>
 
-<pre><code class="language-bash"># pyenvの設定
-export PYENV_ROOT=&quot;${HOME}/.pyenv&quot;
-if [ -d &quot;${PYENV_ROOT}&quot; ]; then
-export PATH=${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
-eval &quot;$(pyenv init -)&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline"># pyenvの設定
+export PYENV_ROOT=&#34;${HOME}/.pyenv&#34;
+if [ -d &#34;${PYENV_ROOT}&#34; ]; then
+    export PATH=${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
+    eval &#34;$(pyenv init -)&#34;
 fi
 # pyenv-virtualenvの設定
-if which pyenv-virtualenv-init &gt; /dev/null; then eval &quot;$(pyenv virtualenv-init -)&quot;; fi
-</code></pre></li>
+if which pyenv-virtualenv-init &gt; /dev/null; then eval &#34;$(pyenv virtualenv-init -)&#34;; fi</code></pre></div>
 
-<li><p>ターミナルを再起動する(sourceコマンドでの再読込でも可)</p></li>
+<ul>
+<li>ターミナルを再起動する(sourceコマンドでの再読込でも可)</li>
 </ul>
 
 <h2 id="pythonの仮想環境を作成する">Pythonの仮想環境を作成する</h2>
@@ -226,22 +226,20 @@ if which pyenv-virtualenv-init &gt; /dev/null; then eval &quot;$(pyenv virtualen
 <p><em>hoge</em> ディレクトリ配下を任意のpythonバージョンで動作するようにしましょう。
 pythonのバージョンを確認しておきます。</p>
 
-<pre><code class="language-bash">mkdir hoge
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">mkdir hoge
 cd hoge
 python -V
-&gt; Python 2.7.6
-</code></pre>
+&gt; Python 2.7.6</code></pre></div>
 
 <h3 id="pythonのバージョンを設定">pythonのバージョンを設定</h3>
 
 <p>pyenvで使用可能なpythonを指定します。
-今回は3.6.0をインストールした後、*hoge*ディレクトリ配下を3.6.0にします。</p>
+今回は3.6.0をインストールした後、<em>hoge</em> ディレクトリ配下を3.6.0にします。</p>
 
-<pre><code class="language-bash">pyenv install 3.6.0
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv install 3.6.0
 pyenv local 3.6.0
 python -V
-&gt; Python 3.6.0
-</code></pre>
+&gt; Python 3.6.0</code></pre></div>
 
 <h3 id="仮想環境の構築">仮想環境の構築</h3>
 
@@ -249,14 +247,12 @@ python -V
 今回は便宜的にカレントディレクトリに仮想環境を展開します。
 <code>activate</code>を読み込むことで、仮想環境に切り替わります。</p>
 
-<pre><code class="language-bash">python3 -m venv .
-source bin/activate
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">python3 -m venv .
+source bin/activate</code></pre></div>
 
 <p><code>deactivate</code>する場合には<code>deactivate</code>コマンドを入力するだけです。</p>
 
-<pre><code class="language-bash">deactivate
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">deactivate</code></pre></div>
 
 <h2 id="pythonの仮想環境を作成する-anacondaの場合">Pythonの仮想環境を作成する(anacondaの場合)</h2>
 
@@ -265,11 +261,10 @@ source bin/activate
 <p>同様にして、anaconda環境を構築するために、*fuga*ディレクトリを作成します。
 pythonのバージョンがデフォルトであることも確認しておきましょう。</p>
 
-<pre><code class="language-bash">mkdir fuga
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">mkdir fuga
 cd fuga
 python -V
-Python 2.7.6
-</code></pre>
+Python 2.7.6</code></pre></div>
 
 <h3 id="anacondaのバージョンを設定">anacondaのバージョンを設定</h3>
 
@@ -277,36 +272,31 @@ Python 2.7.6
 pyenvではインストールするpythonのディストリビューションが選択できます。
 <code>anaconda</code>以外にも<code>miniconda</code>や<code>pypy</code>、<code>jython</code>等でも構築が可能です。</p>
 
-<pre><code>pyenv install anaconda3-4.1.0
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv install anaconda3-4.1.0
 pyenv local anaconda3-4.1.0
 python -V
-&gt; Python 3.5.1 :: Anaconda 4.1.0 (x86_64)
-</code></pre>
+&gt; Python 3.5.1 :: Anaconda 4.1.0 (x86_64)</code></pre></div>
 
 <h3 id="仮想環境の構築-1">仮想環境の構築</h3>
 
 <p><code>conda</code>コマンドを使用して、存在している環境情報を確認することができます。</p>
 
-<pre><code class="language-bash">conda info -e
-&gt; root                  *  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">conda info -e
+&gt; root                  *  /Users/XXXXXXXXX/.pyenv/versions/anaconda3-4.1.0</code></pre></div>
 
 <p>次に、anacondaの仮想環境を構築します。</p>
 
-<pre><code class="language-bash">conda create -n fuga python=3.5 anaconda
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">conda create -n fuga python=3.5 anaconda</code></pre></div>
 
 <p><code>-n</code> オプションは構築する仮想環境の名前、<code>python=3.5</code>は使用するpythonのバージョン、<code>anaconda</code>は仮想環境上で使用するモジュールになります。</p>
 
 <p><code>pyenv activate</code>コマンドを使用することで、anacondaの環境をactivateできます。</p>
 
-<pre><code class="language-bash">pyenv activate anaconda3-4.1.0/envs/fuga
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv activate anaconda3-4.1.0/envs/fuga</code></pre></div>
 
 <p>deactivateも同様ですね。</p>
 
-<pre><code class="language-bash">pyenv deactivate
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">pyenv deactivate</code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

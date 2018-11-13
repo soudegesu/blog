@@ -73,7 +73,7 @@ jibではプロダクトの目的として以下の3つを謳っているので�
 
 まずは、 `build.gradle` を編集しましょう。以下のような感じで `build.gradle` を編集します。
 
-```gradle
+{{< highlight groovy "linenos=inline" >}}
 buildscript {
     repositories {
         maven {
@@ -127,32 +127,32 @@ ext {
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: verSpringboot
 }
-```
+{{< / highlight >}}
 
 ### Dockerイメージのビルド
 
 まずは、Dockerイメージのビルドをしてみましょう。
 イメージのビルドには不要ですが、ビルドが失敗するので実行引数にプロファイルを指定します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ./gradlew jibDockerBuild -Paws.accountid=${awsアカウントID} -Paws.region=${awsのリージョン}
-```
+{{< / highlight >}}
 
 完成したイメージを確認します。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 docker images
 
 > REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
 > jib-test                    unspecified         155f1b17a8bc        48 years ago        119MB
 
-```
+{{< / highlight >}}
 
 「CREATED」が **48 years ago** なのが少し気になりますが、そのうち改善されるでしょう。（きっと）
 
 作成したイメージからコンテナをローカルで起動してみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 docker run -p 8080:8080 -it 155f1b17a8bc
 
   .   ____          _            __ _ _
@@ -166,18 +166,18 @@ docker run -p 8080:8080 -it 155f1b17a8bc
 2018-07-18 00:34:52.773  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : Starting MainApplication on 1b3277472466 with PID 1 (/app/classes started by root in /)
 2018-07-18 00:34:52.780  INFO 1 --- [           main] com.soudegesu.example.MainApplication    : No active profile set, falling back to default profiles: default
 (以下略)
-```
+{{< / highlight >}}
 
 ### プロセスを見てみる
 
 springbootで実装したアプリケーションをイメージに入れたわけですが、特に executable-jar を作るタスクを実行したわけではありません。
 dockerコンテナの中に入って、プロセスを確認してみましょう。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ps ax | grep java
 
 > java -Xms512m -Xms1g -Xmx1g -Xss10m -XX:MaxMetaspaceSize=1g -cp /app/libs/*:/app/resources/:/app/classes/ com.soudegesu.example.MainApplication
-```
+{{< / highlight >}}
 
 なるほど。 `/app` の各ディレクトリ配下にクラスパスを通して、指定されたMainクラスを実行しているのですね。
 
@@ -191,7 +191,7 @@ ps ax | grep java
 
 以下コマンドを実行してみます。
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 ./gradlew jib -Paws.accountid=${awsアカウントID} -Paws.region=${awsのリージョン} --stacktrace
 
 > Containerizing application to ${awsアカウントID}.dkr.ecr.${awsのリージョン}.amazonaws.com/jib-test...
@@ -213,7 +213,7 @@ ps ax | grep java
 >
 > BUILD SUCCESSFUL in 22s
 > 2 actionable tasks: 1 executed, 1 up-to-date
-```
+{{< / highlight >}}
 
 イメージをAWSコンソール上から確認してみましょう。
 

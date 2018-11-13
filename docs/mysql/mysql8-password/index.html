@@ -180,50 +180,49 @@ ansible playbookのサンプルは以下のようになりました。</p>
 
 <p>なお、今回はメインのタスク定義の部分だけとし、その他の部分やPackerは冗長になるので割愛しています。</p>
 
-<pre><code class="language-yml">---
-- name: download epel-release
-  yum:
-    name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
-    state: present
-- name: delete mariadb
-  yum:
-    name: mariadb-libs
-    state: removed
-- name: install mysql
-  yum:
-    name: &quot;{{ item }}&quot;
-    state: present
-  with_items:
-    - mysql-community-devel*
-    - mysql-community-server*
-    - MySQL-python
-- name: copy my.cnf
-  copy:
-    src: ../files/etc/my.cnf
-    dest: /etc/my.cnf
-    mode: 0644
-- name: enable mysql
-  systemd:
-    name: mysqld
-    state: restarted
-    enabled: yes
-- name: get root password
-  shell: &quot;grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'&quot;
-  register: root_password
-- name: update expired root user password
-  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute=&quot;ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';&quot;
-- name: create mysql client user
-  mysql_user:
-    login_user: root
-    login_password: &quot;{{ mysql.root.password }}&quot;
-    name: &quot;{{ item.name }}&quot;
-    password: &quot;{{ item.password }}&quot;
-    priv: '*.*:ALL,GRANT'
-    state: present
-    host: '%'
-  with_items:
-    - &quot;{{ mysql.users }}&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>---
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>- name: download epel-release
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>  yum:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    name: https://dev.mysql.com/get/mysql80-community-release-el7-<span style="color:#ae81ff">1.</span>noarch.rpm
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>- name: delete mariadb
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>  yum:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    name: mariadb-libs
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    state: removed
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>- name: install mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>  yum:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    name: <span style="color:#e6db74">&#34;{{ item }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>  with_items:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>    - mysql-community-devel*
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    - mysql-community-server*
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>    - MySQL-python
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>- name: copy my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>  copy:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>    src: ../files/etc/my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    dest: /etc/my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    mode: <span style="color:#ae81ff">0644</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>- name: enable mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>  systemd:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    name: mysqld
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>    state: restarted
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>    enabled: yes
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>- name: get root password
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>  shell: <span style="color:#e6db74">&#34;grep &#39;A temporary password is generated for root@localhost&#39; /var/log/mysqld.log | awk -F &#39; &#39; &#39;{print $(NF)}&#39;&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>  register: root_password
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>- name: update expired root user password
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute=<span style="color:#e6db74">&#34;ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;{{ mysql.root.password }}&#39;;&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>- name: create mysql client user
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>  mysql_user:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>    login_user: root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>    login_password: <span style="color:#e6db74">&#34;{{ mysql.root.password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>    name: <span style="color:#e6db74">&#34;{{ item.name }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>    password: <span style="color:#e6db74">&#34;{{ item.password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>    priv: <span style="color:#e6db74">&#39;*.*:ALL,GRANT&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span>    host: <span style="color:#e6db74">&#39;%&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>  with_items:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span>    - <span style="color:#e6db74">&#34;{{ mysql.users }}&#34;</span></code></pre></div>
 
 <h2 id="ポイント解説">ポイント解説</h2>
 
@@ -234,11 +233,10 @@ ansible playbookのサンプルは以下のようになりました。</p>
 <p>CentOS 7にデフォルトでインストールされている mariadbのモジュールは削除しましょう。
 MySQLインストール時にモジュールの競合を起こしてうまくいきません。</p>
 
-<pre><code class="language-yml">- name: delete mariadb
-  yum:
-    name: mariadb-libs
-    state: removed
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>- name: delete mariadb
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  yum:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    name: mariadb-libs
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    state: removed</code></pre></div>
 
 <h3 id="mysql-pythonをインストールする">MySQL-pythonをインストールする</h3>
 
@@ -246,15 +244,14 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
 
 <p>なお、 <code>MySQL-python</code> はPython2上でしか動作しない点も注意してください。</p>
 
-<pre><code class="language-yml">- name: install mysql
-  yum:
-    name: &quot;{{ item }}&quot;
-    state: present
-  with_items:
-    - mysql-community-devel*
-    - mysql-community-server*
-    - MySQL-python # これ
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>- name: install mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  yum:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    name: <span style="color:#e6db74">&#34;{{ item }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>  with_items:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    - mysql-community-devel*
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    - mysql-community-server*
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>    - MySQL-python <span style="color:#75715e"># これ</span></code></pre></div>
 
 <h3 id="mysqlのデフォルト認証プラグインの変更">MySQLのデフォルト認証プラグインの変更</h3>
 
@@ -270,21 +267,19 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
 
 <p><code>/etc/my.cnf</code> にコピーしてあげます。</p>
 
-<pre><code class="language-yml">- name: copy my.cnf
-  copy:
-    src: ../files/etc/my.cnf
-    dest: /etc/my.cnf
-    mode: 0644
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>- name: copy my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  copy:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    src: ../files/etc/my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    dest: /etc/my.cnf
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    mode: <span style="color:#ae81ff">0644</span></code></pre></div>
 
 <p>変更を反映するために、<code>mysqld</code> を再起動してあげます。</p>
 
-<pre><code class="language-yml">- name: enable mysql
-  systemd:
-    name: mysqld
-    state: restarted
-    enabled: yes
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>- name: enable mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  systemd:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    name: mysqld
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    state: restarted
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    enabled: yes</code></pre></div>
 
 <h3 id="ログファイルからrootのパスワードを取得して初期化する">ログファイルからrootのパスワードを取得して初期化する</h3>
 
@@ -294,26 +289,24 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
 
 <p>初期パスワードをログファイルから抽出して変数に登録した後( <code>register</code> )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。</p>
 
-<pre><code class="language-yml">- name: get root password
-  shell: &quot;grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'&quot;
-  register: root_password # これで一回変数登録
-- name: update expired root user password
-  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute=&quot;ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>- name: get root password
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  shell: <span style="color:#e6db74">&#34;grep &#39;A temporary password is generated for root@localhost&#39; /var/log/mysqld.log | awk -F &#39; &#39; &#39;{print $(NF)}&#39;&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>  register: root_password <span style="color:#75715e"># これで一回変数登録</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>- name: update expired root user password
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>  command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute=<span style="color:#e6db74">&#34;ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;{{ mysql.root.password }}&#39;;&#34;</span></code></pre></div>
 
 <p><strong>なぜ <code>mysql_user</code> ではなく <code>command</code> モジュールを使うの？</strong> と思うことでしょう。</p>
 
 <p>例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。</p>
 
-<pre><code class="language-yml">-  mysql_user:
-    login_user: root
-    login_password: &quot;{{ root_password }}&quot;
-    name: root
-    password: &quot;{{ sometinng new password }}&quot;
-    priv: '*.*:ALL,GRANT'
-    state: present
-    host: '%'
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>-  mysql_user:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    login_user: root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    login_password: <span style="color:#e6db74">&#34;{{ root_password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    name: root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    password: <span style="color:#e6db74">&#34;{{ sometinng new password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    priv: <span style="color:#e6db74">&#39;*.*:ALL,GRANT&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>    host: <span style="color:#e6db74">&#39;%&#39;</span></code></pre></div>
 
 <p>実はこれだと、以下のようなエラーが発生します。</p>
 
@@ -331,18 +324,17 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
 <p>これはMySQL自体の話ですが、 <code>host</code> は接続元のホストを適切に設定してください。今回は研修用途のどうでもいいサーバなので <code>%</code> としています。
 逆に <code>host</code> が未設定だと、localhostからの接続しか許可されません。</p>
 
-<pre><code class="language-yml">- name: create mysql client user
-  mysql_user:
-    login_user: root
-    login_password: &quot;{{ mysql.root.password }}&quot;
-    name: &quot;{{ item.name }}&quot;
-    password: &quot;{{ item.password }}&quot;
-    priv: '*.*:ALL,GRANT'
-    state: present
-    host: '%' # hostを設定しないと、localhostからの接続しか受け付けない
-  with_items:
-    - &quot;{{ mysql.users }}&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>- name: create mysql client user
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  mysql_user:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    login_user: root
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    login_password: <span style="color:#e6db74">&#34;{{ mysql.root.password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    name: <span style="color:#e6db74">&#34;{{ item.name }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    password: <span style="color:#e6db74">&#34;{{ item.password }}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    priv: <span style="color:#e6db74">&#39;*.*:ALL,GRANT&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    state: present
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    host: <span style="color:#e6db74">&#39;%&#39;</span> <span style="color:#75715e"># hostを設定しないと、localhostからの接続しか受け付けない</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>  with_items:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    - <span style="color:#e6db74">&#34;{{ mysql.users }}&#34;</span></code></pre></div>
 
 <h2 id="まとめ">まとめ</h2>
 

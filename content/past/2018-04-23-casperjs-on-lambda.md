@@ -100,14 +100,14 @@ CasperJSのデバッグはコンソールに情報を出力するよりも `capu
 CasperJSで操作するWebコンテンツがi18n対応されていたため、ヘッドレスブラウザの設定を英語にしました。
 **CSSセレクタではなくてエレメント内のテキスト情報で要素を引きたい** ことが発生した場合に、マルチバイト文字だと引っかからなかったからです。
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 // Change browser lang
 casper.on('started', function () {
     this.page.customHeaders = {
         "Accept-Language": "en-US"
     }
 });
-```
+{{< / highlight >}}
 
 **ランタイムに依存しない** という意味でも設定しておいた方が良いと思います。
 

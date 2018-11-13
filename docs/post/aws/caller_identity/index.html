@@ -151,14 +151,12 @@ if (!doNotTrack) {
 
 <p>ってありますよね。 例えば、AWSアカウント番号がそうです。 <a href="https://www.terraform.io/docs/modules/usage.html">Terraform Module</a> を使って、それなりのサイズ感のシステムコンポーネント定義を書いていくと、モジュール毎の <code>variables.tf</code> ファイルに</p>
 
-<pre><code class="language-terraform">variable &quot;account_id&quot; {
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">variable</span> <span style="color:#e6db74">&#34;account_id&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>}</code></pre></div>
 
 <p>と定義した後、 <code>.tfvars</code> ファイルに</p>
 
-<pre><code>account_id = &quot;XXXXXXXXXXX&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">account_id</span> = <span style="color:#e6db74">&#34;XXXXXXXXXXX&#34;</span></code></pre></div>
 
 <p>という記載が増えて冗長に感じます。</p>
 
@@ -166,32 +164,30 @@ if (!doNotTrack) {
 
 <p>こんな感じだったり、</p>
 
-<pre><code>data &quot;aws_iam_policy_document&quot; &quot;xxxxx&quot; {
-    statement {
-        effect = &quot;Allow&quot;
-
-        actions = [
-            &quot;s3:PutObject&quot;,
-        ]
-
-        resources = [
-            &quot;arn:aws:s3:::xxxxx/*&quot;
-        ]
-
-        principals = {
-            type = &quot;AWS&quot;
-            identifiers = [
-                &quot;${var.account_id}&quot;
-            ]
-        }
-    }
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">data</span> <span style="color:#e6db74">&#34;aws_iam_policy_document&#34;</span> <span style="color:#e6db74">&#34;xxxxx&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#a6e22e">statement</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>        <span style="color:#a6e22e">effect</span> = <span style="color:#e6db74">&#34;Allow&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        <span style="color:#a6e22e">actions</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#e6db74">&#34;s3:PutObject&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>        <span style="color:#a6e22e">resources</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>            <span style="color:#e6db74">&#34;arn:aws:s3:::xxxxx/*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>        <span style="color:#a6e22e">principals</span> = {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>            <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;AWS&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>            <span style="color:#a6e22e">identifiers</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>                <span style="color:#e6db74">&#34;${var.account_id}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>            ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>}</code></pre></div>
 
 <p>こんな感じで使ったりしていました。</p>
 
-<pre><code>${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/xxxxxxxxx:${var.image_tag},
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#960050;background-color:#1e0010">$</span>{var<span style="color:#f92672">.</span>account_id}<span style="color:#f92672">.</span>dkr<span style="color:#f92672">.</span>ecr<span style="color:#f92672">.</span>ap<span style="color:#f92672">-</span>northeast<span style="color:#f92672">-</span><span style="color:#ae81ff">1.</span>amazonaws<span style="color:#f92672">.</span>com<span style="color:#f92672">/</span>xxxxxxxxx:<span style="color:#960050;background-color:#1e0010">$</span>{var<span style="color:#f92672">.</span>image_tag},</code></pre></div>
 
 <h2 id="aws-caller-identity-を使う">aws_caller_identity を使う</h2>
 
@@ -201,18 +197,16 @@ if (!doNotTrack) {
 
 <p>以下のように <code>data</code> 定義をします。</p>
 
-<pre><code>data &quot;aws_caller_identity&quot; &quot;current&quot; {}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">data</span> <span style="color:#e6db74">&#34;aws_caller_identity&#34;</span> <span style="color:#e6db74">&#34;current&#34;</span> {}</code></pre></div>
 
 <p><code>aws_caller_identity</code> から <code>account_id</code> の属性値が参照できるので、以下のようにアクセスできます。</p>
 
-<pre><code>principals = {
-  type = &quot;AWS&quot;
-  identifiers = [
-    &quot;${data.aws_caller_identity.current.account_id}&quot;
-  ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">principals</span> = {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;AWS&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>  <span style="color:#a6e22e">identifiers</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#e6db74">&#34;${data.aws_caller_identity.current.account_id}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>  ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>}</code></pre></div>
 
 <p>こうすることで、 <code>.tfvars</code> ファイルの変数定義も減らせてすっきりですね！</p>
 

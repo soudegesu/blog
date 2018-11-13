@@ -27,12 +27,12 @@ twitter_card_image: /images/icons/rds_icon.png
 
 というお達しと共に
 
-```
+{{< highlight bash "linenos=inline" >}}
 CVE-2018-XXXX
 CVE-2018-XXXX
 CVE-2018-XXXX
 (以下略)
-```
+{{< / highlight >}}
 
 対象と思しきCVEのリストが展開されるのです。
 

@@ -209,92 +209,91 @@ if (!doNotTrack) {
 <p>以下のようなコードサンプルを試します。
 なお、URLパス中に言語を指定するタイプの <code>i18n</code> 対応を想定して書いてみます。</p>
 
-<pre><code class="language-javascript">const map = require('express-sitemap')
-const fs = require('fs')
-const i18n = require('i18n')
-const express = require('express')
-const app = express()
-
-app.get('/sitemap.xml', (req, res) =&gt; {
-  res.set('Content-Type', 'text/xml');
-  res.send( fs.readFileSync(require('path').resolve(__dirname, './sitemap.xml'), &quot;utf8&quot;));
-});
-
-app.get('/', (req, res) =&gt; {
-  res.redirect('/' + i18n.getLocale(req) + '/');
-})
-
-app.get(/^\/(ja|en)\/$/, function(req, res){
-  res.render('index.ejs');
-});
-
-app.get(/^\/(ja|en)\/alerm\/$/, function(req, res){
-  res.render('alerm/index.ejs');
-});
-
-app.get('/aaaa', function(req, res){
-  res.render('alerm/index.ejs');
-});
-
-const sitemap = map({
-  http: 'https',
-  url: 'www.tools.soudegesu.com',
-  generate: app,
-  route: {
-    '/': {
-      lastmod: '2018-04-01',
-      changefreq: 'always',
-      priority: 1.0,
-      alternatepages: [
-      {
-        rel: 'alternate',
-        hreflang: 'ja',
-        href: 'https://www.tools.soudegesu.com/ja/'
-      },
-      {
-        rel: 'alternate',
-        hreflang: 'en',
-        href: 'https://www.tools.soudegesu.com/en/'
-      }]
-    },
-  },
-}).toFile();
-
-module.exports = app
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">map</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express-sitemap&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">fs</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;fs&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">i18n</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;i18n&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/sitemap.xml&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;Content-Type&#39;</span>, <span style="color:#e6db74">&#39;text/xml&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">send</span>( <span style="color:#a6e22e">fs</span>.<span style="color:#a6e22e">readFileSync</span>(<span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;path&#39;</span>).<span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">__dirname</span>, <span style="color:#e6db74">&#39;./sitemap.xml&#39;</span>), <span style="color:#e6db74">&#34;utf8&#34;</span>));
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">redirect</span>(<span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">i18n</span>.<span style="color:#a6e22e">getLocale</span>(<span style="color:#a6e22e">req</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;/&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>})
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">/^\/(ja|en)\/$/</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">/^\/(ja|en)\/alerm\/$/</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;alerm/index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/aaaa&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;alerm/index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sitemap</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">map</span>({
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>  <span style="color:#a6e22e">http</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>  <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;www.tools.soudegesu.com&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>  <span style="color:#a6e22e">generate</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">app</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>  <span style="color:#a6e22e">route</span><span style="color:#f92672">:</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>    <span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">:</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>      <span style="color:#a6e22e">lastmod</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;2018-04-01&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>      <span style="color:#a6e22e">changefreq</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;always&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>      <span style="color:#a6e22e">priority</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1.0</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>      <span style="color:#a6e22e">alternatepages</span><span style="color:#f92672">:</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>      {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span>        <span style="color:#a6e22e">rel</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;alternate&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>        <span style="color:#a6e22e">hreflang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;ja&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span>        <span style="color:#a6e22e">href</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/ja/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>      },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span>      {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44</span>        <span style="color:#a6e22e">rel</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;alternate&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45</span>        <span style="color:#a6e22e">hreflang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;en&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46</span>        <span style="color:#a6e22e">href</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/en/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47</span>      }]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">48</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">49</span>  },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">50</span>}).<span style="color:#a6e22e">toFile</span>();
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">51</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">52</span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">app</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">53</span></code></pre></div>
 
 <p><code>sitemap.xml</code> にアクセスすると以下のように出力されていることがわかります。</p>
 
-<pre><code class="language-xml">#curl http://localhost:3000/sitemap.xml
-
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;urlset xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;
-        xmlns:xhtml=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com*&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/sitemap.xml&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/&lt;/loc&gt;
-        &lt;lastmod&gt;2018-04-01&lt;/lastmod&gt;
-        &lt;changefreq&gt;always&lt;/changefreq&gt;
-        &lt;priority&gt;1&lt;/priority&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;ja&quot; href=&quot;https://www.tools.soudegesu.com/ja/&quot; /&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;en&quot; href=&quot;https://www.tools.soudegesu.com/en/&quot; /&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/$/&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/alerm\/$/&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;http://www.tools.soudegesu.com/aaaa&lt;/loc&gt;
-    &lt;/url&gt;
-&lt;/urlset&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>curl http://localhost:3000/sitemap.xml
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&lt;?xml version<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span> encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>?&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&lt;urlset xmlns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.sitemaps.org/schemas/sitemap/0.9&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        xmlns:xhtml<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.w3.org/1999/xhtml&#34;</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        &lt;loc&gt;https://www.tools.soudegesu.com*&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        &lt;loc&gt;https://www.tools.soudegesu.com/sitemap.xml&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>        &lt;loc&gt;https://www.tools.soudegesu.com/&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>        &lt;lastmod&gt;2018-04-01&lt;/lastmod&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        &lt;changefreq&gt;always&lt;/changefreq&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        &lt;priority&gt;1&lt;/priority&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ja&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/ja/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/en/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>        &lt;loc&gt;https://www.tools.soudegesu.com/^<span style="color:#ae81ff">\/</span><span style="color:#f92672">(</span>ja|en<span style="color:#f92672">)</span><span style="color:#ae81ff">\/</span>$/&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>        &lt;loc&gt;https://www.tools.soudegesu.com/^<span style="color:#ae81ff">\/</span><span style="color:#f92672">(</span>ja|en<span style="color:#f92672">)</span><span style="color:#ae81ff">\/</span>alerm<span style="color:#ae81ff">\/</span>$/&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>        &lt;loc&gt;http://www.tools.soudegesu.com/aaaa&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>&lt;/urlset&gt;</code></pre></div>
 
 <p>特徴としては <strong>定義していないURL定義はexpress-sitemapがよしなにXMLに出力してくれます</strong> 。</p>
 
@@ -304,106 +303,104 @@ module.exports = app
 
 <p>具体的に言うと、以下の部分が該当します。</p>
 
-<pre><code class="language-xml">    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/$/&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/^\/(ja|en)\/alerm\/$/&lt;/loc&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;http://www.tools.soudegesu.com/aaaa&lt;/loc&gt;
-    &lt;/url&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>    <span style="color:#f92672">&lt;url&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>        <span style="color:#f92672">&lt;loc&gt;</span>https://www.tools.soudegesu.com/^\/(ja|en)\/$/<span style="color:#f92672">&lt;/loc&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#f92672">&lt;/url&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">&lt;url&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>        <span style="color:#f92672">&lt;loc&gt;</span>https://www.tools.soudegesu.com/^\/(ja|en)\/alerm\/$/<span style="color:#f92672">&lt;/loc&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>    <span style="color:#f92672">&lt;/url&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    <span style="color:#f92672">&lt;url&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>        <span style="color:#f92672">&lt;loc&gt;</span>http://www.tools.soudegesu.com/aaaa<span style="color:#f92672">&lt;/loc&gt;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">9</span>    <span style="color:#f92672">&lt;/url&gt;</span></code></pre></div>
 
 <h3 id="sitemap-を試す">sitemap を試す</h3>
 
 <p>次に <a href="https://www.npmjs.com/package/sitemap">sitemap</a> を試しましょう。
 コードサンプルは以下のような感じです。</p>
 
-<pre><code class="language-javascript">const sitemap = require('sitemap')
-const express = require('express')
-const i18n = require('i18n')
-const app = express()
-
-const sitemap = sm.createSitemap({
-  hostname: 'https://www.tools.soudegesu.com',
-  urls: [
-    {
-      url: 'https://www.tools.soudegesu.com/',
-      links: [
-        {
-          lang: 'en',
-          url: 'https://www.tools.soudegesu.com/en/'
-        },
-        {
-          lang: 'ja',
-          url: 'https://www.tools.soudegesu.com/ja/'
-        }
-      ]
-    },
-    {
-      url: 'https://www.tools.soudegesu.com/en/alerm/',
-      links: [
-        {
-          lang: 'en',
-          url: 'https://www.tools.soudegesu.com/en/alerm/'
-        },
-        {
-          lang: 'ja',
-          url: 'https://www.tools.soudegesu.com/ja/alerm/'
-        }
-      ]
-    }
-  ]
-});
-
-
-app.get('/sitemap.xml', (req, res) =&gt; {
-  map.tickle();
-  map.XMLtoWeb(res);
-});
-
-app.get('/', (req, res) =&gt; {
-  res.redirect('/' + i18n.getLocale(req) + '/');
-})
-
-app.get(/^\/(ja|en)\/$/, function(req, res){
-  res.render('index.ejs');
-});
-
-app.get(/^\/(ja|en)\/alerm\/$/, function(req, res){
-  res.render('alerm/index.ejs');
-});
-
-app.get('/aaaa', function(req, res){
-  res.render('alerm/index.ejs');
-});
-
-module.exports = app
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sitemap</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;sitemap&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">i18n</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;i18n&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>()
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sitemap</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">sm</span>.<span style="color:#a6e22e">createSitemap</span>({
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>  <span style="color:#a6e22e">hostname</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>  <span style="color:#a6e22e">urls</span><span style="color:#f92672">:</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>      <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>      <span style="color:#a6e22e">links</span><span style="color:#f92672">:</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>          <span style="color:#a6e22e">lang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;en&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>          <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/en/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>          <span style="color:#a6e22e">lang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;ja&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>          <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/ja/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>      ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>      <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/en/alerm/&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>      <span style="color:#a6e22e">links</span><span style="color:#f92672">:</span> [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>          <span style="color:#a6e22e">lang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;en&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>          <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/en/alerm/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>        },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>        {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>          <span style="color:#a6e22e">lang</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;ja&#39;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>          <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;https://www.tools.soudegesu.com/ja/alerm/&#39;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>      ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>  ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/sitemap.xml&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40</span>  <span style="color:#a6e22e">map</span>.<span style="color:#a6e22e">tickle</span>();
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41</span>  <span style="color:#a6e22e">map</span>.<span style="color:#a6e22e">XMLtoWeb</span>(<span style="color:#a6e22e">res</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">redirect</span>(<span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">i18n</span>.<span style="color:#a6e22e">getLocale</span>(<span style="color:#a6e22e">req</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;/&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46</span>})
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">48</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">/^\/(ja|en)\/$/</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">49</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">50</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">51</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">52</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">/^\/(ja|en)\/alerm\/$/</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">53</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;alerm/index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">54</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">55</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">56</span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/aaaa&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>){
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">57</span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;alerm/index.ejs&#39;</span>);
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">58</span>});
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">59</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">60</span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">app</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">61</span></code></pre></div>
 
 <p>以下のような <code>sitemap.xml</code> が出力されました。</p>
 
-<pre><code class="language-xml">#curl http://localhost:3000/sitemap.xml
-
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;urlset
-    xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;
-    xmlns:news=&quot;http://www.google.com/schemas/sitemap-news/0.9&quot;
-    xmlns:xhtml=&quot;http://www.w3.org/1999/xhtml&quot;
-    xmlns:mobile=&quot;http://www.google.com/schemas/sitemap-mobile/1.0&quot; xmlns:image=&quot;http://www.google.com/schemas/sitemap-image/1.1&quot; xmlns:video=&quot;http://www.google.com/schemas/sitemap-video/1.1&quot;&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/&lt;/loc&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;en&quot; href=&quot;https://www.tools.soudegesu.com/en/&quot; /&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;ja&quot; href=&quot;https://www.tools.soudegesu.com/ja/&quot; /&gt;
-    &lt;/url&gt;
-    &lt;url&gt;
-        &lt;loc&gt;https://www.tools.soudegesu.com/en/alerm/&lt;/loc&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;en&quot; href=&quot;https://www.tools.soudegesu.com/en/alerm/&quot; /&gt;
-        &lt;xhtml:link rel=&quot;alternate&quot; hreflang=&quot;ja&quot; href=&quot;https://www.tools.soudegesu.com/ja/alerm/&quot; /&gt;
-    &lt;/url&gt;
-&lt;/urlset&gt;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>curl http://localhost:3000/sitemap.xml
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>&lt;?xml version<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span> encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>?&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>&lt;urlset
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    xmlns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.sitemaps.org/schemas/sitemap/0.9&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    xmlns:news<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.google.com/schemas/sitemap-news/0.9&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    xmlns:xhtml<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.w3.org/1999/xhtml&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    xmlns:mobile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.google.com/schemas/sitemap-mobile/1.0&#34;</span> xmlns:image<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.google.com/schemas/sitemap-image/1.1&#34;</span> xmlns:video<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.google.com/schemas/sitemap-video/1.1&#34;</span>&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        &lt;loc&gt;https://www.tools.soudegesu.com/&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/en/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ja&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/ja/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    &lt;url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        &lt;loc&gt;https://www.tools.soudegesu.com/en/alerm/&lt;/loc&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/en/alerm/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        &lt;xhtml:link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alternate&#34;</span> hreflang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ja&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.tools.soudegesu.com/ja/alerm/&#34;</span> /&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>    &lt;/url&gt;
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>&lt;/urlset&gt;</code></pre></div>
 
 <p>sitemapの場合は <strong>定義されていないURLはよしなに出力してくれない</strong> 感じですね。</p>
 

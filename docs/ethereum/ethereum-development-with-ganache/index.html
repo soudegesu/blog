@@ -176,9 +176,8 @@ if (!doNotTrack) {
 <li>Etehreum のインストール</li>
 </ul>
 
-<pre><code class="language-bash">brew tap ethereum/ethereum
-brew install ethereum
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew tap ethereum/ethereum
+brew install ethereum</code></pre></div>
 
 <ul>
 <li>nodenvのインストール</li>
@@ -186,45 +185,39 @@ brew install ethereum
 
 <p>私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 <code>nodenv</code> を使って切り替えています。</p>
 
-<pre><code class="language-bash">brew install nodenv
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">brew install nodenv</code></pre></div>
 
 <p>nodenv起動のために、 <code>~/.zshrc</code> に以下を追記します。</p>
 
-<pre><code class="language-bash">export PATH=&quot;$PATH:$HOME/.nodenv/bin:&quot;
-eval &quot;$(nodenv init --no-rehash -)&quot;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">export PATH=&#34;$PATH:$HOME/.nodenv/bin:&#34;
+eval &#34;$(nodenv init --no-rehash -)&#34;</code></pre></div>
 
 <ul>
 <li>node(9.6.1)のインストールと設定</li>
 </ul>
 
-<pre><code class="language-bash">nodenv install 9.6.1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">nodenv install 9.6.1
 nodenv local 9.6.1
-node -v
-</code></pre>
+node -v</code></pre></div>
 
 <ul>
 <li><code>package.json</code> の作成</li>
 </ul>
 
-<pre><code class="language-bash">npm init
-(面倒なので、以降はEnter)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm init
+(面倒なので、以降はEnter)</code></pre></div>
 
 <ul>
 <li><code>truffle</code> のインストール</li>
 </ul>
 
-<pre><code class="language-bash">npm install truffle@4.0.4
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm install truffle@4.0.4</code></pre></div>
 
 <ul>
 <li>solidityのコンパイラ <code>solc</code> のインストール</li>
 </ul>
 
-<pre><code class="language-bash">npm install solc@0.4.18
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm install solc@0.4.18</code></pre></div>
 
 <ul>
 <li><code>Ganache</code> のインストール</li>
@@ -239,22 +232,20 @@ node -v
 <p><code>truffle</code> をグローバルインストールしていないので、<code>npm run</code> でキックできるように <code>package.json</code> を修正します。
 <code>package.json</code> の <code>scripts</code> ブロックを修正します。</p>
 
-<pre><code class="language-json">  &quot;scripts&quot;: {
-    &quot;truffle&quot;: &quot;truffle&quot;,
-    &quot;develop&quot;: &quot;truffle develop&quot;,
-    &quot;truffle-ganache&quot;: &quot;truffle migrate --compile-all --reset --network ganache&quot;,
-    &quot;truffle-console&quot;: &quot;truffle console --network ganache&quot;
-  },
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>  <span style="color:#e6db74">&#34;scripts&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#f92672">&#34;truffle&#34;</span>: <span style="color:#e6db74">&#34;truffle&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#f92672">&#34;develop&#34;</span>: <span style="color:#e6db74">&#34;truffle develop&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#f92672">&#34;truffle-ganache&#34;</span>: <span style="color:#e6db74">&#34;truffle migrate --compile-all --reset --network ganache&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    <span style="color:#f92672">&#34;truffle-console&#34;</span>: <span style="color:#e6db74">&#34;truffle console --network ganache&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>  }<span style="color:#960050;background-color:#1e0010">,</span></code></pre></div>
 
 <h3 id="truffleを初期化する">truffleを初期化する</h3>
 
-<pre><code class="language-bash">npm run truffle init
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm run truffle init</code></pre></div>
 
 <p>実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。</p>
 
-<pre><code class="language-bash">tree -L 1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">tree -L 1
 
 .
 ├── contracts
@@ -264,8 +255,7 @@ node -v
 ├── package.json
 ├── test
 ├── truffle-config.js
-└── truffle.js
-</code></pre>
+└── truffle.js</code></pre></div>
 
 <ul>
 <li><code>contracts</code> ディレクトリ
@@ -297,8 +287,7 @@ node -v
 
 <p>私はMacユーザなので、<code>truffle-config.js</code> は消してしまいます。</p>
 
-<pre><code class="language-bash">rm truffle-config.js
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">rm truffle-config.js</code></pre></div>
 
 <h3 id="ganacheと接続する">Ganacheと接続する</h3>
 
@@ -309,24 +298,23 @@ node -v
 
 <p>Ganacheが表示しているネットワークの情報を基に、<code>truffle.js</code> を以下のように編集します。</p>
 
-<pre><code class="language-javascript">module.exports = {
-  // See &lt;http://truffleframework.com/docs/advanced/configuration&gt;
-  // to customize your Truffle configuration!
-  networks: {
-    ganache: {
-      host: &quot;localhost&quot;,
-      port: 7545,
-      network_id: &quot;*&quot;
-    }
-  }
-};
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  <span style="color:#75715e">// See &lt;http://truffleframework.com/docs/advanced/configuration&gt;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#75715e"></span>  <span style="color:#75715e">// to customize your Truffle configuration!
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">networks</span><span style="color:#f92672">:</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#a6e22e">ganache</span><span style="color:#f92672">:</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>      <span style="color:#a6e22e">host</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;localhost&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>      <span style="color:#a6e22e">port</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">7545</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>      <span style="color:#a6e22e">network_id</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;*&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>  }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>};
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span></code></pre></div>
 
 <p><code>package.json</code> に記載した npm scriptsのコマンドから <code>truffle-ganache</code> を起動し、
 Ganacheのマイグレーションを行います。</p>
 
-<pre><code class="language-bash">npm run truffle-ganache
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm run truffle-ganache</code></pre></div>
 
 <p>Ganacheの画面を見てみると1番上のアドレスの <code>balance</code> (所有しているether) が <code>100</code> → <code>99.97</code> に減っています。</p>
 
@@ -342,18 +330,16 @@ Ganacheのマイグレーションを行います。</p>
 
 <p>また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、</p>
 
-<pre><code class="language-bash">npm run truffle-console
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">npm run truffle-console</code></pre></div>
 
 <p>試しに以下のようなコードを実行すると</p>
 
-<pre><code class="language-javascript">web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, &quot;ether&quot;)})
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">web3</span>.<span style="color:#a6e22e">eth</span>.<span style="color:#a6e22e">sendTransaction</span>({<span style="color:#a6e22e">from</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">web3</span>.<span style="color:#a6e22e">eth</span>.<span style="color:#a6e22e">accounts</span>[<span style="color:#ae81ff">0</span>], <span style="color:#a6e22e">to</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">web3</span>.<span style="color:#a6e22e">eth</span>.<span style="color:#a6e22e">accounts</span>[<span style="color:#ae81ff">1</span>], <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span><span style="color:#a6e22e">web3</span>.<span style="color:#a6e22e">toWei</span>(<span style="color:#ae81ff">5</span>, <span style="color:#e6db74">&#34;ether&#34;</span>)})
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span></code></pre></div>
 
 <p>トランザクションのアドレスが帰ってきます。</p>
 
-<pre><code class="language-bash">&gt;  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-linenos=inline" data-lang="linenos=inline">&gt;  &#39;0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a&#39;</code></pre></div>
 
 <p><code>Ganache</code> の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。</p>
 

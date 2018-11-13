@@ -287,12 +287,11 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 
 <p><a href="https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/">Spring Boot Gradle Plugin</a> の <code>bootRepackage</code> タスクが廃止になったため削除した。 <code>public static void main(String[] args)</code> を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも <code>mainClassName</code> の記述は必須ではない。</p>
 
-<pre><code class="language-groovy">// 削除
-//bootRepackage {
-//    mainClass = 'com.soudegesu.demo.app.Application'
-//    executable = true
-//}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#75715e">// 削除
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#75715e">//bootRepackage {
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#75715e">//    mainClass = &#39;com.soudegesu.demo.app.Application&#39;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#75715e">//    executable = true
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#75715e"></span><span style="color:#e6db74">//</span><span style="color:#f92672">}</span></code></pre></div>
 
 <h3 id="application-yaml-の修正">application.yaml の修正</h3>
 
@@ -300,21 +299,20 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 私の場合には主に <code>springboot-actuator</code> の設定変更が発生した。
 <strong>yaml構造の変更</strong> と <strong>actuator endpointの公開設定</strong> と <strong>メトリック取得方法指定</strong> といったところ。</p>
 
-<pre><code class="language-yaml">management:
-  endpoints:
-    web:
-      exposure:
-        include: info,health,metrics,httptrace,threaddump,heapdump
-  metrics:
-    export:
-      datadog:
-        api-key: (APIのキー)
-        step: 30s
-  security:
-    enabled: false
-  server:
-    port: ポート番号
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>management:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>  endpoints:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    web:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>      exposure:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        include: info,health,metrics,httptrace,threaddump,heapdump
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>  metrics:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    export:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>      datadog:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>        api-key: (APIのキー)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        step: 30s
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>  security:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    enabled: <span style="color:#66d9ef">false</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>  server:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    port: ポート番号</code></pre></div>
 
 <h3 id="コンパイルエラーやwarningを解決していく">コンパイルエラーやwarningを解決していく</h3>
 
@@ -362,13 +360,11 @@ Spring Bootの1.5がJava9のmodule pathでのクラスロードに対応して�
 
 <p>DBへのINSERTが伴うリクエストの処理にて、 <a href="https://projects.spring.io/spring-data-jpa/">spring-data-jpa</a> がエラーを吐き出している。</p>
 
-<pre><code>org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
-(中略)
-Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
-
-  Query is: select next_val as id_val from hibernate_sequence for update
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL <span style="color:#f92672">[</span>n/a<span style="color:#f92672">]</span>; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#f92672">(</span>中略<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>Caused by: java.sql.SQLException: Table <span style="color:#e6db74">&#39;(Schema名).hibernate_sequence&#39;</span> doesn<span style="color:#960050;background-color:#1e0010">&#39;</span>t exist
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>  Query is: <span style="color:#66d9ef">select</span> next_val as id_val from hibernate_sequence <span style="color:#66d9ef">for</span> update</code></pre></div>
 
 <p>DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに <code>@GeneratedValue(strategy= GenerationType.AUTO)</code> アノテーションを付与しているのだが、 <code>hibernate_sequence</code> を使ったID生成を試みてしまっているようだ。</p>
 
@@ -418,67 +414,65 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 <p>以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
 拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。</p>
 
-<pre><code class="language-json">{
-    &quot;mem&quot;: 485331,
-    &quot;mem.free&quot;: 253058,
-    &quot;processors&quot;: 4,
-    &quot;instance.uptime&quot;: 312097,
-    &quot;uptime&quot;: 338799,
-    &quot;systemload.average&quot;: 3.69384765625,
-    &quot;heap.committed&quot;: 419840,
-    &quot;heap.init&quot;: 131072,
-    &quot;heap.used&quot;: 166781,
-    &quot;heap&quot;: 1864192,
-    &quot;nonheap.committed&quot;: 66648,
-    &quot;nonheap.init&quot;: 2496,
-    &quot;nonheap.used&quot;: 65492,
-    &quot;nonheap&quot;: 0,
-    &quot;threads.peak&quot;: 177,
-    &quot;threads.daemon&quot;: 155,
-    &quot;threads.totalStarted&quot;: 243,
-    &quot;threads&quot;: 158,
-    &quot;classes&quot;: 9613,
-    &quot;classes.loaded&quot;: 9613,
-    &quot;classes.unloaded&quot;: 0,
-    &quot;gc.ps_scavenge.count&quot;: 14,
-    &quot;gc.ps_scavenge.time&quot;: 373,
-    &quot;gc.ps_marksweep.count&quot;: 2,
-    &quot;gc.ps_marksweep.time&quot;: 388,
-    〜(中略)〜
-    &quot;httpsessions.max&quot;: -1,
-    &quot;httpsessions.active&quot;: 0,
-    &quot;datasource.primary.active&quot;: 0,
-    &quot;datasource.primary.usage&quot;: 0
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#f92672">&#34;mem&#34;</span>: <span style="color:#ae81ff">485331</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#f92672">&#34;mem.free&#34;</span>: <span style="color:#ae81ff">253058</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    <span style="color:#f92672">&#34;processors&#34;</span>: <span style="color:#ae81ff">4</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>    <span style="color:#f92672">&#34;instance.uptime&#34;</span>: <span style="color:#ae81ff">312097</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#f92672">&#34;uptime&#34;</span>: <span style="color:#ae81ff">338799</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>    <span style="color:#f92672">&#34;systemload.average&#34;</span>: <span style="color:#ae81ff">3.69384765625</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#f92672">&#34;heap.committed&#34;</span>: <span style="color:#ae81ff">419840</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#f92672">&#34;heap.init&#34;</span>: <span style="color:#ae81ff">131072</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    <span style="color:#f92672">&#34;heap.used&#34;</span>: <span style="color:#ae81ff">166781</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    <span style="color:#f92672">&#34;heap&#34;</span>: <span style="color:#ae81ff">1864192</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    <span style="color:#f92672">&#34;nonheap.committed&#34;</span>: <span style="color:#ae81ff">66648</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    <span style="color:#f92672">&#34;nonheap.init&#34;</span>: <span style="color:#ae81ff">2496</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    <span style="color:#f92672">&#34;nonheap.used&#34;</span>: <span style="color:#ae81ff">65492</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>    <span style="color:#f92672">&#34;nonheap&#34;</span>: <span style="color:#ae81ff">0</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    <span style="color:#f92672">&#34;threads.peak&#34;</span>: <span style="color:#ae81ff">177</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>    <span style="color:#f92672">&#34;threads.daemon&#34;</span>: <span style="color:#ae81ff">155</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>    <span style="color:#f92672">&#34;threads.totalStarted&#34;</span>: <span style="color:#ae81ff">243</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>    <span style="color:#f92672">&#34;threads&#34;</span>: <span style="color:#ae81ff">158</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>    <span style="color:#f92672">&#34;classes&#34;</span>: <span style="color:#ae81ff">9613</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    <span style="color:#f92672">&#34;classes.loaded&#34;</span>: <span style="color:#ae81ff">9613</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    <span style="color:#f92672">&#34;classes.unloaded&#34;</span>: <span style="color:#ae81ff">0</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>    <span style="color:#f92672">&#34;gc.ps_scavenge.count&#34;</span>: <span style="color:#ae81ff">14</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>    <span style="color:#f92672">&#34;gc.ps_scavenge.time&#34;</span>: <span style="color:#ae81ff">373</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    <span style="color:#f92672">&#34;gc.ps_marksweep.count&#34;</span>: <span style="color:#ae81ff">2</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>    <span style="color:#f92672">&#34;gc.ps_marksweep.time&#34;</span>: <span style="color:#ae81ff">388</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>    <span style="color:#960050;background-color:#1e0010">〜(中略)〜</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    <span style="color:#f92672">&#34;httpsessions.max&#34;</span>: <span style="color:#ae81ff">-1</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>    <span style="color:#f92672">&#34;httpsessions.active&#34;</span>: <span style="color:#ae81ff">0</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>    <span style="color:#f92672">&#34;datasource.primary.active&#34;</span>: <span style="color:#ae81ff">0</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>    <span style="color:#f92672">&#34;datasource.primary.usage&#34;</span>: <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>}</code></pre></div>
 
 <h4 id="これからはメトリック毎に取得する">これからはメトリック毎に取得する</h4>
 
 <p><code>/actuator/metrics</code> を参考に取得可能なメトリックを確認して
 (この時点でメトリック名に互換性がないことがわかる)</p>
 
-<pre><code class="language-json">{
-    &quot;names&quot;: [
-        &quot;http.server.requests&quot;,
-        &quot;jvm.buffer.memory.used&quot;,
-        &quot;jvm.memory.used&quot;,
-        &quot;jvm.gc.memory.allocated&quot;,
-        &quot;jvm.memory.committed&quot;,
-        &quot;jdbc.connections.min&quot;,
-        &quot;tomcat.sessions.created&quot;,
-        &quot;tomcat.sessions.expired&quot;,
-        &quot;hikaricp.connections.usage&quot;,
-        &quot;tomcat.global.request.max&quot;,
-        (中略)
-        &quot;tomcat.threads.busy&quot;,
-        &quot;tomcat.global.request&quot;,
-        &quot;hikaricp.connections.creation&quot;,
-        &quot;jvm.gc.memory.promoted&quot;,
-        &quot;tomcat.sessions.rejected&quot;,
-        &quot;tomcat.sessions.alive.max&quot;
-    ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#e6db74">&#34;names&#34;</span>: <span style="color:#f92672">[</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>        <span style="color:#e6db74">&#34;http.server.requests&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#e6db74">&#34;jvm.buffer.memory.used&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        <span style="color:#e6db74">&#34;jvm.memory.used&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>        <span style="color:#e6db74">&#34;jvm.gc.memory.allocated&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        <span style="color:#e6db74">&#34;jvm.memory.committed&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        <span style="color:#e6db74">&#34;jdbc.connections.min&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>        <span style="color:#e6db74">&#34;tomcat.sessions.created&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        <span style="color:#e6db74">&#34;tomcat.sessions.expired&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        <span style="color:#e6db74">&#34;hikaricp.connections.usage&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>        <span style="color:#e6db74">&#34;tomcat.global.request.max&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>        <span style="color:#f92672">(</span>中略<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>        <span style="color:#e6db74">&#34;tomcat.threads.busy&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>        <span style="color:#e6db74">&#34;tomcat.global.request&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>        <span style="color:#e6db74">&#34;hikaricp.connections.creation&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        <span style="color:#e6db74">&#34;jvm.gc.memory.promoted&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        <span style="color:#e6db74">&#34;tomcat.sessions.rejected&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>        <span style="color:#e6db74">&#34;tomcat.sessions.alive.max&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>    <span style="color:#f92672">]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span><span style="color:#f92672">}</span></code></pre></div>
 
 <p><code>/actuator/metrics/(メトリック名)</code> でリクエストをしてあげなければならない。</p>
 
@@ -486,17 +480,16 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 
 <p>パス: <code>/actuator/metrics/tomcat.sessions.created</code></p>
 
-<pre><code class="language-json">{
-    &quot;name&quot;: &quot;tomcat.sessions.created&quot;,
-    &quot;measurements&quot;: [
-        {
-            &quot;statistic&quot;: &quot;COUNT&quot;,
-            &quot;value&quot;: 0
-        }
-    ],
-    &quot;availableTags&quot;: []
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;tomcat.sessions.created&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#e6db74">&#34;measurements&#34;</span>: <span style="color:#f92672">[</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>            <span style="color:#e6db74">&#34;statistic&#34;</span>: <span style="color:#e6db74">&#34;COUNT&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        <span style="color:#f92672">}</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    <span style="color:#f92672">]</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>    <span style="color:#e6db74">&#34;availableTags&#34;</span>: <span style="color:#f92672">[]</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#f92672">}</span></code></pre></div>
 
 <p>結構変わってしまったではないか。。</p>
 
@@ -509,8 +502,7 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 <li><code>build.gradle</code> に依存モジュールを追加</li>
 </ul>
 
-<pre><code class="language-groovy">compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>compile group: <span style="color:#e6db74">&#39;io.micrometer&#39;</span><span style="color:#f92672">,</span> name: <span style="color:#e6db74">&#39;micrometer-registry-datadog&#39;</span><span style="color:#f92672">,</span> version: <span style="color:#e6db74">&#39;1.0.3&#39;</span></code></pre></div>
 
 <h3 id="まさかにec2-amazonlinux-デプロイで落とし穴">まさかにEC2（AmazonLinux）デプロイで落とし穴</h3>
 
@@ -518,8 +510,7 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 
 <p><code>service</code> コマンド起動時に</p>
 
-<pre><code class="language-bash">invalid file (bad magic number): Exec format error
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>invalid file <span style="color:#f92672">(</span>bad magic number<span style="color:#f92672">)</span>: Exec format error</code></pre></div>
 
 <p>のようなエラーメッセージが出て起動できなくなってしまったのだ。</p>
 
@@ -527,10 +518,9 @@ Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't
 
 <p>これには <code>bootJar</code> タスク実行時に起動スクリプトを含めることで対応した。</p>
 
-<pre><code class="language-groovy">bootJar {
-    launchScript()
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>bootJar <span style="color:#f92672">{</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    launchScript<span style="color:#f92672">()</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#f92672">}</span></code></pre></div>
 
 <h2 id="とどめの負荷テスト">とどめの負荷テスト</h2>
 

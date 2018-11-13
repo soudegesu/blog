@@ -34,52 +34,52 @@ twitter_card_image: /images/icons/ethereum_icon.png
 
 * Etehreum のインストール
 
-```bash
+{{< highlight "linenos=inline" >}}
 brew tap ethereum/ethereum
 brew install ethereum
-```
+{{< / highlight >}}
 
 * nodenvのインストール
 
 私の場合、ローカル環境のグローバルなnodeのバージョンを変更したくないので、 `nodenv` を使って切り替えています。
 
-```bash
+{{< highlight "linenos=inline" >}}
 brew install nodenv
-```
+{{< / highlight >}}
 
 nodenv起動のために、 `~/.zshrc` に以下を追記します。
 
-```bash
+{{< highlight "linenos=inline" >}}
 export PATH="$PATH:$HOME/.nodenv/bin:"
 eval "$(nodenv init --no-rehash -)"
-```
+{{< / highlight >}}
 
 * node(9.6.1)のインストールと設定
 
-```bash
+{{< highlight "linenos=inline" >}}
 nodenv install 9.6.1
 nodenv local 9.6.1
 node -v
-```
+{{< / highlight >}}
 
 * `package.json` の作成
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm init
 (面倒なので、以降はEnter)
-```
+{{< / highlight >}}
 
 * `truffle` のインストール
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm install truffle@4.0.4
-```
+{{< / highlight >}}
 
 * solidityのコンパイラ `solc` のインストール
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm install solc@0.4.18
-```
+{{< / highlight >}}
 
 * `Ganache` のインストール
 
@@ -91,24 +91,24 @@ npm install solc@0.4.18
 `truffle` をグローバルインストールしていないので、`npm run` でキックできるように `package.json` を修正します。
 `package.json` の `scripts` ブロックを修正します。
 
-```json
+{{< highlight json "linenos=inline" >}}
   "scripts": {
     "truffle": "truffle",
     "develop": "truffle develop",
     "truffle-ganache": "truffle migrate --compile-all --reset --network ganache",
     "truffle-console": "truffle console --network ganache"
   },
-```
+{{< / highlight >}}
 
 ### truffleを初期化する
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm run truffle init
-```
+{{< / highlight >}}
 
 実行が完了すると、プロジェクトディレクトリにフォルダやファイルがジェネレートされます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 tree -L 1
 
 .
@@ -120,7 +120,7 @@ tree -L 1
 ├── test
 ├── truffle-config.js
 └── truffle.js
-```
+{{< / highlight >}}
 
 * `contracts` ディレクトリ
     * コントラクトプログラムを配置する場所。`truffle init` 時に `Migrations.sol` が生成される
@@ -136,9 +136,9 @@ tree -L 1
 
 私はMacユーザなので、`truffle-config.js` は消してしまいます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 rm truffle-config.js
-```
+{{< / highlight >}}
 
 ### Ganacheと接続する
 
@@ -149,7 +149,7 @@ rm truffle-config.js
 
 Ganacheが表示しているネットワークの情報を基に、`truffle.js` を以下のように編集します。
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -161,14 +161,14 @@ module.exports = {
     }
   }
 };
-```
+{{< / highlight >}}
 
 `package.json` に記載した npm scriptsのコマンドから `truffle-ganache` を起動し、
 Ganacheのマイグレーションを行います。
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm run truffle-ganache
-```
+{{< / highlight >}}
 
 Ganacheの画面を見てみると1番上のアドレスの `balance` (所有しているether) が `100` → `99.97` に減っています。
 
@@ -184,21 +184,21 @@ Ganacheの画面を見てみると1番上のアドレスの `balance` (所有し
 
 また、対話形式でプログラムを書きたい場合には以下のようにコンソールを立ち上げて、
 
-```bash
+{{< highlight "linenos=inline" >}}
 npm run truffle-console
-```
+{{< / highlight >}}
 
 試しに以下のようなコードを実行すると
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 web3.eth.sendTransaction({from: web3.eth.accounts[0], to: web3.eth.accounts[1], value:web3.toWei(5, "ether")})
-```
+{{< / highlight >}}
 
 トランザクションのアドレスが帰ってきます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 >  '0x046714fb412724c656250e5856bbb83469e2811b5d710bfa3c515606f5ff938a'
-```
+{{< / highlight >}}
 
 `Ganache` の方を確認すると、ちゃんとトランザクションが反映されていることがわかりますね。
 

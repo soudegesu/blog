@@ -212,13 +212,12 @@ Javaアプリケーションのメトリック取得がいい感じだったの�
 公式ドキュメントだと指定可能なプロパティが全て列挙されていないので、
 <code>io.micrometer.datadog.DatadogConfig</code> クラスの中を見ることで確認できます。</p>
 
-<pre><code class="language-yaml">management:
-  metrics:
-    export:
-      datadog:
-        api-key: ${datadogのAPIキー}
-        step: 15s # メトリックの収集間隔
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>management:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>  metrics:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    export:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>      datadog:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>        api-key: ${datadogのAPIキー}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>        step: 15s <span style="color:#75715e"># メトリックの収集間隔</span></code></pre></div>
 
 <h3 id="メトリックに情報を付与する">メトリックに情報を付与する</h3>
 

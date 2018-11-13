@@ -73,10 +73,10 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 
 notebook上で以下のコードを実行すれば、GPUに変更されたことを確認できます。
 
-```
+{{< highlight python "linenos=inline" >}}
 import tensorflow as tf
 tf.test.gpu_device_name()
-```
+{{< / highlight >}}
 
 デバイス名が表示されていますね。(CPUの場合は空文字が返ってきます)
 
@@ -134,22 +134,22 @@ Colaboratory はJupyter notebookのGUIを少し拡張していて、コードス
 
 * jupyter notebookをインストールしておく
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 pip install jupyter\[notebook\]
-```
+{{< / highlight >}}
 
 * serverextensionを有効にする
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 pip install jupyter_http_over_ws
 jupyter serverextension enable --py jupyter_http_over_ws
-```
+{{< / highlight >}}
 
 * Colaboratoryのアクセスを許可する
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=8888
-```
+{{< / highlight >}}
 
 #### Colaboratoryの設定
 
@@ -200,14 +200,14 @@ ColaboratoryではGPUも使うことができて大変ありがたいのです�
 
 具体的に言うと、以下のコードをColaboratoryとローカルのJupyter notebook上の両方で実行してみるとわかります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import pkg_resources
 [pkg for pkg in pkg_resources.working_set]
-```
+{{< / highlight >}}
 
 * ColaboratoryにデフォルトでインストールされているPythonモジュール
 
-```python
+{{< highlight python "linenos=inline" >}}
 [xgboost 0.7.post4 (/usr/local/lib/python3.6/dist-packages),
  wheel 0.31.0 (/usr/local/lib/python3.6/dist-packages),
  Werkzeug 0.14.1 (/usr/local/lib/python3.6/dist-packages),
@@ -311,11 +311,11 @@ import pkg_resources
  beautifulsoup4 4.6.0 (/usr/local/lib/python3.6/dist-packages),
  astor 0.6.2 (/usr/local/lib/python3.6/dist-packages),
  absl-py 0.2.0 (/usr/local/lib/python3.6/dist-packages)]
-```
+{{< / highlight >}}
 
 * Jupyter notebookにデフォルトでインストールされているPythonモジュール
 
-```python
+{{< highlight python "linenos=inline" >}}
 [widgetsnbextension 3.2.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  webencodings 0.5.1 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  wcwidth 0.1.7 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
@@ -360,7 +360,7 @@ import pkg_resources
  bleach 2.1.3 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  backcall 0.1.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages),
  appnope 0.1.0 (/Users/soudegesu/.pyenv/versions/3.6.1/envs/test/lib/python3.6/site-packages)]
-```
+{{< / highlight >}}
 
 機械学習ライブラリや数値計算系ライブラリ、Google APIなどがColaboratoryには入っていますね。
 必要に応じてローカル環境にもライブラリをインストールしましょう。

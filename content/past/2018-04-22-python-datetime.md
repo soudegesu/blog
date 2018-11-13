@@ -46,45 +46,45 @@ datetime型の `fromtimestamp` 関数を使えば記述もシンプルに済ま�
 
 `fromtimestamp` 関数を使った変換のサンプルは以下になります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 import datetime
 
 e = 1524349374
 dt = datetime.datetime.fromtimestamp(e)
-print(dt)
 
-# >> 2018-04-22 07:22:54
-```
+print(dt)
+>> 2018-04-22 07:22:54
+{{< / highlight >}}
 
 #### ミリ秒を含むepochtimeからdatetime
 
 少数点以下にミリ秒を含んでいても問題なく変換できます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # epochtimeからdatetime(ミリ秒含む)
 import datetime
 
 mills = 1524349374.099776
 dt2 = datetime.datetime.fromtimestamp(mills)
-print(dt2)
 
-# >> 2018-04-22 07:22:54.099776
-```
+print(dt2)
+>> 2018-04-22 07:22:54.099776
+{{< / highlight >}}
 
 #### エポックミリ秒からdatetime
 
 整数部分でミリ秒部分が表現されている(エポックミリ秒表記)場合には、何桁までがミリ秒を表しているのか確認した後、割ってあげます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # epochmillitimeからdatetime
 import datetime
 
 mills = 1524349374099
 dt3 = datetime.datetime.fromtimestamp(mills / 1000)
-print(dt3)
 
-# >> 2018-04-22 07:22:54.099000
-```
+print(dt3)
+>> 2018-04-22 07:22:54.099000
+{{< / highlight >}}
 
 ### 文字列からdatetime
 
@@ -95,7 +95,7 @@ print(dt3)
 `strptime` 関数を使えば簡単に変換できます。
 ミリ秒は `%f` 、 タイムゾーンは `%z` を使えばパースしてくれます。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # タイムゾーンあり
 import datetime
 
@@ -103,8 +103,8 @@ utc_date_str = '2018-04-01 20:10:56.123+0900'
 dt = datetime.datetime.strptime(utc_date_str, '%Y-%m-%d %H:%M:%S.%f%z')
 
 print(dt)
-# >> 2018-04-01 20:10:56.123000+09:00
-```
+>> 2018-04-01 20:10:56.123000+09:00
+{{< / highlight >}}
 
 #### タイムゾーンなし日付文字列からdatetime
 
@@ -112,7 +112,7 @@ print(dt)
 **日付文字列がどのタイムゾーンのデータを表しているか** を調べる必要があります。
 少し邪道感ありますが、データ仕様（タイムゾーンが何か）を確認した後に文字列結合してしまうのが楽ちんです。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # タイムゾーンなし日付文字列(文字列結合)
 import datetime
 
@@ -122,15 +122,15 @@ dt = datetime.datetime.strptime(utc_date_str + '+0900', '%Y-%m-%d %H:%M:%S%z')
 
 print(dt)
 print(dt.tzinfo)
-# >> 2018-04-01 20:10:56+09:00
-# >> UTC+09:00
-```
+>> 2018-04-01 20:10:56+09:00
+>> UTC+09:00
+{{< / highlight >}}
 
 別パターンは `dateutil` を使うパターンも書いておきます。
 `dateutil` の `parse` 関数を使用する際に `tzinfos` を引数に与えることで指定のtimezoneで処理をしてくれる書き方です。
 先程の例と比べて、パッと見でどこのタイムゾーンかが識別しやすくなる、という利点があります。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # タイムゾーンなし日付文字列(dateutilを使う)
 import datetime
 from dateutil.parser import parse
@@ -140,7 +140,7 @@ tzinfos = {'JST' : gettz('Asia/Tokyo')}
 date_str = '2018-04-01 20:10:56'
 str_to_dt = parse(date_str + ' JST', tzinfos=tzinfos)
 print(str_to_dt)
-```
+{{< / highlight >}}
 
 ## 日時データを扱う上で注意すべきこと
 ### naiveとaware
@@ -186,7 +186,7 @@ print(str_to_dt)
 
 awareとnaiveに留意せずにタイムゾーン変換の処理を書くと、動作環境によって得られる結果が変わってしまうため、注意が必要です。
 
-```python
+{{< highlight python "linenos=inline" >}}
 # 文字列から日付(実行マシン上のタイムゾーンに引きずられる)
 import datetime
 from pytz import timezone
@@ -218,7 +218,7 @@ print(jst_dt.timestamp())             # 1522581056.0
 print(jst_dt.tzname())                # JST
 print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
 
-```
+{{< / highlight >}}
 
 この例ではタイムゾーンなしの文字列からdatetime型の `str_to_dt` を作成するのですが、
 そこから `astimezone` 関数を使って任意のタイムゾーンへ変換しようとする際に、

@@ -64,7 +64,7 @@ S3を使わない理由は **節約** です!!
 以下のようなコードサンプルを試します。
 なお、URLパス中に言語を指定するタイプの `i18n` 対応を想定して書いてみます。
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 const map = require('express-sitemap')
 const fs = require('fs')
 const i18n = require('i18n')
@@ -117,12 +117,12 @@ const sitemap = map({
 }).toFile();
 
 module.exports = app
-```
+{{< / highlight >}}
 
 `sitemap.xml` にアクセスすると以下のように出力されていることがわかります。
 
-```xml
-#curl http://localhost:3000/sitemap.xml
+{{< highlight bash "linenos=inline" >}}
+curl http://localhost:3000/sitemap.xml
 
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -151,7 +151,7 @@ module.exports = app
         <loc>http://www.tools.soudegesu.com/aaaa</loc>
     </url>
 </urlset>
-```
+{{< / highlight >}}
 
 特徴としては **定義していないURL定義はexpress-sitemapがよしなにXMLに出力してくれます** 。
 
@@ -161,7 +161,7 @@ module.exports = app
 
 具体的に言うと、以下の部分が該当します。
 
-```xml
+{{< highlight xml "linenos=inline" >}}
     <url>
         <loc>https://www.tools.soudegesu.com/^\/(ja|en)\/$/</loc>
     </url>
@@ -171,14 +171,14 @@ module.exports = app
     <url>
         <loc>http://www.tools.soudegesu.com/aaaa</loc>
     </url>
-```
+{{< / highlight >}}
 
 ### sitemap を試す
 
 次に [sitemap](https://www.npmjs.com/package/sitemap) を試しましょう。
 コードサンプルは以下のような感じです。
 
-```javascript
+{{< highlight javascript "linenos=inline" >}}
 const sitemap = require('sitemap')
 const express = require('express')
 const i18n = require('i18n')
@@ -239,12 +239,12 @@ app.get('/aaaa', function(req, res){
 });
 
 module.exports = app
-```
+{{< / highlight >}}
 
 以下のような `sitemap.xml` が出力されました。
 
-```xml
-#curl http://localhost:3000/sitemap.xml
+{{< highlight bash "linenos=inline" >}}
+curl http://localhost:3000/sitemap.xml
 
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
@@ -263,7 +263,7 @@ module.exports = app
         <xhtml:link rel="alternate" hreflang="ja" href="https://www.tools.soudegesu.com/ja/alerm/" />
     </url>
 </urlset>
-```
+{{< / highlight >}}
 
 sitemapの場合は **定義されていないURLはよしなに出力してくれない** 感じですね。
 

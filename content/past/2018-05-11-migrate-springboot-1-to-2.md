@@ -109,13 +109,14 @@ Spring Bootの場合には
 
 [Spring Boot Gradle Plugin](https://docs.spring.io/spring-boot/docs/2.0.1.RELEASE/gradle-plugin/reference/html/) の `bootRepackage` タスクが廃止になったため削除した。 `public static void main(String[] args)` を探してよしなにやってくれるようなので、シンプルな構成のアプリケーションであれば、そもそも `mainClassName` の記述は必須ではない。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 // 削除
 //bootRepackage {
 //    mainClass = 'com.soudegesu.demo.app.Application'
 //    executable = true
 //}
-```
+
+{{< / highlight >}}
 
 ### application.yaml の修正
 
@@ -123,7 +124,7 @@ Spring Bootの場合には
 私の場合には主に `springboot-actuator` の設定変更が発生した。
 **yaml構造の変更** と **actuator endpointの公開設定** と **メトリック取得方法指定** といったところ。
 
-```yaml
+{{< highlight yaml "linenos=inline" >}}
 management:
   endpoints:
     web:
@@ -138,7 +139,7 @@ management:
     enabled: false
   server:
     port: ポート番号
-```
+{{< / highlight >}}
 
 ### コンパイルエラーやwarningを解決していく
 
@@ -166,14 +167,14 @@ management:
 
 DBへのINSERTが伴うリクエストの処理にて、 [spring-data-jpa](https://projects.spring.io/spring-data-jpa/) がエラーを吐き出している。
 
-```
+{{< highlight bash "linenos=inline" >}}
 org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
 (中略)
 Caused by: java.sql.SQLException: Table '(Schema名).hibernate_sequence' doesn't exist
 
   Query is: select next_val as id_val from hibernate_sequence for update
 
-```
+{{< / highlight >}}
 
 DB（MySQL）へのINSERTで1箇所、AUTO INCREMENTしているところがあって、 Entityでフィールドに `@GeneratedValue(strategy= GenerationType.AUTO)` アノテーションを付与しているのだが、 `hibernate_sequence` を使ったID生成を試みてしまっているようだ。
 
@@ -210,7 +211,7 @@ springboot-actuator のメトリックをシステム監視に利用している
 以前はactuator endpointに対してリクエストすると、以下のようにメトリックが一発で取れた。
 拡張メトリックもレスポンスのjsonにプロパティが追加される形で拡張がなされていた。
 
-```json
+{{< highlight json "linenos=inline" >}}
 {
     "mem": 485331,
     "mem.free": 253058,
@@ -243,14 +244,14 @@ springboot-actuator のメトリックをシステム監視に利用している
     "datasource.primary.active": 0,
     "datasource.primary.usage": 0
 }
-```
+{{< / highlight >}}
 
 #### これからはメトリック毎に取得する
 
 `/actuator/metrics` を参考に取得可能なメトリックを確認して
 (この時点でメトリック名に互換性がないことがわかる)
 
-```json
+{{< highlight bash "linenos=inline" >}}
 {
     "names": [
         "http.server.requests",
@@ -272,7 +273,7 @@ springboot-actuator のメトリックをシステム監視に利用している
         "tomcat.sessions.alive.max"
     ]
 }
-```
+{{< / highlight >}}
 
 `/actuator/metrics/(メトリック名)` でリクエストをしてあげなければならない。
 
@@ -280,7 +281,7 @@ springboot-actuator のメトリックをシステム監視に利用している
 
 パス: `/actuator/metrics/tomcat.sessions.created`
 
-```json
+{{< highlight bash "linenos=inline" >}}
 {
     "name": "tomcat.sessions.created",
     "measurements": [
@@ -291,7 +292,7 @@ springboot-actuator のメトリックをシステム監視に利用している
     ],
     "availableTags": []
 }
-```
+{{< / highlight >}}
 
 結構変わってしまったではないか。。
 
@@ -302,9 +303,9 @@ springboot-actuator のメトリックをシステム監視に利用している
 
 * `build.gradle` に依存モジュールを追加
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
-```
+{{< / highlight >}}
 
 ### まさかにEC2（AmazonLinux）デプロイで落とし穴
 
@@ -312,9 +313,9 @@ compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1
 
 `service` コマンド起動時に
 
-```bash
+{{< highlight bash "linenos=inline" >}}
 invalid file (bad magic number): Exec format error
-```
+{{< / highlight >}}
 
 のようなエラーメッセージが出て起動できなくなってしまったのだ。
 
@@ -322,11 +323,11 @@ invalid file (bad magic number): Exec format error
 
 これには `bootJar` タスク実行時に起動スクリプトを含めることで対応した。
 
-```groovy
+{{< highlight groovy "linenos=inline" >}}
 bootJar {
     launchScript()
 }
-```
+{{< / highlight >}}
 
 ## とどめの負荷テスト
 

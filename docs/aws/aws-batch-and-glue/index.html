@@ -225,16 +225,15 @@ Batchと言いつつも、内部的にはECSが起動して処理を行うため
 <p>今回は前処理をPython 3.6で実行させたいので、 <code>python:3.6.5-alpine</code> のイメージを使ってDockerfileを作成します。
 コンテナ内の <code>/opt/etl</code> 配下にpythonプログラムを置くイメージです。</p>
 
-<pre><code>FROM python:3.6.5-alpine
-
-MAINTAINER soudegesu
-
-COPY ./etl /opt/etl
-COPY ./requirements.txt /opt/requirements.txt
-
-RUN pip install --upgrade pip
-RUN pip install -r /opt/requirements.txt
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">FROM</span> <span style="color:#a6e22e">python</span>:<span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">6</span>.<span style="color:#ae81ff">5</span>-<span style="color:#a6e22e">alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">MAINTAINER</span> <span style="color:#a6e22e">soudegesu</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">COPY</span> .<span style="color:#e6db74">/etl /</span><span style="color:#a6e22e">opt</span>/<span style="color:#a6e22e">etl</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">COPY</span> .<span style="color:#e6db74">/requirements.txt /</span><span style="color:#a6e22e">opt</span>/<span style="color:#a6e22e">requirements</span>.<span style="color:#a6e22e">txt</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">RUN</span> <span style="color:#a6e22e">pip</span> <span style="color:#a6e22e">install</span> --<span style="color:#a6e22e">upgrade</span> <span style="color:#a6e22e">pip</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">9</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">RUN</span> <span style="color:#a6e22e">pip</span> <span style="color:#a6e22e">install</span> -<span style="color:#a6e22e">r</span> <span style="color:#e6db74">/opt/</span><span style="color:#a6e22e">requirements</span>.<span style="color:#a6e22e">txt</span></code></pre></div>
 
 <p>ビルドしたdocker imageをECRにpushすればOKです。</p>
 
@@ -245,24 +244,23 @@ RUN pip install -r /opt/requirements.txt
 
 <p>Terraformで設定例を書くと以下のようになります。</p>
 
-<pre><code>resource &quot;aws_batch_compute_environment&quot; &quot;etl&quot; {
-    compute_environment_name = &quot;etl&quot;
-    compute_resources {
-        instance_role = &quot;${ECSインスタンスのRole}&quot;
-        instance_type = [
-            ${EC2インスタンスタイプ}&quot;
-        ]
-        max_vcpus = 16
-        min_vcpus = 2
-        desired_vcpus = 2
-        security_group_ids = [&quot;${SecurityGroupのID}&quot;]
-        subnets = [&quot;${SubnetのID}&quot;]
-        type = &quot;EC2&quot;
-    }
-    service_role = &quot;arn:aws:iam::${アカウント番号}:role/service-role/AWSBatchServiceRole&quot;
-    type = &quot;MANAGED&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_batch_compute_environment&#34;</span> <span style="color:#e6db74">&#34;etl&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#a6e22e">compute_environment_name</span> = <span style="color:#e6db74">&#34;etl&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#a6e22e">compute_resources</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>        <span style="color:#a6e22e">instance_role</span> = <span style="color:#e6db74">&#34;${ECSインスタンスのRole}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>        <span style="color:#a6e22e">instance_type</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>            <span style="color:#960050;background-color:#1e0010">$</span>{<span style="color:#a6e22e">EC2インスタンスタイプ</span>}<span style="color:#e6db74">&#34;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span><span style="color:#e6db74">        ]
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span><span style="color:#e6db74">        max_vcpus = 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#e6db74">        min_vcpus = 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span><span style="color:#e6db74">        desired_vcpus = 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span><span style="color:#e6db74">        security_group_ids = [&#34;</span><span style="color:#960050;background-color:#1e0010">$</span>{<span style="color:#a6e22e">SecurityGroupのID</span>}<span style="color:#e6db74">&#34;]
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span><span style="color:#e6db74">        subnets = [&#34;</span><span style="color:#960050;background-color:#1e0010">$</span>{<span style="color:#a6e22e">SubnetのID</span>}<span style="color:#e6db74">&#34;]
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span><span style="color:#e6db74">        type = &#34;</span><span style="color:#a6e22e">EC2</span><span style="color:#e6db74">&#34;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span><span style="color:#e6db74">    }
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span><span style="color:#e6db74">    service_role = &#34;</span><span style="color:#a6e22e">arn</span>:<span style="color:#a6e22e">aws</span>:<span style="color:#a6e22e">iam</span>::<span style="color:#960050;background-color:#1e0010">$</span>{<span style="color:#a6e22e">アカウント番号</span>}:<span style="color:#a6e22e">role</span><span style="color:#f92672">/</span><span style="color:#a6e22e">service</span><span style="color:#f92672">-</span><span style="color:#a6e22e">role</span><span style="color:#f92672">/</span><span style="color:#a6e22e">AWSBatchServiceRole</span><span style="color:#e6db74">&#34;
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#e6db74">    type = &#34;</span><span style="color:#a6e22e">MANAGED</span><span style="color:#960050;background-color:#1e0010">&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>}</code></pre></div>
 
 <h4 id="ジョブキューの作成">ジョブキューの作成</h4>
 
@@ -270,15 +268,14 @@ RUN pip install -r /opt/requirements.txt
 
 <p>Terraformで設定例を書くと以下のようになります。</p>
 
-<pre><code>resource &quot;aws_batch_job_queue&quot; &quot;etl&quot; {
-    name = &quot;etl&quot;
-    state = &quot;ENABLED&quot;
-    priority = 1
-    compute_environments = [
-        &quot;${aws_batch_compute_environment.etl.arn}&quot;
-    ]
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_batch_job_queue&#34;</span> <span style="color:#e6db74">&#34;etl&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;etl&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>    <span style="color:#a6e22e">state</span> = <span style="color:#e6db74">&#34;ENABLED&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>    <span style="color:#a6e22e">priority</span> = <span style="color:#ae81ff">1</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>    <span style="color:#a6e22e">compute_environments</span> = [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>        <span style="color:#e6db74">&#34;${aws_batch_compute_environment.etl.arn}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">8</span>}</code></pre></div>
 
 <h4 id="バッチのジョブ定義">バッチのジョブ定義</h4>
 
@@ -291,43 +288,42 @@ RUN pip install -r /opt/requirements.txt
 <p>コンテナ内で任意のプログラムを実行する場合には <code>command</code> プロパティ部に設定を行います。
 引数部分に <code>Ref::</code> という見慣れないものがありますが、これは後述します。</p>
 
-<pre><code>resource &quot;aws_batch_job_definition&quot; &quot;etl&quot; {
-    name = &quot;etl&quot;
-    type = &quot;container&quot;
-    container_properties = &lt;&lt;EOF
-{
-    &quot;command&quot;: [&quot;python&quot;,
-        &quot;/opt/etl/main.py&quot;,
-        &quot;-b&quot;,
-        &quot;Ref::bucket&quot;,
-        &quot;-k&quot;,
-        &quot;Ref::objKey&quot;
-    ],
-    &quot;environment&quot;: [
-         {
-            &quot;name&quot;: &quot;TMP&quot;,
-            &quot;value&quot;: &quot;/tmp&quot;
-         },
-         {
-            &quot;name&quot;: &quot;UPLOAD_BUCKET&quot;,
-            &quot;value&quot;: &quot;${バケット名}&quot;
-         }
-    ],
-    &quot;image&quot;: &quot;${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/etl:${var.image_tag}&quot;,
-    &quot;memory&quot;: 1024,
-    &quot;vcpus&quot;: 2,
-    &quot;ulimits&quot;: [
-      {
-        &quot;hardLimit&quot;: 1024,
-        &quot;name&quot;: &quot;nofile&quot;,
-        &quot;softLimit&quot;: 1024
-      }
-    ]
-}
-EOF
-
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_batch_job_definition&#34;</span> <span style="color:#e6db74">&#34;etl&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;etl&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#66d9ef">type</span> = <span style="color:#e6db74">&#34;container&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    <span style="color:#a6e22e">container_properties</span> = <span style="color:#f92672">&lt;&lt;</span><span style="color:#a6e22e">EOF</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>{
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#e6db74">&#34;command&#34;</span>: [<span style="color:#e6db74">&#34;python&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        <span style="color:#e6db74">&#34;/opt/etl/main.py&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>        <span style="color:#e6db74">&#34;-b&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>        <span style="color:#e6db74">&#34;Ref::bucket&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>        <span style="color:#e6db74">&#34;-k&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>        <span style="color:#e6db74">&#34;Ref::objKey&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    ],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    <span style="color:#e6db74">&#34;environment&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>         {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>            <span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;TMP&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>            <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;/tmp&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>         },
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>         {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>            <span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;UPLOAD_BUCKET&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>            <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;${バケット名}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>         }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    ],
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>    <span style="color:#e6db74">&#34;image&#34;</span>: <span style="color:#e6db74">&#34;${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/etl:${var.image_tag}&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>    <span style="color:#e6db74">&#34;memory&#34;</span>: <span style="color:#ae81ff">1024</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>    <span style="color:#e6db74">&#34;vcpus&#34;</span>: <span style="color:#ae81ff">2</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>    <span style="color:#e6db74">&#34;ulimits&#34;</span>: [
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>      {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>        <span style="color:#e6db74">&#34;hardLimit&#34;</span>: <span style="color:#ae81ff">1024</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>        <span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;nofile&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>        <span style="color:#e6db74">&#34;softLimit&#34;</span>: <span style="color:#ae81ff">1024</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31</span>      }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32</span>    ]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33</span>}
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34</span><span style="color:#a6e22e">EOF</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36</span>}</code></pre></div>
 
 <p>なお、ここで実行される <code>main.py</code> の処理概要は以下になります。</p>
 
@@ -346,52 +342,49 @@ EOF
 
 <p>AWS Batchのジョブを実行するだけのサンプルコードを書きます。</p>
 
-<pre><code class="language-python">import json
-import boto3
-import logging
-import os
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-def lambda_handler(event, context):
-
-    job_name = os.environ['JOB_NAME']
-    job_queue = os.environ['JOB_QUEUE']
-    job_definition = os.environ['JOB_DEFINITION']
-    bucket_name = os.environ['BUCKET_NAME']
-    obj_key = os.environ['OBJECT_KEY']
-    parameters = {
-        'bucket': str(bucket_name),
-        'objKey': str(obj_key)
-    }
-
-    batch = boto3.client('batch')
-    try:
-        response = batch.submit_job(jobQueue=job_queue, jobName=job_name, jobDefinition=job_definition, parameters=parameters)
-        jobId = response['jobId']
-        return {
-            'jobId': jobId
-        }
-    except Exception as e:
-        logger.error(e)
-        raise Exception('Error submitting Batch Job')
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#f92672">import</span> json
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span><span style="color:#f92672">import</span> boto3
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span><span style="color:#f92672">import</span> logging
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span><span style="color:#f92672">import</span> os
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>logger <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>getLogger(__name__)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>logger<span style="color:#f92672">.</span>setLevel(logging<span style="color:#f92672">.</span>INFO)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lambda_handler</span>(event, context):
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>    job_name <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;JOB_NAME&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    job_queue <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;JOB_QUEUE&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>    job_definition <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;JOB_DEFINITION&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    bucket_name <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;BUCKET_NAME&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>    obj_key <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;OBJECT_KEY&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span>    parameters <span style="color:#f92672">=</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span>        <span style="color:#e6db74">&#39;bucket&#39;</span>: str(bucket_name),
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span>        <span style="color:#e6db74">&#39;objKey&#39;</span>: str(obj_key)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21</span>    batch <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74">&#39;batch&#39;</span>)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22</span>    <span style="color:#66d9ef">try</span>:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23</span>        response <span style="color:#f92672">=</span> batch<span style="color:#f92672">.</span>submit_job(jobQueue<span style="color:#f92672">=</span>job_queue, jobName<span style="color:#f92672">=</span>job_name, jobDefinition<span style="color:#f92672">=</span>job_definition, parameters<span style="color:#f92672">=</span>parameters)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24</span>        jobId <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;jobId&#39;</span>]
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25</span>        <span style="color:#66d9ef">return</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26</span>            <span style="color:#e6db74">&#39;jobId&#39;</span>: jobId
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27</span>        }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28</span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29</span>        logger<span style="color:#f92672">.</span>error(e)
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30</span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">Exception</span>(<span style="color:#e6db74">&#39;Error submitting Batch Job&#39;</span>)</code></pre></div>
 
 <p>要点としては <code>submit_job</code> 関数の <code>parameters</code> 引数で渡されたデータが、
 先程のバッチジョブ定義の <code>Ref::</code> を置換することで、動的なデータの受け渡しを実現しています。</p>
 
 <p>（今回のケースで言えば <code>bucket</code> と <code>objKey</code> が置換されます）</p>
 
-<pre><code class="language-json">    &quot;command&quot;: [&quot;python&quot;,
-        &quot;/opt/etl/main.py&quot;,
-        &quot;-b&quot;,
-        &quot;Ref::bucket&quot;,
-        &quot;-k&quot;,
-        &quot;Ref::objKey&quot;
-    ],
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>    <span style="color:#e6db74">&#34;command&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> [<span style="color:#e6db74">&#34;python&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>        <span style="color:#e6db74">&#34;/opt/etl/main.py&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>        <span style="color:#e6db74">&#34;-b&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>        <span style="color:#e6db74">&#34;Ref::bucket&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>        <span style="color:#e6db74">&#34;-k&#34;</span>,
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>        <span style="color:#e6db74">&#34;Ref::objKey&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span>    ]<span style="color:#960050;background-color:#1e0010">,</span></code></pre></div>
 
 <p>ここまで来れば、ETL済みのバケットへ以下のような構成でデータがアップロードされているはずです。</p>
 
@@ -406,10 +399,9 @@ def lambda_handler(event, context):
 
 <p>まずはデータベースの設定です。これはAthenaのデータベースになります。</p>
 
-<pre><code>resource &quot;aws_glue_catalog_database&quot; &quot;sample&quot; {
-    name = &quot;${データベース名}&quot;
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_glue_catalog_database&#34;</span> <span style="color:#e6db74">&#34;sample&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;${データベース名}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>}</code></pre></div>
 
 <p>次にCrawlerの設定です。</p>
 
@@ -418,22 +410,21 @@ def lambda_handler(event, context):
 <p><code>schedule</code> にてCrawlerが対象のS3のパスを見に行くスケジュールの指定ができますし、
 スキーマ変更があった場合の振る舞いを定義（今回は「データが無くなっていたら削除する」に指定）できます。</p>
 
-<pre><code>resource &quot;aws_glue_crawler&quot; &quot;sample&quot; {
-    database_name = &quot;${aws_glue_catalog_database.sample.name}&quot;
-    name = &quot;${Crawler名}&quot;
-    role = &quot;${Glue用のRole}&quot;
-
-    s3_target {
-        path = &quot;${S3バケットのパス}&quot;
-    }
-
-    schedule = &quot;cron(0 21 * * ? *)&quot;
-
-    schema_change_policy = {
-        delete_behavior = &quot;DELETE_FROM_DATABASE&quot;
-    }
-}
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span><span style="color:#a6e22e">resource</span> <span style="color:#e6db74">&#34;aws_glue_crawler&#34;</span> <span style="color:#e6db74">&#34;sample&#34;</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>    <span style="color:#a6e22e">database_name</span> = <span style="color:#e6db74">&#34;${aws_glue_catalog_database.sample.name}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;${Crawler名}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>    <span style="color:#a6e22e">role</span> = <span style="color:#e6db74">&#34;${Glue用のRole}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>    <span style="color:#a6e22e">s3_target</span> {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>        <span style="color:#a6e22e">path</span> = <span style="color:#e6db74">&#34;${S3バケットのパス}&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>    <span style="color:#a6e22e">schedule</span> = <span style="color:#e6db74">&#34;cron(0 21 * * ? *)&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>    <span style="color:#a6e22e">schema_change_policy</span> = {
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span>        <span style="color:#a6e22e">delete_behavior</span> = <span style="color:#e6db74">&#34;DELETE_FROM_DATABASE&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span>    }
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>}</code></pre></div>
 
 <p>Crawlerを実行すると、「Databases」 &gt; 「Tables」 の中にいくつかデータテーブルができていることがわかります。
 これがAthenaのテーブルとリンクします。</p>

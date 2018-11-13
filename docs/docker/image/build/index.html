@@ -151,73 +151,71 @@ if (!doNotTrack) {
 
 <p>まず、dockerのバージョンが古かったので、<a href="https://www.docker.com/products/docker#/mac">公式サイト</a>からmac用のdockerを再度ダウンロードし、アップデートしておきます。</p>
 
-<pre><code># docker version
-Client:
- Version:      1.13.0
- API version:  1.25
- Go version:   go1.7.3
- Git commit:   49bf474
- Built:        Wed Jan 18 16:20:26 2017
- OS/Arch:      darwin/amd64
-
-Server:
- Version:      1.13.0
- API version:  1.25 (minimum version 1.12)
- Go version:   go1.7.3
- Git commit:   49bf474
- Built:        Wed Jan 18 16:20:26 2017
- OS/Arch:      linux/amd64
- Experimental: true
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>docker version
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>Client:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span> Version:      <span style="color:#ae81ff">1</span>.13.0
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span> API version:  <span style="color:#ae81ff">1</span>.25
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span> Go version:   go1.7.3
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span> Git commit:   49bf474
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span> Built:        Wed Jan <span style="color:#ae81ff">18</span> <span style="color:#ae81ff">16</span>:20:26 <span style="color:#ae81ff">2017</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span> OS/Arch:      darwin/amd64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span>Server:
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span> Version:      <span style="color:#ae81ff">1</span>.13.0
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span> API version:  <span style="color:#ae81ff">1</span>.25 <span style="color:#f92672">(</span>minimum version <span style="color:#ae81ff">1</span>.12<span style="color:#f92672">)</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span> Go version:   go1.7.3
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span> Git commit:   49bf474
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span> Built:        Wed Jan <span style="color:#ae81ff">18</span> <span style="color:#ae81ff">16</span>:20:26 <span style="color:#ae81ff">2017</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17</span> OS/Arch:      linux/amd64
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18</span> Experimental: true</code></pre></div>
 
 <p>以下のような簡単なDockerfileを作成し、プロジェクトのルートにおいておきます。
 今回は<a href="https://github.com/docker-library/docs/tree/master/mysql">mysql公式のdocker image</a>を使用することにしましょう。</p>
 
-<pre><code>FROM mysql
-MAINTAINER soudegesu
-
-RUN echo &quot;finished setup !!&quot;
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span><span style="color:#a6e22e">FROM</span> <span style="color:#a6e22e">mysql</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">MAINTAINER</span> <span style="color:#a6e22e">soudegesu</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#a6e22e">RUN</span> <span style="color:#a6e22e">echo</span><span style="color:#75715e"> &#34;finished setup !!&#34;</span></code></pre></div>
 
 <h2 id="dockerfile-をビルドしてイメージを作成する">Dockerfile をビルドしてイメージを作成する</h2>
 
 <p><code>docker build</code> コマンドを実行すると以下のようなエラーが出ました。</p>
 
-<pre><code>#docker build -t soudegesu/mysql:0.0.1 .
-Sending build context to Docker daemon 57.86 MB
-Error response from daemon: The Dockerfile (Dockerfile) cannot be empty
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>docker build -t soudegesu/mysql:0.0.1 .
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>Sending build context to Docker daemon <span style="color:#ae81ff">57</span>.86 MB
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>Error response from daemon: The Dockerfile <span style="color:#f92672">(</span>Dockerfile<span style="color:#f92672">)</span> cannot be empty</code></pre></div>
 
 <p>Dockerfileが配置されているディレクトリでコマンドを実行したので、Dockerfileを勝手に認識してくれるはずだったような。。
 念のため、<code>-f</code> オプションを指定して、直接ファイルを指定してみたところ上手くいきました。</p>
 
-<pre><code>#docker build -f ./Dockerfile -t soudegesu/mysql:0.0.1 .
-Sending build context to Docker daemon 57.86 MB
-Step 1/3 : FROM mysql
-latest: Pulling from library/mysql
-5040bd298390: Pull complete
-(以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>docker build -f ./Dockerfile -t soudegesu/mysql:0.0.1 .
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>Sending build context to Docker daemon <span style="color:#ae81ff">57</span>.86 MB
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">4</span>Step <span style="color:#ae81ff">1</span>/3 : FROM mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">5</span>latest: Pulling from library/mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">6</span>5040bd298390: Pull complete
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">7</span><span style="color:#f92672">(</span>以下略<span style="color:#f92672">)</span></code></pre></div>
 
 <p>本当に先程のコマンドがNGだったのか怪しいので、docker imageを削除して、もう一度トライしてみましょう。</p>
 
-<pre><code>#docker rmi soudegesu/mysql:0.0.1
-Untagged: soudegesu/mysql:0.0.1
-Deleted: sha256:5cdbd0f32baa9bd25e39532ae9e660e35c0d9e57740406536b05bb7dbfbd4226
-Deleted: sha256:b60d4e0b4ad869c06c6e874095d813c5d91990f0266897163d714b201501b577
-
-#docker build -t soudegesu/mysql:0.0.1 .
-Sending build context to Docker daemon 57.86 MB
-Step 1/3 : FROM mysql
- ---&gt; 7666f75adb6b
-Step 2/3 : MAINTAINER soudegesu
- ---&gt; Using cache
- ---&gt; ebb2015c5850
-Step 3/3 : RUN echo &quot;finished setup !!&quot;
-(以下略)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1</span>docker rmi soudegesu/mysql:0.0.1
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3</span>Untagged: soudegesu/mysql:0.0.1
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4</span>Deleted: sha256:5cdbd0f32baa9bd25e39532ae9e660e35c0d9e57740406536b05bb7dbfbd4226
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5</span>Deleted: sha256:b60d4e0b4ad869c06c6e874095d813c5d91990f0266897163d714b201501b577
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7</span>docker build -t soudegesu/mysql:0.0.1 .
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9</span>Sending build context to Docker daemon <span style="color:#ae81ff">57</span>.86 MB
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10</span>Step <span style="color:#ae81ff">1</span>/3 : FROM mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11</span> ---&gt; 7666f75adb6b
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12</span>Step <span style="color:#ae81ff">2</span>/3 : MAINTAINER soudegesu
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13</span> ---&gt; Using cache
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14</span> ---&gt; ebb2015c5850
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15</span>Step <span style="color:#ae81ff">3</span>/3 : RUN echo <span style="color:#e6db74">&#34;finished setup !!&#34;</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16</span><span style="color:#f92672">(</span>以下略<span style="color:#f92672">)</span></code></pre></div>
 
 <h2 id="コンテナを起動して確認する">コンテナを起動して確認する</h2>
 
@@ -225,29 +223,27 @@ Step 3/3 : RUN echo &quot;finished setup !!&quot;
 * -i：コンテナの標準入力を開きます
 * -t：tty（端末デバイス）を確保します</p>
 
-<pre><code>#docker run -it soudegesu/mysql:0.0.1 /bin/bash
-root@08671cc122c7:/#
-
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>docker run -it soudegesu/mysql:0.0.1 /bin/bash
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>root@08671cc122c7:/#</code></pre></div>
 
 <p>OSを確認してみましょう。公式のmysqlのdocker imageはMoby Linuxを使っているようですね。</p>
 
-<pre><code>root@0e512378b63d:/# cat /proc/version
-Linux version 4.9.4-moby (root@1d811a9194c4) (gcc version 5.3.0 (Alpine 5.3.0) ) #1 SMP Wed Jan 18 17:04:43 UTC 2017
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>root@0e512378b63d:/# cat /proc/version
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>Linux version <span style="color:#ae81ff">4</span>.9.4-moby <span style="color:#f92672">(</span>root@1d811a9194c4<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>gcc version <span style="color:#ae81ff">5</span>.3.0 <span style="color:#f92672">(</span>Alpine <span style="color:#ae81ff">5</span>.3.0<span style="color:#f92672">)</span> <span style="color:#f92672">)</span> #1 SMP Wed Jan <span style="color:#ae81ff">18</span> <span style="color:#ae81ff">17</span>:04:43 UTC <span style="color:#ae81ff">2017</span></code></pre></div>
 
 <p><code>mysql</code> コマンドが生きているか確認しましょう。</p>
 
-<pre><code>root@08671cc122c7:/# mysql
-ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>root@08671cc122c7:/# mysql
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2</span>
+<span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">3</span>ERROR <span style="color:#ae81ff">2002</span> <span style="color:#f92672">(</span>HY000<span style="color:#f92672">)</span>: Can<span style="color:#e6db74">&#39;t connect to local MySQL server through socket &#39;</span>/var/run/mysqld/mysqld.sock<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#f92672">(</span><span style="color:#ae81ff">2</span><span style="color:#f92672">)</span></code></pre></div>
 
 <p>このままだとコンテナを立ち上げただけなので、mysql自体起動していません。</p>
 
 <p>実はdocker run する際に オプションを指定してあげる必要があるようです。</p>
 
-<pre><code>docker run --name soudegesu -e MYSQL_ROOT_PASSWORD=soudegesu -d soudegesu/mysql:0.0.1
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1</span>docker run --name soudegesu -e MYSQL_ROOT_PASSWORD<span style="color:#f92672">=</span>soudegesu -d soudegesu/mysql:0.0.1</code></pre></div>
 
 		</div>
 		
