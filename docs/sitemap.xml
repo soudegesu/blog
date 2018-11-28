@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/post/python/recommended-ide/</loc>
+    <lastmod>2018-11-27T09:49:50+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/post/python/flatten-json-column-with-pandas/</loc>
     <lastmod>2018-11-10T07:57:16+09:00</lastmod>
   </url>
@@ -361,14 +366,14 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/anaconda/</loc>
-    <lastmod>2017-03-06T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/categories/anaconda/</loc>
+    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/anaconda/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/anaconda/</loc>
+    <lastmod>2017-03-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -397,13 +402,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/aws/</loc>
+    <loc>https://www.soudegesu.com/categories/aws/</loc>
     <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/aws/</loc>
+    <loc>https://www.soudegesu.com/tags/aws/</loc>
     <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -421,25 +426,25 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/blog/</loc>
-    <lastmod>2017-05-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/categories/blog/</loc>
     <lastmod>2018-08-22T08:00:34+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/book/</loc>
-    <lastmod>2018-06-05T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/blog/</loc>
+    <lastmod>2017-05-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/book/</loc>
+    <lastmod>2018-06-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/book/</loc>
     <lastmod>2018-06-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -481,13 +486,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/continuous-delivery/</loc>
+    <loc>https://www.soudegesu.com/categories/continuous-delivery/</loc>
     <lastmod>2018-04-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/continuous-delivery/</loc>
+    <loc>https://www.soudegesu.com/tags/continuous-delivery/</loc>
     <lastmod>2018-04-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -505,13 +510,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/dart/</loc>
+    <loc>https://www.soudegesu.com/categories/dart/</loc>
     <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/dart/</loc>
+    <loc>https://www.soudegesu.com/tags/dart/</loc>
     <lastmod>2018-08-21T08:39:33+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -523,25 +528,25 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/design/</loc>
-    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/categories/design/</loc>
     <lastmod>2018-08-25T15:54:58+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/docker/</loc>
-    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/design/</loc>
+    <lastmod>2018-08-25T15:54:58+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/docker/</loc>
+    <lastmod>2018-10-03T08:39:26+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/docker/</loc>
     <lastmod>2018-10-03T08:39:26+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -559,20 +564,14 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/engineer-life/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/categories/engineer-life/</loc>
     <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/ethereum/</loc>
-    <lastmod>2018-03-10T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/engineer-life/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -583,13 +582,19 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/event/</loc>
-    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/ethereum/</loc>
+    <lastmod>2018-03-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/event/</loc>
+    <lastmod>2018-09-07T09:48:44+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/event/</loc>
     <lastmod>2018-09-07T09:48:44+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -607,13 +612,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/fish/</loc>
+    <loc>https://www.soudegesu.com/categories/fish/</loc>
     <lastmod>2017-02-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/fish/</loc>
+    <loc>https://www.soudegesu.com/tags/fish/</loc>
     <lastmod>2017-02-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -631,13 +636,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/gcp/</loc>
+    <loc>https://www.soudegesu.com/categories/gcp/</loc>
     <lastmod>2018-08-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/gcp/</loc>
+    <loc>https://www.soudegesu.com/tags/gcp/</loc>
     <lastmod>2018-08-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -649,13 +654,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/go/</loc>
+    <loc>https://www.soudegesu.com/categories/go/</loc>
     <lastmod>2018-10-02T08:46:15+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/go/</loc>
+    <loc>https://www.soudegesu.com/tags/go/</loc>
     <lastmod>2018-10-02T08:46:15+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -685,25 +690,25 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/java/</loc>
-    <lastmod>2018-03-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/categories/java/</loc>
     <lastmod>2018-08-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/javascript/</loc>
-    <lastmod>2018-10-24T08:07:24+09:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/java/</loc>
+    <lastmod>2018-03-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/javascript/</loc>
+    <lastmod>2018-10-24T08:07:24+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/javascript/</loc>
     <lastmod>2018-10-24T08:07:24+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -751,25 +756,25 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/mysql/</loc>
-    <lastmod>2018-07-31T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/categories/mysql/</loc>
     <lastmod>2018-07-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/nodejs/</loc>
-    <lastmod>2018-05-03T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/mysql/</loc>
+    <lastmod>2018-07-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/nodejs/</loc>
+    <lastmod>2018-05-03T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/nodejs/</loc>
     <lastmod>2018-05-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -800,18 +805,18 @@
   
   <url>
     <loc>https://www.soudegesu.com/post/</loc>
-    <lastmod>2018-11-10T07:57:16+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.soudegesu.com/tags/pyenv/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-27T09:49:50+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/pyenv/</loc>
+    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/tags/pyenv/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -823,14 +828,14 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/python/</loc>
-    <lastmod>2018-11-10T07:57:16+09:00</lastmod>
+    <loc>https://www.soudegesu.com/categories/python/</loc>
+    <lastmod>2018-11-27T09:49:50+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/python/</loc>
-    <lastmod>2018-11-10T07:57:16+09:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/python/</loc>
+    <lastmod>2018-11-27T09:49:50+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -865,13 +870,13 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/rust/</loc>
+    <loc>https://www.soudegesu.com/categories/rust/</loc>
     <lastmod>2018-10-28T07:09:38+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/rust/</loc>
+    <loc>https://www.soudegesu.com/tags/rust/</loc>
     <lastmod>2018-10-28T07:09:38+09:00</lastmod>
     <priority>0</priority>
   </url>
@@ -949,14 +954,14 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/tags/tensorflow/</loc>
-    <lastmod>2018-05-02T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/categories/tensorflow/</loc>
+    <lastmod>2017-03-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/categories/tensorflow/</loc>
-    <lastmod>2017-03-06T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/tags/tensorflow/</loc>
+    <lastmod>2018-05-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1010,7 +1015,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/</loc>
-    <lastmod>2018-11-10T07:57:16+09:00</lastmod>
+    <lastmod>2018-11-27T09:49:50+09:00</lastmod>
     <priority>0</priority>
   </url>
   

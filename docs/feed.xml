@@ -6,10 +6,19 @@
     <description>Recent content on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sat, 10 Nov 2018 07:57:16 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 27 Nov 2018 09:49:50 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Python初心者にオススメのIDE（エディタ）</title>
+      <link>https://www.soudegesu.com/post/python/recommended-ide/</link>
+      <pubDate>Tue, 27 Nov 2018 09:49:50 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/recommended-ide/</guid>
+      <description>初めてPythonを触る方に 「Pythonで開発する時にIDEは何を使えば良いでしょうか？」 とよく聞かれます。 手元でささっと動かすだけであれ</description>
+    </item>
     
     <item>
       <title>PandasでJSON形式の列データを複数列に展開する</title>
