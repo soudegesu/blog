@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pypdf2 on そうなんでげす</title>
+    <link>https://www.soudegesu.com/tags/pypdf2/</link>
+    <description>Recent content in Pypdf2 on そうなんでげす</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-JP</language>
+    <lastBuildDate>Fri, 30 Nov 2018 10:54:40 +0900</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/tags/pypdf2/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PDFをPython（PyPDF2）で操作する - PDF・暗号化PDFファイルの読み込み</title>
+      <link>https://www.soudegesu.com/post/python/open-pdf-with-pypdf2/</link>
+      <pubDate>Fri, 30 Nov 2018 10:54:40 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/open-pdf-with-pypdf2/</guid>
+      <description>今回はPDFファイルをPythonで操作する方法を紹介したいと思います。 事前準備 まずは事前準備を行いましょう。 なお、実行環境との依存モジュー</description>
+    </item>
+    
+  </channel>
+</rss>
