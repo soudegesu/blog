@@ -6,10 +6,19 @@
     <description>Recent content in Pypdf2 on そうなんでげす</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-JP</language>
-    <lastBuildDate>Sun, 02 Dec 2018 17:29:29 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 03 Dec 2018 10:19:07 +0900</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/tags/pypdf2/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PDFをPython（PyPDF2）で操作する -  PyPDF2とPyPDF3のどちらを使うと良いのか</title>
+      <link>https://www.soudegesu.com/post/python/difference-between-pypdf2-and-pypdf3/</link>
+      <pubDate>Mon, 03 Dec 2018 10:19:07 +0900</pubDate>
+      
+      <guid>https://www.soudegesu.com/post/python/difference-between-pypdf2-and-pypdf3/</guid>
+      <description>以前に書いた以下の記事では、PyPDF2 を用いて、PDFファイルからテキスト情報を抽出するまでを行うことができました。 PDFをPython（</description>
+    </item>
     
     <item>
       <title>PDFをPython（PyPDF2）で操作する - PDFからテキストを抽出する</title>
