@@ -1,6 +1,6 @@
 ---
 title: "PDFをPython（PyPDF2）で操作する - PDFからテキストを抽出する"
-description: ""
+description: "PyPDF2を使ってPDF内のテキストを抽出します。PDF内のページへのアクセスの仕方や、全ページへのアクセス方法を紹介した後、ページ内からテキストを抽出します。"
 date: "2018-12-02T17:29:29+09:00"
 thumbnail: /images/icons/python_icon.png
 categories:
