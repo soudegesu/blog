@@ -1,6 +1,6 @@
 ---
-title: "PDFをPython（PyPDF2）で操作する - マージして透かしを入れる"
-description: ""
+title: "PDFをPython（PyPDF2）で操作する - 複数ページをマージして透かしを入れる"
+description: "PyPDF2を使って複数ページをマージする方法を紹介します。今回は透かし入りのPDFを作成するサンプルです。"
 date: "2018-12-05T10:23:41+09:00"
 thumbnail: /images/icons/python_icon.png
 categories:
@@ -18,7 +18,7 @@ twitter_card_image: /images/icons/python_icon.png
 * [PDFをPython（PyPDF2）で操作する - PDF・暗号化PDFファイルの読み込み](/post/python/open-pdf-with-pypdf2/)
 * [PDFをPython（PyPDF2）で操作する - PDFからテキストを抽出する](/post/python/extract-text-from-pdf-with-pypdf2/)
 
-今回は [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) を使って、ファイルの中に「すかし」を入れる方法を実現したいと思います。
+今回は [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) のページをマージする機能を使って、ファイルの中に「すかし」を入れる方法を実現したいと思います。
 
 ## 事前準備
 
