@@ -1,9 +1,7 @@
-defaultContentLanguage = "ja"
-languageCode = "ja-JP"
-
-baseurl = "https://www.soudegesu.com"
-title = "そうなんでげす"
 theme = "mainroad"
+defaultContentLanguage = "ja"
+baseurl = "https://www.soudegesu.com"
+#defaultContentLanguageInSubdirto = true
 
 enableEmoji = true
 paginate = "10"
@@ -24,9 +22,7 @@ baseName = "feed"
     avatar = "/images/soudegesu.jpg"
     twitter = "alten_manten"
 
-[Params]
-    subtitle = "またつまらぬモノを斬ってしまった"
-    description = "soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"
+[Params]        
     opengraph = true
     twitter_cards = true
     readmore = true
@@ -59,3 +55,19 @@ baseName = "feed"
     social_github = "soudegesu"
     #social_email = "example@example.com"
     #social_google_plus = "profileid"
+
+[Languages]
+[Languages.ja]
+    languageName = "日本語"
+    languageCode = "ja-JP"
+    title = "そうなんでげす"
+[Languages.ja.params]
+    description = "soudegesuのtechブログ。普段仕事では使わない技術を中心に書いていくので入門系記事が多くなると思っていたけど、書き始めたらいい感じにいろいろまぜこぜになってきました。とりあえず、書きたくなったらいろいろ書きます。"
+    subtitle = "またつまらぬモノを斬ってしまった"
+[Languages.en]
+    languageName = "English"
+    languageCode = "en-US"
+    title = "Sou-Nan-De-Gesu"
+[Languages.en.params]
+    description = "soudegesu tech blog. As I usually write about technologies that I do not use at work, I thought that there will be more introductory articles, but as I started writing, various things have become miscellaneous. Anyway, I write various things when I want to write."
+    subtitle = "Once again, I cut a worthless object"
