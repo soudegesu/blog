@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/docker/docker-compose/mysql/</loc>
+    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/docker/docker-compose/mysql/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/docker/docker-compose/mysql/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/docker/</loc>
+    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/docker/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/docker/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/docker-compose/</loc>
+    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/docker-compose/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/docker-compose/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/past/</loc>
+    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/past/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/past/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/</loc>
+    <lastmod>2017-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/tags/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/"
+                />
+  </url>
+  
+</urlset>
