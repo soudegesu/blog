@@ -6,10 +6,22 @@
     <description>Recent content in Docker on Sou-Nan-De-Gesu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 31 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 01 Feb 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/en/categories/docker/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Start mysql docker container with docker-compose</title>
+      <link>https://www.soudegesu.com/en/docker/docker-compose/mysql/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/en/docker/docker-compose/mysql/</guid>
+      <description>In the previous article, I can start mysql docker container by using the docker run command after executing docker build.
+Personally, I like the lesser option of cli, so this time I&amp;rsquo;d like to start docker-compose a bit easier to start up.
+Install docker-compose Let&amp;rsquo;s install docker-toolbox from the following site. Docker-compose is also included in the download.
+ https://docs.docker.com/toolbox/  Docker-compose provides functions to easily manage multiple containers. In this article, only mysql is started with a container, but since setting up system components and controlling the order of activation can only be described in yaml file, it is highly readable and easy to manage even with VCS.</description>
+    </item>
     
     <item>
       <title>Create a Docker image with docker build command</title>
@@ -18,18 +30,6 @@
       
       <guid>https://www.soudegesu.com/en/docker/image/build/</guid>
       <description>This post is a personal note for building mysql container using Docker. Update Docker daemon In my case, the version of docker was old, so I downloaded docker for Mac from the official website and updated docker daemon. Check docker version. 1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64</description>
-    </item>
-    
-    <item>
-      <title>Start mysql docker container with docker-compose</title>
-      <link>https://www.soudegesu.com/en/docker/docker-compose/mysql/</link>
-      <pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/en/docker/docker-compose/mysql/</guid>
-      <description>In the previous article, I can start mysql docker container by using the docker run command after executing docker build.
-Personally, I like the lesser option of cli, so this time I&amp;rsquo;d like to start docker-compose a bit easier to start up.
-Install docker-compose Let&amp;rsquo;s install docker-toolbox from the following site. Docker-compose is also included in the download.
- https://docs.docker.com/toolbox/  Docker-compose provides functions to easily manage multiple containers. In this article, only mysql is started with a container, but since setting up system components and controlling the order of activation can only be described in yaml file, it is highly readable and easy to manage even with VCS.</description>
     </item>
     
   </channel>

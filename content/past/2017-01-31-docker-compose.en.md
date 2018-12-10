@@ -1,7 +1,7 @@
 ---
 title: "Start mysql docker container with docker-compose"
 description: "Use the docker-compose command to start mysql's docker container"
-date: 2017-01-31
+date: 2017-02-01
 thumbnail: /images/icons/docker_icon.png
 categories:
   - docker
