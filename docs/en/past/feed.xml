@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pasts on Sou-Nan-De-Gesu</title>
+    <link>https://www.soudegesu.com/en/past/</link>
+    <description>Recent content in Pasts on Sou-Nan-De-Gesu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 31 Jan 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/en/past/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Start mysql docker container with docker-compose</title>
+      <link>https://www.soudegesu.com/en/docker/docker-compose/mysql/</link>
+      <pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/en/docker/docker-compose/mysql/</guid>
+      <description>In the previous article, I can start mysql docker container by using the docker run command after executing docker build.
+Personally, I like the lesser option of cli, so this time I&amp;rsquo;d like to start docker-compose a bit easier to start up.
+Install docker-compose Let&amp;rsquo;s install docker-toolbox from the following site. Docker-compose is also included in the download.
+ https://docs.docker.com/toolbox/  Docker-compose provides functions to easily manage multiple containers. In this article, only mysql is started with a container, but since setting up system components and controlling the order of activation can only be described in yaml file, it is highly readable and easy to manage even with VCS.</description>
+    </item>
+    
+  </channel>
+</rss>
