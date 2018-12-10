@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Sou-Nan-De-Gesu</title>
+    <link>https://www.soudegesu.com/en/tags/docker/</link>
+    <description>Recent content in Docker on Sou-Nan-De-Gesu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 31 Jan 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.soudegesu.com/en/tags/docker/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Create a Docker image with docker build command</title>
+      <link>https://www.soudegesu.com/en/docker/image/build/</link>
+      <pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/en/docker/image/build/</guid>
+      <description>This post is a personal note for building mysql container using Docker. Update Docker daemon In my case, the version of docker was old, so I downloaded docker for Mac from the official website and updated docker daemon. Check docker version. 1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64</description>
+    </item>
+    
+  </channel>
+</rss>
