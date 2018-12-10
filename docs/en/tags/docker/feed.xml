@@ -17,7 +17,10 @@
       <pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate>
       
       <guid>https://www.soudegesu.com/en/docker/image/build/</guid>
-      <description>This post is a personal note for building mysql container using Docker. Update Docker daemon In my case, the version of docker was old, so I downloaded docker for Mac from the official website and updated docker daemon. Check docker version. 1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64</description>
+      <description>This post is a personal note for building mysql container using Docker.
+Update Docker daemon In my case, the version of docker was old, so I downloaded docker for Mac from the official website and updated docker daemon.
+Check docker version.
+1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64 10 11Server: 12 Version: 1.</description>
     </item>
     
   </channel>

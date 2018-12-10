@@ -350,6 +350,16 @@
   <url>
     <loc>https://www.soudegesu.com/python/pyenv/anaconda/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/python/pyenv/anaconda/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/python/pyenv/anaconda/"
+                />
   </url>
   
   <url>
@@ -414,12 +424,32 @@
     <loc>https://www.soudegesu.com/tags/anaconda/</loc>
     <lastmod>2017-03-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/anaconda/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/anaconda/"
+                />
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/anaconda/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/anaconda/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/anaconda/"
+                />
   </url>
   
   <url>
@@ -914,18 +944,48 @@
     <loc>https://www.soudegesu.com/tags/pyenv/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/pyenv/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/pyenv/"
+                />
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/pyenv/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/pyenv/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/pyenv/"
+                />
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/tags/pyenv-virtualenv/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/pyenv-virtualenv/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/pyenv-virtualenv/"
+                />
   </url>
   
   <url>
@@ -938,6 +998,16 @@
     <loc>https://www.soudegesu.com/tags/python/</loc>
     <lastmod>2018-12-05T10:23:41+09:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/python/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/python/"
+                />
   </url>
   
   <url>
