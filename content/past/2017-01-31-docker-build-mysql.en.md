@@ -75,7 +75,7 @@ Step 2/3 : MAINTAINER soudegesu
  ---> Using cache
  ---> ebb2015c5850
 Step 3/3 : RUN echo "finished setup !!"
-(以下略)
+...
 {{< / highlight >}}
 
 ## Start docker container
