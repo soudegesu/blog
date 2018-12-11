@@ -1,5 +1,5 @@
-publish:
-	hugo
+pub:
+	hugo --minify
 
 serve:
 	hugo server -DFE
