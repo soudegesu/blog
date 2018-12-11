@@ -1,25 +1,2 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Anaconda on Sou-Nan-De-Gesu</title>
-    <link>https://www.soudegesu.com/en/categories/anaconda/</link>
-    <description>Recent content in Anaconda on Sou-Nan-De-Gesu</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language>
-    <lastBuildDate>Tue, 28 Feb 2017 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.soudegesu.com/en/categories/anaconda/feed.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Setting to avoid python and anaconda conflict using pyenv and pyenv-virtualenv</title>
-      <link>https://www.soudegesu.com/python/pyenv/anaconda/</link>
-      <pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/python/pyenv/anaconda/</guid>
-      <description>Introduction I have been using pyenv only to switch versions of python in local environments. However, recently I have used anaconda more often. Since ptyhon and anaconda conflict when executing activate command, I decided to use pyenv-virtualenv.
-Goals  I want to switch python version in one machine I also want to switch the python distribution (anaconda in this case) I want to resolve conflict between anaconda and pyenv when I execute activate command  When I activate anaconda, I do not execute the command with full path   1 and 2 are pyenv, and 3 can be solved with pyenv-virtualenv.</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Anaconda on Sou-Nan-De-Gesu</title><link>https://www.soudegesu.com/en/categories/anaconda/</link><description>Recent content in Anaconda on Sou-Nan-De-Gesu</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 28 Feb 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://www.soudegesu.com/en/categories/anaconda/feed.xml" rel="self" type="application/rss+xml"/><item><title>Setting to avoid python and anaconda conflict using pyenv and pyenv-virtualenv</title><link>https://www.soudegesu.com/python/pyenv/anaconda/</link><pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/python/pyenv/anaconda/</guid><description>Introduction I have been using pyenv only to switch versions of python in local environments. However, recently I have used anaconda more often. Since ptyhon and anaconda conflict when executing activate command, I decided to use pyenv-virtualenv.
+Goals I want to switch python version in one machine I also want to switch the python distribution (anaconda in this case) I want to resolve conflict between anaconda and pyenv when I execute activate command When I activate anaconda, I do not execute the command with full path 1 and 2 are pyenv, and 3 can be solved with pyenv-virtualenv.</description></item></channel></rss>
