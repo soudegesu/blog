@@ -3,6 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.soudegesu.com/en/aws/validate-certification-manager/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/aws/validate-certification-manager/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/aws/validate-certification-manager/"
+                />
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/python/pyenv/anaconda/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -48,18 +63,18 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/en/categories/anaconda/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <loc>https://www.soudegesu.com/en/tags/acm/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="https://www.soudegesu.com/categories/anaconda/"
+                href="https://www.soudegesu.com/tags/acm/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://www.soudegesu.com/en/categories/anaconda/"
+                href="https://www.soudegesu.com/en/tags/acm/"
                 />
   </url>
   
@@ -80,6 +95,54 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/en/categories/anaconda/</loc>
+    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/anaconda/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/anaconda/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/tags/aws/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/aws/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/aws/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/aws/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/aws/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/aws/"
+                />
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/en/categories/</loc>
     <lastmod>2017-02-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -96,22 +159,6 @@
   </url>
   
   <url>
-    <loc>https://www.soudegesu.com/en/categories/docker/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="https://www.soudegesu.com/categories/docker/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.soudegesu.com/en/categories/docker/"
-                />
-  </url>
-  
-  <url>
     <loc>https://www.soudegesu.com/en/tags/docker/</loc>
     <lastmod>2017-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -124,6 +171,22 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.soudegesu.com/en/tags/docker/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/docker/</loc>
+    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/docker/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/docker/"
                 />
   </url>
   
@@ -145,7 +208,7 @@
   
   <url>
     <loc>https://www.soudegesu.com/en/past/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
@@ -156,22 +219,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.soudegesu.com/en/past/"
-                />
-  </url>
-  
-  <url>
-    <loc>https://www.soudegesu.com/en/categories/pyenv/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="https://www.soudegesu.com/categories/pyenv/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.soudegesu.com/en/categories/pyenv/"
                 />
   </url>
   
@@ -188,6 +235,22 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.soudegesu.com/en/tags/pyenv/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://www.soudegesu.com/en/categories/pyenv/</loc>
+    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/pyenv/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/pyenv/"
                 />
   </url>
   
@@ -224,8 +287,24 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/en/tags/route53/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/route53/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/route53/"
+                />
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/en/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
@@ -240,8 +319,24 @@
   </url>
   
   <url>
+    <loc>https://www.soudegesu.com/en/tags/ssl/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/ssl/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/ssl/"
+                />
+  </url>
+  
+  <url>
     <loc>https://www.soudegesu.com/en/tags/</loc>
-    <lastmod>2017-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"

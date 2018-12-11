@@ -6,10 +6,20 @@
     <description>Recent content on Sou-Nan-De-Gesu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 28 Feb 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.soudegesu.com/en/feed.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>It&#39;s better to use DNS verification for verification of SSL certificate issued by AWS Certification Manager</title>
+      <link>https://www.soudegesu.com/en/aws/validate-certification-manager/</link>
+      <pubDate>Wed, 31 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.soudegesu.com/en/aws/validate-certification-manager/</guid>
+      <description>Domain verification with Route 53 in Certification Manager became available In 2017&amp;frasl;11, Domain validation by DNS records of Route 53 was supported as a verification method when AWS Certification Manager(ACM) SSL certificate was acquired. This update has a very great advantage not only for acquiring SSL certificates but also for updating SSL certificates.
+Changes in issuing SSL certificates Validation by email is troublesome Conventionally, in order to verify the domain of SSL certificate at ACM, we click on the link in the body of the received email, and push the approval button in the web page.</description>
+    </item>
     
     <item>
       <title>Setting to avoid python and anaconda conflict using pyenv and pyenv-virtualenv</title>

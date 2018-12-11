@@ -335,6 +335,16 @@
   <url>
     <loc>https://www.soudegesu.com/aws/validate-certification-manager/</loc>
     <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/aws/validate-certification-manager/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/aws/validate-certification-manager/"
+                />
   </url>
   
   <url>
@@ -406,6 +416,16 @@
     <loc>https://www.soudegesu.com/tags/acm/</loc>
     <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/acm/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/acm/"
+                />
   </url>
   
   <url>
@@ -480,12 +500,32 @@
     <loc>https://www.soudegesu.com/tags/aws/</loc>
     <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/aws/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/aws/"
+                />
   </url>
   
   <url>
     <loc>https://www.soudegesu.com/categories/aws/</loc>
     <lastmod>2018-10-21T09:22:45+09:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/categories/aws/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/categories/aws/"
+                />
   </url>
   
   <url>
@@ -1044,6 +1084,16 @@
     <loc>https://www.soudegesu.com/tags/route53/</loc>
     <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/route53/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/route53/"
+                />
   </url>
   
   <url>
@@ -1104,6 +1154,16 @@
     <loc>https://www.soudegesu.com/tags/ssl/</loc>
     <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.soudegesu.com/en/tags/ssl/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://www.soudegesu.com/tags/ssl/"
+                />
   </url>
   
   <url>
