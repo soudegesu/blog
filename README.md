@@ -20,5 +20,5 @@ make serve
 
 * build posts for publish article (exclude draft)
 ```
-make publish
+make pub
 ```

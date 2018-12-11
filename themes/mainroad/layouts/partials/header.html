@@ -8,20 +8,14 @@
 	{{ partial "seo.html" . }}
 	{{ if .Site.Params.opengraph }}{{ template "_internal/opengraph.html" . }}{{ end }}
 	{{ if .Site.Params.twitter_cards }}{{ template "_internal/twitter_cards.html" . }}{{ end }}
-	<link rel="dns-prefetch" href="//fonts.googleapis.com">
-	<link rel="dns-prefetch" href="//fonts.gstatic.com">
 	{{- range .AlternativeOutputFormats }}
 	<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .RelPermalink | safeURL }}">
 	{{- end }}
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
-	<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
-	<script type="text/javascript" src="{{ "js/scripts.js" | relURL }}"></script>
-	<link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
+	<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">	
 	{{- if not .Site.IsServer }}
 		{{ template "_internal/google_analytics_async.html" . }}
 		{{ partial "ad/ad_sense.html" . }}
 	{{- end }}
-
 </head>
 <body class="body">
 	<div class="container container-outer">

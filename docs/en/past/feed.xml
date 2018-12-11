@@ -1,59 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Pasts on Sou-Nan-De-Gesu</title>
-    <link>https://www.soudegesu.com/en/past/</link>
-    <description>Recent content in Pasts on Sou-Nan-De-Gesu</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language>
-    <lastBuildDate>Wed, 31 Jan 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.soudegesu.com/en/past/feed.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>It&#39;s better to use DNS verification for verification of SSL certificate issued by AWS Certification Manager</title>
-      <link>https://www.soudegesu.com/en/aws/validate-certification-manager/</link>
-      <pubDate>Wed, 31 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/en/aws/validate-certification-manager/</guid>
-      <description>Domain verification with Route 53 in Certification Manager became available In 2017&amp;frasl;11, Domain validation by DNS records of Route 53 was supported as a verification method when AWS Certification Manager(ACM) SSL certificate was acquired. This update has a very great advantage not only for acquiring SSL certificates but also for updating SSL certificates.
-Changes in issuing SSL certificates Validation by email is troublesome Conventionally, in order to verify the domain of SSL certificate at ACM, we click on the link in the body of the received email, and push the approval button in the web page.</description>
-    </item>
-    
-    <item>
-      <title>Setting to avoid python and anaconda conflict using pyenv and pyenv-virtualenv</title>
-      <link>https://www.soudegesu.com/python/pyenv/anaconda/</link>
-      <pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/python/pyenv/anaconda/</guid>
-      <description>Introduction I have been using pyenv only to switch versions of python in local environments. However, recently I have used anaconda more often. Since ptyhon and anaconda conflict when executing activate command, I decided to use pyenv-virtualenv.
-Goals  I want to switch python version in one machine I also want to switch the python distribution (anaconda in this case) I want to resolve conflict between anaconda and pyenv when I execute activate command  When I activate anaconda, I do not execute the command with full path   1 and 2 are pyenv, and 3 can be solved with pyenv-virtualenv.</description>
-    </item>
-    
-    <item>
-      <title>Start mysql docker container with docker-compose</title>
-      <link>https://www.soudegesu.com/en/docker/docker-compose/mysql/</link>
-      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/en/docker/docker-compose/mysql/</guid>
-      <description>In the previous article, I can start mysql docker container by using the docker run command after executing docker build.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pasts on Sou-Nan-De-Gesu</title><link>https://www.soudegesu.com/en/past/</link><description>Recent content in Pasts on Sou-Nan-De-Gesu</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Wed, 31 Jan 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://www.soudegesu.com/en/past/feed.xml" rel="self" type="application/rss+xml"/><item><title>It&#39;s better to use DNS verification for verification of SSL certificate issued by AWS Certification Manager</title><link>https://www.soudegesu.com/en/aws/validate-certification-manager/</link><pubDate>Wed, 31 Jan 2018 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/en/aws/validate-certification-manager/</guid><description>Domain verification with Route 53 in Certification Manager became available In 2017&amp;frasl;11, Domain validation by DNS records of Route 53 was supported as a verification method when AWS Certification Manager(ACM) SSL certificate was acquired. This update has a very great advantage not only for acquiring SSL certificates but also for updating SSL certificates.
+Changes in issuing SSL certificates Validation by email is troublesome Conventionally, in order to verify the domain of SSL certificate at ACM, we click on the link in the body of the received email, and push the approval button in the web page.</description></item><item><title>Setting to avoid python and anaconda conflict using pyenv and pyenv-virtualenv</title><link>https://www.soudegesu.com/python/pyenv/anaconda/</link><pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/python/pyenv/anaconda/</guid><description>Introduction I have been using pyenv only to switch versions of python in local environments. However, recently I have used anaconda more often. Since ptyhon and anaconda conflict when executing activate command, I decided to use pyenv-virtualenv.
+Goals I want to switch python version in one machine I also want to switch the python distribution (anaconda in this case) I want to resolve conflict between anaconda and pyenv when I execute activate command When I activate anaconda, I do not execute the command with full path 1 and 2 are pyenv, and 3 can be solved with pyenv-virtualenv.</description></item><item><title>Start mysql docker container with docker-compose</title><link>https://www.soudegesu.com/en/docker/docker-compose/mysql/</link><pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/en/docker/docker-compose/mysql/</guid><description>In the previous article, I can start mysql docker container by using the docker run command after executing docker build.
 Personally, I like the lesser option of cli, so this time I&amp;rsquo;d like to start docker-compose a bit easier to start up.
 Install docker-compose Let&amp;rsquo;s install docker-toolbox from the following site. Docker-compose is also included in the download.
- https://docs.docker.com/toolbox/  Docker-compose provides functions to easily manage multiple containers. In this article, only mysql is started with a container, but since setting up system components and controlling the order of activation can only be described in yaml file, it is highly readable and easy to manage even with VCS.</description>
-    </item>
-    
-    <item>
-      <title>Create a Docker image with docker build command</title>
-      <link>https://www.soudegesu.com/en/docker/image/build/</link>
-      <pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.soudegesu.com/en/docker/image/build/</guid>
-      <description>This post is a personal note for building mysql container using Docker.
+https://docs.docker.com/toolbox/ Docker-compose provides functions to easily manage multiple containers. In this article, only mysql is started with a container, but since setting up system components and controlling the order of activation can only be described in yaml file, it is highly readable and easy to manage even with VCS.</description></item><item><title>Create a Docker image with docker build command</title><link>https://www.soudegesu.com/en/docker/image/build/</link><pubDate>Tue, 31 Jan 2017 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/en/docker/image/build/</guid><description>This post is a personal note for building mysql container using Docker.
 Update Docker daemon In my case, the version of docker was old, so I downloaded docker for Mac from the official website and updated docker daemon.
 Check docker version.
-1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64 10 11Server: 12 Version: 1.</description>
-    </item>
-    
-  </channel>
-</rss>
+1docker version 2 3Client: 4 Version: 1.13.0 5 API version: 1.25 6 Go version: go1.7.3 7 Git commit: 49bf474 8 Built: Wed Jan 18 16:20:26 2017 9 OS/Arch: darwin/amd64 10 11Server: 12 Version: 1.</description></item></channel></rss>
