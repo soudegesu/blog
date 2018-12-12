@@ -18,7 +18,7 @@ twitter_card_image: /images/icons/acm_icon.png
 
 ![acm_validate](/images/20180131/acm_validate.png)
 
-In 2017/11, Domain validation by DNS records of Route 53 was supported as a verification method when `AWS Certification Manager(ACM)` SSL certificate was acquired.
+In November 2017, Domain validation by DNS records of Route 53 was supported as a verification method when `AWS Certification Manager(ACM)` SSL certificate was acquired.
 This update has a very great advantage not only for acquiring SSL certificates but also for updating SSL certificates.
 
 ## Changes in issuing SSL certificates
