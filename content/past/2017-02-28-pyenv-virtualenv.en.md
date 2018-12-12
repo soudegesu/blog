@@ -10,7 +10,7 @@ tags:
     - pyenv
     - pyenv-virtualenv
     - anaconda
-url: /python/pyenv/anaconda
+url: /en/python/pyenv/anaconda
 twitter_card_image: /images/icons/python_icon.png
 ---
 ## Introduction
