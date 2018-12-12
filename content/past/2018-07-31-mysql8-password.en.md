@@ -14,7 +14,7 @@ twitter_card_image: /images/icons/mysql_icon.png
 ---
 
 [MySQL](https://www.mysql.com/jp/) major version `8` was released on April 2018.
-I introduce the problem with my trying to creaet MySQL 8 Amazon Machine Image(AMI) with ansible.
+I introduce how to write MySQL 8 ansible playbook.
 
 ## Motivation
 
