@@ -1,5 +1,5 @@
 ---
-title: "Configures MySQL8 in Ansible Playbook(how to change root password etc.)"
+title: "Ansible playbook configuration for MySQL8 (how to change root password etc.)"
 description: "MySQL major version 8 was released on 2018/4. I summarize the trouble with my trying to create MySQL 8 AMI with ansible playbook."
 date: 2018-07-31
 thumbnail: /images/icons/mysql_icon.png
@@ -13,13 +13,13 @@ url: /en/mysql/mysql8-password/
 twitter_card_image: /images/icons/mysql_icon.png
 ---
 
-[MySQL](https://www.mysql.com/jp/) major version `8` was released on 2018/4.
+[MySQL](https://www.mysql.com/jp/) major version `8` was released on April 2018.
 I introduce the problem with my trying to creaet MySQL 8 Amazon Machine Image(AMI) with ansible.
 
 ## Motivation
 
-I usually use AWS. AWS has a database managed service called RDS, and RDS supports MySQL 5. x series.
-In order to conduct training using MySQL 8 in-house, I needed to make AMI of MySQL 8 with ansible.
+I usually use AWS. AWS has a database managed service called RDS, and RDS supports MySQL 5.x series.
+To conduct in-house training using MySQL 8, I needed to make AMI of MySQL 8 with ansible.
 
 ## Environment
 
@@ -29,7 +29,7 @@ In order to conduct training using MySQL 8 in-house, I needed to make AMI of MyS
 
 ## Configuration sample of ansible playbook
 
-In this case, I describe **only the main task definition part**, I omit Packer configuration because it becomes redundant.
+In this case, I describe **only the main task definition part in Ansible**, I omit Packer configuration because it becomes redundant.
 
 The sample of ansible playbook is now as follows.
 
@@ -79,13 +79,14 @@ The sample of ansible playbook is now as follows.
     - "{{ mysql.users }}"
 {{< / highlight >}}
 
-## Point
+## Points
+
+Now, I explain the above `.yaml` settings.
 
 ### Remove mariadb-libs
 
 I delete MariaDB modules that is installed on Centos7 in default.
-
-MySQLインストール時にモジュールの競合を起こしてうまくいきません。
+MariaDB modules conflict MySQL modules when install.
 
 {{< highlight yaml "linenos=inline" >}}
 - name: delete mariadb
@@ -94,11 +95,10 @@ MySQLインストール時にモジュールの競合を起こしてうまくい
     state: removed
 {{< / highlight >}}
 
-### MySQL-pythonをインストールする
+### Install MySQL-python
 
-ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-python をプロビジョニング対象のサーバにインストールする** 必要があります。
-
-なお、 `MySQL-python` はPython2上でしか動作しない点も注意してください。
+If use `mysql_user` module in ansible, **need to install MySQL-python to provisioning host**.
+In addition, `MySQL-python` works on only Python 2.
 
 {{< highlight yaml "linenos=inline" >}}
 - name: install mysql
@@ -108,24 +108,23 @@ ansibleで `mysql_user` モジュールを使いたい場合には **MySQL-pytho
   with_items:
     - mysql-community-devel*
     - mysql-community-server*
-    - MySQL-python # これ
+    - MySQL-python # Here
 {{< / highlight >}}
 
-### MySQLのデフォルト認証プラグインの変更
+### Change default authentication plugin in MySQL
 
-MySQL8からセキュリティ強化の目的で、デフォルトの認証プラグインが変更されています。
-詳しくは [ここ](https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password) を読んでください。
+MySQL 8 changes default authentication plugin to strengthen security.
+For details, see [here](https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password).
 
-そのため、以前の認証プラグインに変更するために `my.cnf` を修正する必要があります。
-
-以下のように **default-authentication-plugin=mysql_native_password** を追記した `my.cnf` を準備し、
+To use the previous authentication plugin, I edit `my.cnf` and
+add `default-authentication-plugin = mysql_native_password` block as follows. 
 
 {{< highlight vim "linenos=inline" >}}
 [mysqld]
 default-authentication-plugin=mysql_native_password
 {{< / highlight >}}
 
-`/etc/my.cnf` にコピーしてあげます。
+And then, copy to `/etc/my.cnf` .
 
 {{< highlight yaml "linenos=inline" >}}
 - name: copy my.cnf
@@ -135,7 +134,7 @@ default-authentication-plugin=mysql_native_password
     mode: 0644
 {{< / highlight >}}
 
-変更を反映するために、`mysqld` を再起動してあげます。
+Restart `mysqld` daemon to apply the settings.
 
 {{< highlight yaml "linenos=inline" >}}
 - name: enable mysql
@@ -145,25 +144,26 @@ default-authentication-plugin=mysql_native_password
     enabled: yes
 {{< / highlight >}}
 
-### ログファイルからrootのパスワードを取得して初期化する
+### Get root password written in log file and initialize user
 
-これがめんどくさいところでした。
+This is the most troublesome point.
 
-MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり出力します。
+**MySQL 8 outputs root user's initial password in `/var/log/mysqld.log`**
 
-初期パスワードをログファイルから抽出して変数に登録した後( `register` )、 mysql コマンドを直で発行して root ユーザのデフォルトパスワードを変更します。
+To change default password for root user, I save the password text to variable using `register`, and change password with `mysql` command.
 
 {{< highlight yaml "linenos=inline" >}}
 - name: get root password
   shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
-  register: root_password # これで一回変数登録
+  register: root_password # save to variable
 - name: update expired root user password
   command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql.root.password }}';"
 {{< / highlight >}}
 
-**なぜ `mysql_user` ではなく `command` モジュールを使うの？** と思うことでしょう。
+I explain **the reason why I use `command` module instead of `mysql_user` module** .
 
-例えば、以下のように、rootでloginし、root自身を操作するような書き方を想定するかもしれません。
+For example, I initially configured as follows.
+In this case, `MySQL-python` connects to database as root user and change root user's own password.
 
 {{< highlight yaml "linenos=inline" >}}
 -  mysql_user:
@@ -176,23 +176,22 @@ MySQL8はrootの初期パスワードを `/var/log/mysqld.log` にこっそり�
     host: '%'
 {{< / highlight >}}
 
-実はこれだと、以下のようなエラーが発生します。
+However, the following error occurs.
+This error is reported in [github issue](https://github.com/ansible/ansible/issues/41116).
 
 {{< highlight bash "linenos=inline" >}}
 unable to connect to database, check login_user and login_password are correct or /root/.my.cnf has the credentials
 {{< / highlight >}}
 
-こちらは [Ansible の isuue](https://github.com/ansible/ansible/issues/41116) にも報告がされていました。
+Beacause of the issue, using `mysql` command with `command` module until the issue fixes is better. 
 
-そのため、少し邪道感はありますが、issueがfixするまでは、mysqlコマンドを直接発行して変更をする、という手段をとります。
+### Create user to connect database
 
-### データベース接続するユーザを作成する
+`mysql_user` module creates mysql user to connect database.
+`login_user` block is a user who creates a user(`root`), and `login_password` block is the password used to authenticate with.
 
-アプリケーションから接続する時に使うmysqlのユーザを作成します。
-操作するユーザ(`login_user`) を `root` とし、更新済みのパスワードで接続( `login_password` )します。
-
-これはMySQL自体の話ですが、 `host` は接続元のホストを適切に設定してください。今回は研修用途のどうでもいいサーバなので `%` としています。
-逆に `host` が未設定だと、localhostからの接続しか許可されません。
+To the `host` block, set the host of the connection source appropriately.
+`%` means `any`. **When the `host` block is not set, only connections from localhost are accepted** .
 
 {{< highlight yaml "linenos=inline" >}}
 - name: create mysql client user
@@ -203,22 +202,24 @@ unable to connect to database, check login_user and login_password are correct o
     password: "{{ item.password }}"
     priv: '*.*:ALL,GRANT'
     state: present
-    host: '%' # hostを設定しないと、localhostからの接続しか受け付けない
+    host: '%' # When host is not set, only connections from localhost are accepted
   with_items:
     - "{{ mysql.users }}"
 {{< / highlight >}}
 
-## まとめ
+## Conclusion
 
-今回は MySQL8初期化のplaybookのはまりポイントを紹介しました。
-文書化すると案外簡素になりましたが、MySQL8による変更点と、Ansibleそのものの振る舞いとを切り分けをしたこともあり、実作業はなかなか時間がかかっています。
-Packer+Ansibleのデバッグ効率を上げるために、ローカルのVagrantに対して実施していましたがもっと作業スピードを上げたいところです。
+It is available to
 
-## 参考にさせていただいたサイト
-
-* [Github](https://github.com/ansible/ansible)
+* Install mysql with uninstalling mariadb modules
+* Change `root` user default password with getting password from `/var/log/mysqld.log`
+* Create user to connect database, and change accessible host
 
 <div align="center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4844333933&linkId=3e53647e05f4ccbeb0c6cf501ef74f65&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1787125688&asins=1787125688&linkId=e29ca38f6a2a430b19743885ac51de97&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
     </iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=B00ZUQ4492&asins=B00ZUQ4492&linkId=e2e96554262ff4461c8824fa8ddd6f5a&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1491915323&asins=1491915323&linkId=d1e6046e7eadaf9afe507e038d2a5b09&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>        
 </div>
