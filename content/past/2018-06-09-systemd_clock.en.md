@@ -14,6 +14,8 @@ url: /en/linux/systemd_clock/
 When I migrate `Amazon Linux` to `Amazon Linux2`, I investigate how to change system clock on Linux server working with `systemd`.
 This post is technical memo for myself.
 
+<!--adsense-->
+
 ## Change system clock
 
 System clock is calculated by `/etc/adjtime` that uses hardware clock.
@@ -89,6 +91,8 @@ zdump /etc/localtime
 Using `set-time` sub command can set datetime directly as follows, however I have never used.
 
 `timedatectl set-time　"2018-06-09 12:00:00"`
+
+<!--adsense-->
 
 ## Check hardware clock
 

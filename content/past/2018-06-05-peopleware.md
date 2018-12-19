@@ -18,6 +18,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/B00I96CJWO/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=B00I96CJWO&linkCode=as2&tag=soudegesu-22&linkId=6ae02fcebb6f0d35b7626bba2e51f880"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=B00I96CJWO&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=B00I96CJWO" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
 
+<!--adsense-->
+
 ## 人間同士のコラボレーションの重要性を説いた本
 
 本書はソフトウェア開発における **「人の問題」** にフォーカスした書籍である。
@@ -32,6 +34,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 事例ベースでの成功したパターンの紹介とそれに対する解説が記載される程度だ。
 
 人間的な問題は要素が複雑であり一般化するのは難しいことから、解決策は状況に応じて現場で考えねばならない、ということかもしれない。
+
+<!--adsense-->
 
 ## チーミングに関する話
 本書ではチーミングについても触れている。
@@ -67,6 +71,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 が優先されると聞いた。
 
 だから、入り口を狭くする、と。
+
+<!--adsense-->
 
 ## マネジメント層の役割について
 

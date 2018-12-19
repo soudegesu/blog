@@ -17,6 +17,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は、シート内の **セルの値の読み書き** をしましょう。
 
+<!--adsense-->
+
 ## セルに値を入力する
 
 `Worksheet` オブジェクトに対して **列+行** のプロパティでセルにアクセスすることができます。
@@ -50,6 +52,8 @@ ws.cell(row=2, column=2, value='hogehogehoge')
 ws.cell(row=5, column=6, value='fugafugaufga')
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## セルの値を読み込む
 
 セルの値を読み込むには、入力時と同様に **列+行** のプロパティでセルにアクセスした後に `value` プロパティで取得できます。
@@ -65,6 +69,8 @@ b2 = ws['B2'].value
 {{< highlight python "linenos=inline" >}}
 b2 = ws.cell(column=2, row=2).value
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 行を処理する
 
@@ -121,6 +127,8 @@ for row in ws.iter_rows(min_row=2):
 ------------------------------------------
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## 列を処理する
 
 `iter_cols` 関数で列単位でデータを取得できます。
@@ -170,6 +178,8 @@ for col in ws.iter_cols(min_row=2):
 5行目：fugafugaufga
 ------------------------------------------
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 行単位でデータを入力する
 

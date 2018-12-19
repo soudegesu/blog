@@ -19,6 +19,8 @@ twitter_card_image: /images/icons/python_icon.png
 * Anaconda 4.3.0
 * python 3.5
 
+<!--adsense-->
+
 ## 発生した問題
 tensorflowのversion 1がリリースされましたので、anacondaで構築した仮想環境に対して以下のようにtensorflowをインストールしようとしたところ、まだ対応しているtensorflowのバージョンがない、とエラーが出てしまいました。
 
@@ -32,6 +34,8 @@ pip3 install tensorflow
 {{< highlight bash "linenos=inline" >}}
 pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.0-py3-none-any.whl
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 備考
 anaconda の方でのパッケージ管理でインストール可能かを調べてみました。

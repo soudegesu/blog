@@ -30,6 +30,8 @@ matplotlibはpythonでデータの可視化をするときに重宝しますが�
 
 また、今回作成したグラフは [こちら](https://github.com/soudegesu/pyplot-test) にpushしてあります。
 
+<!--adsense-->
+
 ## pyplotの思想を理解する
 
 グラフ描画を始める前にpyplotの思想を理解しました。
@@ -830,6 +832,8 @@ plt.streamplot(X, Y, U, V, color=U, linewidth=2, cmap=plt.cm.autumn)
 
 ![streamplot](/images/20180622/streamplot.png)
 
+<!--adsense-->
+
 ## グラフに付加情報を加える
 
 グラフに付加情報を加えることで、プロットされたデータの理解を補助することができます。
@@ -1410,6 +1414,8 @@ plt.barbs(x, y, u, v)
 
 ![barbs](/images/20180622/barbs.png)
 
+<!--adsense-->
+
 ## グラフのレイアウトを修正する
 
 図を見やすくするために、グラフのレイアウトを微調整します。
@@ -1637,6 +1643,8 @@ plt.show()
 {{< / highlight >}}
 
 ![xkcd](/images/20180622/xkcd.png)
+
+<!--adsense-->
 
 ## まとめ
 

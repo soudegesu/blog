@@ -14,6 +14,8 @@ twitter_card_image: /images/icons/python_icon.png
 Python使いであれば、Python 2.x と Python 3.x では文法的な互換性がないため、バージョンを正しく使い分けることは最初の第一歩です。
 今回はMac環境でのバージョン切り替えとLinux環境でのバージョンの共存について書きます。
 
+<!--adsense-->
+
 ## モチベーション
 ### Python 2.x と Python 3.x を共存させたい
 
@@ -32,6 +34,8 @@ Python 2で書かれたコードをPython 3のランタイムで動かすこと�
 
 プロジェクト毎にpythonのライブラリを管理したい(プロジェクト毎に依存モジュールが混ざらないようにしたい)ケースが多いので、
 仮想環境を簡単に管理できる仕組みも欲しいです。
+
+<!--adsense-->
 
 ## Mac OSの場合
 
@@ -103,6 +107,8 @@ python -V
 {{< / highlight >}}
 
 できました。
+
+<!--adsense-->
 
 ## サーバの場合
 

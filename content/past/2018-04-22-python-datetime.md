@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は自分の備忘録的な意味も込めて書こうと思います。
 
+<!--adsense-->
+
 ## 環境情報
 
 今回のPythonの実行環境は以下になります。
@@ -142,6 +144,8 @@ str_to_dt = parse(date_str + ' JST', tzinfos=tzinfos)
 print(str_to_dt)
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## 日時データを扱う上で注意すべきこと
 ### naiveとaware
 
@@ -226,6 +230,8 @@ print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
 
 そのため、パブリッククラウドで複数リージョンを使っている場合などには、
 プログラムの展開先によって振る舞いが異なる可能性があるため、注意が必要でしょう。
+
+<!--adsense-->
 
 ## まとめ
 

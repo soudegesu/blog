@@ -21,6 +21,8 @@ twitter_card_image: /images/icons/acm_icon.png
 [DNS を使って AWS Certificate Manager の検証を簡単に](https://aws.amazon.com/jp/blogs/news/easier-certificate-validation-using-dns-with-aws-certificate-manager/)
 の記事にも記載があるように、2017/11に `AWS Certification Manager(以下ACM)` のSSL証明書取得の際の検証手順に **Route53のDNS検証** が追加されました。実はこれは、ACMで取得したSSL証明書の **取得** だけではなく **更新** においてもとても大きな利点があるので、今回はそれを紹介します。
 
+<!--adsense-->
+
 ## SSL証明書"発行"の違い
 ### E-mail検証は手間がかかる
 従来、ACMにてSSL証明書を取得する際のドメイン検証の方法は、Certificatioin Managerで証明書発行依頼を出した後、受信したE-mailの本文に記載されている一時リンクを踏んで承認ボタンを押す、という手続きを踏んでいました。
@@ -55,6 +57,8 @@ DNS検証ではRoute53に追加されたCNAMEレコードを用いてドメイ�
 ね、簡単でしょう？
 
 ![add_cname_records](/images/20180131/add_record.png)
+
+<!--adsense-->
 
 ## SSL証明書"更新"の違い
 ### ACMのSSL証明書有効期限は13ヶ月
@@ -115,6 +119,7 @@ DNS検証で作成したSSL証明書の自動更新のルールはどうでし�
 
 [Terraform](https://www.terraform.io/) や [roadworker](https://github.com/codenize-tools/roadworker) といったコード化ツールを使っていればなおのこと敷居は下がりますね。
 
+<!--adsense-->
 
 ## まとめ
 今回は2種類の検証方法を比較しながらDNS検証の優位性を説明しました。

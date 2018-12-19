@@ -20,6 +20,8 @@ twitter_card_image: http://www.soudegesu.com/images/soudegesu.jpg
 
 [Flutter](https://flutter.io/) 初心者である私が [Codelabs](https://codelabs.developers.google.com/) でサンプルアプリケーションを実装してみたので。その感想をまとめます。
 
+<!--adsense-->
+
 ## Codelabsって何よ？
 
 [Codelabs](https://codelabs.developers.google.com/) はGoogle社が提供しているコンテンツです。
@@ -44,6 +46,8 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 2. [Write Your First Flutter App, part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/index.html?index=..%2F..%2Findex#0)
 3. [Building Beautiful UIs with Flutter](https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..%2Findex#0)
 4. [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html?index=..%2F..%2Findex#0)
+
+<!--adsense-->
 
 ## 学べたこと
 

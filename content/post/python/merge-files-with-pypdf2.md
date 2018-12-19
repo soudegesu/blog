@@ -33,6 +33,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 ![confidential](/images/20181205/confidential_pdf.png)
 
+<!--adsense-->
+
 ## PDFファイルのマージ
 
 [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) で2つのファイルをマージしましょう。
@@ -68,6 +70,8 @@ with open(FILE_PATH, mode='rb') as f, open(CONFIDENTIAL_FILE_PATH, mode='rb') as
 先程取得した「社外秘的なSomething」ページを結合してわけです。
 
 最後に `PdfFileWriter` を使って、 `executive_order_merged.pdf` という別名のファイルで書き込みを行います。
+
+<!--adsense-->
 
 ## 結果を確認する
 

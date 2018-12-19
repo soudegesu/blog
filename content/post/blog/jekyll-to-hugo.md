@@ -15,6 +15,8 @@ twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 先日、このブログのサイトジェネレータを [Jekyll](https://jekyllrb.com/) から [Hugo](https://gohugo.io/) に変更しました。
 実行に移した経緯と手順を紹介します。
 
+<!--adsense-->
+
 ## そもそもなんでJekyllを使っていたか
 
 「変更するくらいなら、最初からそれ使えよ」という話ではあるのですが、当時の私にもそれなりの考えがあったのです。
@@ -30,6 +32,8 @@ twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 
 [http://jekyllthemes.org/](http://jekyllthemes.org/) に [Jekyll](https://jekyllrb.com/) のテーマが掲載されているのですが、
 それなりに充実していて、ぱっと使えるものが多かったのです。
+
+<!--adsense-->
 
 ## なんでHugoに変更しようと思ったか
 
@@ -70,6 +74,8 @@ twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 [Hugoの公式ドキュメント](https://gohugo.io/) はYoutubeのハンズオン動画も掲載されるなど、初心者にもとっかかりのよいコンテンツ構成に劇的に進化していることも一役買っていると思います。
 
 かつて [Jekyll](https://jekyllrb.com/) のレイアウトのカスタマイズを試みたのですが、欲しい情報になかなかたどり着かず、泥沼にはまり大変苦労したのはいい思い出です。
+
+<!--adsense-->
 
 ## 移行手順
 

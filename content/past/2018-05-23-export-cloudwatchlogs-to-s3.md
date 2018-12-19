@@ -17,6 +17,8 @@ twitter_card_image: /images/icons/stepfunction_icon.png
 CloudWatch LogsにはロググループをS3にエクスポートする機能がついています。
 しかし、エクスポート機能には同時実行数制限があるので、 今回は Step Functions を使ってS3へのログのエクスポートを実現しました。
 
+<!--adsense-->
+
 ## モチベーション
 
 ### ログをS3にエクスポートしたい
@@ -54,6 +56,8 @@ CloudWatch Logsを外部のAWSリソースにストリーム接続させるに�
 次のエクスポートを設定できません。
 
 実装目線で言えば、**エクスポートタスクの終了を待ち合わせて、次のログストリームをエクスポートタスクを設定する** 必要がありそうです。
+
+<!--adsense-->
 
 ## Step Functionsで create export task APIを呼びまくる
 
@@ -307,6 +311,8 @@ Step Functionsのarnを指定するだけなので、そこまで凝った所は
 （表示列は設定変更しています）
 
 ![stacked_task](/images/20180523/stacked_task.png)
+
+<!--adsense-->
 
 ## まとめ
 

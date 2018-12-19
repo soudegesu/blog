@@ -14,6 +14,8 @@ In the previous article, I can start mysql docker container by using the `docker
 
 Personally, I like the lesser option of cli, so this time I'd like to start docker-compose a bit easier to start up.
 
+<!--adsense-->
+
 ## Install docker-compose
 
 Let's install docker-toolbox from the following site.
@@ -62,6 +64,8 @@ mysql:
 By specifying the created `Dockerfile` as the `dockerfile` property of the yaml file, you can build the image in the startup phase and launch the container with the created image.
 
 In the case of an official container of mysql, by attaching `docker-entrypoint-initdb.d` inside the container to an arbitrary directory on the host, sql in the directory is executed when the container is started, and the database is initialized.
+
+<!--adsense-->
 
 ## launch with docker-compose
 
@@ -135,6 +139,8 @@ mysql> show tables;
 2 rows in set (0.00 sec)
 
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Additional Information
 

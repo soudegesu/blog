@@ -19,6 +19,8 @@ spring-boot-starter-web、spring-boot-starter-data-jpa、spring-boot-starter-act
 
 ![springboot](/images/20180511/springboot.png)
 
+<!--adsense-->
+
 ## モチベーション
 ### これからのJava時代に備えて
 
@@ -82,6 +84,8 @@ Spring Bootの場合には
 なお、負荷テストではbefore/afterの比較ができないと意味がないので、既存のシステムでさばけるパフォーマンスは一度計測しておく。
 
 とりあえず私の場合は既にメンテンナスされている資産があるので、それを使うことにする。
+
+<!--adsense-->
 
 ## いざマイグレーション!!
 
@@ -158,6 +162,8 @@ management:
 `CrudRepository` から `findOne` が削除されたため、 implementしているクラス側で `findByXX` を自前定義してあげた。
 
 コンパイルエラーが治ったら、単体テストを実行し、クラスレベルのデグレードが起きないことを確認した。
+
+<!--adsense-->
 
 ## 実行時エラーを解決する
 
@@ -328,6 +334,8 @@ bootJar {
     launchScript()
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## とどめの負荷テスト
 

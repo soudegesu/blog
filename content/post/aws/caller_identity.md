@@ -64,6 +64,8 @@ data "aws_iam_policy_document" "xxxxx" {
 ${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/xxxxxxxxx:${var.image_tag},
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## aws_caller_identity を使う
 
 最近知ったのですが、 [aws_caller_identity](https://www.terraform.io/docs/providers/aws/d/caller_identity.html) のData Sourceを使うことで記述をすっきりさせることができることがわかりました。

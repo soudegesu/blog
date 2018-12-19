@@ -30,6 +30,8 @@ packerのジョブがエラーで止まるようになってしまいました�
 
 `yum search docker` をしても docker が見つかりませんでした。
 
+<!--adsense-->
+
 ## Extras Library で docker をインストールする
 
 調査をしたところ、案外簡単に答えが見つかりました。

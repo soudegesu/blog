@@ -18,6 +18,8 @@ twitter_card_image: /images/icons/rds_icon.png
 
 なお、エンジンバージョンは `aurora-postgresql9.6` として以下はまとめていきます。
 
+<!--adsense-->
+
 ## WALを使ったレプリケーション
 
 PostgreSQLには WAL（Write Ahead Logging）という仕組みがあります。いわゆるトランザクションログのことを指しますが、
@@ -38,6 +40,8 @@ PostgreSQLには WAL（Write Ahead Logging）という仕組みがあります�
 * wal_sender_timeout
 
 結局、WALを使ってレプリケーションをしているか否か、よくわかりません。
+
+<!--adsense-->
 
 ## サポートに聞いてみよう
 

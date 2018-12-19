@@ -55,6 +55,7 @@ minikube version
 
 これで `minikube` コマンドが使えるようになりました。
 
+<!--adsense-->
 
 ## Usageを確認する
 
@@ -103,6 +104,8 @@ Flags:
       --vmodule moduleSpec               comma-separated list of pattern=N settings for file-filtered logging
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## Minikubeの起動/停止
 
 `minikube start` コマンドで [Kubernates](https://kubernetes.io/) クラスタを起動します。
@@ -140,6 +143,8 @@ minikube status
 {{< highlight bash "linenos=inline" >}}
 minikube stop
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Minikubeの設定ファイルを確認する
 
@@ -240,6 +245,8 @@ minikube stop
     }
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## クラスタの削除
 

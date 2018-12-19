@@ -13,10 +13,13 @@ tags:
 url: /python/pyenv/anaconda
 twitter_card_image: /images/icons/python_icon.png
 ---
+
 ## はじめに
 今までローカル環境のpythonを切り替えるためにpyenvのみを利用してきました。
 anacondaを使用する機会も増えてきたので、`pyenv install`からの`pyenv local`コマンドでanaconda環境が構築するのですが、
 `activate`の部分をもう少しスマートに行いたいため、 *pyenv-virtualenv* も用いる方法に変更します。
+
+<!--adsense-->
 
 ## 今回やりたいこと
 1. 1台のマシンの中で使用するpythonのバージョンを切り替えたい
@@ -30,6 +33,8 @@ anacondaを使用する機会も増えてきたので、`pyenv install`からの
 * MacOSX Yosemite
 * homebrew
 * zsh
+
+<!--adsense-->
 
 ## セットアップ手順
 ### 仮想環境切り替え用のモジュールをインストール
@@ -57,6 +62,8 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 {{< / highlight >}}
 
 * ターミナルを再起動する(sourceコマンドでの再読込でも可)
+
+<!--adsense-->
 
 ## Pythonの仮想環境を作成する
 ### テスト用のディレクトリを作成
@@ -96,6 +103,8 @@ source bin/activate
 {{< highlight "linenos=inline" >}}
 deactivate
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Pythonの仮想環境を作成する(anacondaの場合)
 ### テスト用のディレクトリを作成
@@ -148,6 +157,8 @@ deactivateも同様ですね。
 {{< highlight "linenos=inline" >}}
 pyenv deactivate
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## まとめ
 * `pyenv`と`pyenv-virtualenv`を使用することで、pythonの仮想環境の切り替えができるようになりました。

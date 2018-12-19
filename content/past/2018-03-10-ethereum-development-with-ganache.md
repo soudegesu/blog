@@ -17,6 +17,8 @@ twitter_card_image: /images/icons/ethereum_icon.png
 [前回の記事](/ethereum/ethereum-development-environment/) で `Ethereum` の開発環境の構築を行いました。
 今回はさらに `Ethereum` 用のフレームワークである `Truffle` と `Ganache` を使ってローカルでの開発環境を整えようと思います。
 
+<!--adsense-->
+
 ## Truffleとは
 [Truffle](http://truffleframework.com/) は `Ethereum` アプリケーションの開発効率を上げるためのフレームワークです。
 ボイラープレート的な仕事をしてくれるところから始まり、 ネットワーク接続の設定管理や、ネットワークのマイグレーション実行や初期化、テストフレームワークをバンドルしていたりなど、一通り開発できるように準備を整えてくれます。
@@ -28,6 +30,8 @@ twitter_card_image: /images/icons/ethereum_icon.png
 [Ganache](http://truffleframework.com/ganache/) はDAppsを開発時のテストをする際に使用するローカル用のプライベートネットワークを構築してくれます。自動マイニングしてくれるので、別でターミナルを立ち上げて、マイニング用のコマンドを実行する必要もありません。発生したトランザクションは順番にソートされて表示もされるので、動作確認も比較的容易にできると思います。
 
 ![Ganache top](/images/20180310/ganache.png)
+
+<!--adsense-->
 
 ## セットアップ
 以前同様の記事を書きましたが、簡単におさらいします。
@@ -85,6 +89,7 @@ npm install solc@0.4.18
 
 [Ganache](http://truffleframework.com/ganache/) のページからインストーラを取得し実行する。
 
+<!--adsense-->
 
 ## 設定
 ### package.json の修正

@@ -25,6 +25,7 @@ twitter_card_image: /images/icons/codebuild_icon.png
 複数の `CodeBuild` プロジェクトを作成するにあたり、 **`ServiceRole` を個別に作成するのが面倒なので、共有してしまおう、** 
 と考えたのです。
 
+<!--adsense-->
 
 ## Service Roleのポリシーが勝手に増えている？
 
@@ -41,6 +42,8 @@ twitter_card_image: /images/icons/codebuild_icon.png
 
 実は、 CodeBuildプロジェクト作成時に **CodeBuildが自動でポリシーを生成し、ServiceRoleに対してアタッチしている** のです。
 `ServiceRole` を共有化していたことによって、**作成されたCodeBuildプロジェクトの数ぶんのポリシーがアタッチされ、上限に達した** というのです。
+
+<!--adsense-->
 
 ## 解決策
 

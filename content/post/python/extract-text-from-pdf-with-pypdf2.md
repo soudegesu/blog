@@ -23,6 +23,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 ![executive_order](/images/20181202/executive_order.png)
 
+<!--adsense-->
+
 ## ページへのアクセス
 
 まずは、読み込んだPDFファイルから操作対象のページを定める必要があります。
@@ -65,6 +67,8 @@ with open(FILE_PATH, mode='rb') as f:
 `PdfFileReader` クラスには `pages` というプロパティがあり、それは `PageObject` クラスのリストです。
 `pages` プロパティをループすることで、最初のページから順に処理ができます。
 （上のサンプルではとりあえず `pass` にしていますが、ここに何らかの処理が入ります。）
+
+<!--adsense-->
 
 ## ページからテキストを抽出する
 

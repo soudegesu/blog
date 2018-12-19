@@ -33,6 +33,8 @@ twitter_card_image: /images/soudegesu.jpg
 
 もはや「腰ガタガタ夫婦」です。
 
+<!--adsense-->
+
 ## 直営店でしか試し座りできない椅子を買う
 
 もともとは妻の骨盤矯正の話の延長線上で、「復職時に [イスの座面に置くタイプの姿勢良くなるシート](https://amzn.to/2BR8kw9)を会社の椅子に取り付けたい」という話をしていました。↓のこれのことです。（写真は「Boby Make Seat Style」）
@@ -54,6 +56,8 @@ twitter_card_image: /images/soudegesu.jpg
 結果、[Style Dr.CHAIR Plus](https://amzn.to/2FZSLGu) と [Style Premium DX](https://www.mtg.gr.jp/brands/wellness/product/style/style_premium_dx/) の両方をその場で購入。
 [Style Dr.CHAIR Plus](https://amzn.to/2FZSLGu) の青色は入荷待ちだったので、1週間ほど待ちました。
 
+<!--adsense-->
+
 ## Style Dr.CHAIR Plus をしばらく使ってみた感想
 
 ![mtg_chair](/images/20181206/mtg_chair.jpg)
@@ -69,6 +73,8 @@ twitter_card_image: /images/soudegesu.jpg
 
 私も、ラップトップを膝に置いて使うときには [Style Dr.CHAIR Plus](https://amzn.to/2FZSLGu) に座るようにしています。
 ラップトップを膝に置くと、たいてい姿勢が悪くなるのですが、[Style Dr.CHAIR Plus](https://amzn.to/2FZSLGu) はそうならない。しゅごい。
+
+<!--adsense-->
 
 ## Style Premium DX をしばらく使ってみた感想
 

@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/mysql_icon.png
 [MySQL](https://www.mysql.com/jp/) のメジャーバージョン `8` が 2018/4 にリリースされました。
 今回はPacker+Ansibleで MySQL8のAMIを作成しようとして苦労したところをまとめます。
 
+<!--adsense-->
+
 ## MySQL8のAMIを作りたい
 
 普段、AWSを利用する上ではRDSを使うことが多いので、MySQL5.x系を選択することになります。
@@ -28,6 +30,8 @@ twitter_card_image: /images/icons/mysql_icon.png
 * CentOS 7
 * Ansible 2.6.1
 * Packer 1.1.3
+
+<!--adsense-->
 
 ## playbookのサンプル
 
@@ -81,6 +85,8 @@ ansible playbookのサンプルは以下のようになりました。
   with_items:
     - "{{ mysql.users }}"
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## ポイント解説
 

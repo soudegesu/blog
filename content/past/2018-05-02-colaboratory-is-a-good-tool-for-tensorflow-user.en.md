@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 
 For engineer who use Jupyter Notebook in often, web IDE named [Colaboratory](https://colab.research.google.com/) is the best tool. Try [Colaboratory](https://colab.research.google.com/).
 
+<!--adsense-->
+
 ## What is Colaboratory?
 
 [Colaboratory](https://colab.research.google.com/) is a web IDE based on [Jupyter notebook](http://jupyter.org/) and hosted by Google.
@@ -26,6 +28,7 @@ Everyone can use [Colaboratory](https://colab.research.google.com/) without Goog
 
 ![colaboratory_top](/images/20180502/colaboratory_top.png)
 
+<!--adsense-->
 
 ## The good points of Colaboratory
 ### Free of charges
@@ -126,6 +129,8 @@ jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' 
 Select "Connect" menu on the upper right side of the screen, and select "Connect to local runtime...", and then, code is run on local machine.
 
 ![switch_runtime](/images/20180502/switch_runtime.png)
+
+<!--adsense-->
 
 ## Important notice
 
@@ -320,6 +325,8 @@ Jupyter notebook has modules as follows in default.
 
 Colaboratory includes Machine learning, scientific computing, and Google API libraries etc.
 If necessary, install the same libraries to the local machine.
+
+<!--adsense-->
 
 ## Conclusion
 

@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 
 普段 [Jupter notebook](http://jupyter.org/) で統計処理や機械学習ライブラリを触っている開発者の方は多いはず。今回は巷で話題の [Colaboratory](https://colab.research.google.com/) を触ってみました。
 
+<!--adsense-->
+
 ## Colaboratoryとは
 
 [Colaboratory](https://colab.research.google.com/) はGoogleから提供されている[Jupter notebook](http://jupyter.org/) 環境です。
@@ -28,6 +30,8 @@ twitter_card_image: /images/icons/colaboratory_icon.png
 ![colaboratory_top](/images/20180502/colaboratory_top.png)
 
 以降では、早速使ってみたColaboratoryの特徴をまとめました。
+
+<!--adsense-->
 
 ## Colaboratoryの特徴
 ### 利用料がタダ
@@ -100,14 +104,10 @@ Colaboratoryで作成したプログラムは自分のGoogle Driveに `.ipynb` �
 
 ![save_to_drive](/images/20180502/save_to_drive.png)
 
-<br>
-
 逆に、既にローカルマシン上に存在する `.ipynb` ファイルのアップロードには メニューから [Upload notebook] を選択し、
 ファイルをドラッグ&ドロップするだけで読み込むことができます。
 
 ![upload_notebook](/images/20180502/upload_notebook.png)
-
-<br>
 
 もちろん、Google Drive上にアップロードした `.ipynb` ファイルをColaboratoryで開くことも可能です。
 Google Drive上のアイコンが見た目的に違いますし、開こうとするとポップアップが出たりしますが、大丈夫でした。
@@ -164,6 +164,8 @@ jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' 
 <br>
 
 これでローカルマシンをランタイムとして実行できます。
+
+<!--adsense-->
 
 ## 注意事項
 

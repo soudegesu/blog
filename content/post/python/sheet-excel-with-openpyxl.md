@@ -24,6 +24,8 @@ twitter_card_image: /images/icons/python_icon.png
 * python 3.6
 * openpyxl 2.5.6
 
+<!--adsense-->
+
 ## シートの新規追加
 
 新規でシートを追加するには `create_sheet` 関数を使います。
@@ -51,6 +53,8 @@ wb.save(filename = 'sample_book.xlsx')
 
 ![insert_sheet](/images/20180831/insert_sheet.png)
 
+<!--adsense-->
+
 ## すべてのシート名を取得する
 
 Excelファイル内に存在するすべてのシート名を確認するには `Workbook` オブジェクトの `sheetnames` プロパティを参照します。
@@ -68,6 +72,8 @@ for ws in wb:
     print(ws.title)
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## シートの選択
 
 `Workbook` オブジェクトから **シート名を指定する** ことで、操作したい対象のシートを取得できます。
@@ -76,6 +82,8 @@ for ws in wb:
 # wbはWorkbookオブジェクトを表す
 ws1 = wb["シート1のタイトル"]
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## シートの属性値の変更
 
@@ -112,6 +120,8 @@ ws1.sheet_properties.filterMode = True
 |published|bool|ドキュメント内のアイテムまたはアイテムのコレクションを Web ページ形式で保存します|
 |syncHorizontal|bool|水平方向のスクロール時に、作業中のシートを同期します|
 |syncVertical|bool|垂直方向のスクロール時に、作業中のシートを同期します|
+
+<!--adsense-->
 
 ## まとめ
 

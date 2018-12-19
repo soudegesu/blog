@@ -19,6 +19,8 @@ I have been using pyenv only to switch versions of python in local environments.
 However, recently I use anaconda more often.
 Since python and anaconda conflict when executing `activate` command, I decided to use pyenv-virtualenv.
 
+<!--adsense-->
+
 ## Goals
 1. Switch python version in one machine
 1. Switch the python distribution (anaconda in this case)
@@ -31,6 +33,8 @@ Both 1 and 2 above are able to solved with `pyenv` and 3 with `pyenv-virtualent`
 * MacOSX Yosemite
 * homebrew
 * zsh
+
+<!--adsense-->
 
 ## Setup
 ### Install modules for switching python virtual environments
@@ -58,6 +62,8 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 {{< / highlight >}}
 
 * Reboot terminal(you can also use `source` command)
+
+<!--adsense-->
 
 ## Create a Python virtual environment(for Python)
 ### Create directory
@@ -100,6 +106,8 @@ And use `deactivate` command to deactivate virtual environment.
 {{< highlight "linenos=inline" >}}
 deactivate
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Create a Python virtual environment(for anaconda)
 ### Create directory
@@ -153,6 +161,8 @@ And use `pyenv deactivate` command to deactivate virtual environment.
 {{< highlight "linenos=inline" >}}
 pyenv deactivate
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Conclusion
 

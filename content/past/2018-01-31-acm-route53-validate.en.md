@@ -21,6 +21,8 @@ twitter_card_image: /images/icons/acm_icon.png
 In November 2017, Domain validation by DNS records of Route 53 was supported as a verification method when `AWS Certification Manager(ACM)` SSL certificate was acquired.
 This update has a very great advantage not only for acquiring SSL certificates but also for updating SSL certificates.
 
+<!--adsense-->
+
 ## Changes in issuing SSL certificates
 ### Validation by email is troublesome
 Conventionally, in order to verify the domain of SSL certificate at ACM, 
@@ -49,6 +51,8 @@ We need following procedure.
 That's all. Awsome!!
 
 ![add_cname_records](/images/20180131/add_record.png)
+
+<!--adsense-->
 
 ## Changes in updating SSL certificates
 In ACM, SSL certificate expires in 13 months. After about 1 year, we need to renew SSL certificate.
@@ -102,6 +106,8 @@ There are no limitations on network communication requirements, protocols, domai
 You only need to be careful not to delete the CNAME record.
 
 In addition, you will not have to worry about deleting to adopt coding tools like [Terraform](https://www.terraform.io/) and [roadworker](https://github.com/codenize-tools/roadworker).
+
+<!--adsense-->
 
 ## Conclusion
 This time, I explained the superiority of DNS verification while comparing the two kinds of verification methods.

@@ -15,6 +15,7 @@ twitter_card_image: /images/icons/gopher_icon.png
 非公式ながら [Go2](https://github.com/golang/go/wiki/Go2) の話も盛り上がっているので、
 そろそろ真面目にバージョン管理するか、と、 [goenv](https://github.com/syndbg/goenv) に手を出しました。
 
+<!--adsense-->
 
 ## goenvとは
 
@@ -33,6 +34,8 @@ Pythonであれば [pyenv](https://github.com/pyenv/pyenv)、 Rubyであれば [
 
 * MacOS X
 * [Homebrew](https://brew.sh/index_ja) インストール済み
+
+<!--adsense-->
 
 ## 設定手順
 

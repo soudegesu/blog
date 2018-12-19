@@ -17,6 +17,8 @@ twitter_card_image: /images/soudegesu.jpg
 現職に転職してからはクライアントサイドの開発に従事する機会が激減し、`FIDO`　の動向をキャッチアップしていなかったのですが、
 先程のニュースを見て、「おっ」と思い、久しぶりに手を動かしてみました。
 
+<!--adsense-->
+
 ## Web AuthenticationとFIDO
 
 簡単に触りだけ説明します。
@@ -30,6 +32,8 @@ twitter_card_image: /images/soudegesu.jpg
 
 個人的には `FIDO` という単語を、 **所持認証や生体認証を用いてクライアント側で認証処理自体を行う技術**、という意味合いで使っています。
 
+<!--adsense-->
+
 ## Web Authenticationの対応状況
 
 策定された [Web Authentication](https://www.w3.org/TR/webauthn/) の仕様は、各ブラウザベンダーが実装を進めています。
@@ -41,6 +45,8 @@ PCブラウザでは、一部のブラウザ（FirefoxやChrome）で既に利�
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07BYSB7FK&linkId=5b318a344f16e200346b36c76ea5e527"></iframe>
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B018Y1Q71M&linkId=02d0f0a9c5607f1b8713ef635b64d056"></iframe>
+
+<!--adsense-->
 
 ## 指紋認証を試してみる
 

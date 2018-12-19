@@ -46,6 +46,8 @@ pip install openpyxl pandas
 
 ![sample_sheet](/images/20181013/sample_sheet.png)
 
+<!--adsense-->
+
 ## openpyxl から PandasのDataFrameへ変換
 
 では早速、[openpyxl](https://openpyxl.readthedocs.io/en/stable/index.html) でシートのデータを読み取り、 `DataFrame` に変換しましょう。
@@ -122,6 +124,7 @@ df.head(3)
 
 きちんとヘッダー名も表示されました。
 
+<!--adsense-->
 
 ## PandasでExcelファイルを読み込む
 
@@ -143,6 +146,8 @@ import pandas as pd
 df = pd.read_excel('sample.xlsx', sheet_name='sample')
 df.head()
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## まとめ 
 

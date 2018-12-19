@@ -17,6 +17,8 @@ twitter_card_image: /images/icons/terraform_icon.png
 
 [Terraform](https://www.terraform.io/) も例外ではないのですが、S3バケットのポリシー設定の所でふと気付いたので書いておきます。
 
+<!--adsense-->
+
 ## Terraform公式のS3のバケットポリシーが...
 
 Terraform公式の [aws_s3_bucket_policy](https://www.terraform.io/docs/providers/aws/r/s3_bucket_policy.html)
@@ -51,6 +53,8 @@ POLICY
 {{< / highlight >}}
 
 だめではないのですが、折角コード化を進めているので、ここもキレイにしたいですよね。
+
+<!--adsense-->
 
 ## IAMポリシードキュメントのデータソース（aws_iam_policy_document）を使う
 

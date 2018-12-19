@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/lambda_icon.png
 AWS上のデータを別サービスに連携するために、AWS LambdaからCasperJSを使ってファイル配置を自動化する仕組みを作ってみました。
 APIでデータをPOSTできれば簡単なのですが、今回はGUI上からファイルをアップロードしないといけないため、技術の無駄遣いをしてみます。
 
+<!--adsense-->
+
 ## 日次でファイルをアップロードしたい
 
 ことの発端は以前書いた記事 「[クロスアカウントで共有されたS3バケットはAWSコンソール上から参照可能なのか](/aws/s3-cross-account/)」 にて、
@@ -33,6 +35,8 @@ APIでデータをPOSTできれば簡単なのですが、今回はGUI上から�
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/487311778X/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=487311778X&linkCode=as2&tag=soudegesu-22&linkId=22f6b91a2296dc4b4344bbc4b08fc5dd"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=487311778X&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=487311778X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
 
+<!--adsense-->
+
 ## CasperJSとは
 [CasperJS](http://casperjs.org/) は [PhantomJS](http://phantomjs.org/) のラッパーライブラリです。
 PhantomJS 自体はwebkitをベースとしたヘッドレスブラウザです。
@@ -44,6 +48,8 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 セレクタに対するwaitや、イベントの発火、データ入力等のコードをシンプルに書くことができます。
 
 というか、PhantomJS単体だと自前定義のfunctionが多くなるためオススメできません。
+
+<!--adsense-->
 
 ## Lambda + CasperJS で実現してみよう
 
@@ -67,6 +73,7 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 3. BucketのPUTイベントを基にファイルアップロード用のLambdaが実行される
 4. LambdaでCasperJSが動き、他サービスにファイルをアップロードする
 
+<!--adsense-->
 
 ## 実装時のポイント
 

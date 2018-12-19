@@ -13,6 +13,8 @@ twitter_card_image: /images/icons/gopher_icon.png
 
 今回は `reflect` パッケージと `json` パッケージも使って構造体の生成をしてみます。
 
+<!--adsense-->
+
 ## `json.Unmarshal` を使った構造体の生成
 
 以下の構造体を定義します。
@@ -37,6 +39,8 @@ func main() {
 	log.Printf("%#v", msg)	
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## `reflect` パッケージと `json.Unmarshal` を使った構造体の生成
 
@@ -72,6 +76,8 @@ func createInstance(str string, typ reflect.Type) interface{} {
 	return obj
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## NGなパターン（ `Elem` を使う）
 

@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は読み込んだ複数のDataFrameの扱いについて説明します。
 
+<!--adsense-->
+
 ## データを横方向に追加する
 
 DataFrameを横方向に追加する、つまり、別の列として追加する方法を説明します。
@@ -51,6 +53,8 @@ result.head()
 |1	|2	|田中	|女	|2	|企画部|
 |2	|3	|鈴木 |男	|3	|営業部|
 
+<!--adsense-->
+
 ## データを縦方向に追加する
 
 逆に縦方向にデータを追加する場合には、 `concat` 関数のオプションで `axis=0` を指定します（デフォルト値なので、省略しても構いません）。
@@ -78,6 +82,8 @@ result.head(10)
 |5|	3|	鈴木|	男|
 
 `ignore_index=True` オプションを指定することで、結合前の行のインデックス番号を無視し、新たにインデックス番号を振り直します。
+
+<!--adsense-->
 
 ## データを結合する
 
@@ -127,6 +133,8 @@ result.head()
 {{< highlight python "linenos=inline" >}}
 result = df_sample.join(df_division.set_index('部署ID'), on='部署ID')
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## まとめ
 

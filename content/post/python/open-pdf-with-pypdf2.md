@@ -50,6 +50,8 @@ pip install PyPDF2
 
 ![executive_order](/images/20181130/executive_order.png)
 
+<!--adsense-->
+
 ## PDFファイルを読み込む
 
 ファイル読み込みを早速やってみましょう。 
@@ -74,6 +76,8 @@ with open(FILE_PATH, mode='rb') as f:
 {{< highlight bash >}}
 Number of pages: 3
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## パスワード付きPDFファイル（暗号化PDFファイル）を読み込む
 
@@ -126,6 +130,8 @@ with open(ENCRYPTED_FILE_PATH, mode='rb') as f:
 Number of pages: 3
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## `decrypt` 時に `NotImplementedError` が表示される場合の対処法
 
 暗号化PDFを扱う際、以下のエラーに遭遇するかもしれません。
@@ -172,6 +178,8 @@ Pythonコードから `qpdf` コマンドをOSのコマンドとして実行し�
 その後、もう一度 `PdfFileReader` にてファイルを読み込ませる、という算段です。
 
 なお、このサンプルコードですと、 `with` 句によってファイルが自動クローズされてしまうため、実際にはもう少しコードのスコープを整理してあげる方が汎用性の面で良いと思います。
+
+<!--adsense-->
 
 ## まとめ
 

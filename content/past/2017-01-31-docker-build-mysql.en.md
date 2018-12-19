@@ -13,6 +13,8 @@ twitter_card_image: /images/icons/docker_icon.png
 
 This post is a personal note for building mysql container using Docker.
 
+<!--adsense-->
+
 ## Update Docker daemon
 
 In my case, the version of docker was old, so I downloaded docker for Mac from the [official website](https://www.docker.com/products/docker#/mac) and updated docker daemon.
@@ -40,6 +42,8 @@ Server:
  Experimental: true
 
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Edit Dockerfile
 
@@ -77,6 +81,8 @@ Step 2/3 : MAINTAINER soudegesu
 Step 3/3 : RUN echo "finished setup !!"
 ...
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Start docker container
 

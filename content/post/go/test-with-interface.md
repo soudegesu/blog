@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/gopher_icon.png
 主に [Python](https://www.python.org/) で書いていた簡易なスクリプトを置き換える作業なのですが、
 開発の過程で、[Go](https://github.com/golang/go) におけるテストコードの書き方を学習したので、備忘としてまとめます。
 
+<!--adsense-->
+
 ## Goではスタブがいい感じに作れない
 
 JavaやPythonでは、ライブラリの力を借りることによって、スタブを簡単に作ることができました。
@@ -24,6 +26,8 @@ JavaやPythonでは、ライブラリの力を借りることによって、ス�
 
 基本的にはDependency Injectionの発想と同様のことを行います。Interfaceに対して実装を後から定義するのです。
 さっそくやってみましょう。
+
+<!--adsense-->
 
 ## プロダクションコード側
 ### 構造体とインタフェースの定義
@@ -75,6 +79,8 @@ func hogeMain() int {
 	return sample.doGet()
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## テストコード側
 ### interfaceの実装

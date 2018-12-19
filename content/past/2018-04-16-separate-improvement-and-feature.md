@@ -16,6 +16,8 @@ url: /continuous-delivery/separate-improvement-and-feature/
 これにより出荷可能なプロダクトを頻繁にリリースすることが可能になります。
 今回は頻繁にリリース可能な環境下において、より安全にサービスをデリバリするための個人的な考えをまとめたものです。
 
+<!--adsense-->
+
 ## デプロイの失敗を考える
 ### Decoupling deployment from release(デプロイとリリースは分離しよう)
 
@@ -73,7 +75,7 @@ url: /continuous-delivery/separate-improvement-and-feature/
 <a target="_blank"  href="https://www.amazon.co.jp/gp/offer-listing/4873117321/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4873117321&linkCode=am2&tag=soudegesu-22&linkId=ca20d76273c1a09d878e5bd16acf1f2e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4873117321&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4873117321" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
 
-
+<!--adsense-->
 
 ## 失敗したときの被ダメージを「軽減」する
 
@@ -111,6 +113,8 @@ url: /continuous-delivery/separate-improvement-and-feature/
 
 ![os_patch](/images/20180416/os_patch.png)
 
+<!--adsense-->
+
 ## 失敗リスクを細分化する
 
 Decoupling improvement from feature のような考え方でリリース物に色分けをすると、リスクの分散構造が理解しやすくなるという副産物があります。
@@ -123,6 +127,8 @@ Decoupling improvement from feature のような考え方でリリース物に�
 (時系列的にはfeatureの前にデプロイされているべきです)
 
 デプロイを分割することによって、featureのリリースを行う時点では、既にライブラリのバージョンアップやDBマイグレーションは成功しているので、これらの失敗リスクを加味する必要がなくなります。
+
+<!--adsense-->
 
 ## まとめ
 継続的デリバリを安定して行うための考え方をまとめました。
