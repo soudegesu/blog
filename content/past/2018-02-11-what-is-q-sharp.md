@@ -12,11 +12,15 @@ url: /q_sharp/what-is-q-sharp/
 もともとは **仮想通貨** を調べていた時に、 **量子耐性** という言葉を発見し、量子耐性から **量子耐性のあるアルゴリズム** や量子プログラミング言語である **Q#** に行き着きました。
 Wikipediaなどを見てみると、**Q#** はどちらかといえば研究者向けの言語らしいので、普段の業務との関連性は少なそうですが、せっかくなので触ってみようと思います。
 
+<!--adsense-->
+
 ## Q#の環境構築
 開発環境の構築に関しては大きく補足することは無さそうです。[公式サイト](https://docs.microsoft.com/en-us/quantum/quantum-installconfig?view=qsharp-preview)も手順が手厚めに記載されています。
 
 ただし、セットアップの途中で気づいたのですが、 **Macは Microsoft Quantum Development KitのExtensionをインストールできない** ことが判明しました。手順の序盤に記載があったのですが、すっかり読み飛ばしていました。 現時点のVisual Studio for Mac がこのExtensionをサポートしていない、というのです。
 仕方がないので、Mac使いの私はAzure上にWindowsのインスタンスを構築し、Remote Desktop接続にて作業をすることにしました。
+
+<!--adsense-->
 
 ### Azure上でのWindowsインスタンスセットアップ
 
@@ -43,6 +47,8 @@ Visual Studio上では `Team` というメニューでVCSにアクセスでき�
 とりあえず、動作環境が構築できたことはわかりました。
 
 ![prompt_success](/images/20180211/prompt_success.png)
+
+<!--adsense-->
 
 ## 基本を抑える
 
@@ -72,6 +78,8 @@ Reference to unknown namespace Microsoft.Quantum.Primitive
 調査してみたところ `.NETのバージョンが古い` ことが原因でした。
  `.NET Framework` を `4.6.1` に変更することで namespaceの解決ができるようになりました。
 
+<!--adsense-->
+
 ## Q#の標準ライブラリを見てみる
 普段、高級言語で仕事をしている身からすると、少し変わった型がプリミティブとして用意されているので、紹介しておきます。
 
@@ -96,6 +104,8 @@ Microsoftのサンプルコードで使われている `T` や `H` 、 `CNOT` �
 
 関数が表す式は [公式のライブラリリファレンス](https://docs.microsoft.com/en-us/qsharp/api/prelude/microsoft.quantum.primitive?view=qsharp-preview)
 に記載されています。端的ですが、変に言葉で説明するよりも良いのでしょうね。理解が及んでいない式は別途調べました。
+
+<!--adsense-->
 
 ## まとめ
 ### Q#の理解自体はそこまで難しくない

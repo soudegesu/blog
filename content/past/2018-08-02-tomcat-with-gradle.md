@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/gradle_icon.png
 最近自前でwarファイルをJavaコンテナにデプロイする機会が減って、実行可能なfat-jarをsystemdに管理してもらうことが増えました。
 ただ、今回は敢えてローカル環境でGradleを使ってTomcatアプリケーションを動作させる方法を調査しました。
 
+<!--adsense-->
+
 ## ローカル環境でTomcatを動かそう
 
 最近はもっぱらSpring Bootを使うのですが、とある事情により、素のTomcat上でwarアプリケーションを動作させる必要が出てきました。
@@ -31,6 +33,8 @@ IntelliJにプラグインをインストールするのも方法論としては
 
 * Gradle 4.8
 * Tomcat 9
+
+<!--adsense-->
 
 ## gradle-tomcat-plugin を使う
 

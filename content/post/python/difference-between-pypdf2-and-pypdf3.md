@@ -20,6 +20,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は少し毛色が違いますが、[PyPDF3](https://github.com/mstamy2/PyPDF3) について触れたいと思います。
 
+<!--adsense-->
+
 ## PyPDF2 と PyPDF3 が存在する問題
 
 [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) の調査を進めていく過程で、[とあるStackOverflowのコメント](https://stackoverflow.com/questions/50751267/only-algorithm-code-1-and-2-are-supported) に目を奪われました。
@@ -52,6 +54,8 @@ pip search PyPDF3
 
 どうやら存在するようです。なんてこったい。
 
+<!--adsense-->
+
 ## PyPDF3 は何者なのか
 
 [PyPDF3](https://github.com/mstamy2/PyPDF3) のGithubのページに記載された [Roadmap](https://github.com/mstamy2/PyPDF3/wiki/Roadmap) 、[先程のStackOverflowのコメント](https://stackoverflow.com/questions/50751267/only-algorithm-code-1-and-2-are-supported) や他の調査結果も踏まえて自分の理解をまとめます。
@@ -69,6 +73,8 @@ pip search PyPDF3
 一方で、[PyPDF3](https://github.com/mstamy2/PyPDF3) のコミットログを見ても、あまり開発は進んでいないように伺えます。
 [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) と比較して、GithubのStarの数も少ないですし。
 これは一体どういうことだ。。
+
+<!--adsense-->
 
 ## 解決：PyPDF2のissueにすべてはあった
 

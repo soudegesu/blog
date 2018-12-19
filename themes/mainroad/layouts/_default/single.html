@@ -14,7 +14,7 @@
 		{{- partial "ad/top.html" . -}}
 		{{- partial "post_toc.html" . -}}
 		<div class="post__content clearfix">
-			{{ .Content }}
+			{{ replace .Content "<!--adsense-->" (partial "ad/inarticle.html" .) | safeHTML }}
 		</div>
 		{{ partial "post_tags.html" . }}
 	</article>

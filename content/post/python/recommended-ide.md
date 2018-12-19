@@ -28,6 +28,8 @@ twitter_card_image: /images/icons/python_icon.png
 書くことに特化したツールであるため、インストール時の初期状態では編集しかできませんが、
 プラグイン（拡張機能）を追加することでIDEと同等の機能を持たせることができます。
 
+<!--adsense-->
+
 ## PyCharm
 
 まず最初に紹介するのは、Jetbrains社が提供するPython用IDEの [PyCharm](https://www.jetbrains.com/pycharm/) です。
@@ -41,6 +43,8 @@ PyCharmには無料版と有償版の2種類が存在し、[無料版と有償�
 Pythonで本格的なwebアプリケーションを作る場合には有償版の購入を検討しても良いでしょうが、 **大抵の場合は無料版の機能で十分足りる** でしょう。
 
 唯一の欠点としては、高機能な分、起動に時間がかかることです。
+
+<!--adsense-->
 
 ## Visual Studio Code
 
@@ -59,6 +63,8 @@ Pythonで本格的なwebアプリケーションを作る場合には有償版�
 
 [Visual Studio Code](https://code.visualstudio.com/) の特徴としては、**動作の軽快さ** があります。
 サクッと立ち上げて、サクッと書くなら一番だと感じています。余談ですが、私はGoも [Visual Studio Code](https://code.visualstudio.com/) で書いています。
+
+<!--adsense-->
 
 ## Jupyter Notebook
 
@@ -93,6 +99,8 @@ jupyter notebook
 欠点として、先程説明したユースケースにおいては、ファイル拡張子が [Jupyter Notebook](http://jupyter.org/) 専用の `.ipynb` になってしまうことが挙げられます。`.ipynb` ファイルから、Pythonの実行ファイルである `.py` ファイルへ変換することも可能ですが、各セルのコードを画一的に出力するだけなので、実用性はありません。 **.pyファイルの作成には向いていないと言えます** 。
 加えて、**他のIDEと比べるとコード補完が弱い** ことも気にしておく必要があります。
 
+<!--adsense-->
+
 ## Google Colaboratory
 
 最後に番外編として、[Colaboratory](https://colab.research.google.com/) を上げておきます。
@@ -101,6 +109,7 @@ GPUやTPUといった特殊なプロセッサを使ってプログラムを実�
 
 こちらは以前の記事、「[Colaboratoryは機械学習エンジニアための最高のツールだった] (/python/colaboratory-is-a-good-tool-for-tensorflow-user/) 」 にまとめているので、時間のある時に読んでみてください。
 
+<!--adsense-->
 
 ## まとめ
 

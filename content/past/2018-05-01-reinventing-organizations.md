@@ -20,6 +20,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/4862762263/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4862762263&linkCode=as2&tag=soudegesu-22&linkId=43e663f0a957755b99c435f78312862e"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4862762263&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4862762263" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
 
+<!--adsense-->
+
 ## 超分厚い一冊には今どき組織論のエッセンスが詰まっていた
 この書籍は500ページを超える分厚めの書籍です。私は通勤電車の中で毎日これを読んでいたのですが、持ち運びには向きませんね笑。私はKindle Paperwhiteを所有しているので、Kindle版を購入すれば良かったと後悔しました。
 
@@ -51,6 +53,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 
 途中からは実際にティール組織として機能している会社事例を織り交ぜながら話が進んでいきます。
 どの企業も組織内の信頼関係に下支えされた経営を行っており、企業として機能していること自体に凄さを感じえませんでした。
+
+<!--adsense-->
 
 ## この本は経営者向けの本
 

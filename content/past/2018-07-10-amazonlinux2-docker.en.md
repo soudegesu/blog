@@ -24,6 +24,8 @@ My [Packer](https://www.packer.io/) build job stopped with error after AWS annou
 
 Fail to execute `yum install docker` and `yum search docker` command because yum repository has been changed.
 
+<!--adsense-->
+
 ## Install Docker with Extras Library
 
 In Amazon Linux2, [Extras Library](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/amazon-linux-ami-basics.html#extras-library) is adopted to

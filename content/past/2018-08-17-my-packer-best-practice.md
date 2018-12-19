@@ -29,6 +29,8 @@ twitter_card_image: /images/icons/packer_icon.png
 
 PackerやAnsible、Sererspec自体の解説は割愛します。
 
+<!--adsense-->
+
 ## Vagrantを使ってローカル環境でデバッグできるようにしておく
 
 **Ansible Playbookの書き始めの頃は、可能であればローカル環境上に [Vagrant](https://www.vagrantup.com/) と [Virtual Box](https://www.virtualbox.org/) を使ってインスタンスを起動して、それに対してプロビジョニングするようにしました。**
@@ -117,6 +119,8 @@ templateファイル上で展開される変数は以下を与えます。
 Ansible Playbook が何度でも流せるように、初期化時に Vagrantインスタンスの状態を一度スナップショットとして取得し、
 Packer実行前に毎回 `restore` するようにします。
 
+<!--adsense-->
+
 ## Ansibleの後にServerSpecで検査する
 
 Ansible Playbookが実行された後は [Serverspec](https://serverspec.org/) を実行したいですよね。
@@ -153,6 +157,8 @@ Packerのtemplateファイルで記載するprovisionerには [ansible](https://
         }
     ]
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 設定ファイルは、roleごと、環境ごとに準備する
 
@@ -214,6 +220,8 @@ AnsibleのRole（システムコンポーネント）に依存する設定ファ
     "aws_source_ami": "ami-xxxxxxxx"
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 実行コマンドは別ファイルでラップしておく
 

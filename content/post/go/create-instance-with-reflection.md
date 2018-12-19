@@ -14,6 +14,8 @@ twitter_card_image: /images/icons/gopher_icon.png
 プログラミング言語 [Go](https://github.com/golang/go) で
 インスタンスを生成する関数を作るにはどうすれば良いかを調査しました。
 
+<!--adsense-->
+
 ## 抽象化されたプログラムを書くには？
 
 抽象化されたコードを書く場面にしばしば出くわすことがあります。
@@ -32,6 +34,8 @@ private <T> T createInstance (Class<T> clazz) {
     return obj;
 }
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Goではreflectパッケージを使う
 

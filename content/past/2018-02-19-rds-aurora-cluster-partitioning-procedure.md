@@ -19,6 +19,8 @@ AWSのRDS AuroraはOSSのDBミドルウェアと互換性のあるマネージ�
 今回はAuroraのMySQL互換での日付パーティションの作成に関して説明します。
 AuroraというよりはMySQLの仕様に関する説明も多いのでご了承ください。
 
+<!--adsense-->
+
 ## 今回やりたかったこと
 今回はRDS Aurora(MySQL互換)にてClusterを組み、テーブルは日でパーティショニングすることにしました。
 要件はざっくり以下です。
@@ -39,6 +41,8 @@ AuroraというよりはMySQLの仕様に関する説明も多いのでご了承
 |id          |varchar(255)|ユーザのID              |
 |info        |varchar(255)|ユーザが行なった操作の情報 |
 |create_at   |timestamp   |レコードが作成された日時   |
+
+<!--adsense-->
 
 ## パーティションを日次で追加する
 
@@ -155,6 +159,8 @@ DO CALL
 
 これで、毎日0時にパーティション追加のプロシージャが実行されるようになりました。
 
+<!--adsense-->
+
 ## RDS Aurora Clusterの場合を考える
 ここで、Aurora Clusterの場合を考えます。
 Auroraでクラスタを組んだ場合、Master/Slaveの構成ではなく、Writer/Readerの構成になります。
@@ -179,6 +185,8 @@ select * from INFORMATION_SCHEMA.PROCESSLIST where USER = 'event_scheduler' limi
 {{< / highlight >}}
 
 Failoverさせた状態でも、翌日にもパーティションが作成されていることも確認できたため、Writerのみが実行できているといえます。
+
+<!--adsense-->
 
 ## エラーが発生したらどうするか
 今回の「定期的にプロシージャを実行」という方法は **Auroraインスタンスの中に閉じた処理** になります。
@@ -304,6 +312,8 @@ Auroraから渡されたメッセージを処理して、監視システムや�
 ![rds error log is empty](/images/20180219/rds_log_is_empty.png)
 
 実はこれは、**「AWS側で使用するログを上記のログファイルに出力しているらしく、我々AWSのユーザ側には表示されない」という仕様** によるものです。少しわかりにくいですが、このログファイルの容量はAWS用のログの容量も含まれて表示されている、ということですね。
+
+<!--adsense-->
 
 ## まとめ
 今回はAurora Clusterからプロシージャを定期実行することで、日付パーティションを定期追加する方法をまとめました。

@@ -22,6 +22,8 @@ twitter_card_image: /images/icons/python_icon.png
 * python 3.6
 * openpyxl 2.5.6
 
+<!--adsense-->
+
 ## openpyxlのインストール
 
 今回は [openpyxl](https://openpyxl.readthedocs.io/en/stable/index.html) を使用したいと思います。
@@ -34,6 +36,8 @@ twitter_card_image: /images/icons/python_icon.png
 {{< highlight bash "linenos=inline" >}}
 pip install openpyxl
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## 新規Excelファイルの作成
 
@@ -93,6 +97,8 @@ wb.save(filename = 'sample_book.xlsx')
 
 ただしくシート名がリネームされていますね！
 
+<!--adsense-->
+
 ## 既に存在するファイルを開くときは？
 
 [Python](https://www.python.org/) でExcelを操作するモチベーションは **「既に存在するExcelファイルの操作をプログラムから行いたい（自動化したい）」** ケースが多いので、ここでは既存のエクセルファイルの開き方に触れておきます。
@@ -105,6 +111,8 @@ wb = load_workbook('sample_book.xlsx')
 print(wb.sheetnames)
 # ['シートの名前'] が出力されます
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## まとめ
 

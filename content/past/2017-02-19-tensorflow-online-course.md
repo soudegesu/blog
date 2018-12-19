@@ -23,6 +23,8 @@ NHKの朝のニュースでも頻繁に見るくらいですので、世間一�
 
 アルゴリズムを見つけたり、最適化したり、というのはハードルが高いので、「ライブラリが使える」ようになることを直近の目標にしたいと思います。
 
+<!--adsense-->
+
 ## 筆者のレベル感
 * python はまぁ書ける
 * [coureraの機械学習のコース](https://www.coursera.org/learn/machine-learning/home/welcome)は受講済

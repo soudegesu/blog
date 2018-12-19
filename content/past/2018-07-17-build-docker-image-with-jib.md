@@ -16,6 +16,8 @@ twitter_card_image: /images/20180717/jib.png
 実案件でもJavaアプリケーションをDockerコンテナ上で稼働させる事例もかなり増えていますね。
 今回は [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin) を使ったDockerfileイメージのビルドを紹介します。
 
+<!--adsense-->
+
 ## モチベーション
 
 ### アプリケーションのビルドとDockerイメージのビルドをいい感じに統合したい
@@ -49,6 +51,8 @@ jibではプロダクトの目的として以下の3つを謳っているので�
 > ・Reproducible - Rebuilding your container image with the same contents always generates the same image. Never trigger an unnecessary update again.
 >
 > ・Daemonless - Reduce your CLI dependencies. Build your Docker image from within Maven or Gradle and push to any registry of your choice. No more writing Dockerfiles and calling docker build/push.
+
+<!--adsense-->
 
 ## やってみる
 

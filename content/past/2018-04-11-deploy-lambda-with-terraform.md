@@ -22,6 +22,8 @@ AWS Lambdaは [Cloud9](https://aws.amazon.com/jp/cloud9/) がコンソール上�
 
 ![cloud9_lambda](/images/20180411/cloud9_lambda.png)
 
+<!--adsense-->
+
 ## TerraformでAWS Lambdaをデプロイしたい
 `Infrastructure as Code` はクラウド界隈でバズってだいぶ時間も立っていますので、あまりここでは触れません。
 必要に応じて界隈の方のブログや以下の書籍を読んでください。
@@ -37,6 +39,8 @@ AWS Lambdaがサービスとして登場した頃は、簡易なバッチ的な�
 そんな **「まぁ、Lambdaでいっか」** ケースが増えると同時に、一度デプロイしたLambdaのコードを修正して再デプロイするというケースも増えてきました。
 
 業務上 `Terraform` を使ってAWSリソースをコード化しているので、Lambdaもその管理の対象にしようと思ったのが契機です。
+
+<!--adsense-->
 
 ## やってみる
 
@@ -161,6 +165,8 @@ deploy:
 {{< / highlight >}}
 
 あとは `make deploy` を打てば実行できます。(リポジトリ的にはterraformのリモートバケットの初期化を先に行う必要はあります。)
+
+<!--adsense-->
 
 ## まとめ
 Terraformを使用して、AWS Lambdaのソースコードのデプロイができるようになりました。

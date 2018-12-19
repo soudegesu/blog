@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/mysql_icon.png
 [MySQL](https://www.mysql.com/jp/) major version `8` was released on April 2018.
 I introduce how to write MySQL 8 ansible playbook.
 
+<!--adsense-->
+
 ## Motivation
 
 I usually use AWS. AWS has a database managed service called RDS, and RDS supports MySQL 5.x series.
@@ -26,6 +28,8 @@ To conduct in-house training using MySQL 8, I needed to make AMI of MySQL 8 with
 * CentOS 7
 * Ansible 2.6.1
 * Packer 1.1.3
+
+<!--adsense-->
 
 ## Configuration sample of ansible playbook
 
@@ -78,6 +82,8 @@ The sample of ansible playbook is now as follows.
   with_items:
     - "{{ mysql.users }}"
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Points
 

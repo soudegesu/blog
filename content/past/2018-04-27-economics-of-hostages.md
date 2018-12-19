@@ -18,6 +18,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 <a target="_blank"  href="https://www.amazon.co.jp/gp/product/4163905804/ref=as_li_tl?ie=UTF8&camp=247&creative=1211&creativeASIN=4163905804&linkCode=as2&tag=soudegesu-22&linkId=7fcab04a4c51902e13a9c5d1d697eadc"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=JP&ASIN=4163905804&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=soudegesu-22" ></a><img src="//ir-jp.amazon-adsystem.com/e/ir?t=soudegesu-22&l=am2&o=9&a=4163905804" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>
 
+<!--adsense-->
+
 ## 購入の経緯
 
 「人質」が「経済」に結びつきそうなのは、世界中のどの地域でしょうか。
@@ -52,6 +54,8 @@ twitter_card_image: //ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketP
 には、**道徳的観点がスッポリ抜け落ちるリアルさ** を感じざるを得ませんでした。
 
 なお、事例ベースの展開が本書の大半を占めるため、事例嫌いの読者の方にはあまり向かないかもしれません。
+
+<!--adsense-->
 
 ## 著者のロレッタ・ナポリオーニさんについて
 

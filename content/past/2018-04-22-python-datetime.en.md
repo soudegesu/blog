@@ -17,6 +17,8 @@ I always search answers on the internet that how to **convert date formatted str
 
 This article is a memo for myself.
 
+<!--adsense-->
+
 ## Environment
 
 * python 3.6
@@ -133,6 +135,8 @@ str_to_dt = parse(date_str + ' JST', tzinfos=tzinfos)
 print(str_to_dt)
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## Points to keep in mind when dealing with date and time
 ### naive and aware
 
@@ -208,6 +212,8 @@ and, in changing its timezone with `astimezone` function, relative calculation i
 
 For that reason, when using multiple regions of the public cloud,   
 behavior may be different depending on where the program is deployed.
+
+<!--adsense-->
 
 ## Conclusion
 

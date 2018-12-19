@@ -18,6 +18,8 @@ Javaアプリケーションのメトリック取得がいい感じだったの�
 
 ![micrometer](/images/20180517/micrometer.png)
 
+<!--adsense-->
+
 ## Micrometerって何
 
 [Micrometer](https://micrometer.io/) はJVM上で動くアプリケーションのメトリックを取得するためのライブラリです。
@@ -97,6 +99,8 @@ public MeterRegistryCustomizer<MeterRegistry> customizer() {
 }
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## Datadog上でJVMのメトリックを見てみよう
 
 さて本題です。アプリケーションを起動し、Datadog上でメトリックを確認してみましょう。
@@ -147,6 +151,7 @@ JVMの使用メモリ量は `jvm.memory.used` のメトリックで確認でき�
 |jvm.buffer.memory.used |direct |
 |                       |mapped |
 
+<!--adsense-->
 
 ## micrometer-registry-datadog使用時の注意点
 

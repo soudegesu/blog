@@ -13,6 +13,8 @@ twitter_card_image: /images/icons/docker_icon.png
 
 自宅PC(mac)で簡単なアプリケーションを作ろうと思い、Dockerを使ってmysqlを構築しようとした際の備忘録として残しておきます。
 
+<!--adsense-->
+
 ## Dockerfile を作成する
 
 まず、dockerのバージョンが古かったので、[公式サイト](https://www.docker.com/products/docker#/mac)からmac用のdockerを再度ダウンロードし、アップデートしておきます。
@@ -49,6 +51,8 @@ MAINTAINER soudegesu
 RUN echo "finished setup !!"
 
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## Dockerfile をビルドしてイメージを作成する
 
@@ -94,6 +98,8 @@ Step 2/3 : MAINTAINER soudegesu
 Step 3/3 : RUN echo "finished setup !!"
 (以下略)
 {{< / highlight >}}
+
+<!--adsense-->
 
 ## コンテナを起動して確認する
 

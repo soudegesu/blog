@@ -18,6 +18,8 @@ twitter_card_image: /images/icons/flutter_icon.png
 
 ![flutter](/images/20180725/flutter.png)
 
+<!--adsense-->
+
 ## モチベーション
 
 ### Web系エンジニアがモバイルをアプリを作ることになった
@@ -36,6 +38,8 @@ twitter_card_image: /images/icons/flutter_icon.png
 それと付随して [Flutter](https://flutter.io/) が紹介されていました。
 
 今回実装するのもアプリのプロトタイプのようですし、せっかくだから実験台になってもらおう、となったわけです。
+
+<!--adsense-->
 
 ## 環境構築
 ### Flutterのインストール
