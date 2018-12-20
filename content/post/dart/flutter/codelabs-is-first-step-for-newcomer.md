@@ -95,7 +95,7 @@ Googleが提供するサービスやプラットフォームの初心者向け�
 
 赤ちゃんの名前の投票アプリを作ることが出来ます。
 
-{{< figure src="https://codelabs.developers.google.com/codelabs/flutter-firebase/img/9fda61f0c0f8e865.png" class="center" width="30%" >}}
+{{< figure src="https://codelabs.developers.google.com/codelabs/flutter-firebase/img/87c7749478441728.png" class="center" width="30%" >}}
 
 ここでは以下を学ぶことができました。
 
