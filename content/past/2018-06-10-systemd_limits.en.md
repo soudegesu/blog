@@ -1,6 +1,6 @@
 ---
-title: "Change Soft/Hard limits and file descriptor limits on Amazon Linux2(systemd)"
-description: "今回はAmazon Linux から Amazon Linux2 への移行をする機会があったので、プロセス数やファイルディスクリプタ数といったリソース制限の変更に関して備忘録として残しておきます。"
+title: "Change Soft/Hard limits and file descriptor limits on Amazon Linux 2(systemd)"
+description: "When I migrate Amazon Linux to Amazon Linux 2, I investigate how to change file descriptor limits and number of process per user on Linux server working with systemd"
 date: 2018-06-10
 categories:
   - linux
