@@ -16,6 +16,8 @@ This post is technical memo for myself.
 
 I try the following procedure after booting the official Amazon Linux 2 AMI as it is.
 
+<!--adsense-->
+
 ## Soft limits and Hard limits
 
 Let me review what Soft limits and Hard limits are.
@@ -118,11 +120,8 @@ cat /etc/security/limits.d/20-nproc.conf
 
 ### Check current configuration
 
-`ulimit -a` command lists available system resources per user. 
-`-H` オプションでハードリミット、 `-S` オプションでソフトリミットを確認できます。
-
-注意点として、`ulimit` で表示されるのは、カレントユーザの設定値であることです。
-別のユーザの設定値を確認したければ `su` を使うなどする必要があります。
+`ulimit -a` command lists available system resources for **current user**. 
+`ulimit` command sets Hard limits with `-H` option, and Soft limits with `-S` option.
 
 {{< highlight "linenos=inline" >}}
 ulimit -a
@@ -145,20 +144,18 @@ ulimit -a
 > file locks                      (-x) unlimited
 {{< / highlight >}}
 
-## デーモンへの設定
+<!--adsense-->
 
-次にサーバ上で動作させるデーモンプロセスのリソース制限をしましょう。
+## Configures daemon
 
-[archlinuxのlimits.confのページ](https://wiki.archlinux.jp/index.php/Limits.conf) を見ると興味深いことが書いてあります。
+Now limits the system resources for daemon process.
+The daemon process in systemd uses the configuration in `/etc/security/limits.conf`, but
+`/etc/systemd/system.conf` and `/etc/systemd/user.conf,/etc/systemd/<systemd_unit>/override.conf`.
 
-> ノート: systemd を使っている場合 /etc/security/limits.conf の値は反映されません。/etc/systemd/system.conf, /etc/systemd/user.conf,/etc/systemd/<systemd_unit>/override.conf などを使ってリソースを制御することが可能です。詳しくは systemd-system.conf の man ページを見てください。
+### Change overall default settings
 
-デーモンに対する設定においては、systemd場合、 `limits.conf` による設定はできないよ、ということです。
-
-### 全体へのデフォルト設定をする
-
-systemdにてコントロールされるプロセスのデフォルト値を変更するには `/etc/systemd/system.conf` ファイルを編集します。
-例えば、プロセス数やファイルディスクリプタ数を変更するには以下のように記述をします。
+To change default settings for process controlled by systemd, edit `/etc/systemd/system.conf`.
+For instance, changing the file descriptor limits and upper limits of the process is as bellow.
 
 {{< highlight vim "linenos=inline" >}}
 [Manager]
@@ -166,34 +163,35 @@ DefaultLimitNOFILE=65536
 DefaultLimitNPROC=65536
 {{< / highlight >}}
 
-### デーモンごとの設定をする
+### Settings per daemon
 
-本来、サービスを運用するのであれば、サービスに対して適切なリソースを割り当てるのが好ましいでしょう。
+When system administrators give services in systemd appropriate system resources,
+they creates `/etc/systemd/system/(service name).service` and add `[Service]` block.
 
-その場合には `/etc/systemd/system/（サービス名）.service` ファイルを作成して、 `[Service]` ブロックに追加することができます。
-なお、 `/etc/systemd/system/（サービス名）.service` が既に存在し、割当リソースだけ変更したいケースでは  `/etc/systemd/system/（サービス名）.service.d/override.conf` によって上書きするのがよいでしょう。
-なお、設定値は `（サービス名）.service` の記述よりも `override.conf` が優先されます。
+Changing only system resource despite of `/etc/systemd/system/（service name）.service` file already exists, override with creating `/etc/systemd/system/（service name）.service.d/override.conf`.
 
-以下ではファイルディスクリプタの数を定義しています。
+In addition, the setting of `override.conf` takes precedence over` (service name) .service`.
+
+Changing the number of file descriptor limits is as below.
 
 {{< highlight vim "linenos=inline" >}}
 [Service]
 LimitNOFILE=40000
 {{< / highlight >}}
 
-その後、デーモンを再起動して
+Now restart daemon.
 
 {{< highlight "linenos=inline" >}}
 systemctl daemon-reload
 
-systemctl stop (サービス)
-systemctl start (サービス)
+systemctl stop (service)
+systemctl start (service)
 {{< / highlight >}}
 
-設定が反映されているか確認しましょう。
+Check the configuration.
 
 {{< highlight "linenos=inline" >}}
-cat /proc/${プロセス番号}/limits
+cat /proc/${process ID}/limits
 
 Limit                     Soft Limit           Hard Limit           Units
 Max cpu time              unlimited            unlimited            seconds
@@ -214,22 +212,12 @@ Max realtime priority     0                    0
 Max realtime timeout      unlimited            unlimited            us
 {{< / highlight >}}
 
-ファルディスクリプタ（Max open files）が40000になっていますね。
+The file descriptor (Max open files) is 40000.
 
-## まとめ
+## Conclusion
 
-systemdでのリソース変更を行いました。
-PAM認証でのユーザログインと、systemd上のデーモンプロセスでは設定の仕方が異なるので注意が必要です。
+It is available to ...
 
-くれぐれも `ulimit` だけを変更して、 「Too many open files」 でアプリケーションが死亡しないように注意してくださいね！
-
-## 参考にさせていただいたサイト
-* [ファイルディスクリプタについて](https://codezine.jp/article/detail/4836)
-* [limits.conf](https://wiki.archlinux.jp/index.php/Limits.conf)
-
-<div align="center">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4798044911&linkId=ecbd4a37e5ba5b5255521397a806e73c&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4797382686&linkId=72348c4f427aaabd31a6e84ed1928825&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-</div>
+* Change Soft limits for current login user
+* Change Hard limits for current login user
+* Change default settings for daemon process managed by systemd
