@@ -33,7 +33,7 @@ PhantomJSでなくても良いのですが、過去にPhantomJSを使った経�
 <span style="margin-right:.4em;padding:0 .4em;color:#7c7c79">4</span>        <span style=color:#e6db74>&#34;Accept-Language&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;en-US&#34;</span>
 <span style="margin-right:.4em;padding:0 .4em;color:#7c7c79">5</span>    }
 <span style="margin-right:.4em;padding:0 .4em;color:#7c7c79">6</span>});
-<span style="margin-right:.4em;padding:0 .4em;color:#7c7c79">7</span></code></pre></div><p><strong>ランタイムに依存しない</strong> という意味でも設定しておいた方が良いと思います。</p><h2 id=まとめ>まとめ</h2><p>今回はAWS Lambda上でCasperJSを実行することで、S3上のファイルを別のストレージサービスへアップロードすることができました。
+<span style="margin-right:.4em;padding:0 .4em;color:#7c7c79">7</span></code></pre></div><p><strong>ランタイムに依存しない</strong> という意味でも設定しておいた方が良いと思います。</p><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h2 id=まとめ>まとめ</h2><p>今回はAWS Lambda上でCasperJSを実行することで、S3上のファイルを別のストレージサービスへアップロードすることができました。
 CasperJSからPhantomJSを呼び出せるようにPATHに追加したり、キャプチャ画像をアップロードするためのバケットを準備したり、
 下準備に若干時間がかかりますが、一度作れば動きが理解できると思います。</p><p>Lambdaのタイムアウト時間の最大値である5分以内に処理を終了させる必要があるため、最初はタイムアウトしないか心配でした。
 しかし、メモリも大きめに割り当てて上げると実行自体は数十秒くらいで終了したので、ヘッドレスブラウザ最強です。

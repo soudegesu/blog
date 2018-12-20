@@ -11,11 +11,12 @@ url: /en/python/python-datetime/
 twitter_card_image: /images/icons/python_icon.png
 ---
 
-## Motivation
-
 I always search answers on the internet that how to **convert date formatted string to datetime** and **change timezone**. 
 
 This article is a memo for myself.
+
+There are three types to process date and time in Python. `datetime`, `date`, and `time`. 
+I mainly use `datetime` in this article.
 
 <!--adsense-->
 
@@ -25,15 +26,9 @@ This article is a memo for myself.
 * pytz
 * jupyter notebook
 
-## Frequently used transformation
+<!--adsense-->
 
-As the first step to convert time series data in pre-processing, checking the data format specification from middlewares or data convertors is neccesarry.
-After that, convert data with Python.
-
-There are three types to process date and time in Python. `datetime`, `date`, and `time`. 
-I mainly use `datetime` in this article.
-
-### Convert epochtime to datetime
+## Convert epochtime to datetime
 
 Now convert numeric formatting `epochtime` to `datetime`.
 
@@ -44,7 +39,7 @@ As a point to be aware of, make sure that the numerical data means epoch **secon
 
 Using the `fromtimestamp` function in `datetime` module makes the code simpler as well.
 
-#### Covert epoch second
+### Covert epoch second
 
 Sample code with `fromtimestamp` function is as bellow.
 
@@ -58,7 +53,7 @@ print(dt)
 >> 2018-04-22 07:22:54
 {{< / highlight >}}
 
-#### Covert epoch millisecond expressed in decimal
+### Covert epoch millisecond expressed in decimal
 
 The `fromtimestamp` function can convert without problems even if a value is milliseconds format below the decimal point.
 
@@ -72,7 +67,7 @@ print(dt2)
 >> 2018-04-22 07:22:54.099776
 {{< / highlight >}}
 
-#### Convert epoch millisecond expressed in integer
+### Convert epoch millisecond expressed in integer
 
 In milliseconds expressed as an integer (epoch millisecond notation), divide a value after checking how many digits represent milliseconds.
 
@@ -86,9 +81,11 @@ print(dt3)
 >> 2018-04-22 07:22:54.099000
 {{< / highlight >}}
 
-### Convert string to datetime
+<!--adsense-->
 
-#### Convert date string with timezone
+## Convert string to datetime
+
+### Convert date string with timezone
 
 `strptime` function can convert is easier with parsing with directives.
 `%z` means UTC offset in the form `+HHMM` or `-HHMM`, and `%f` means microsecond as a decimal number, zero-padded on the left.
@@ -103,7 +100,7 @@ print(dt)
 >> 2018-04-01 20:10:56.123000+09:00
 {{< / highlight >}}
 
-#### Convert date string without timezone
+### Convert date string without timezone
 
 Converting a date string without timezone to datetime is troublesome, because checking what timezone the string represents is neccesarry.
 After checking the specification of data, using string joining is a quick solution.
