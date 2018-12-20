@@ -17,14 +17,14 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は、Excelファイルの **シートの操作** を行ってみましょう。
 
+<!--adsense-->
+
 ## 実行環境
 
 実行環境とのそのバージョンは前回同様以下になります。
 
 * python 3.6
 * openpyxl 2.5.6
-
-<!--adsense-->
 
 ## シートの新規追加
 
@@ -53,8 +53,6 @@ wb.save(filename = 'sample_book.xlsx')
 
 ![insert_sheet](/images/20180831/insert_sheet.png)
 
-<!--adsense-->
-
 ## すべてのシート名を取得する
 
 Excelファイル内に存在するすべてのシート名を確認するには `Workbook` オブジェクトの `sheetnames` プロパティを参照します。
@@ -82,8 +80,6 @@ for ws in wb:
 # wbはWorkbookオブジェクトを表す
 ws1 = wb["シート1のタイトル"]
 {{< / highlight >}}
-
-<!--adsense-->
 
 ## シートの属性値の変更
 

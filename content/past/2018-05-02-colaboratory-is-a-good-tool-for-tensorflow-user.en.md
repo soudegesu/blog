@@ -326,8 +326,6 @@ Jupyter notebook has modules as follows in default.
 Colaboratory includes Machine learning, scientific computing, and Google API libraries etc.
 If necessary, install the same libraries to the local machine.
 
-<!--adsense-->
-
 ## Conclusion
 
 Google Colaboratory is the best tool for machine learning engineer, because ...

@@ -24,6 +24,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 なぜ [Pandas](https://pandas.pydata.org/) かというと、 [Pandas](https://pandas.pydata.org/) によって、様々な **データ分析のための処理を簡単に行える** からです。
 
+<!--adsense-->
+
 ## 事前準備
 
 ### モジュールのインストール
@@ -146,8 +148,6 @@ import pandas as pd
 df = pd.read_excel('sample.xlsx', sheet_name='sample')
 df.head()
 {{< / highlight >}}
-
-<!--adsense-->
 
 ## まとめ 
 

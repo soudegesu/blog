@@ -35,8 +35,6 @@ Pythonであれば [pyenv](https://github.com/pyenv/pyenv)、 Rubyであれば [
 * MacOS X
 * [Homebrew](https://brew.sh/index_ja) インストール済み
 
-<!--adsense-->
-
 ## 設定手順
 
 ### goenvのインストール

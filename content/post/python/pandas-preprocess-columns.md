@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は、列のデータを前処理するために使う他の小技をまとめたいと思います。
 
+<!--adsense-->
+
 ## 列を0埋めする（zfill）
 
 **実はIDは5桁の数字なんだよ！** といった  **固定長の数値文字列** を扱う場面の話をします。

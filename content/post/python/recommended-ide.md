@@ -109,8 +109,6 @@ GPUやTPUといった特殊なプロセッサを使ってプログラムを実�
 
 こちらは以前の記事、「[Colaboratoryは機械学習エンジニアための最高のツールだった] (/python/colaboratory-is-a-good-tool-for-tensorflow-user/) 」 にまとめているので、時間のある時に読んでみてください。
 
-<!--adsense-->
-
 ## まとめ
 
 今回、私が考える初心者向けのPythonのIDEを紹介しました。

@@ -82,8 +82,6 @@ rustup component add rustfmt-preview --toolchain stable-x86_64-apple-darwin
 必要なものを適宜追加するスタイルになるので、そもそも差分を考慮するのが面倒であれば、
 `rustup` を `curl https://sh.rustup.rs -sSf | sh`  でインストールした方が良いかもしれません。
 
-<!--adsense-->
-
 ## プロジェクトを初期化する
 
 任意のディレクトリ配下をCargoプロジェクトとしたいときには、 `cargo init` コマンドを使います。

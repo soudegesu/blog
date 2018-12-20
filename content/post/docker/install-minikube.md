@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/k8s_icon.png
 [builderscon tokyo 2018](https://builderscon.io/tokyo/2018/) で [Kubernates](https://kubernetes.io/) に関する
 発表がいくつかありました。業務的に使う機会がなかったのですが、これを機に触ってみようと思い、まずは環境構築から、という話です。
 
+<!--adsense-->
+
 ## 事前準備
 
 以降は以下の環境にて実行することを前提としています。
@@ -54,8 +56,6 @@ minikube version
 {{< / highlight >}}
 
 これで `minikube` コマンドが使えるようになりました。
-
-<!--adsense-->
 
 ## Usageを確認する
 

@@ -32,8 +32,6 @@ twitter_card_image: /images/soudegesu.jpg
 
 個人的には `FIDO` という単語を、 **所持認証や生体認証を用いてクライアント側で認証処理自体を行う技術**、という意味合いで使っています。
 
-<!--adsense-->
-
 ## Web Authenticationの対応状況
 
 策定された [Web Authentication](https://www.w3.org/TR/webauthn/) の仕様は、各ブラウザベンダーが実装を進めています。

@@ -99,7 +99,7 @@ cat /etc/security/limits.conf
 # End of file
 {{< / highlight >}}
 
-### Files overriding limits.conf
+### Overriding limits.conf
 
 A part of comments in `/etc/security/limits.conf` explains the priority of settings as bellow.
 

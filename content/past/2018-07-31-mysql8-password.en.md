@@ -29,8 +29,6 @@ To conduct in-house training using MySQL 8, I needed to make AMI of MySQL 8 with
 * Ansible 2.6.1
 * Packer 1.1.3
 
-<!--adsense-->
-
 ## Configuration sample of ansible playbook
 
 In this case, I describe **only the main task definition part in Ansible**, I omit Packer configuration because it becomes redundant.

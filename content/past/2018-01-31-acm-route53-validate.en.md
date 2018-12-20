@@ -107,8 +107,6 @@ You only need to be careful not to delete the CNAME record.
 
 In addition, you will not have to worry about deleting to adopt coding tools like [Terraform](https://www.terraform.io/) and [roadworker](https://github.com/codenize-tools/roadworker).
 
-<!--adsense-->
-
 ## Conclusion
 This time, I explained the superiority of DNS verification while comparing the two kinds of verification methods.
 

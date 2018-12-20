@@ -14,6 +14,8 @@ twitter_card_image: /images/icons/terraform_icon.png
 
 今回は [Terraform](https://www.terraform.io/) の小ネタです。AWSアカウント番号を `.tfvars` ファイルに記載しない方法を紹介します。
 
+<!--adsense-->
+
 ## .tfvars に記載しがちな情報
 
 ってありますよね。 例えば、AWSアカウント番号がそうです。 [Terraform Module](https://www.terraform.io/docs/modules/usage.html) を使って、それなりのサイズ感のシステムコンポーネント定義を書いていくと、モジュール毎の `variables.tf` ファイルに

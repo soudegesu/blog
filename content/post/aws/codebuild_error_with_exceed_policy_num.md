@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/codebuild_icon.png
 `CodeBuild` の小ネタです。普段は [Terraform](https://www.terraform.io/) を使って、インフラのコード化を行っています。
 今回、 `CodeBuild` をコード化するに当たって発生した困ったことの共有をします。
 
+<!--adsense-->
+
 ## 複数のCodeBuildプロジェクトでService Roleを共有したい
 
 これが、そもそものモチベーションでした。目的は、下図のような `CodeBuild` プロジェクトたちの [Terraform](https://www.terraform.io/) を使ったプロビジョニングです。
@@ -24,8 +26,6 @@ twitter_card_image: /images/icons/codebuild_icon.png
 
 複数の `CodeBuild` プロジェクトを作成するにあたり、 **`ServiceRole` を個別に作成するのが面倒なので、共有してしまおう、** 
 と考えたのです。
-
-<!--adsense-->
 
 ## Service Roleのポリシーが勝手に増えている？
 

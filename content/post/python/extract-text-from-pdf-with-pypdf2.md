@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 前回の記事、 [PDFをPython（PyPDF2）で操作する - PDF・暗号化PDFファイルの読み込み](/post/python/open-pdf-with-pypdf2/) では、 [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) の `PdfFileReader` を使ってPDFファイルの読み込みを行いました。今回は読み込んだPDFファイルからデータの抽出を行います。
 
+<!--adsense-->
+
 ## 事前準備
 
 前回同様、 [アメリカ大統領からの大統領令のページ](https://www.federalregister.gov/presidential-documents/executive-orders) からダウンロードしたファイルを使います。
@@ -22,8 +24,6 @@ twitter_card_image: /images/icons/python_icon.png
 見た目はこんな感じです。全部で3ページほどあります。
 
 ![executive_order](/images/20181202/executive_order.png)
-
-<!--adsense-->
 
 ## ページへのアクセス
 

@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 列データにおける `NaN` の処理を例に、[Pandas](https://pandas.pydata.org/)の便利さの説明をしたいと思います。
 
+<!--adsense-->
+
 ## NaNとは
 
 **NaN（Not a Number）** は浮動小数点型における異常な値のことを意味します。
@@ -77,8 +79,6 @@ df.isna().any()
 上の出力で言えば、**趣味** のカラムは1つ以上欠損しているので `True` です。
 
 `df.isna().all()` としてしまうと、 **全ての値がNaNであればTrue** となってしまうので、注意しましょう。
-
-<!--adsense-->
 
 ## 各列にNaNが何件あるかを確認する
 

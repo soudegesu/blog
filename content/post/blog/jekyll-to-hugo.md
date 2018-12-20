@@ -33,8 +33,6 @@ twitter_card_image: https://www.soudegesu.com/images/icons/hugo_icon.png
 [http://jekyllthemes.org/](http://jekyllthemes.org/) に [Jekyll](https://jekyllrb.com/) のテーマが掲載されているのですが、
 それなりに充実していて、ぱっと使えるものが多かったのです。
 
-<!--adsense-->
-
 ## なんでHugoに変更しようと思ったか
 
 次になぜ [Hugo](https://gohugo.io/) に変更しようと思ったかを書きます。

@@ -40,8 +40,6 @@ func main() {
 }
 {{< / highlight >}}
 
-<!--adsense-->
-
 ## `reflect` パッケージと `json.Unmarshal` を使った構造体の生成
 
 [Goのreflectパッケージを使ってインスタンスを生成する](/post/go/create-instance-with-reflection/) の記事で学んだ

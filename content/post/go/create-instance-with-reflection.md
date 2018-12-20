@@ -35,8 +35,6 @@ private <T> T createInstance (Class<T> clazz) {
 }
 {{< / highlight >}}
 
-<!--adsense-->
-
 ## Goではreflectパッケージを使う
 
 先程のようなコードを [Go](https://github.com/golang/go) で書くには、 [reflect](https://golang.org/pkg/reflect/) パッケージを使って、リフレクションをすることになります。
@@ -95,7 +93,9 @@ r := obj.(User)
 戻り値を型アサーションすることで `obj` 変数が `User` 型としての定義を持っているかを確認してくれます。
 これで、呼び出し元でも `User` 型として処理を書けるわけです。
 
-### 所感
+<!--adsense-->
+
+## 所感
 
 [Go](https://github.com/golang/go) でインスタンス生成を行う、抽象度の少し高いコードを書くことができました。
 ただ、逆に手間がかかってしまう感も否めず、変に共通化を狙わずに、シンプルに処理を書いた方が吉かもしれないなー、と思いました。

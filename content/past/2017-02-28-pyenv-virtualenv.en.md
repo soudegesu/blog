@@ -34,8 +34,6 @@ Both 1 and 2 above are able to solved with `pyenv` and 3 with `pyenv-virtualent`
 * homebrew
 * zsh
 
-<!--adsense-->
-
 ## Setup
 ### Install modules for switching python virtual environments
 
@@ -161,8 +159,6 @@ And use `pyenv deactivate` command to deactivate virtual environment.
 {{< highlight "linenos=inline" >}}
 pyenv deactivate
 {{< / highlight >}}
-
-<!--adsense-->
 
 ## Conclusion
 

@@ -43,8 +43,6 @@ Server:
 
 {{< / highlight >}}
 
-<!--adsense-->
-
 ## Edit Dockerfile
 
 Create a simple Dockerfile as follows and place it at the project root.

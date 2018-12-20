@@ -26,8 +26,6 @@ I mainly use `datetime` in this article.
 * pytz
 * jupyter notebook
 
-<!--adsense-->
-
 ## Convert epochtime to datetime
 
 Now convert numeric formatting `epochtime` to `datetime`.
@@ -209,8 +207,6 @@ and, in changing its timezone with `astimezone` function, relative calculation i
 
 For that reason, when using multiple regions of the public cloud,   
 behavior may be different depending on where the program is deployed.
-
-<!--adsense-->
 
 ## Conclusion
 

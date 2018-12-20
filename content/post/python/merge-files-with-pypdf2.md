@@ -20,6 +20,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) のページをマージする機能を使って、ファイルの中に「すかし」を入れる方法を実現したいと思います。
 
+<!--adsense-->
+
 ## 事前準備
 
 前回同様、 [アメリカ大統領からの大統領令のページ](https://www.federalregister.gov/presidential-documents/executive-orders) からダウンロードしたファイルを使います。
@@ -32,8 +34,6 @@ twitter_card_image: /images/icons/python_icon.png
 こちらが「透かし」になるPDFファイルです。こちらを `confidential.pdf` とします。
 
 ![confidential](/images/20181205/confidential_pdf.png)
-
-<!--adsense-->
 
 ## PDFファイルのマージ
 
@@ -70,8 +70,6 @@ with open(FILE_PATH, mode='rb') as f, open(CONFIDENTIAL_FILE_PATH, mode='rb') as
 先程取得した「社外秘的なSomething」ページを結合してわけです。
 
 最後に `PdfFileWriter` を使って、 `executive_order_merged.pdf` という別名のファイルで書き込みを行います。
-
-<!--adsense-->
 
 ## 結果を確認する
 

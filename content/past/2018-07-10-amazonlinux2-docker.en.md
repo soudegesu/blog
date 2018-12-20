@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/ec2_icon.png
 
 Migration of Amazon Linux to Amazon Linux 2 causes `yum install docker` command doesn't work in Amazon Linux 2, so I investigate how to install docker.
 
+<!--adsense-->
+
 ## Motivation
 
 ### Install Docker to Amazon Linux2 without error
@@ -23,8 +25,6 @@ Migration of Amazon Linux to Amazon Linux 2 causes `yum install docker` command 
 My [Packer](https://www.packer.io/) build job stopped with error after AWS announced [Amazon Linux 2 LTS Candidate](https://aws.amazon.com/jp/amazon-linux-2/) in June 2018, because I migrated my server os Amazon Linux to Amazon Linux2.
 
 Fail to execute `yum install docker` and `yum search docker` command because yum repository has been changed.
-
-<!--adsense-->
 
 ## Install Docker with Extras Library
 

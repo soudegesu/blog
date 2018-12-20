@@ -15,14 +15,14 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回はExcelファイルをPythonで操作する方法を紹介したいと思います。
 
+<!--adsense-->
+
 ## 実行環境
 
 実行環境とのそのバージョンは以下になります。
 
 * python 3.6
 * openpyxl 2.5.6
-
-<!--adsense-->
 
 ## openpyxlのインストール
 
@@ -36,8 +36,6 @@ twitter_card_image: /images/icons/python_icon.png
 {{< highlight bash "linenos=inline" >}}
 pip install openpyxl
 {{< / highlight >}}
-
-<!--adsense-->
 
 ## 新規Excelファイルの作成
 
@@ -111,8 +109,6 @@ wb = load_workbook('sample_book.xlsx')
 print(wb.sheetnames)
 # ['シートの名前'] が出力されます
 {{< / highlight >}}
-
-<!--adsense-->
 
 ## まとめ
 
