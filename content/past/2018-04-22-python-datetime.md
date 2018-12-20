@@ -15,6 +15,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回は自分の備忘録的な意味も込めて書こうと思います。
 
+なお、Pythonでは日付時刻の処理を行う場合に `datetime` や `date`、 `time` などの型を使って処理をしますが、今回は `datetime` を使います。
+
 <!--adsense-->
 
 ## 環境情報
@@ -25,13 +27,9 @@ twitter_card_image: /images/icons/python_icon.png
 * pytz
 * jupyter notebook
 
-## 頻繁に使う変換
+<!--adsense-->
 
-データのクレンジング作業などで時系列データを取り扱う場合には、特定のミドルウェアや他人のコンバータが出力するデータ仕様を調査した上で加工処理を施すことが多いです。
-
-Pythonでは日付時刻の処理を行う場合に `datetime` や `date`、 `time` などの型を使って処理をしますが、今回は `datetime` を使います。
-
-### epochtimeからdatetime
+## epochtimeからdatetime
 epochtimeを表す `数値型` から `datetime` に変換します。
 
 epochtimeはUnix時間とも言われますが、世界標準時の1970年1月1日午前0時0分0秒からの経過秒数を整数値で表したものです。
@@ -44,7 +42,7 @@ UTCからの経過秒数を表現していることから、その数字から�
 
 datetime型の `fromtimestamp` 関数を使えば記述もシンプルに済ませることができます。
 
-#### epochtimeからdatetime
+### epochtimeからdatetime
 
 `fromtimestamp` 関数を使った変換のサンプルは以下になります。
 
@@ -58,7 +56,7 @@ print(dt)
 >> 2018-04-22 07:22:54
 {{< / highlight >}}
 
-#### ミリ秒を含むepochtimeからdatetime
+### ミリ秒を含むepochtimeからdatetime
 
 少数点以下にミリ秒を含んでいても問題なく変換できます。
 
@@ -73,7 +71,7 @@ print(dt2)
 >> 2018-04-22 07:22:54.099776
 {{< / highlight >}}
 
-#### エポックミリ秒からdatetime
+### エポックミリ秒からdatetime
 
 整数部分でミリ秒部分が表現されている(エポックミリ秒表記)場合には、何桁までがミリ秒を表しているのか確認した後、割ってあげます。
 
@@ -88,11 +86,13 @@ print(dt3)
 >> 2018-04-22 07:22:54.099000
 {{< / highlight >}}
 
-### 文字列からdatetime
+<!--adsense-->
+
+## 文字列からdatetime
 
 次に文字列からdatetimeに変換します。
 
-#### タイムゾーンあり日付文字列からdatetime
+### タイムゾーンあり日付文字列からdatetime
 
 `strptime` 関数を使えば簡単に変換できます。
 ミリ秒は `%f` 、 タイムゾーンは `%z` を使えばパースしてくれます。
@@ -108,7 +108,7 @@ print(dt)
 >> 2018-04-01 20:10:56.123000+09:00
 {{< / highlight >}}
 
-#### タイムゾーンなし日付文字列からdatetime
+### タイムゾーンなし日付文字列からdatetime
 
 厄介なのが、 **タイムゾーンのない日付文字列をdatetimeに変換する** 場合です。
 **日付文字列がどのタイムゾーンのデータを表しているか** を調べる必要があります。

@@ -115,10 +115,10 @@ url: /continuous-delivery/separate-improvement-and-feature/
 
 <!--adsense-->
 
-## 失敗リスクを細分化する
+## デプロイを細分化するとリスクの洗い出しがしやすくなる
 
-Decoupling improvement from feature のような考え方でリリース物に色分けをすると、リスクの分散構造が理解しやすくなるという副産物があります。
-例えば、 **feature開発のために、ライブラリをこっそりバージョンアップしてしまう現象** は現場でよく見かけます。
+Decoupling improvement from feature のような考え方でリリース物に色分けをすると、「デプロイを失敗に導くリスクがどこにあるか」を理解しやすくなるという副産物があります。
+例えば、 **feature開発のために、ライブラリをこっそりバージョンアップしてしまう現象** は現場でよく見かける思います。
 
 ![feature_stone](/images/20180416/feature_stone.png)
 

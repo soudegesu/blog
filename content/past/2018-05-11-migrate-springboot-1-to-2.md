@@ -313,7 +313,7 @@ springboot-actuator のメトリックをシステム監視に利用している
 compile group: 'io.micrometer', name: 'micrometer-registry-datadog', version: '1.0.3'
 {{< / highlight >}}
 
-### まさかにEC2（AmazonLinux）デプロイで落とし穴
+### まさかのEC2（AmazonLinux）デプロイで落とし穴
 
 ローカルマシン（Mac）で起動できたため、大方いけると考えていたが、EC2に `jar` をデプロイする時に落とし穴に遭遇した。
 
