@@ -1,5 +1,5 @@
 ---
-title: "Convert date formatted string or epochtime to datetime, and change timezone in Python"
+title: "Convert a string representing the date or epoch time to datetime and change timezone in Python"
 description: "Convert date formatted string or epochtime to datetime, and change timezone in Python.I often convert epochtime and string formatted datetime from middlware and other data sources. This post is a memo for myself."
 date: 2018-04-22
 thumbnail: /images/icons/python_icon.png
@@ -11,9 +11,9 @@ url: /en/python/python-datetime/
 twitter_card_image: /images/icons/python_icon.png
 ---
 
-I always search answers on the internet that how to **convert date formatted string to datetime** and **change timezone**. 
+## Motivation
 
-This article is a memo for myself.
+Because I always google the way to convert a string representing the date to datetime and change timezone on the Internet, this is note to self article.
 
 There are three types to process date and time in Python. `datetime`, `date`, and `time`. 
 I mainly use `datetime` in this article.
@@ -26,14 +26,12 @@ I mainly use `datetime` in this article.
 * pytz
 * jupyter notebook
 
-## Convert epochtime to datetime
+## Convert epoch time to datetime
+Now convert numeric data types of `eopch time` to `datetime`.
 
-Now convert numeric formatting `epochtime` to `datetime`.
+The `epoch time` is also called as `Unix time` and this counts starts at the Unix Epoch on January 1st, 1970 at UTC. Therefore, the unix time is merely the number of seconds between a particular date and the Unix Epoch.
 
-The `epochtime` is called as `Unix time`. It is an integral value of the number of elapsed seconds from 0:00:00 AM on January 1, 1970 at the world standard time(`UTC`). 
-Converting epochtime to datetime having timezone is easy.
-
-As a point to be aware of, make sure that the numerical data means epoch **second** or epoch **millisecond**. Judge by the number of digits of actual data, or determine by actual calculation by function.
+Just one thing to be careful of this conversion is to check whether the numeric types of epoch time is in **second or millisecond**. It is often the case that I judge it by digits or actual calculation by fuction.
 
 Using the `fromtimestamp` function in `datetime` module makes the code simpler as well.
 
@@ -85,8 +83,7 @@ print(dt3)
 
 ### Convert date string with timezone
 
-`strptime` function can convert is easier with parsing with directives.
-`%z` means UTC offset in the form `+HHMM` or `-HHMM`, and `%f` means microsecond as a decimal number, zero-padded on the left.
+It is easy to convert date string with timezone to datetime by using `strptime` function. %z means that UTC offset in the form `+HHMM` or `-HHMM` and `%f` means microsecond as a decimal number which zero-padded on the left.
 
 {{< highlight python "linenos=inline" >}}
 import datetime
@@ -100,7 +97,7 @@ print(dt)
 
 ### Convert date string without timezone
 
-Converting a date string without timezone to datetime is troublesome, because checking what timezone the string represents is neccesarry.
+Converting a date string without timezone to datetime is troublesome because checking what timezone the string represents is neccesarry.
 After checking the specification of data, using string joining is a quick solution.
 
 {{< highlight python "linenos=inline" >}}
@@ -135,9 +132,9 @@ print(str_to_dt)
 ## Points to keep in mind when dealing with date and time
 ### naive and aware
 
-In dealing with date and time in Python, keep in mind 2 kind of data **naive** and **aware**.
+In dealing with date and time in Python, keep in mind two kind of data **naive** and **aware**.
 
-The official Python document says as below.
+The official Python document says as below,
 
 * aware 
 
@@ -149,7 +146,7 @@ The official Python document says as below.
 
 In short, the `aware` object should be used in dealing with time data with timezone.
  
-However, relationship between **types and `aware`/`naive` objects** is complicated, because 
+However, relationship between **types and `aware`/`naive` objects** is complicated because 
 objects created from types are not unique.
 
 |types      |object|
@@ -158,7 +155,7 @@ objects created from types are not unique.
 |time       |naive or aware|
 |datetime   |naive or aware|
 
-Whether the `time` and` datetime` types  are `aware` and` naive` can be checked below.
+Whether the `time` and` datetime` types  are `aware` or` naive` can be checked below.
 
 |object    |condition to become aware |condition to become naive |
 |--------------|-------------|--------------|
@@ -202,8 +199,7 @@ print(jst_dt.tzinfo.utcoffset(jst_dt))# 9:00:00
 
 {{< / highlight >}}
 
-In the example code above, convert string without timezone to datetime as variable named `str_to_dt`,
-and, in changing its timezone with `astimezone` function, relative calculation is performed from the timezone on the runtime environment to the target timezone.
+In the example code above it shows conversion of string without timezone to datetime as variable named `str_to_dt`. And when changing timezone with `astimezone` function, relative calculation is performed from the timezone on the runtime environment to the target timezone.
 
 For that reason, when using multiple regions of the public cloud,   
 behavior may be different depending on where the program is deployed.
@@ -212,11 +208,11 @@ behavior may be different depending on where the program is deployed.
 
 It is available to 
 
-* Converte epochtime (second and millsecond) to datetime with `fromtimestamp` function
-* Converte string to datetime with `strptime` function
+* Convert epochtime (second and millsecond) to datetime with `fromtimestamp` function
+* Convert string to datetime with `strptime` function
 * Change timezone with `dateutil` library
 
-And in dealing with date and time in Python, keep in mind 2 kind of data **naive** and **aware**.
+And in dealing with date and time in Python, keep in mind two kind of data **naive** and **aware**.
 
 <div style="text-align: center">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1449355730&asins=1449355730&linkId=2bcac713b26ea9254a799c102127aa5b&show_border=true&link_opens_in_new_window=true"></iframe>
