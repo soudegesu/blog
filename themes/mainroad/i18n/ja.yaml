@@ -1,25 +1,25 @@
 # General
 - id: read_more
-  translation: Read more…
+  translation: 記事を読む
 
 # Post meta
 - id: meta_lastmod
-  translation: Last Modified
+  translation: 最終更新日時
 
 # Table of Contents
 - id: toc_title
-  translation: Page content
+  translation: 目次
 
 # Post nav
 - id: post_nav_prev
-  translation: Previous
+  translation: 前の記事
 
 - id: post_nav_next
-  translation: Next
+  translation: 次の記事
 
 # Authorbox
 - id: authorbox_name
-  translation: About {{ .Count }}
+  translation: "{{ .Count }} について"
 
 # Sidebar
 - id: sidebar_warning
@@ -34,19 +34,23 @@
 
 # Categories widget
 - id: categories_title
-  translation: Categories
+  translation: カテゴリ
 
 # Recent Posts widget
 - id: recent_title
-  translation: Recent Posts
+  translation: 最近投稿された記事
+
+# Related Posts
+- id: related_title
+  translation: 関連記事
 
 # Social widget
 - id: social_title
-  translation: Social
+  translation: ソーシャル
 
 # Tags List widget
 - id: tags_title
-  translation: Tags
+  translation: タグ
 
 # Footer
 - id: footer_credits

@@ -40,6 +40,10 @@
 - id: recent_title
   translation: Recent Posts
 
+# Related Posts
+- id: related_title
+  translation: Related Posts
+
 # Social widget
 - id: social_title
   translation: Social

@@ -1,6 +1,6 @@
 {{ $related := .Site.RegularPages.Related . | first 5 }}
 {{ with $related }}
-<h3>関連記事</h3>
+<h3>{{ T "related_title" }}</h3>
 {{ range . }}
 <div class="list__item">
 {{- if .Params.thumbnail }}
