@@ -1229,3 +1229,7 @@ textarea {
 .pagenation-ad {
 	margin-top: 20px;
 }
+
+.post .adsbygoogle {
+	margin-bottom: 1.25rem;
+}
