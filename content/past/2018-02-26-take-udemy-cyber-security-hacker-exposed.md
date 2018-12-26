@@ -12,7 +12,7 @@ url: /security/take-udemy-cyber-security-hacker-exposed/
 ---
 
 昨今の仮想通貨流出問題を受けて、システム開発に携わるエンジニアにとって、セキュリティの専門家でなくても、サイバーセキュリティに関する学習の必要性を感じている方はいらっしゃるのではないでしょうか。
-かくいう私もその口で、今回は [Udemy](https://www.udemy.com/) というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。
+かくいう私もその口で、今回は [Udemy](https://www.udemy.com/?deal_code=JPA8DEAL2PERCENTAGE&aEightID=s00000016735001) というオンライン学習プラットフォームを活用してサイバーセキュリティの基礎を学んだ感想を書きます。
 
 <!--adsense-->
 
@@ -24,17 +24,17 @@ Udemyはオンライン学習プラットフォームです。自身の目的に
 ![about_udemy](/images/20180226/about_udemy.png)
 
 ## 学習のため購入したコンテンツ
-今回はUdemyの中でもサイバーセキュリティのコンテンツのジャンルの中で人気のコンテンツ [「The Complete Cyber Security Course : Hackers Exposed!」](https://www.udemy.com/the-complete-internet-security-privacy-course-volume-1/) を購入しました。
+今回はUdemyの中でもサイバーセキュリティのコンテンツのジャンルの中で人気のコンテンツ [「The Complete Cyber Security Course : Hackers Exposed!」](https://px.a8.net/svt/ejp?a8mat=2ZWBEP+EBLENM+3L4M+BW8O2&a8ejpredirect=https%3A%2F%2Fwww.udemy.com%2Fthe-complete-internet-security-privacy-course-volume-1%2F%3Fdeal_code%3DJPA8DEAL2PERCENTAGE%26aEightID%3Ds00000016735001) を購入しました。
 価格は `1,300円` ほどで、クレジットカードでお支払いです。
 
 ![cyber_security](/images/20180226/cyber_security.png)
 
 この `The Complete Cyber Security Course` シリーズは全部で以下4つのコースが提供されており、先に進む程応用的な内容になっているそうです。(全部まだ受けていないので、伝聞で書いています)
 
-1. The Complete Cyber Security Course : Hackers Exposed!
-2. The Complete Cyber Security Course : Network Security!
-3. The Complete Cyber Security Course : Anonymous Browsing!
-4. The Complete Cyber Security Course : End Point Protection!
+1. [The Complete Cyber Security Course : Hackers Exposed!](https://px.a8.net/svt/ejp?a8mat=2ZWBEP+EBLENM+3L4M+BW8O2&a8ejpredirect=https%3A%2F%2Fwww.udemy.com%2Fthe-complete-internet-security-privacy-course-volume-1%2F%3Fdeal_code%3DJPA8DEAL2PERCENTAGE%26aEightID%3Ds00000016735001)
+2. [The Complete Cyber Security Course : Network Security!](https://px.a8.net/svt/ejp?a8mat=2ZWBEP+EBLENM+3L4M+BW8O2&a8ejpredirect=https%3A%2F%2Fwww.udemy.com%2Fnetwork-security-course%2F%3Fdeal_code%3DJPA8DEAL2PERCENTAGE%26aEightID%3Ds00000016735001)
+3. [The Complete Cyber Security Course : Anonymous Browsing!](https://px.a8.net/svt/ejp?a8mat=2ZWBEP+EBLENM+3L4M+BW8O2&a8ejpredirect=https%3A%2F%2Fwww.udemy.com%2Fthe-complete-cyber-security-course-anonymous-browsing%2F%3Fdeal_code%3DJPA8DEAL2PERCENTAGE%26aEightID%3Ds00000016735001)
+4. [The Complete Cyber Security Course : End Point Protection!](https://px.a8.net/svt/ejp?a8mat=2ZWBEP+EBLENM+3L4M+BW8O2&a8ejpredirect=https%3A%2F%2Fwww.udemy.com%2Fthe-complete-cyber-security-course-end-point-protection%2F%3Fdeal_code%3DJPA8DEAL2PERCENTAGE%26aEightID%3Ds00000016735001)
 
 ちなみにPart.1は全編英語、約11時間のコースでした。
 
