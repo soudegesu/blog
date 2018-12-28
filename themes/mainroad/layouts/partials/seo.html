@@ -7,11 +7,16 @@
 <meta name="author" content="{{ $.Site.Author.name }}">
 <link rel="canonical" href="{{ .Site.BaseURL }}{{ .Page.URL }}">
 {{ if .IsTranslated }}
-  <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}"/>    
+  <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}"/>      
   {{ range .Translations }}
-    <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}"/>
-    <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+    <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}"/>    
   {{ end}}  
+  {{ if eq .Lang "en" }}
+  <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}"/>
+  {{ end }}
+  {{ if eq .Lang "ja" }}
+  <link rel="alternate" hreflang="x-default" href="{{ .Site.BaseURL }}en{{ .Page.URL }}"/>
+  {{ end }}
 {{ else }}
   <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
 {{ end }}
