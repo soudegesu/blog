@@ -1,10 +1,14 @@
-{{- if .Site.Menus.main }}
+{{ if .IsTranslated }}
 <nav class="menu">
 	<ul class="menu__list">
-		{{- $currentNode := . }}
-		{{- range sort .Site.Menus.main }}
-		{{- if .Name}}
-		<li class="menu__item{{if or ($currentNode.IsMenuCurrent "main" .) ($currentNode.HasMenuCurrent "main" .) }} menu__item--active{{end}}"><a class="menu__link" href="{{ .URL }}">{{ .Name | upper }}</a></li>
+		<li class="menu__item menu__link">Language</li>
+		{{ range .Site.Languages }}
+		{{ if eq . $.Site.Language }}
+		<li class="menu__item menu__item--active"><a class="menu__link" href="#">{{ .LanguageName }}</a></li>
+		{{ else }}
+			{{ range $.Translations }}
+			<li class="menu__item"><a class="menu__link" href="{{ .Permalink }}">{{ .Language.LanguageName }}</a></li>
+			{{- end }}
 		{{- end }}
 		{{- end }}
 	</ul>
