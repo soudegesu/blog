@@ -1,6 +1,6 @@
 ---
 title: "Use PyPDF2 - open PDF file or encrypted PDF file"
-description: ""
+description: "Open PDF file with PdfFileReader on PyPDF2 and decrypt an encrypted PDF file with decrypt function. Troubleshoot when NotImplementedError is occured."
 date: "2018-11-30T10:54:40+09:00"
 thumbnail: /images/icons/python_icon.png
 categories:
@@ -65,8 +65,8 @@ with open(FILE_PATH, mode='rb') as f:
     print(f"Number of pages: {reader.getNumPages()}")
 {{< / highlight >}}
 
-Open the PDF file as binary read mode after importing installed `PyPDF2`.
-And then, Create a `PdfFileReader` object to work PDF.
+Open the PDF file as binary read mode after importing `PyPDF2`.
+And then, create a `PdfFileReader` object to work PDF.
 
 Check the result.
 
@@ -76,14 +76,14 @@ Number of pages: 3
 
 <!--adsense-->
 
-## Read PDF file with password(Encrypted PDF)
+## Read a PDF file with password(Encrypted PDF)
 
 In this section, Open and read an **encrypted PDF file** that has a password when opening a file. To create an encrypted PDF file, set a password with enabling encryption option when saving a PDF file.
 
 ### Failed example
 
 Save a PDF file named `executive_order_encrypted.pdf` with a password `hoge1234`. 
-Open the PDF file and execute with a previous program that read the **PDF without password**.
+Open the PDF file and execute with the previous code that read the **PDF without password**.
 
 {{< highlight python "linenos=inline" >}}
 # Failed example
@@ -102,7 +102,7 @@ The following error message will be printed.
 PdfReadError: File has not been decrypted
 {{< / highlight >}}
 
-### Decrypt an encrypted PDF file
+### Success example
 
 The `decrypt` function given a password string to an argument decrypts an encrypted PDF file.
 It is a better way to check if the file is encrypted with `isEncrypted` function before calling `decrypt` function.
@@ -125,16 +125,16 @@ Number of pages: 3
 
 <!--adsense-->
 
-## Troubleshooting: `NotImplementedError` is displayed in calling `decrypt` function
+## Troubleshooting: `NotImplementedError` is thrown in calling `decrypt` function
 
-The following error message may be displayed when working an encrypted PDF file.
+The following error message may be thrown when working an encrypted PDF file.
 
 {{< highlight bash >}}
 NotImplementedError: only algorithm code 1 and 2 are supported
 {{< / highlight >}}
 
 The error message means that [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) doesn't have an implementation to decrypt an algorithm that encrypts the PDF file. 
-If this happens, it's difficult to solve the problem with [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) only.
+If this happens, it's difficult to open the PDF file with [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) only.
 
 ### Decrypt with qpdf
 
@@ -166,23 +166,19 @@ with open(ENCRYPTED_FILE_PATH, mode='rb') as f:
                 print(f"Number of page: {reader.getNumPages()}")
 {{< / highlight >}}
 
-Pythonコードから `qpdf` コマンドをOSのコマンドとして実行し、
-**複合化したPDFファイルをパスワードなしの別ファイルとして保存** します。
-その後、もう一度 `PdfFileReader` にてファイルを読み込ませる、という算段です。
-
-なお、このサンプルコードですと、 `with` 句によってファイルが自動クローズされてしまうため、実際にはもう少しコードのスコープを整理してあげる方が汎用性の面で良いと思います。
+The point is that Python executes the `qpdf` command as the OS command and
+save decrypted PDF file as new PDF file without password. Then, create `PdfFileReader` instance to work the PDF file with [PyPDF2](https://pythonhosted.org/PyPDF2/index.html).
 
 ## Conclusion
 
-今回は [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) を使ってPDFファイルを開く方法をまとめました。
+It is available to
 
-* ファイル読み込みには `PdfFileReader` を使う
-* 暗号化PDFには `decrypt` 関数で復号化する
-* 復号化時に `NotImplementedError` が出る場合には、復号化の処理は [qpdf](https://github.com/qpdf/qpdf) で行う
+* Open PDF file with `PdfFileReader` on [PyPDF2](https://pythonhosted.org/PyPDF2/index.html)
+* Decrypt an encrypted PDF file with `decrypt` function
+* Decrypt an encrypted PDF file with [qpdf](https://github.com/qpdf/qpdf) when `NotImplementedError` is occured
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=487311778X&linkId=c147d28e189fdaae2d03d9fa71dd1ea2&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117380&linkId=fffb54546b0abb4066b8c70034e45cee&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=479738946X&linkId=a0f1182a7478439bc70e51d189ec3179&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1593275994&asins=1593275994&linkId=365e065e9a34c2f0591dd8776c437d42&show_border=true&link_opens_in_new_window=true"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1449357016&asins=1449357016&linkId=76478fed9537a1dcdb17f90ac79fa493&show_border=true&link_opens_in_new_window=true"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1491946008&asins=1491946008&linkId=a0d89601ba231dccc5db55892c0fef31&show_border=true&link_opens_in_new_window=true"></iframe>
+</div>
