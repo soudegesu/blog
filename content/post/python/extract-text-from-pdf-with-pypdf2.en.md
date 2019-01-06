@@ -21,14 +21,14 @@ In previous article titled '[Use PyPDF2 - open PDF file or encrypted PDF file](/
 
 ## Preparation
 
-前回同様、 [アメリカ大統領からの大統領令のページ](https://www.federalregister.gov/presidential-documents/executive-orders) からダウンロードしたファイルを使います。
-
-見た目はこんな感じです。全部で3ページほどあります。
+Prepare a PDF file for working. Download [Executive Order](https://www.federalregister.gov/presidential-documents/executive-orders) as before.
+It looks like below. There are three pages in all.
 
 ![executive_order](/images/20181202/executive_order.png)
 
-## ページへのアクセス
+## Accessing to pages
 
+In this section,
 まずは、読み込んだPDFファイルから操作対象のページを定める必要があります。
 ここでは、「任意のページにアクセスする方法」と「すべてのページにアクセスする方法」の2種類を紹介します。
 
