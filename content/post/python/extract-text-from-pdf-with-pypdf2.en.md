@@ -1,6 +1,6 @@
 ---
 title: "Use PyPDF2 - extract text data from PDF file"
-description: ""
+description: "Access to specified or all of pages in PDF file and extract text on the file as string type with extractText by PyPDF2"
 date: "2018-12-02T17:29:29+09:00"
 thumbnail: /images/icons/python_icon.png
 categories:
@@ -28,14 +28,9 @@ It looks like below. There are three pages in all.
 
 ## Accessing to pages
 
-In this section,
-まずは、読み込んだPDFファイルから操作対象のページを定める必要があります。
-ここでは、「任意のページにアクセスする方法」と「すべてのページにアクセスする方法」の2種類を紹介します。
+### Accessing to arbitrary page
 
-### 任意のページにアクセスする
-
-読み込んだPDFファイルの任意のページにアクセスする方法です。
-サンプルコードは以下のようになります。
+The following code describes accessing the specified page in read PDF file.
 
 {{< highlight python "linenos=inline,hl_lines=7" >}}
 import PyPDF2
@@ -44,16 +39,16 @@ FILE_PATH = './files/executive_order.pdf'
 
 with open(FILE_PATH, mode='rb') as f:
     reader = PyPDF2.PdfFileReader(f)
-    page = reader.getPage(0) #最初のページにアクセスする
+    page = reader.getPage(0) #accessing to first page in file
 {{< / highlight >}}
 
-`PdfFileReader` で読み込んだ後、 `getPage` 関数でアクセスするページを指定します。
-引数の数字は `0` 始まりになり、今回は全3ページのPDFなので、`0` `1` `2` が指定可能です。
+After loading file with `PdfFileReader`, specify by The `getPage` function.
+Giving a page index to `getPage` as an aruguments, the function returns its page instance. The page index starts 0.
+This Executive Order file has three pages in file, so we can specify 0 to 2.
 
-### PDFすべてのページにアクセスする
+### Accessing to all of pages
 
-次にPDFファイルすべてのページにアクセスする方法です。
-サンプルコードは以下になります。
+The following code describes accessing all of pages in read PDF file.
 
 {{< highlight python "linenos=inline,hl_lines=7-8" >}}
 import PyPDF2
@@ -66,15 +61,15 @@ with open(FILE_PATH, mode='rb') as f:
         pass
 {{< / highlight >}}
 
-`PdfFileReader` クラスには `pages` というプロパティがあり、それは `PageObject` クラスのリストです。
-`pages` プロパティをループすることで、最初のページから順に処理ができます。
-（上のサンプルではとりあえず `pass` にしていますが、ここに何らかの処理が入ります。）
+`PdfFileReader` class has a `pages` property that is a list of `PageObject` class.
+Iterating `pages` property with for loops can access to all of page in order from first page.
 
 <!--adsense-->
 
-## ページからテキストを抽出する
+## Extarct text from page object
 
-操作対象のページが決まれば、次にテキストを抽出しましょう。
+Now extract text string data from page object.
+The `extractText` function returns text in page as string type.
 
 {{< highlight python "linenos=inline,hl_lines=8" >}}
 import PyPDF2
@@ -87,7 +82,7 @@ with open(FILE_PATH, mode='rb') as f:
     print(page.extractText())
 {{< / highlight >}}
 
-`extractText` 関数で、ページ内のテキストを文字列型として取得します。
+The result is printed as below.
 
 ```
 Presidential Documents
@@ -153,17 +148,20 @@ date of this order.
 VerDate Sep<11>2014 18:13 Nov 01, 2018Jkt 247001PO 00000Frm 00003Fmt 4705Sfmt 4790E:\FR\FM\02NOE0.SGM02NOE0
 ```
 
-文字列が抽出できました。`Title 3Ñ` や `ezuelaÕs` など一部の記号が文字化けしているようです。
-また、ページ内の文章全体を１つの文字列として抽出するため、抽出した文字列を自然言語処理で更に加工するなど工夫が必要そうですね。
+I can extract text in page, but some symbols are garbled like `Title 3Ñ` and `ezuelaÕs`.
+In addition, since all the sentence on the page is extracted as one stinrg, it seemns necessary to devise such as processing the extracted character string by natural language processing.
 
 
-## まとめ
+## Conclusion
 
-今回は [PyPDF2](https://pythonhosted.org/PyPDF2/index.html) を使って読み込んだPDFファイルのページからテキストを抽出しました。 `extractText` 関数を呼び出すだけなので、処理自体の難しさはありませんが、処理したテキストを更に加工するなどの工夫が必要でしょう。
+It is available to
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=487311778X&linkId=c147d28e189fdaae2d03d9fa71dd1ea2&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=4873117380&linkId=fffb54546b0abb4066b8c70034e45cee&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=soudegesu-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=479738946X&linkId=a0f1182a7478439bc70e51d189ec3179&bc1=ffffff&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-</iframe>
+* Access to specified or all of pages in PDF file.
+* Extract text on the file as string type with `extractText`
+
+
+<div align="center">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1593275994&asins=1593275994&linkId=365e065e9a34c2f0591dd8776c437d42&show_border=true&link_opens_in_new_window=true"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1449357016&asins=1449357016&linkId=76478fed9537a1dcdb17f90ac79fa493&show_border=true&link_opens_in_new_window=true"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=soudegesu-20&marketplace=amazon&region=US&placement=1491946008&asins=1491946008&linkId=a0d89601ba231dccc5db55892c0fef31&show_border=true&link_opens_in_new_window=true"></iframe>
+</div>
