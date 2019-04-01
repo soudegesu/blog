@@ -11,3 +11,17 @@ draft: true
 isCJKLanguage: true
 twitter_card_image: /images/icons/python_icon.png
 ---
+
+今回はPythonでHTTP通信を行うためのモジュールである [urllib.request](https://docs.python.org/ja/3/library/urllib.request.html) について説明をします。
+
+## 環境情報
+
+今回は以下の環境にて動作確認をしています。
+
+## 基本的な通信
+
+### HTTP Get
+
+
+### HTTP Post
+
