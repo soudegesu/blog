@@ -19,6 +19,8 @@ twitter_card_image: /images/icons/python_icon.png
 
 * python 3.7
 
+<!--adsense-->
+
 ## 基本的な通信
 
 ### Request オブジェクトを使ったGET
@@ -89,6 +91,8 @@ with urlopen(req) as res:
 
 `TypeError: can't concat str to bytes` が表示されるときは `data` に渡すオブジェクトがエンコードされていないことが原因です。
 上の例では `json.dumps({'param': 'piyo'}).encode()` で辞書型をjsonにエンコードしています。
+
+<!--adsense-->
 
 ## `urlopen` だけで通信する
 
