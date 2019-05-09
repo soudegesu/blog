@@ -20,16 +20,15 @@ In this article, I will introduce Python IDEs and code editors use cases.
 
 ## What is an IDE ?
 
-IDE is an abbreviation for **Integrated Development Environment**.
+An IDE is an abbreviation for **Integrated Development Environment**.
 We have several steps for developing source code. These are writing codes, compililing, running codes and debugging.
-IDE is a software suite for that.
+An IDE is a software suite for that.
 
 ## What is a code editor?
 
-「エディタ」という単語もIDEを語る文脈の中で登場します。エディタ（editor）というくらいですから、
-その名の通り、一般には「（プログラムやテキストなどの）記述や編集」に特化したツールのことを指します。
-書くことに特化したツールであるため、インストール時の初期状態では編集しかできませんが、
-プラグイン（拡張機能）を追加することでIDEと同等の機能を持たせることができます。
+A code editor is a tool specialized in the writing of programs and texts in general.
+You can only edit after installation because it specializes in writing,
+However, code editor has the same function as an IDE by installing the plug-in.
 
 <!--adsense-->
 
