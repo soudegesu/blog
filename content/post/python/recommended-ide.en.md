@@ -20,8 +20,9 @@ In this article, I will introduce Python IDEs and code editors use cases.
 
 ## What is an IDE ?
 
-そもそもIDEは **Integrated Development Environment** の略であり、日本語では「統合開発環境」と呼ばれています。
-そもそもプログラミングでは実行可能なプログラムを完成させるまでに、プログラムを記述し、コードをコンパイルし、実行し、デバッグするというおおまかな流れがあります。IDEはこれらのプロセスを単一のツール上で行うことができるため、「統合」と銘打っていると理解しています。
+IDE is an abbreviation for **Integrated Development Environment**.
+We have several steps for developing source code. These are writing codes, compililing, running codes and debugging.
+IDE is a software suite for that.
 
 ## What is a code editor?
 
