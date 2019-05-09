@@ -11,17 +11,19 @@ isCJKLanguage: true
 twitter_card_image: /images/icons/python_icon.png
 ---
 
-初めてPythonを触る方に **「Pythonで開発する時にIDEは何を使えば良いでしょうか？」** とよく聞かれます。
+## Motivation
 
-手元でささっと動かすだけであれば、自身の手に馴染んだIDEを使ったり、エディタにPythonのプラグインをインストールするのが手っ取り早いでしょうが、初心者の方には **やりたいこと（作りたいもの）を聞いてから、用途に応じてオススメのエディタを伝えています** 。
-今回はいくつかあるPythonのIDEの中で、初心者向けのものと、個人的に考えるユースケースを紹介します。
+My colleages who are Python beginners often asks me my recommended Python IDE.
+After hearing what they'd like to do with Python from them at first, I suggest one of several IDEs or code editors.
 
-## IDEとは
+In this article, I will introduce Python IDEs and code editors use cases.
+
+## What is an IDE ?
 
 そもそもIDEは **Integrated Development Environment** の略であり、日本語では「統合開発環境」と呼ばれています。
 そもそもプログラミングでは実行可能なプログラムを完成させるまでに、プログラムを記述し、コードをコンパイルし、実行し、デバッグするというおおまかな流れがあります。IDEはこれらのプロセスを単一のツール上で行うことができるため、「統合」と銘打っていると理解しています。
 
-## エディタとは
+## What is a code editor?
 
 「エディタ」という単語もIDEを語る文脈の中で登場します。エディタ（editor）というくらいですから、
 その名の通り、一般には「（プログラムやテキストなどの）記述や編集」に特化したツールのことを指します。
