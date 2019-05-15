@@ -34,94 +34,80 @@ However, code editor has the same function as an IDE by installing the plug-in.
 
 ## PyCharm
 
-まず最初に紹介するのは、Jetbrains社が提供するPython用IDEの [PyCharm](https://www.jetbrains.com/pycharm/) です。
+At first, [PyCharm](https://www.jetbrains.com/pycharm/) that is a Python IDE provided by Jetbrains.
 
 ![pycharm](/images/20181127/pycharm.png)
 
-他のエディタと比べてPyCharmは高機能なIDEと言えます。特にコード補完やデバッガの優秀さが特徴で、 **Pythonで中〜大規模なアプリケーションを開発する時にオススメします。**
-例えば、[django](https://www.djangoproject.com/)を使ったWebアプリケーションや、Pythonのライブラリのソースコードを読む場合などです。
+Compared with other IDEs, [PyCharm](https://www.jetbrains.com/pycharm/) is a multifunctional IDE. Especially, code completion and debugger are superior. So, [PyCharm](https://www.jetbrains.com/pycharm/) is suited for development of medium or large-scale system with Python.
+(For example, developing web apps using [django](https://www.djangoproject.com/), python libraly code reading etc..)
 
-PyCharmには無料版と有償版の2種類が存在し、[無料版と有償版の機能比較](https://www.jetbrains.com/pycharm/features/editions_comparison_matrix.html) ページが公開されています。
-Pythonで本格的なwebアプリケーションを作る場合には有償版の購入を検討しても良いでしょうが、 **大抵の場合は無料版の機能で十分足りる** でしょう。
+Jetbrains provides two types of [PyCharm](https://www.jetbrains.com/pycharm/) editions, one is a professional edition(subscription model), another is a community edition(free of charge model). PyCharm editions comparison is [here](https://www.jetbrains.com/pycharm/features/editions_comparison_matrix.html). Community edition is ehough for development in most cases.
 
-唯一の欠点としては、高機能な分、起動に時間がかかることです。
+The only thing is, [PyCharm](https://www.jetbrains.com/pycharm/) startup is slowly.
 
 <!--adsense-->
 
 ## Visual Studio Code
 
-次はMicrosoft社が提供するソースコードエディタ、[Visual Studio Code](https://code.visualstudio.com/) です。
-プログラミングで使うことを目的としたエディタで、とても使い勝手が良いです。
+Secondly, [Visual Studio Code](https://code.visualstudio.com/) that is a code editor provided by Microsoft.
+[Visual Studio Code](https://code.visualstudio.com/) is easy to use because it is optimized for building and debugging code.
 
 ![vscode](/images/20181127/vscode.png)
 
-[Visual Studio Code](https://code.visualstudio.com/) は汎用性の高いエディタで、プラグインをインストールすることで、
-どの言語にも対応できるようになります。Microsoft社からPythonのプラグインが提供されているので、それをインストールすると良いでしょう。
+Developers can develop on various programming environment with [Visual Studio Code](https://code.visualstudio.com/) installed some plugins.
+Microsft provides Python plugin for [Visual Studio Code](https://code.visualstudio.com/).
 
 ![vscode_python_extention.png](/images/20181127/vscode_python_extention.png)
 
-**小〜中規模なPythonコード** を書くのであれば [Visual Studio Code](https://code.visualstudio.com/) をオススメします。
-例えば、簡単なWebスクレイピングプログラムや、AWS Lambdaの関数を作成する場合です。
-
-[Visual Studio Code](https://code.visualstudio.com/) の特徴としては、**動作の軽快さ** があります。
-サクッと立ち上げて、サクッと書くなら一番だと感じています。余談ですが、私はGoも [Visual Studio Code](https://code.visualstudio.com/) で書いています。
+[Visual Studio Code](https://code.visualstudio.com/) is suited for development of small or middle-scale system
+(For example, developing web scaraper, AWS Lambda function etc..), because it is light in behavior or action.
 
 <!--adsense-->
 
 ## Jupyter Notebook
 
-次に [Jupyter Notebook](http://jupyter.org/) を紹介します。Jupyterの読みは「ジュパイター」でも「ジュピター」でも通じます。
-昔は **IPython Notebook** という名前のツールでした。
+Next is [Jupyter Notebook](http://jupyter.org/) that is an browser IDE. That was named **IPython Notebook** in past.
 
-[Jupyter Notebook](http://jupyter.org/) はブラウザ上で動作するIDEになります。
-
-[Jupyter Notebook](http://jupyter.org/) はwebページからインストーラをダウンロードするのではなく、Pythonの `pip` コマンドでインストールをします。
+[Jupyter Notebook](http://jupyter.org/) can be installed with `pip` command as follows.
 
 {{< highlight bash "linenos=inline" >}}
-pip install -U pip  #pipのバージョンを最新にする
-pip install jupyter #jupyter をインストールする
+pip install -U pip  #update pip versiion
+pip install jupyter #install jupyter
 {{< / highlight >}}
 
-インストールが完了すると `jupyter` コマンドが使えるようになるので、 [Jupyter Notebook](http://jupyter.org/) を起動します。
+and then, boot [Jupyter Notebook](http://jupyter.org/).
 
 {{< highlight bash "linenos=inline" >}}
 jupyter notebook
 {{< / highlight >}}
 
-コマンド実行後にブラウザが起動し、 `http://localhost:8888` にてアクセスができるようになります。
+After above command execution, browser boots automatically and open `http://localhost:8888`.
 
 ![jupyter_home](/images/20181127/jupyter_home.png)
 
-[Jupyter Notebook](http://jupyter.org/) の特徴は、コードブロック単位（セル）でプログラムが実行できることと、表や図の描画に優れていることです。
-そのため、 コーディングと並行して **データの可視化が必要な場合** にオススメします。
-例えば、機械学習やデータファイル（エクセルやCSV）を取り扱う場面が該当します。
+[Jupyter Notebook](http://jupyter.org/) is suited for data visualization or machine learning because it is excellent in code execution in cell units and drawing graphs and tables.
 
 ![jupyter_iris](/images/20181127/jupyter_iris.png)
 
-欠点として、先程説明したユースケースにおいては、ファイル拡張子が [Jupyter Notebook](http://jupyter.org/) 専用の `.ipynb` になってしまうことが挙げられます。`.ipynb` ファイルから、Pythonの実行ファイルである `.py` ファイルへ変換することも可能ですが、各セルのコードを画一的に出力するだけなので、実用性はありません。 **.pyファイルの作成には向いていないと言えます** 。
-加えて、**他のIDEと比べるとコード補完が弱い** ことも気にしておく必要があります。
+The file extension is `.ipynb` specialised in [Jupyter Notebook](http://jupyter.org/).
+We can convert `.ipynb` file to `.py` file, however converted code is not executable.
+And code completion in [Jupyter Notebook](http://jupyter.org/) is inferior as compared with others.
 
 <!--adsense-->
 
 ## Google Colaboratory
 
-最後に番外編として、[Colaboratory](https://colab.research.google.com/) を上げておきます。
-これは [Jupyter Notebook](http://jupyter.org/) を Google社がカスタマイズしたWebサービスで、
-GPUやTPUといった特殊なプロセッサを使ってプログラムを実行させることができます。
+At last, [Colaboratory](https://colab.research.google.com/) that is hosted by Google.
+That is customised [Jupyter Notebook](http://jupyter.org/) for machine learning. We can run codes on special processor GPU and TPU.
 
-こちらは以前の記事、「[Colaboratoryは機械学習エンジニアための最高のツールだった] (/python/colaboratory-is-a-good-tool-for-tensorflow-user/) 」 にまとめているので、時間のある時に読んでみてください。
+## Conclusion
 
-## まとめ
+In this article, I introduced my reccomend python IDEs.
 
-今回、私が考える初心者向けのPythonのIDEを紹介しました。
+If you..
 
-まとめると、
-
-* 本格的なPythonアプリケーションを実装するなら [PyCharm](https://www.jetbrains.com/pycharm/)
-  * 無料版でも問題ない
-  * Webアプリケーションフレームワークを使って実装するなら有償版を検討する価値はある
-* コードをサクッと書くなら [Visual Studio Code](https://code.visualstudio.com/)
-* 機械学習のようなデータ処理なら [Jupyter Notebook](http://jupyter.org/)
-  * GPUやTPUを使いたいなら [Colaboratory](https://colab.research.google.com/) を選択するのもあり
-
-です。是非いろいろ試してみて、自分の手に馴染む開発環境を手に入れてください！
+* develop production level application, use [PyCharm](https://www.jetbrains.com/pycharm/).
+  * community edition is enough in most cases.
+* develop light codes, use [Visual Studio Code](https://code.visualstudio.com/).
+* process data like machine learning, use [Jupyter Notebook](http://jupyter.org/)
+  * running codes on GPU or TPU, choice [Colaboratory](https://colab.research.google.com/)
