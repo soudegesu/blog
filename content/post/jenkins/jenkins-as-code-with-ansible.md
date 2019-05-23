@@ -278,7 +278,7 @@ Groovyスクリプトを使うことで、 `${JENKINS_HOME}` 配下にxmlをひ�
     mode: 0700
 {{< / highlight >}}
 
-Groovyスクリプトの書き方については、別のポストで書きます。
+Groovyスクリプトの書き方については、「[Jenkins2をコード化しよう - その２：Jenkinsの起動時にプログラム（Groovy Hook Script）を動かす](/post/jenkins/jenkins-as-code-with-init-groovy-d/)」 を参考にしてください。
 
 <!--adsense-->
 
