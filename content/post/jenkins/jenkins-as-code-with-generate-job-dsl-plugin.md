@@ -16,6 +16,12 @@ twitter_card_image: /images/icons/jenkins_icon.png
 
 今回はJenkinsのジョブ設定をコード化してみましょう。
 
+## JenkinsのジョブはXMLで管理されている
+
+## Jenkins Job DSL プラグインを使う
+
+## サンプルコード：ビルドジョブの作成
+
 ## 参考にさせていだいたサイト
 
 * [Jenkins Job DSL API](https://jenkinsci.github.io/job-dsl-plugin/)
