@@ -1,5 +1,5 @@
 ---
-title: "Jenkins2をコード化しよう - その１：Ansibleでマシンイメージを作成する"
+title: "Jenkins2をコード化しよう - その１：Ansibleでプロビジョニングする"
 description: "Jenkins2をAnsibleでコード化する場合のTipをまとめました。"
 date: "2019-05-15T15:35:08+09:00"
 thumbnail: "/images/icons/jenkins_icon.png"
@@ -12,7 +12,7 @@ isCJKLanguage: true
 twitter_card_image: /images/icons/jenkins_icon.png
 ---
 
-今回は、CIサーバとして広く使われているJenkinsのマシンイメージをAnsibleでコード化するための手順を紹介します。
+今回は、CIサーバとして広く使われているJenkinsをAnsibleでコード化するための手順を紹介します。
 
 ## 背景：Jenkinsサーバがカオスだった
 
@@ -49,7 +49,7 @@ Jenkinsの起動に必要なJava8をインストールした後、Jenkinsのyum�
 インストールには公開鍵が必要なので、取得を行った後にJenkinsを `yum` でインストールします。
 
 {{< highlight yaml "linenos=inline" >}}
-- name: yumリポジトリを有効にします（私の場合はAWS EC2上でマシンイメージを作成しています）
+- name: yumリポジトリを有効にします
   shell: amazon-linux-extras enable corretto8
 - name: OpenJDK 8(corretto) をインストールします
   yum:
