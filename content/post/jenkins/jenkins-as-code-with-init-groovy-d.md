@@ -12,7 +12,7 @@ isCJKLanguage: true
 twitter_card_image: /images/icons/jenkins_icon.png
 ---
 
-前回の記事 [Jenkins2をコード化しよう - その１：Ansibleでマシンイメージを作成する](/post/jenkins/jenkins-as-code-with-ansible/) では Jenkins2をAnsibleでコード化するためのTipsを紹介しました。
+前回の記事 [Jenkins2をコード化しよう - その１：Ansibleでプロビジョニングする](/post/jenkins/jenkins-as-code-with-ansible/) では Jenkins2をAnsibleでコード化するためのTipsを紹介しました。
 
 今回は前回触れなかった `init.groovy.d` のJenkins起動スクリプトについて説明します。
 
