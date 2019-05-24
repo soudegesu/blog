@@ -16,6 +16,8 @@ twitter_card_image: /images/icons/jenkins_icon.png
 
 今回はJenkinsのジョブ設定をコード化してみましょう。
 
+<!--adsense-->
+
 ## JenkinsのジョブはXMLで管理されている
 
 `${JENKINS_HOME}` 配下のディレクトリ構成は以下のようになっています。ジョブに関連する部分のみ抜粋します。
@@ -35,6 +37,8 @@ ${JENKINS_HOME}
 
 `jobs` ディレクトリ直下にジョブ名のディレクトリがあり、その配下に `config.xml` が存在します。
 `config.xml` 内にJenkinsのジョブの設定全体を保存しているのですが、xmlを直接編集したり、gitで管理するのは苦行です。
+
+<!--adsense-->
 
 ## Jenkins Job DSL プラグインを使う
 
@@ -105,6 +109,8 @@ java -Dfile.encoding=UTF8 -Dsun.jnu.encoding=UTF8 -jar job-dsl-core-1.74-standal
     </definition>
 </flow-definition>
 {{</ highlight>}}
+
+<!--adsense-->
 
 ## ユースケース：ジョブをインポートするジョブを作る
 
