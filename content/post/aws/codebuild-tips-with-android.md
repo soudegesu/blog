@@ -1,7 +1,7 @@
 ---
 title: "クラウド上でアプリをビルドしたい！CodeBuildでAndroidアプリをビルドするときのTips"
 description: "CodeBuildでAndroidアプリをビルドする方法を紹介します。Android SDKが複数必要な場合にも対応しています。CodeBuildの標準出力を日本語化する場合の説明もあります"
-date: "2019-05-27T09:22:45+09:00"
+date: "2019-05-27T08:30:00+09:00"
 thumbnail: /images/icons/codebuild_icon.png
 categories:
   - "aws"
