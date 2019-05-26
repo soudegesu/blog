@@ -1,0 +1,202 @@
+<!doctype html><html lang=ja-jp><head><meta charset=utf-8><meta http-equiv=x-dns-prefetch-control content=on><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><link rel=dns-prefetch href=//fonts.googleapis.com><link rel=dns-prefetch href=//fonts.gstatic.com><link rel=dns-prefetch href=//pagead2.googlesyndication.com><link rel=dns-prefetch href=//googleads.g.doubleclick.net><link rel=dns-prefetch href=//googleads4.g.doubleclick.net><link rel=dns-prefetch href=//tpc.googlesyndication.com><link rel=dns-prefetch href=//www.gstatic.com><meta name=generator content="Hugo 0.48"><title>Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する - そうなんでげす</title><meta name=description content="Jenkins2のコード化を行います。今回はJenkins Slaveの登録をSwarm Pluginを使って行います。"><meta property=og:description content="Jenkins2のコード化を行います。今回はJenkins Slaveの登録をSwarm Pluginを使って行います。"><meta name=author content=soudegesu><link rel=canonical href=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/><link rel=alternate hreflang=x-default href=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/><meta name=twitter:site content=@alten_manten><meta name=twitter:title content="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する - そうなんでげす"><meta name=twitter:description content="Jenkins2のコード化を行います。今回はJenkins Slaveの登録をSwarm Pluginを使って行います。"><meta name=twitter:url content=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/><meta name=twitter:card content=summary_large_image><meta name=twitter:creator content=@alten_manten><meta property=og:locale content=ja-JP><meta property=og:site_name content="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する - そうなんでげす"><meta property=og:title content="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する - そうなんでげす"><meta property=og:url content=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/><meta property=og:image content=/images/icons/jenkins_icon.png><meta name=twitter:image content=/images/icons/jenkins_icon.png><meta property=og:type content=article><meta property=article:published_time content="2019-05-25 15:35:08 &#43;0900 JST"><link rel=next href=Page%28/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin.md%29><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "url": "https://www.soudegesu.com",
+    "logo": "https://www.soudegesu.com/images/soudegesu.jpg"
+  }
+</script><script type=application/ld+json>
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "soudegesu",
+    "url" : "https://www.soudegesu.com",
+    "sameAs" : null
+  }
+</script><meta name=google-site-verification content=cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw><meta name=msvalidate.01 content=C58B4D4C2D3C5B99C7CF26F79733F9EB><meta name=yandex-verification content=2f79a5310dc24118><meta property=og:title content="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する"><meta property=og:description content="Jenkins2のコード化を行います。今回はJenkins Slaveの登録をSwarm Pluginを使って行います。"><meta property=og:type content=article><meta property=og:url content=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/><meta property=article:published_time content=2019-05-25T15:35:08&#43;09:00><meta property=article:modified_time content=2019-05-25T15:35:08&#43;09:00><meta property=og:site_name content=そうなんでげす><meta name=twitter:card content=summary><meta name=twitter:title content="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する"><meta name=twitter:description content="Jenkins2のコード化を行います。今回はJenkins Slaveの登録をSwarm Pluginを使って行います。"><link rel=stylesheet href=/css/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-92599175-1','auto');ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><script>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:"ca-pub-5005266309965277",enable_page_level_ads:true});</script><script async src=https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js custom-element=amp-auto-ads></script><amp-auto-ads type=adsense data-ad-client=ca-pub-5005266309965277></head><body class=body><div class="container container-outer"><header class=header><div class="container container-inner"><div class=logo role=banner><a class=logo__link href=/ title=そうなんでげす rel=home><div class=logo__title>そうなんでげす</div><div class=logo__tagline>またつまらぬモノを斬ってしまった</div></a></div></div><div class=divider></div></header><div class="wrapper flex"><main class="main content"><article class=post><header class=post__header><h1 class=post__title>Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する</h1><div class="post__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16c4.4.0 8-3.6 8-8.0000003.0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4 3.52.0 6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2019-05-25T15:35:08>May 25, 2019</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/jenkins rel=category>jenkins</a></span></span></div></header><figure class=post__thumbnail><img src=/images/icons/jenkins_icon.png alt="Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する"></figure><div class="post__toc toc"><div class=toc__title>目次</div><div class=toc__menu><nav id=TableOfContents><ul><li><ul><li><a href=#swarm-pluginでslaveからmasterへノード登録する>Swarm PluginでSlaveからMasterへノード登録する</a></li><li><a href=#swarm-plugin-の使い方>Swarm Plugin の使い方</a><ul><li><a href=#masterの設定>Masterの設定</a><ul><li><a href=#swarm-plugin-をインストールするだけ>Swarm Plugin をインストールするだけ</a></li></ul></li><li><a href=#slaveの設定>Slaveの設定</a><ul><li><a href=#swarm-plugin-clientを配置する>Swarm Plugin Clientを配置する</a></li><li><a href=#java-jar-コマンドで起動する><code>java -jar</code> コマンドで起動する</a></li></ul></li></ul></li><li><a href=#まとめ>まとめ</a></li><li><a href=#参考にさせていだいたサイト>参考にさせていだいたサイト</a></li></ul></li></ul></nav></div></div><div class="post__content clearfix"><p>前回の記事 <a href=/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin/>Jenkins2をコード化しよう - その３：Jenkins Job DSLプラグインでジョブをコード化する</a> ではJenkinsのジョブをGroovy DSLで記述する方法と、利用例を紹介しました。</p><p>今回はJenkins Slave登録の方法を少し工夫してみましょう。</p><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h2 id=swarm-pluginでslaveからmasterへノード登録する>Swarm PluginでSlaveからMasterへノード登録する</h2><p>JenkinsをMaster-Slaveの冗長構成で組む場合に、従来であればMaster側の管理画面にある <code>[ノードの管理]</code> からビルドSlaveにあたる別のJenkinsを登録します。</p><p>しかし、稀にネットワーク的な理由でMasterからSlaveに接続できない場合もあります。
+例えば、Jenkins Masterはクラウド上にあるのに、SlaveはiOSアプリをビルドするためにオンプレのMacで構築する（ファイアウォールに穴あけしたくない）必要がある場合などがそれに当たります。</p><p>そこで今回紹介する <a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a> を使うことで、 <strong>ビルドSlave側からJenkins Masterに対してノード登録ができる</strong> のです。とても便利です。</p><p>イメージは以下の通りです。Jenkins Masterには <a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a> をインストールし、
+Jenkins SlaveのマシンにはMasterにインストールされた <a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a> と同じバージョンの <a href=https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/>Swarm Plugin Client</a> をダウンロードしておきます。</p><p><img src=/images/20190525/jenkins-swarm.png alt=jenkins-swarm></p><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h2 id=swarm-plugin-の使い方>Swarm Plugin の使い方</h2><h3 id=masterの設定>Masterの設定</h3><h4 id=swarm-plugin-をインストールするだけ>Swarm Plugin をインストールするだけ</h4><p><a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a> をインストールすれば、Master側ではプラグインの追加設定はありません。
+ただし、Slaveからネットワーク的に接続可能な状態にしておく必要はあります。例えば、<a href=https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/>Swarm Plugin Client</a> が使うJNLP接続のポート番号を解放しておくなどです。</p><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h3 id=slaveの設定>Slaveの設定</h3><h4 id=swarm-plugin-clientを配置する>Swarm Plugin Clientを配置する</h4><p><a href=https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/>Swarm Plugin Client</a> でダウンロードするクライアントは <code>jar</code> ファイルです。スタンドアロンで動作するため、 <code>java -jar</code> コマンドで起動できるようにJavaをインストールしておく必要があります。</p><h4 id=java-jar-コマンドで起動する><code>java -jar</code> コマンドで起動する</h4><p>次に、Swarm Plugin Client を起動します。以降では Swarm Plugin Client <code>3.15</code> を使っています。</p><p>まずは <code>--help</code> で指定可能オプションを確認しましょう。</p><pre><code class=language-bash>java -jar swarm-client-3.15.jar --help
+</code></pre><p>こんな感じですね。</p><pre><code class=language-bash> -autoDiscoveryAddress VAL              : Use this address for udp-based
+                                          auto-discovery (default
+                                          255.255.255.255)
+ -candidateTag VAL                      : Show swarm candidate with tag only
+ -deleteExistingClients                 : Deletes any existing slave with the
+                                          same name.
+ -description VAL                       : Description to be put on the slave
+ -disableClientsUniqueId                : Disables Clients unique ID.
+ -disableSslVerification                : Disables SSL verification in the
+                                          HttpClient.
+ -executors N                           : Number of executors
+ -fsroot FILE                           : Directory where Jenkins places files
+ -help (--help)                         : Show the help screen
+ -labels VAL                            : Whitespace-separated list of labels
+                                          to be assigned for this slave.
+                                          Multiple options are allowed.
+ -labelsFile VAL                        : File location with space delimited
+                                          list of labels.  If the file changes,
+                                          restarts this client.
+ -logFile VAL                           : File to write STDOUT and STDERR to.
+                                          (Deprecated, use -Djava.util.logging.c
+                                          onfig.file={path}logging.properties
+                                          instead)
+ -master VAL                            : The complete target Jenkins URL like
+                                          'http://server:8080/jenkins/'. If
+                                          this option is specified,
+                                          auto-discovery will be skipped
+ -maxRetryInterval N                    : Max time to wait before retry in
+                                          seconds. Default is 60 seconds.
+ -mode MODE                             : The mode controlling how Jenkins
+                                          allocates jobs to slaves. Can be
+                                          either 'normal' (utilize this slave
+                                          as much as possible) or 'exclusive'
+                                          (leave this machine for tied jobs
+                                          only). Default is normal.
+ -name VAL                              : Name of the slave
+ -noRetryAfterConnected                 : Do not retry if a successful
+                                          connection gets closed.
+ -password VAL                          : The Jenkins user password
+ -passwordEnvVariable VAL               : Environment variable that the
+                                          password is stored in
+ -passwordFile VAL                      : File containing the Jenkins user
+                                          password
+ -pidFile VAL                           : File to write PID to
+ -retry N                               : Number of retries before giving up.
+                                          Unlimited if not specified.
+ -retryBackOffStrategy RETRY_BACK_OFF_S : The mode controlling retry wait time.
+ TRATEGY                                  Can be either none (use same interval
+                                          between retires)or 'linear' (increase
+                                          wait time before each retry up to
+                                          maxRetryInterval) or 'exponential'
+                                          (double wait interval on each retry
+                                          up to maxRetryInterval). Default is
+                                          none.
+ -retryInterval N                       : Time to wait before retry in seconds.
+                                          Default is 10 seconds.
+ -showHostName (--showHostName)         : Show hostnames instead of IP address
+ -sslFingerprints VAL                   : Whitespace-separated list of accepted
+                                          certificate fingerprints
+                                          (SHA-256/Hex), otherwise system
+                                          truststore will be used. No
+                                          revocation, expiration or not yet
+                                          valid check will be performed for
+                                          custom fingerprints! Multiple options
+                                          are allowed.
+ -t (--toolLocation)                    : A tool location to be defined on this
+                                          slave. It is specified as
+                                          'toolName=location'
+ -tunnel VAL                            : Connect to the specified host and
+                                          port, instead of connecting directly
+                                          to Jenkins. Useful when connection to
+                                          Hudson needs to be tunneled. Can be
+                                          also HOST: or :PORT, in which case
+                                          the missing portion will be
+                                          auto-configured like the default
+                                          behavior
+ -username VAL                          : The Jenkins username for
+                                          authentication
+</code></pre><p>必要そうなものを掻い摘んで設定しましょう。</p><pre><code class=language-bash>java -jar swarm-client-3.15.jar \
+  -master https://your-host.net \
+  -name your-mac-name \
+  -deleteExistingClients \
+  -showHostName \
+  -disableClientsUniqueId \
+  -labels 'mac' \
+  -description 'Slave for iOS build' \
+  -username=username \
+  -password=password &amp;
+</code></pre><p>私が設定しているオプションは以下です。</p><ul><li><code>-master</code> ：Master Node のURL。これを使ってSlaveから接続に行きます。</li><li><code>-name</code> ：Master Nodeに認識させるSlaveの名前</li><li><code>-deleteExistingClients</code> ：同名のSlaveが既に存在していたときに削除してから登録させる</li><li><code>-showHostName</code> ：IPアドレスではなく、ホスト名を表示する</li><li><code>-disableClientsUniqueId</code> ：Master Nodeにユニークに認識させるための、自動で振られるUniqueIDを付与しない。<strong>Jenkinsfile上でノード名指定でジョブを実行させたい場合には指定した方が良いです</strong> 。</li><li><code>-labels</code> ：Slaveに付与するラベル。ラベルを複数指定することも可能。複数のSlaveにビルドを振りたい場合に使う。</li><li><code>-description</code> ：マシンの説明</li><li><code>-username</code> ：認証時のユーザ名</li><li><code>-password</code> ：認証時のパスワード</li></ul><p>Masterのビルドキューの下にSlaveが登録されていればOKです。</p><p><img src=/images/20190525/register_as_slave.png alt=register_as_slave></p><p>余談ですが、デフォルトでビルドキューは4みたいですね。</p><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h2 id=まとめ>まとめ</h2><p>今回は <a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a> を使って、SlaveからMasterへのノード登録ができるようになりました。
+ネットワーク的な制約等でMaster側から接続できない場合や、Slaveが動的に増減する場合に重宝するでしょう。
+対になるClient JarをSlave側で起動するひと手間はありますが、常時起動するような場合にはさほど気になるコストではないと思います。</p><h2 id=参考にさせていだいたサイト>参考にさせていだいたサイト</h2><ul><li><a href=https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin>Swarm Plugin</a></li></ul></div><div class="post__tags tags clearfix"><svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373.0-.74-.24-1-.5L1 8a2.853 2.853.0 0 1-.7-1C.113 6.55.0 5.973.0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034.0 1.4.0h4.2c.373.0.95.113 1.4.3.45.187.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5.0 1 0 0-3 1.5 1.5.0 0 0 0 3z"/></svg><ul class=tags__list><li class=tags__item><a class="tags__link btn" href=/tags/jenkins/ rel=tag>jenkins</a></li><li class=tags__item><a class="tags__link btn" href=/tags/groovy/ rel=tag>groovy</a></li></ul></div></article><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=8973386323 data-ad-format=rectangle data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><nav class="post-nav flex"><div class="post-nav__item post-nav__item--prev"><a class=post-nav__link href=/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin/ rel=prev><span class=post-nav__caption>«&thinsp;前の記事</span><p class=post-nav__post-title>Jenkins2をコード化しよう - その３：Jenkins Job DSLプラグインでジョブをコード化する</p></a></div></nav><h3>関連記事</h3><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin/><img src=/images/icons/jenkins_icon.png alt="Jenkins2をコード化しよう - その３：Jenkins Job DSLプラグインでジョブをコード化する"></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin/ rel=bookmark>Jenkins2をコード化しよう - その３：Jenkins Job DSLプラグインでジョブをコード化する</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16c4.4.0 8-3.6 8-8.0000003.0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4 3.52.0 6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2019-05-24T15:35:08>May 24, 2019</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/jenkins rel=category>jenkins</a></span></span></div></header></div></div><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-init-groovy-d/><img src=/images/icons/jenkins_icon.png alt="Jenkins2をコード化しよう - その２：Jenkinsの起動時にプログラム（Groovy Hook Script）を動かす"></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/post/jenkins/jenkins-as-code-with-init-groovy-d/ rel=bookmark>Jenkins2をコード化しよう - その２：Jenkinsの起動時にプログラム（Groovy Hook Script）を動かす</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16c4.4.0 8-3.6 8-8.0000003.0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4 3.52.0 6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2019-05-22T15:35:08>May 22, 2019</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/jenkins rel=category>jenkins</a></span></span></div></header></div></div><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/post/jenkins/jenkins-as-code-with-ansible/><img src=/images/icons/jenkins_icon.png alt="Jenkins2をコード化しよう - その１：Ansibleでプロビジョニングする"></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/post/jenkins/jenkins-as-code-with-ansible/ rel=bookmark>Jenkins2をコード化しよう - その１：Ansibleでプロビジョニングする</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16c4.4.0 8-3.6 8-8.0000003.0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4 3.52.0 6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2019-05-15T15:35:08>May 15, 2019</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/jenkins rel=category>jenkins</a></span></span></div></header></div></div><div class="authorbox clearfix"><figure class=authorbox__avatar><img alt="soudegesu avatar" src=/images/soudegesu.jpg class=avatar height=90 width=90></figure><div class=authorbox__header><span class=authorbox__name>soudegesu について</span></div><div class=authorbox__description>Software Engineer</div></div><section class=comments><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"soudegesu"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></section></main><aside class=sidebar><div class="widget-search widget"><form class=widget-search__form role=search action=https://google.com/search><label><input class=widget-search__field type=search placeholder=SEARCH... name=q></label>
+<input class=widget-search__submit type=submit value=Search>
+<input type=hidden name=sitesearch value=https://www.soudegesu.com></form></div><div class="widget-recent widget"><h4 class=widget__title>最近投稿された記事</h4><div class=widget__content><ul class=widget__list><li class=widget__item><a class=widget__link href=/post/jenkins/jenkins-as-code-with-provisioning-with-swarm/>Jenkins2をコード化しよう - その４：Swarm PluginでJenkins Slaveを登録する</a></li><li class=widget__item><a class=widget__link href=/post/jenkins/jenkins-as-code-with-generate-job-dsl-plugin/>Jenkins2をコード化しよう - その３：Jenkins Job DSLプラグインでジョブをコード化する</a></li><li class=widget__item><a class=widget__link href=/post/jenkins/jenkins-as-code-with-init-groovy-d/>Jenkins2をコード化しよう - その２：Jenkinsの起動時にプログラム（Groovy Hook Script）を動かす</a></li><li class=widget__item><a class=widget__link href=/post/jenkins/jenkins-as-code-with-ansible/>Jenkins2をコード化しよう - その１：Ansibleでプロビジョニングする</a></li><li class=widget__item><a class=widget__link href=/post/python/http-request-with-urllib/>Python3でHTTP通信をする（urllib.requestモジュールを使う）</a></li></ul></div><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=1184942948 data-ad-format=auto data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><div class="widget-categories widget"><h4 class=widget__title>カテゴリ</h4><div class=widget__content><ul class=widget__list><li class=widget__item><a class=widget__link href=/categories/anaconda>Anaconda</a></li><li class=widget__item><a class=widget__link href=/categories/aws>Aws</a></li><li class=widget__item><a class=widget__link href=/categories/blog>Blog</a></li><li class=widget__item><a class=widget__link href=/categories/book>Book</a></li><li class=widget__item><a class=widget__link href=/categories/continuous-delivery>Continuous delivery</a></li><li class=widget__item><a class=widget__link href=/categories/dart>Dart</a></li><li class=widget__item><a class=widget__link href=/categories/design>Design</a></li><li class=widget__item><a class=widget__link href=/categories/docker>Docker</a></li><li class=widget__item><a class=widget__link href=/categories/docker-compose>Docker compose</a></li><li class=widget__item><a class=widget__link href=/categories/engineer-life>Engineer life</a></li><li class=widget__item><a class=widget__link href=/categories/ethereum>Ethereum</a></li><li class=widget__item><a class=widget__link href=/categories/event>Event</a></li><li class=widget__item><a class=widget__link href=/categories/fish>Fish</a></li><li class=widget__item><a class=widget__link href=/categories/gcp>Gcp</a></li><li class=widget__item><a class=widget__link href=/categories/go>Go</a></li><li class=widget__item><a class=widget__link href=/categories/java>Java</a></li><li class=widget__item><a class=widget__link href=/categories/javascript>Javascript</a></li><li class=widget__item><a class=widget__link href=/categories/jenkins>Jenkins</a></li><li class=widget__item><a class=widget__link href=/categories/linux>Linux</a></li><li class=widget__item><a class=widget__link href=/categories/mysql>Mysql</a></li><li class=widget__item><a class=widget__link href=/categories/nodejs>Nodejs</a></li><li class=widget__item><a class=widget__link href=/categories/pyenv>Pyenv</a></li><li class=widget__item><a class=widget__link href=/categories/python>Python</a></li><li class=widget__item><a class=widget__link href=/categories/q_sharp>Q sharp</a></li><li class=widget__item><a class=widget__link href=/categories/rust>Rust</a></li><li class=widget__item><a class=widget__link href=/categories/security>Security</a></li><li class=widget__item><a class=widget__link href=/categories/tensorflow>Tensorflow</a></li></ul></div></div><div class="widget-social widget"><h4 class="widget-social__title widget__title">ソーシャル</h4><div class="widget-social__content widget__content"><div class="widget-social__item widget__item"><a class="widget-social__link widget__link btn" title=Twitter rel="noopener noreferrer" href=https://twitter.com/alten_manten target=_blank><svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5.0-78.8 35.3-78.8 78.8.0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6.0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1.0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4.0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9.0 224.1-120 224.1-224.1.0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg><span>Twitter</span></a></div><div class="widget-social__item widget__item"><a class="widget-social__link widget__link btn" title=GitHub rel="noopener noreferrer" href=https://github.com/soudegesu target=_blank><svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0C85.9.0.0 85.8.0 191.7c0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2.0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8.0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7.0.0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4.0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5.0 25.6-.2 46.3-.2 52.6.0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg><span>GitHub</span></a></div></div><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=1661016284 data-ad-format=auto data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><div class="widget-taglist widget"><h4 class=widget__title>タグ</h4><div class=widget__content><a class="widget-taglist__link widget__link btn" href=/tags/acm title=Acm>Acm</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/agile title=Agile>Agile</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/amazonlinux title=Amazonlinux>Amazonlinux</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/anaconda title=Anaconda>Anaconda</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/android title=Android>Android</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ansible title=Ansible>Ansible</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/athena title=Athena>Athena</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/aurora title=Aurora>Aurora</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/aws title=Aws>Aws</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/batch title=Batch>Batch</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/beginner title=Beginner>Beginner</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/blog title=Blog>Blog</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/book title=Book>Book</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/casperjs title=Casperjs>Casperjs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cloudfront title=Cloudfront>Cloudfront</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cloudwatchlogs title=Cloudwatchlogs>Cloudwatchlogs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/codebuild title=Codebuild>Codebuild</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/colaboratory title=Colaboratory>Colaboratory</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/continuous-delivery title="Continuous delivery">Continuous delivery</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cyber-security title="Cyber security">Cyber security</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/dapps title=Dapps>Dapps</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/dart title=Dart>Dart</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/datadog title=Datadog>Datadog</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/design title=Design>Design</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/docker title=Docker>Docker</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ec2 title=Ec2>Ec2</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/engineer-life title="Engineer life">Engineer life</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ethereum title=Ethereum>Ethereum</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/event title=Event>Event</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/excel title=Excel>Excel</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/express title=Express>Express</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/fish title=Fish>Fish</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/flutter title=Flutter>Flutter</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ganache title=Ganache>Ganache</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/gcp title=Gcp>Gcp</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/glue title=Glue>Glue</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/go title=Go>Go</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/gradle title=Gradle>Gradle</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/groovy title=Groovy>Groovy</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/hugo title=Hugo>Hugo</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/iam title=Iam>Iam</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ios title=Ios>Ios</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/java title=Java>Java</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/javascript title=Javascript>Javascript</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jenkins title=Jenkins>Jenkins</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jib title=Jib>Jib</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jpms title=Jpms>Jpms</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/kubernates title=Kubernates>Kubernates</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/lambda title=Lambda>Lambda</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/machine-learning title="Machine learning">Machine learning</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/matplotlib title=Matplotlib>Matplotlib</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/mysql title=Mysql>Mysql</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/nodejs title=Nodejs>Nodejs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/openpyxl title=Openpyxl>Openpyxl</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/packer title=Packer>Packer</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pandas title=Pandas>Pandas</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pdf title=Pdf>Pdf</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pyenv title=Pyenv>Pyenv</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pyenv-virtualenv title="Pyenv virtualenv">Pyenv virtualenv</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pypdf2 title=Pypdf2>Pypdf2</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/python title=Python>Python</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/q title=Q#>Q#</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/rds title=Rds>Rds</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/reactor title=Reactor>Reactor</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/route53 title=Route53>Route53</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/rust title=Rust>Rust</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/s3 title=S3>S3</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/serverless title=Serverless>Serverless</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/sh title=Sh>Sh</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/spring title=Spring>Spring</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/springboot title=Springboot>Springboot</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/sql title=Sql>Sql</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ssl title=Ssl>Ssl</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/stepfunction title=Stepfunction>Stepfunction</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/stepfunctions title=Stepfunctions>Stepfunctions</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/systemd title=Systemd>Systemd</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tensorflow title=Tensorflow>Tensorflow</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/terraform title=Terraform>Terraform</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tomcat title=Tomcat>Tomcat</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tool title=Tool>Tool</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/truffle title=Truffle>Truffle</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/udemy title=Udemy>Udemy</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/webauthn title=Webauthn>Webauthn</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/webflux title=Webflux>Webflux</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/zsh title=Zsh>Zsh</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/%e7%b5%84%e7%b9%94%e8%ab%96 title=組織論>組織論</a></div><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=2162982695 data-ad-format=auto data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></aside></div><footer class=footer><div class="container container-inner"><div class=footer__copyright>&copy; 2019 そうなんでげす. <span class=footer__copyright-credits>Generated with <a href=https://gohugo.io/ rel="nofollow noopener" target=_blank>Hugo</a> and <a href=https://github.com/Vimux/Mainroad/ rel="nofollow noopener" target=_blank>Mainroad</a> theme.</span></div></div></footer></div><script>var navigation=responsiveNav(".menu",{navClass:"menu--collapse",});</script><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700"><script src=/js/scripts.js></script><link rel="shortcut icon" href=/favicon.ico></body></html>
