@@ -7,16 +7,15 @@ categories:
   - "python"
 tags:
   - "python"
-draft: true
 isCJKLanguage: true
 twitter_card_image: /images/icons/python_icon.png
 ---
 
-今回はPythonでHTTP通信を行うためのモジュールである [urllib.request](https://docs.python.org/ja/3/library/urllib.request.html) モジュールを紹介します。
+In this article, I introduced how to use [urllib.request](https://docs.python.org/ja/3/library/urllib.request.html) module to request with HTTP in Python.
 
 ## Environment
 
-今回は以下の環境にて動作確認をしています。
+Runtime environment is as follows.
 
 * python 3.7
 
@@ -26,9 +25,9 @@ twitter_card_image: /images/icons/python_icon.png
 
 ### HTTP GET request with an `Request` object
 
-`urllib.request` モジュール内に含まれる `Request` オブジェクトを使います。
+Use `Request` object included in `urllib.request` module.
 
-以下のようにインスタンスを作成します。
+Create `Request` object instance as follows.
 
 {{< highlight python "linenos=inline" >}}
 from urllib.request import *
@@ -36,8 +35,8 @@ from urllib.request import *
 req = Request(url='https://docs.python.org/ja/', headers={}, method='GET')
 {{< / highlight >}}
 
-`Request` オブジェクトのインスタンスのプロパティにアクセスしてみましょう。
-オリジンの情報やパスなどの情報が取得できることがわかります。
+Access to `Request` object property.
+You can see the host information and path etc..
 
 {{< highlight python "linenos=inline" >}}
 print(req.full_url)
@@ -65,7 +64,7 @@ print(req.method)
 > GET
 {{< / highlight >}}
 
-あとはこれを `urlopen` 関数で処理してあげるだけです。
+Then, open the request using `urlopen` function.
 
 {{< highlight python "linenos=inline" >}}
 with urlopen(req) as res:
@@ -75,9 +74,9 @@ with urlopen(req) as res:
 
 ### HTTP POST request with an `Request` object
 
-今度は `POST` で送信します。
+Next, request with HTTP `POST`.
 
-リクエストボディを指定するには `Request` オブジェクトのインスタンス生成時に `data` オプションを指定してします。
+You can give request body with `data` option when creating `Request` object instance.
 
 {{< highlight python "linenos=inline" >}}
 from urllib.request import *
@@ -90,14 +89,15 @@ with urlopen(req) as res:
     print(body)
 {{< / highlight >}}
 
-`TypeError: can't concat str to bytes` が表示されるときは `data` に渡すオブジェクトがエンコードされていないことが原因です。
-上の例では `json.dumps({'param': 'piyo'}).encode()` で辞書型をjsonにエンコードしています。
+If `data` object is not encoded, the error message `TypeError: can't concat str to bytes` occued.
+In above case, convert dictionary type to json with `json.dumps({'param': 'piyo'}).encode()`.
 
 <!--adsense-->
 
 ## HTTP request wit only `urlopen` function
 
-先程のような簡単な通信であれば `Request` オブジェクトを使わなくても `urlopen` 関数単体で実現できます。
+Instead of `Request` object, you can request with only `urlopen` function in simple request case.
+The sample code is as follows.
 
 {{< highlight python "linenos=inline" >}}
 from urllib.request import *
