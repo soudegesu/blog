@@ -1,6 +1,6 @@
 ---
 title: "Python3でHTTP通信をする（Requestsを使う）"
-description: "PythonのHTTP通信をするためのライブラリであるReqestsを使ってみます。"
+description: "PythonのHTTP通信をするためのライブラリであるReqestsを使ってみます。urllibよりも高機能で、インターフェースも理解しやすいモジュールです。"
 date: "2019-05-27T09:12:22+09:00"
 thumbnail: "/images/icons/python_icon.png"
 categories:
@@ -14,6 +14,8 @@ twitter_card_image: /images/icons/python_icon.png
 以前の記事 「[Python3でHTTP通信をする（urllib.requestモジュールを使う）](/post/python/http-request-with-urllib/)」 では、Pythonの標準モジュールである [urllib.request](https://docs.python.org/ja/3/library/urllib.request.html) を使って、簡単なHTTPリクエスト処理を書きました。
 
 今回は外部ライブラリである [Requests](https://requests-docs-ja.readthedocs.io/en/latest/) を使ってみようと思います。
+
+<!--adsense-->
 
 ## Requests とは
 
@@ -44,6 +46,8 @@ Python標準の `urllib` モジュールよりも高機能であり、コード�
 pip install requests
 {{</ highlight>}}
 
+<!--adsense-->
+
 ## Requestsを使ったHTTP通信
 
 まずは基本のHTTP GETをしてみましょう。
@@ -55,11 +59,13 @@ r = requests.get('https://github.com/timeline.json')
 
 とてもシンプルです。最高ですね。
 実は同様にして `POST` や `PUT` など他のHTTP Methodも処理できます。
+リクエストボディは `data` オプションで指定します。
 
 {{< highlight python "linenos=inline" >}}
 import requests
-r = requests.post('xxxxxxxx')
-r = requests.put('xxxxxxx')
+import json
+r = requests.post('xxxxxxxx', data=json.dumps({'hoge':'huga'}))
+r = requests.put('xxxxxxx', data=json.dumps({'hoge':'huga'}))
 {{</ highlight>}}
 
 ## レスポンスのハンドリング
@@ -88,10 +94,31 @@ except json.JSONDecodeError as e:
     print(e)
 {{</ highlight>}}
 
-## リダイレクトされたかを確認する
+<!--adsense-->
 
-レスポンスオブジェクトの `status_code` プロパティにアクセスすると
+## リダイレクト時のステータスコードの確認
 
+レスポンスオブジェクトの `status_code` プロパティにアクセスするとレスポンスのステータスコードが取得できます。
+しかし、このステータスコードは **リダイレクトがあった場合には、リダイレクト後のページのステータスコード** になります。
+つまり、`3xx` のステータスコードが取れないのです。
+
+その場合、 `history` プロパティにアクセスすることで、リダイレクト時のレスポンスの情報にもアクセスができます。
+リクエストの古いものから順に配列に挿入されていきます。
+
+{{< highlight python "linenos=inline" >}}
+r = requests.get('http://github.com')
+his = r.history
+print(his[0].status_code) # 301
+{{</ highlight>}}
+
+## まとめ
+
+今回は [Requests](https://requests-docs-ja.readthedocs.io/en/latest/) を使って、
+
+* HTTP リクエストをする
+* リダイレクト時のステータスコードを取得する
+
+を紹介しました。 `urllib` よりも機能が多く、APIも使い勝手が良いため、積極的に利用していきたいですね。
 
 ## 参考にさせていただいたサイト
 
