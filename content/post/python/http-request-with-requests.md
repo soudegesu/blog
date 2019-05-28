@@ -35,6 +35,63 @@ Python標準の `urllib` モジュールよりも高機能であり、コード�
 > * Python 2.6-3.3に対応
 > * スレッドセーフ
 
+## Requestsのインストール
+
+まずは [Requests](https://requests-docs-ja.readthedocs.io/en/latest/) をインストールしましょう。
+外部ライブラリなので `pip` でインストールします。
+
+{{< highlight bash "linenos=inline" >}}
+pip install requests
+{{</ highlight>}}
+
+## Requestsを使ったHTTP通信
+
+まずは基本のHTTP GETをしてみましょう。
+
+{{< highlight python "linenos=inline" >}}
+import requests
+r = requests.get('https://github.com/timeline.json')
+{{</ highlight>}}
+
+とてもシンプルです。最高ですね。
+実は同様にして `POST` や `PUT` など他のHTTP Methodも処理できます。
+
+{{< highlight python "linenos=inline" >}}
+import requests
+r = requests.post('xxxxxxxx')
+r = requests.put('xxxxxxx')
+{{</ highlight>}}
+
+## レスポンスのハンドリング
+
+レスポンスが `JSON` 形式であれば、`json()` 関数を使うとJSONとしてデータを取得できます。
+
+{{< highlight python "linenos=inline" >}}
+import requests
+r = requests.get('https://github.com/timeline.json')
+r.json()
+{{</ highlight>}}
+
+ただし、JSONのデコードに失敗すると `None` が返却される仕様なので、後段で　`None` の判定処理は入れた方が良いです。
+
+きちんと例外処理をしたい場合には、単にレスポンスをテキストとして扱うために `text` プロパティにアクセスし、`json.loads` 関数で処理することをオススメします。
+以下のようなイメージになります。
+
+{{< highlight python "linenos=inline" >}}
+import json
+import requests
+
+try:
+    r = requests.get('https://github.com/timeline.json')
+    res = json.loads(r.text)
+except json.JSONDecodeError as e:
+    print(e)
+{{</ highlight>}}
+
+## リダイレクトされたかを確認する
+
+レスポンスオブジェクトの `status_code` プロパティにアクセスすると
+
 
 ## 参考にさせていただいたサイト
 
