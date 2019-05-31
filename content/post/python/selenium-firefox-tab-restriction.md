@@ -1,5 +1,5 @@
 ---
-title: "Pythonで自動化しよう！ ー SeleniumでFirefoxの複数タブを同時に開く時にブロックされる問題に対処する"
+title: "Pythonで自動化しよう！ ー SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する"
 description: "Seleniumを使って複数のURLを一斉に開く時に、Firefoxではポップアップブロックが表示されてしまいます。"
 date: "2019-06-01T09:00:00+09:00"
 thumbnail: "/images/icons/python_icon.png"
@@ -42,20 +42,20 @@ for i in range(0, 100):
 
 ![popup_block](/images/20190601/popup_block.png)
 
-ポップアップブロックは `window.open()` 関数を実行しているタブに対してのみ表示されるため、これではすべてのタブを完全に開ききることができません。
-間違いなく見落とします。
+ポップアップブロックは `window.open()` 関数を実行しているタブに対してのみ表示されるため、間違いなく見落とします。
+ポップアップブロックから「許可」を手動で行えばなんとか開けますが、自動化のうまみが消えてしまうのでなんとか対処したいです。
 
 <!--adsense-->
 
 ## 解決策：ポップアップの上限数を設定する
 
-調査の結果、Firefoxのwebdriverを生成する時に、ブラウザの「設定」に該当するオプションを指定できることがわかりました。
+調査の結果、ブラウザの「設定」に該当するオプションをFirefoxのwebdriverを生成時に `Options` クラスで指定できることがわかりました。
 以下のサンプルコードでは2つのプロパティをしています。
 
 * `dom.disable_open_during_load`: ページロード中におけるポップアップブロックを行う
 * `dom.popup_maximum`: ポップアップによる別タブ表示の上限数（デフォルトは **20**）
 
-{{< highlight python "linenos=inline, hl_lines=4-8" >}}
+{{< highlight python "linenos=inline, hl_lines=4-10" >}}
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
@@ -70,7 +70,7 @@ for i in range(0, 100):
 
 {{< /highlight>}}
 
-`dom.popup_maximum` を `-1` に指定したことで、タブの表示上限が無制限となり、ポップアップブロックされなくなりました。
+`dom.popup_maximum` を `-1` に指定するとタブの表示上限が無制限扱いとなり、ポップアップブロックされなくなりました。
 
 ## 参考にさせていただいたサイト
 
