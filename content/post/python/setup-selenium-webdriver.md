@@ -19,6 +19,11 @@ twitter_card_image: /images/icons/python_icon.png
 
 今回はPythonでSeleniumを動かしたいニーズ（というか質問）がちらほら出てきたので、文書に起こすことにしました。
 
+## 今回のゴール
+
+* Seleniumをインストールする
+* Seleniumを使ってブラウザが起動できる
+
 ## Seleniumって何？
 
 大上段の話として、まず [Selenium](http://oss.infoscience.co.jp/seleniumhq/docs/01_introducing_selenium.html) って何よ？というのがあります。
@@ -32,18 +37,44 @@ SeleniumはSeleniumを実行するマシン上にインストールされてい�
 
 ## 実行環境
 
+動作環境は以下になります。
+
 * Python `3.7.2`
 * selenium `3.141.0`
 
+## Seleniumのインストール
+
+まずは [Selenium](http://oss.infoscience.co.jp/seleniumhq/docs/01_introducing_selenium.html) をインストールします。
+
+```python
+pip install selenium
+```
+
 ## WebDriverをダウンロードする
 
-https://www.seleniumhq.org/download/
+次に [Selenium](http://oss.infoscience.co.jp/seleniumhq/docs/01_introducing_selenium.html) がブラウザを起動させるためドライバをセットアップしましょう。
+
+[Seleniumの公式ページに各ブラウザのドライバへのリンク](https://www.seleniumhq.org/download/) が貼られているため、動作させたいブラウザに応じたドライバをダウンロードしましょう。
 
 ### Mozilla Firefoxの場合
 
-https://github.com/mozilla/geckodriver/releases
+Firefoxを [Selenium](http://oss.infoscience.co.jp/seleniumhq/docs/01_introducing_selenium.html) で動作させるには [geckodriver](https://github.com/mozilla/geckodriver/releases) が必要です。
+[Gecko](https://ja.wikipedia.org/wiki/Gecko) というのはFirefoxの中に組み込まれているHTMLなどを描画する機能を持ったエンジンのことです。
+
+[geckodriver](https://github.com/mozilla/geckodriver/releases) のページから自分のマシンに合ったドライバをダウンロードします。
+
+手元の環境がMacであれば `geckodriver-vx.xx.x-macos.tar.gz` 、64bitのWindowsであれば `geckodriver-vx.xx.x-win64.zip` を選択するといった要領です。
+
+ダウンロード後に解凍したzipファイルを環境変数のPATHに通してあげれば良いです。
+PATHの通し方はここでは解説しないので、「Windows PATH」「Mac PATH」などで検索いただければと思います。
 
 ### Google Chromeの場合
+
+Chromeの場合もFirefoxと同様に [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) が必要になります。
+[ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) のページから、自分のインストールしているGoogle Chromeのバージョンと等しいドライバを選択した後、自分のマシンに合ったドライバをダウンロードしてください。
+
+ここでも、ダウンロード後に解凍したzipファイルを環境変数のPATHに通してあげれば良いです。
+PATHの通し方はここでは解説しないので、「Windows PATH」「Mac PATH」などで検索いただければと思います。
 
 ### Safariの場合
 
