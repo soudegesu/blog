@@ -1,14 +1,13 @@
 ---
-title: "Pythonで自動化しよう！ ー SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する"
+title: "SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する"
 description: "Seleniumを使って複数のURLを一斉に開く時に、Firefoxではポップアップブロックが表示されてしまいます。"
-date: "2019-06-01T09:00:00+09:00"
+date: "2019-05-31T18:00:00+09:00"
 thumbnail: "/images/icons/python_icon.png"
 categories:
   - "python"
 tags:
   - "python"
   - "selenium"
-draft: true
 isCJKLanguage: true
 twitter_card_image: "/images/icons/python_icon.png"
 ---
@@ -49,13 +48,13 @@ for i in range(0, 100):
 
 ## 解決策：ポップアップの上限数を設定する
 
-調査の結果、ブラウザの「設定」に該当するオプションをFirefoxのwebdriverを生成時に `Options` クラスで指定できることがわかりました。
-以下のサンプルコードでは2つのプロパティをしています。
+調査の結果、ブラウザの「設定」に該当するオプションをFirefoxのwebdriver生成時に `Options` クラスで指定できることがわかりました。
+以下のサンプルコードでは2つのプロパティを使っています。
 
 * `dom.disable_open_during_load`: ページロード中におけるポップアップブロックを行う
 * `dom.popup_maximum`: ポップアップによる別タブ表示の上限数（デフォルトは **20**）
 
-{{< highlight python "linenos=inline, hl_lines=4-10" >}}
+{{< highlight python "linenos=inline, hl_lines=2 4-8" >}}
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
