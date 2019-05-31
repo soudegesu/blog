@@ -1,7 +1,7 @@
 ---
 title: "SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する"
 description: "Seleniumを使って複数のURLを一斉に開く時に、Firefoxではポップアップブロックが表示されてしまいます。"
-date: "2019-05-31T18:00:00+09:00"
+date: "2019-06-01T03:00:00+09:00"
 thumbnail: "/images/icons/python_icon.png"
 categories:
   - "python"
@@ -62,7 +62,7 @@ options = Options()
 options.set_preference("dom.disable_open_during_load", False)
 options.set_preference('dom.popup_maximum', -1)
 
-driver = webdriver.Firefox(firefox_options=options)
+driver = webdriver.Firefox(options=options)
 driver.get('https://www.google.com/')
 for i in range(0, 100):
     driver.execute_script(f"window.open('https://www.google.com/', '{i}')")
