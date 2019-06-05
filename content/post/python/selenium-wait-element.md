@@ -1,5 +1,5 @@
 ---
-title: "Selenium実行中に稀にエラーになる時はWaitが正しく使えているか見てみよう"
+title: "Seleniumのコードを安定して動かすためにはWaitを使おう"
 description: "Selenium実行中に稀にエラーになる時はWaitで要素の表示がされるまで待ちましょう、という話をします。"
 date: "2019-06-04T11:05:57+09:00"
 thumbnail: "/images/icons/python_icon.png"
@@ -13,9 +13,13 @@ isCJKLanguage: true
 twitter_card_image: "/images/icons/python_icon.png"
 ---
 
-以前の記事 [SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する](/post/python/setup-selenium-webdriver/) では、
+以前の記事 [SeleniumでFirefoxの複数タブを同時に開く時にポップアップブロックされる問題に対処する](/post/python/setup-selenium-webdriver/) では、ちょっとニッチなFirefoxでSeleniumを動かす時のTipsを紹介しました。
 
-## Seleniumの自動操作がたまにエラーになる
+今回はSeleniumのコードを書く時のTipsを紹介します。
+
+## Seleniumの自動操作が不安定（たまにエラーになる）
+
+
 
 ## Seleniumは動作が早すぎる
 
