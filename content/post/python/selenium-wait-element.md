@@ -1,5 +1,5 @@
 ---
-title: "Seleniumのコードを安定して動かすためにはWaitを使おう"
+title: "Seleniumのコードを安定して動かすためにWaitを使って要素を待つ"
 description: "Selenium実行中に稀にエラーになる時はWaitで要素の表示がされるまで待ちましょう、という話をします。"
 date: "2019-06-04T11:05:57+09:00"
 thumbnail: "/images/icons/python_icon.png"
@@ -8,7 +8,6 @@ categories:
 tags:
   - "python"
   - "selenium"
-draft: true
 isCJKLanguage: true
 twitter_card_image: "/images/icons/python_icon.png"
 ---
@@ -17,13 +16,24 @@ twitter_card_image: "/images/icons/python_icon.png"
 
 今回はSeleniumのコードを書く時のTipsを紹介します。
 
-## Seleniumの自動操作が不安定（たまにエラーになる）
-
-
+<!--adsense-->
 
 ## Seleniumは動作が早すぎる
 
-## Waitを使って表示を待つ
+本来人間が行う操作をSeleniumが肩代わりをしてコードを実行することで高速に操作するわけですが、そこでうっかり見落としがちなのは **「待ち」** です。
+
+例えば、ボタンをクリックなどの何らかのイベントをトリガーとして、ブラウザは通信や画面の描画をします。
+ブラウザが処理している間、人間はブラウザ動作の完了を待っています。一通り画面がさわれそうになったら **「あ、触れそうかな」** と判断して、次の動作をします。
+これと同じことをSeleniumでも実現する必要があるのです。
+
+Seleniumは人間の操作と比べて動作が高速であるため、正しく「待ち」を設定しましょう。
+
+## WebDriverWait を使って表示を待つ
+
+`WebDriverWait` を使って、 **任意のHTMLの要素が特定の状態になるまで待つ** 方法を紹介します。
+`sleep` 関数で指定秒数を待つ方法よりも、実行環境への依存が減らせますし、実行時間の削減にも繋がります。
+
+サンプルコードは以下のようになります。
 
 {{< highlight python "linenos=inline" >}}
 
@@ -34,13 +44,19 @@ from selenium.webdriver.support import expected_conditions as EC
 
 driver = webdriver.Firefox()
 driver.get("http://somedomain/url_that_delays_loading")
-try:
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "myDynamicElement"))
-    )
-finally:
-    driver.quit()
+
+element = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.ID, "myDynamicElement"))
+)
+
 {{< /highlight>}}
+
+`WebDriverWait` への第一引数はWaitさせたいWebDriver、第二引数はタイムアウト値を指定します。
+`until` の中では 「充足されるまでWebDriverをWaitさせ続ける条件」 を記載します。
+上記の例では、`myDynamicElement` というid属性を持ったHTMLの要素が存在するまで待っています。
+
+`presence_of_element_located` がHTML要素の存在をチェックするための関数ですが、
+他にも様々な条件が用意されています。
 
 * title_is
 * title_contains
@@ -60,7 +76,15 @@ finally:
 * element_located_selection_state_to_be
 * alert_is_present
 
+URLは変えずにJavaScriptによってHTML要素の表示/非表示を切り替えて画面遷移を表現するWebアプリケーションの場合には、
+要素が見えているかで判断したほうが良いため、 `visibility_of_element_located` を使います。
+
+<!--adsense-->
+
 ## 暗黙的な待ち時間を設定する
+
+先程は `WebDriverWait` にタイムアウト値を設定しましたが、
+共通的に暗黙的な待ち時間を設定することもできます。それが `implicitly_wait` を使う方法です。
 
 {{< highlight python "linenos=inline, hl_lines=4" >}}
 from selenium import webdriver
