@@ -8,6 +8,7 @@ categories:
 tags:
     - aws
     - packer
+    - ansible
 url: /aws/my-packer-best-practice/
 twitter_card_image: /images/icons/packer_icon.png
 ---
