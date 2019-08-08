@@ -1,6 +1,6 @@
 ---
 title: "AWS CodeCommitからgit cloneする方法"
-description: ""
+description: "AWS CodeCommitを使ってソースコードをローカルマシン上でgit cloneする方法を紹介します。加えて git: 'credential-aws' is not a git commandエラーへの対処法も記載します。"
 date: "2019-08-08T12:49:50+09:00"
 thumbnail: "/images/icons/codecommit_icon.png"
 categories:
