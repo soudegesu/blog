@@ -1,5 +1,5 @@
 ---
-title: "Nuxt.jsではじめるJavaScript - Nuxt.jsのプロジェクトを新規作成する"
+title: "Nuxt.jsをはじめよう - Nuxt.jsのプロジェクトを新規作成する"
 description: "Nuxt.jsのプロジェクトを初期化して、WEBアプリケーションの開発を始めましょう。npxコマンドを使うことで簡単にプロジェクトの初期化ができます。"
 date: "2019-08-08T08:32:35+09:00"
 thumbnail: "images/icons/nuxt_icon.png"

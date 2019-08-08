@@ -1,5 +1,5 @@
 ---
-title: "Nuxt.jsではじめるJavaScript - Nuxt.jsを使う前に気をつけたいこと"
+title: "Nuxt.jsをはじめよう - Nuxt.jsを使う前に気をつけたいこと"
 description: "Nuxt.jsを使ってみて得られた知見を共有します。まずはNuxt.jsを使う前に気をつけたいことを説明します。"
 date: "2019-08-07T08:38:55+09:00"
 thumbnail: "images/icons/nuxt_icon.png"
