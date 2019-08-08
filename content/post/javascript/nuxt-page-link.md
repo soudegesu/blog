@@ -1,6 +1,6 @@
 ---
 title: "Nuxt.jsをはじめよう - nuxt-linkで画面遷移をする"
-description: ""
+description: "Nuxt.jsにおけるnuxt-linkを使った画面遷移を説明します。またnuxt-linkとaタグのユースケースの違いやnuxt-linkを使うメリットを紹介します。"
 date: "2019-08-09T06:51:05+09:00"
 thumbnail: "images/icons/nuxt_icon.png"
 categories:
@@ -13,7 +13,7 @@ twitter_card_image: "images/icons/nuxt_icon.png"
 ---
 
 [前回の記事](/post/javascript/initialize-nuxt-projext/) では Nuxt.jsプロジェクトの初期化を行いました。
-今回は [Nuxt.js](https://ja.nuxtjs.org/) で画面遷移や画面間でのデータ渡しをします。
+今回はまず [Nuxt.js](https://ja.nuxtjs.org/) で画面遷移をします。
 
 <!--adsense-->
 
