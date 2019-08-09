@@ -9,7 +9,7 @@ tags:
   - "javascript"
   - "nuxtjs"
 isCJKLanguage: true
-twitter_card_image: /images/soudegesu.jpg
+twitter_card_image: images/icons/nuxt_icon.png"
 ---
 
 [前回の記事](/post/javascript/start-project-with-nuxt/) では Nuxt.jsを使う前の注意点をかるっとまとめました。
