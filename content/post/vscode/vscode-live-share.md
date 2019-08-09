@@ -6,7 +6,6 @@ categories:
   - "vscode"
 tags:
   - "vscode"
-draft: true
 isCJKLanguage: true
 twitter_card_image: /images/soudegesu.jpg
 ---
