@@ -70,6 +70,8 @@ npm i -D @types/prettier @types/eslint-plugin-prettier @types/eslint @types/babe
 npm i -D @vue/eslint-config-prettier @vue/eslint-config-typescript
 {{< / highlight >}}
 
+<!--adsense-->
+
 ## 設定ファイルの編集
 
 次にインストールしたモジュールを使うための設定を行います。 `.eslintrc.json` に設定を行います。
@@ -145,8 +147,11 @@ npm run lint
 
 `eslint --fix` をラップした `npm run lintfix` コマンドによって、機械的に修正可能な警告は自動で修正できます。
 
+<!--adsense-->
+
 ## Visual Studio Codeの設定
 
+[Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/) を使っているときには
 
 ## 参考サイト
 
