@@ -70,17 +70,80 @@ npm i -D @types/prettier @types/eslint-plugin-prettier @types/eslint @types/babe
 npm i -D @vue/eslint-config-prettier @vue/eslint-config-typescript
 {{< / highlight >}}
 
-## 設定の追加
+## 設定ファイルの編集
 
-`.eslintrc.js`
+次にインストールしたモジュールを使うための設定を行います。 `.eslintrc.json` に設定を行います。
+`parser` に `vue-eslint-parser`、 `parserOptions` に `@typescript-eslint/parser` を追加し、 `extends` に外部のルールを設定していきます。個別にカスタマイズしたいルールは `rules` プロパティに記載していきます。
 
-    'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
-    'plugin:prettier/recommended',
-    'plugin:vue/recommended',
-    '@vue/prettier',
-    '@vue/typescript'
+{{< highlight json "linenos=inline,hl_lines=7-19" >}}
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "extends": [
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+    "plugin:vue/recommended",
+    "@vue/prettier",
+    "@vue/typescript"
+  ],
+  "plugins": ["vue"],
+  "rules": {
+    "semi": [2, "never"],
+    "no-unused-vars": ["error", { "args": "none" }],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false
+      }
+    ]
+  }
+}
+{{< / highlight >}}
 
+## Linterの実行
+
+`package.json` ファイルに `lint` `lintfix` コマンドを追加します。
+
+{{< highlight json "linenos=inline" >}}
+  "scripts": {
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore .",
+    "lintfix": "eslint --fix --ext .ts,.js,.vue --ignore-path .gitignore .",
+  }
+{{< / highlight >}}
+
+Lintを実行してみます。
+
+{{< highlight bash "linenos=inline" >}}
+npm run lint
+
+/XXXXXXXXXX/api/routes/users.ts
+   9:22  warning  Missing return type on function   @typescript-eslint/explicit-function-return-type
+   9:33  warning  'next' is defined but never used  @typescript-eslint/no-unused-vars
+  14:26  warning  Missing return type on function   @typescript-eslint/explicit-function-return-type
+  14:37  warning  'next' is defined but never used  @typescript-eslint/no-unused-vars
+
+/XXXXXXXXXX/nuxt.config.ts
+  60:11  warning  Missing return type on function     @typescript-eslint/explicit-function-return-type
+  60:12  warning  'config' is defined but never used  @typescript-eslint/no-unused-vars
+  60:20  warning  'ctx' is defined but never used     @typescript-eslint/no-unused-vars
+
+/XXXXXXXXXX/store/modules/user.ts
+  28:20  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+
+✖ 8 problems (0 errors, 8 warnings)
+{{< / highlight >}}
+
+`eslint --fix` をラップした `npm run lintfix` コマンドによって、機械的に修正可能な警告は自動で修正できます。
 
 ## Visual Studio Codeの設定
 
@@ -90,3 +153,4 @@ npm i -D @vue/eslint-config-prettier @vue/eslint-config-typescript
 * [ESLint](https://eslint.org/)
 * [Prettier](https://prettier.io/)
 * [開発ツール](https://ja.nuxtjs.org/guide/development-tools/)
+* [Step by Stepで始めるESLint](https://qiita.com/howdy39/items/6e2c75861bc5a14b2acf)
