@@ -32,8 +32,54 @@ Linterとコードフォーマッター間の設定ルールを統一してお�
 
 ## ESLintとPrettierのルールをインストール
 
+まずは、[ESLint](https://eslint.org/) と [Prettier](https://prettier.io/) をインストールします。
+
+`npx create-nuxt-app` コマンドでプロジェクト初期化時する際に [ESLint](https://eslint.org/) と [Prettier](https://prettier.io/) を選択していると、必要なファイルやライブラリがインストールされた状態でスタートできます。
+
+{{< highlight bash "linenos=inline" >}}
+? Choose linting tools
+❯◉ ESLint
+ ◉ Prettier
+ ◯ Lint staged files
+{{< / highlight >}}
+
+プロジェクト初期化時に設定をしておらず、後から追加したい場合には以下を実行すると良いでしょう。
+
+{{< highlight bash "linenos=inline" >}}
+npm install --save-dev babel-eslint eslint eslint-config-prettier eslint-loader eslint-plugin-vue eslint-plugin-prettier prettier
+{{< / highlight >}}
+
+次にルール適用に使うPluginをインストールします。
+
+
+まずは [ESLint](https://eslint.org/) をTypeScriptや[Prettier](https://prettier.io/)と組み合わせて使うためのモジュールをインストールします。
+
+{{< highlight bash "linenos=inline" >}}
+npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin
+{{< / highlight >}}
+
+次にTypeScriptの型定義をインストールします。
+
+{{< highlight bash "linenos=inline" >}}
+npm i -D @types/prettier @types/eslint-plugin-prettier @types/eslint @types/babel-core
+{{< / highlight >}}
+
+最後にルールをインストールします。
+
+{{< highlight bash "linenos=inline" >}}
+npm i -D @vue/eslint-config-prettier @vue/eslint-config-typescript
+{{< / highlight >}}
 
 ## 設定の追加
+
+`.eslintrc.js`
+
+    'plugin:@typescript-eslint/recommended',
+    'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
+    'plugin:vue/recommended',
+    '@vue/prettier',
+    '@vue/typescript'
 
 
 ## Visual Studio Codeの設定
