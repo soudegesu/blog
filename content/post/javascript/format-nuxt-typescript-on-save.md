@@ -169,10 +169,8 @@ npm run lint
 
 プロジェクト直下の `.vscode/settings.json` を編集し、エディタの設定を定義します。
 
-{{< highlight json "linenos=inline,hl_lines=4-10" >}}
+{{< highlight json "linenos=inline" >}}
 {
-  "editor.tabSize": 2,
-  "editor.renderWhitespace": "all",
   "prettier.eslintIntegration": true,
   "eslint.autoFixOnSave": true,
   "eslint.options": { "configFile": "./.eslintrc.json" },
