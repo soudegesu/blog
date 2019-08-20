@@ -1,6 +1,6 @@
 ---
 title: "Nuxt.jsをはじめよう - ESLint+Prettierでコードをフォーマットする"
-description: ""
+description: "Nuxt.jsのプロジェクトにLinterとコードフォーマッターを適用します。ESLintとPrettierのルールの設定方法とTypeScriptを使った際の設定方法を紹介します。"
 date: "2019-08-19T08:27:57+09:00"
 thumbnail: "images/icons/nuxt_icon.png"
 categories:
@@ -25,7 +25,7 @@ twitter_card_image: images/icons/nuxt_icon.png"
 [ESLint](https://eslint.org/) はソースコード静的解析し、良くない書き方を警告してくれるLinterです。
 また、[Prettier](https://prettier.io/) はルールに則ってソースコードを整形してくれるコードフォーマッターです。
 
-Linterとコードフォーマッター間の設定ルールを統一しておくことでと、特に複数人で開発するシーンでは、個々人のソースコードの書き方の差分を補正してくれるため大変重宝します。
+Linterとコードフォーマッター間の設定ルールを統一しておくことで、特に複数人で開発するシーンでは、個々人のソースコードの書き方の差分を補正してくれるため大変重宝します。
 逆にLinterとコードフォーマッター間のルールがずれていると、常にLinterから警告が出続けることとなり開発スピードを落とすことになりかねませんので注意しましょう。
 
 それではさっそく設定していきます。
@@ -151,7 +151,42 @@ npm run lint
 
 ## Visual Studio Codeの設定
 
-[Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/) を使っているときには
+[Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/) では拡張機能を使うことで保存時に自動フォーマットをかけたり、
+エディタ上で警告を出すこともできます。ここでは設定方法を紹介します。
+
+### 拡張機能のインストール
+
+[Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/) のコマンドパレットを開き（Cmd + Shift + P）
+拡張機能のビューを開きます。その後、 ESLintとPrettierの拡張機能をインストールします。
+
+![eslint_extention](/images/20190819/eslint_extention.png)
+
+![prettier_extention](/images/20190819/prettier_extention.png)
+
+インストール終了後、[Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/) を再起動して拡張機能を有効にします。
+
+### settings.json の修正
+
+プロジェクト直下の `.vscode/settings.json` を編集し、エディタの設定を定義します。
+
+{{< highlight json "linenos=inline,hl_lines=4-7" >}}
+{
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "all",
+  "prettier.eslintIntegration": true,
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": true,
+  "eslint.options": { "configFile": "./.eslintrc.json" }
+}
+{{< / highlight >}}
+
+`editor.formatOnSave`: ファイル保存時に自動でフォーマット
+`eslint.autoFixOnSave`: ファイル保存時にESLintのルールを自動で適用する
+`prettier.eslintIntegration`: ESLint実行時にPrettierも適用する
+`eslint.options:{ "configFile": "./.eslintrc.json" }`: `.eslintrc.json` を起用ルールとする
+
+重要なのは `configFile` の設定でVisual Studio Codeと `npm run lint` コマンド実行時のルールを共有することです。
+ここの設定がずれてしまうとファイルを保存する度にLinterからエラーメッセージが表示されストレスフルになります。
 
 ## 参考サイト
 
