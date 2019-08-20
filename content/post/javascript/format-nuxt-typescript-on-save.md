@@ -169,21 +169,25 @@ npm run lint
 
 プロジェクト直下の `.vscode/settings.json` を編集し、エディタの設定を定義します。
 
-{{< highlight json "linenos=inline,hl_lines=4-7" >}}
+{{< highlight json "linenos=inline,hl_lines=4-10" >}}
 {
   "editor.tabSize": 2,
   "editor.renderWhitespace": "all",
   "prettier.eslintIntegration": true,
   "eslint.autoFixOnSave": true,
-  "editor.formatOnSave": true,
-  "eslint.options": { "configFile": "./.eslintrc.json" }
+  "eslint.options": { "configFile": "./.eslintrc.json" },
+  "eslint.validate": [
+    "javascript",
+    { "language": "typescript", "autoFix": true },
+    { "language": "vue", "autoFix": true }
+  ]
 }
 {{< / highlight >}}
 
-`editor.formatOnSave`: ファイル保存時に自動でフォーマット
 `eslint.autoFixOnSave`: ファイル保存時にESLintのルールを自動で適用する
 `prettier.eslintIntegration`: ESLint実行時にPrettierも適用する
-`eslint.options:{ "configFile": "./.eslintrc.json" }`: `.eslintrc.json` を起用ルールとする
+`eslint.options:{ "configFile": "./.eslintrc.json" }`: `.eslintrc.json` を適用ルールとする
+`eslint.validate`: 検証対象の言語を指定し、ついでに自動で修正する
 
 重要なのは `configFile` の設定でVisual Studio Codeと `npm run lint` コマンド実行時のルールを共有することです。
 ここの設定がずれてしまうとファイルを保存する度にLinterからエラーメッセージが表示されストレスフルになります。
