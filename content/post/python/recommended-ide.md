@@ -36,7 +36,7 @@ twitter_card_image: /images/icons/python_icon.png
 
 ![pycharm](/images/20181127/pycharm.png)
 
-他のエディタと比べてPyCharmは高機能なIDEと言えます。特にコード補完やデバッガの優秀さが特徴で、 **Pythonで中〜大規模なアプリケーションを開発する時にオススメします。** 
+他のエディタと比べてPyCharmは高機能なIDEと言えます。特にコード補完やデバッガの優秀さが特徴で、 **Pythonで中〜大規模なアプリケーションを開発する時にオススメします。**
 例えば、[django](https://www.djangoproject.com/)を使ったWebアプリケーションや、Pythonのライブラリのソースコードを読む場合などです。
 
 PyCharmには無料版と有償版の2種類が存在し、[無料版と有償版の機能比較](https://www.jetbrains.com/pycharm/features/editions_comparison_matrix.html) ページが公開されています。
@@ -97,7 +97,7 @@ jupyter notebook
 ![jupyter_iris](/images/20181127/jupyter_iris.png)
 
 欠点として、先程説明したユースケースにおいては、ファイル拡張子が [Jupyter Notebook](http://jupyter.org/) 専用の `.ipynb` になってしまうことが挙げられます。`.ipynb` ファイルから、Pythonの実行ファイルである `.py` ファイルへ変換することも可能ですが、各セルのコードを画一的に出力するだけなので、実用性はありません。 **.pyファイルの作成には向いていないと言えます** 。
-加えて、**他のIDEと比べるとコード補完が弱い** ことも気にしておく必要があります。
+~~加えて、**他のIDEと比べるとコード補完が弱い** ことも気にしておく必要があります。~~ コード補完もできるので [Jupyter Notebookでコードの自動補完をする](/post/python/jupyter-autocomplete/) を見てください。
 
 <!--adsense-->
 
