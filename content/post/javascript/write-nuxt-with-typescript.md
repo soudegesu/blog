@@ -15,6 +15,8 @@ twitter_card_image: "images/icons/nuxt_icon.png"
 [前回の記事](/post/javascript/store-with-nuxt/) では [Vuex](https://vuex.vuejs.org/ja/) を使った状態管理の仕方を書きました。
 今回は[Nuxt.js](https://ja.nuxtjs.org/)のコードをTypeScriptで書くための設定や書き方などを紹介します。
 
+なお、ここでは **Nuxt 2.8.x** を想定しています。
+
 <!--adsense-->
 
 ## Nuxt.jsのTypeScriptサポート
@@ -159,7 +161,7 @@ class UserModule extends VuexModule implements UserState {
   }
 
   @Action({})
-  async save() {    
+  async save() {
     const users = await axios.get<Array<User>>(process.env.apiBaseUrl + '/users')
     this.updateUser(users.data)
   }
