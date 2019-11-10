@@ -1,5 +1,5 @@
 ---
-title: "Pythonを使った文字列連結（文字列結合）の方法: +演算子/join関数/format関数/f-strings"
+title: "Pythonの文字列連結（文字列結合）: +演算子/join関数/format関数/f-strings"
 description: "Pythonで文字列連結（文字列結合）を行います。+演算子やjoin関数、format関数やf-stringsを使います。なお、Python3での利用を想定しています。"
 date: "2019-10-28T08:41:04+09:00"
 thumbnail: /images/icons/python_icon.png
