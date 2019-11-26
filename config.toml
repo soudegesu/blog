@@ -33,6 +33,7 @@ baseName = "feed"
     toc = true
     post_navigation = true
     postSections = ["post", "past"]
+    mainSections = ["post", "past"]
     #postSections = ["blog", "news"] # alternative that shows more than one section's pages
     #dateformat = "2006-01-02" # change the format of dates
     #mathjax = true # Enable MathJax
