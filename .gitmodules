@@ -1,4 +1,4 @@
-[submodule "themes/mainroad"]
+[submodule "theme/mainroad"]
 	path = themes/mainroad
 	url = https://github.com/soudegesu/mainroad
 	branch = master
