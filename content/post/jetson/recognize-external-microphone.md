@@ -20,7 +20,7 @@ twitter_card_image: /images/soudegesu.jpg
 今回の動作確認環境は以下です。
 
 * [Jetson Nano](https://amzn.to/36f2dhQ)
-  * SD Card Image: [jetson-nano-sd-card-image-r3231](https://developer.nvidia.com/jetson-nano-sd-card-image-r3231)
+  * Card Image: [jetson-nano-sd-card-image-r3231](https://developer.nvidia.com/jetson-nano-sd-card-image-r3231)
 
 ## USBマイクの音が拾えてない..??
 
@@ -46,18 +46,13 @@ plughw:CARD=Pro,DEV=0
 pcm.!default {
 	type plug
 	slave {
-		pcm "hw:{{ audio_card }},DEV=0"
-		#pcm "hw:tegrasndt210ref,0"
-		#channels 2
-		#rate 48000
+		pcm "hw:Pro,DEV=0"
 	}
-	#hint.description "Tegra APE Soundcard (tegrasndt210ref,0)"
 }
 
 ctl.!default {
 	type hw
-	card {{ audio_card }}
-	#card tegrasndt210ref
+	card Pro
 }
 ```
 
