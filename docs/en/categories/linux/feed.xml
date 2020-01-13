@@ -2,5 +2,5 @@
 I try the following procedure after booting the official Amazon Linux 2 AMI as it is.
 Soft limits and Hard limits Let me review what Soft limits and Hard limits are.
 Linux limits the number of process per user.</description></item><item><title>Change system clock on Amazon Linux2(systemd)</title><link>https://www.soudegesu.com/en/linux/systemd_clock/</link><pubDate>Sat, 09 Jun 2018 00:00:00 +0000</pubDate><guid>https://www.soudegesu.com/en/linux/systemd_clock/</guid><description>Motivation When I migrate Amazon Linux to Amazon Linux2, I investigate how to change system clock on Linux server working with systemd. This post is technical memo for myself.
-Change system clock System clock is calculated by /etc/adjtime that uses hardware clock. If OS working with systemd dosen&amp;rsquo;t have /etc/adjtime, UTC is default.
-cat /etc/adjtime &amp;gt; 0.0 0 0.0 &amp;gt; 0 &amp;gt; UTC Now check the system clock with timedatectl command.</description></item></channel></rss>
+Change system clock System clock is calculated by /etc/adjtime that uses hardware clock. If OS working with systemd dosen't have /etc/adjtime, UTC is default.
+cat /etc/adjtime 0.0 0 0.0 0 UTC Now check the system clock with timedatectl command.</description></item></channel></rss>
