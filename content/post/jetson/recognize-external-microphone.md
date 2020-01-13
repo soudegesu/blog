@@ -30,19 +30,22 @@ twitter_card_image: /images/soudegesu.jpg
 
 ## マイクデバイスを確認する
 
-まず最初に行うのは接続済みのマイクデバイスの確認です。 `arecord -L` コマンドで確認できます。
+[Jetson Nano](https://amzn.to/36f2dhQ) のマイクデバイスはデフォルトで `tegrasndt210` が設定されていたため、マイクデバイスに変更する必要があります。
+そのため、まず最初に接続済みのマイクデバイスの確認をします。 `arecord -L` コマンドで確認できます。
 
-```bash
+{{< highlight "linenos=inline" >}}
 arecord -L
 
 plughw:CARD=Pro,DEV=0
   HD Webcam eMeet C980 Pro, USB Audio
   Hardware device with all software conversions
-```
+{{< / highlight >}}
 
 ## `/etc/asound.conf` を編集する
 
-```vi
+確認できたCARD情報で `/etc/asound.conf` を書き換えます。
+
+{{< highlight "linenos=inline" >}}
 pcm.!default {
 	type plug
 	slave {
@@ -54,7 +57,14 @@ ctl.!default {
 	type hw
 	card Pro
 }
-```
+{{< / highlight >}}
+
+編集後、再起動を行い設定を読み込ませます。
+
+{{< highlight "linenos=inline" >}}
+alsactl stop
+alsactl start
+{{< / highlight >}}
 
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=soudegesu-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07T6LYQZ6&linkId=7ed180cd03c44a1f511439d04b3f94d4"></iframe>
