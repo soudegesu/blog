@@ -72,3 +72,6 @@ baseName = "feed"
 [Languages.en.params]
     description = "soudegesu tech blog. As I usually write about technologies that I do not use at work, I thought that there will be more introductory articles, but as I started writing, various things have become miscellaneous. Anyway, I write various things when I want to write."
     subtitle = "Once again, I cut a worthless object"
+
+[markup.goldmark.renderer]
+    unsafe = true
