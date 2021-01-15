@@ -1,6 +1,6 @@
 ---
 title: "RecoilでReactの子孫要素がatomの値が取得できない時の対処法"
-description: "Reactの状態管理ライブラリであるRecoilのTipsを紹介します。Recoilで子コンポーネントからatomの値が取得できない場合、"
+description: "Reactの状態管理ライブラリであるRecoilのTipsを紹介します。Recoilで子コンポーネントからatomの値が取得できない場合、子コンポーネントのどこかでcontext stateが渡されていないのでブリッジしましょう"
 date: "2021-01-15T13:43:32+09:00"
 thumbnail: "images/icons/react_icon.png"
 categories:
