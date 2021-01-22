@@ -1,0 +1,497 @@
+<!doctype html><html class=no-js lang=ja-jp><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><title>KubernatesでPrometheusとGrafanaとpushgatewayを構築する - そうなんでげす</title><script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script><meta name=description content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta property="og:title" content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する"><meta property="og:description" content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta property="og:type" content="article"><meta property="og:url" content="https://www.soudegesu.com/post/docker/prometheus-on-kubernates/"><meta property="article:published_time" content="2021-01-22T14:28:08+09:00"><meta property="article:modified_time" content="2021-01-22T14:28:08+09:00"><meta property="og:site_name" content="そうなんでげす"><meta name=twitter:card content="summary"><meta name=twitter:title content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する"><meta name=twitter:description content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><link rel=dns-prefetch href=//fonts.googleapis.com><link rel=dns-prefetch href=//fonts.gstatic.com><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700"><link rel=stylesheet href=/css/style.css><link rel="shortcut icon" href=/favicon.ico><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-92599175-1','auto');ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script></head><body class=body><div class="container container--outer"><!doctype html><html lang=ja-jp><head><meta charset=utf-8><meta http-equiv=x-dns-prefetch-control content="on"><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><link rel=dns-prefetch href=//fonts.googleapis.com><link rel=dns-prefetch href=//fonts.gstatic.com><link rel=dns-prefetch href=//pagead2.googlesyndication.com><link rel=dns-prefetch href=//googleads.g.doubleclick.net><link rel=dns-prefetch href=//googleads4.g.doubleclick.net><link rel=dns-prefetch href=//tpc.googlesyndication.com><link rel=dns-prefetch href=//www.gstatic.com><meta name=generator content="Hugo 0.62.2"><title>KubernatesでPrometheusとGrafanaとpushgatewayを構築する - そうなんでげす</title><meta name=description content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta property="og:description" content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta name=author content="soudegesu"><link rel=canonical href=https://www.soudegesu.com/post/docker/prometheus-on-kubernates/><link rel=alternate hreflang=x-default href=https://www.soudegesu.com/post/docker/prometheus-on-kubernates/><meta name=twitter:site content="@alten_manten"><meta name=twitter:title content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する - そうなんでげす"><meta name=twitter:description content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta name=twitter:url content="https://www.soudegesu.com/post/docker/prometheus-on-kubernates/"><meta name=twitter:card content="summary_large_image"><meta name=twitter:creator content="@alten_manten"><meta property="og:locale" content="ja-JP"><meta property="og:site_name" content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する - そうなんでげす"><meta property="og:title" content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する - そうなんでげす"><meta property="og:url" content="https://www.soudegesu.com/post/docker/prometheus-on-kubernates/"><meta property="og:image" content="/images/icons/k8s_horizontal_icon.png"><meta name=twitter:image content="/images/icons/k8s_horizontal_icon.png"><meta property="og:type" content="article"><meta property="article:published_time" content="2021-01-22 14:28:08 +0900 JST"><link rel=prev href=Page%28/post/javascript/recoil-context.md%29><script type=application/ld+json>{"@context":"http://schema.org","@type":"Organization","url":"https:\/\/www.soudegesu.com","logo":"https:\/\/www.soudegesu.com\/images\/soudegesu.jpg"}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Person","name":"soudegesu","url":"https:\/\/www.soudegesu.com","sameAs":null}</script><meta name=google-site-verification content="cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw"><meta name=msvalidate.01 content="C58B4D4C2D3C5B99C7CF26F79733F9EB"><meta name=yandex-verification content="2f79a5310dc24118"><meta property="og:title" content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する"><meta property="og:description" content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><meta property="og:type" content="article"><meta property="og:url" content="https://www.soudegesu.com/post/docker/prometheus-on-kubernates/"><meta property="article:published_time" content="2021-01-22T14:28:08+09:00"><meta property="article:modified_time" content="2021-01-22T14:28:08+09:00"><meta property="og:site_name" content="そうなんでげす"><meta name=twitter:card content="summary"><meta name=twitter:title content="KubernatesでPrometheusとGrafanaとpushgatewayを構築する"><meta name=twitter:description content="Kubernates環境でPrometheusとGrafanaとpushgatewayの構築を素振りしたので備忘録として残します。"><link rel=stylesheet href=/css/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-92599175-1','auto');ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><script>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:"ca-pub-5005266309965277",enable_page_level_ads:true});</script><script async src=https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js custom-element=amp-auto-ads></script><amp-auto-ads type=adsense data-ad-client=ca-pub-5005266309965277></head><body class=body><div class="container container-outer"><header class=header><div class="container container-inner"><div class=logo role=banner><a class=logo__link href=/ title=そうなんでげす rel=home><div class=logo__title>そうなんでげす</div><div class=logo__tagline>またつまらぬモノを斬ってしまった</div></a></div></div><div class=divider></div></header><div class="wrapper flex"><div class="wrapper flex"><div class=primary><main class=main role=main><article class=post><header class=post__header><h1 class=post__title>KubernatesでPrometheusとGrafanaとpushgatewayを構築する</h1><div class="post__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16s8-3.6 8-8.0000003c0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4s6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2021-01-22T14:28:08>January 22, 2021</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/docker rel=category>docker</a></span></span></div></header><figure class=post__thumbnail><img src=/images/icons/k8s_horizontal_icon.png alt=KubernatesでPrometheusとGrafanaとpushgatewayを構築する></figure><div class="post__toc toc"><div class=toc__title>目次</div><div class=toc__menu><nav id=TableOfContents><ul><li><a href=#やりたいこと>やりたいこと</a></li><li><a href=#環境情報>環境情報</a></li><li><a href=#構築手順>構築手順</a><ul><li><a href=#kubernates-contextを指定する>Kubernates Contextを指定する</a></li><li><a href=#clusterroleとclusterrolebindingの作成>ClusterRoleとClusterRoleBindingの作成</a></li><li><a href=#pushgatewayを作成する>pushgatewayを作成する</a></li><li><a href=#prometheusを作成する>Prometheusを作成する</a></li><li><a href=#grafanaを作成する>Grafanaを作成する</a></li><li><a href=#applyする>applyする</a></li></ul></li><li><a href=#最後に>最後に</a></li><li><a href=#参考にさせていただいたリンク>参考にさせていただいたリンク</a></li></ul></nav></div></div><div class="content post__content clearfix"><p><a href=https://kubernetes.io/>Kubernates</a> 環境で <a href=https://prometheus.io/>Prometheus</a> と <a href=https://grafana.com/>Grafana</a> と <a href=https://github.com/prometheus/pushgateway>pushgateway</a> の構築を素振りしたので備忘録として残します。</p><p>リポジトリは以下</p><ul><li><a href=https://github.com/soudegesu/prometheus-pushgw-practice>soudegesu/prometheus-pushgw-practice</a></li></ul><script async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h2 id=やりたいこと>やりたいこと</h2><ul><li><a href=https://prometheus.io/>Prometheus</a> と <a href=https://grafana.com/>Grafana</a> と <a href=https://github.com/prometheus/pushgateway>pushgateway</a> を <a href=https://kubernetes.io/>Kubernates</a> で管理する</li><li><a href=https://grafana.com/>Grafana</a> は <a href=https://prometheus.io/>Prometheus</a> をデータソースとして参照する</li><li><a href=https://prometheus.io/>Prometheus</a> は <a href=https://github.com/prometheus/pushgateway>pushgateway</a> からメトリクスをpullする</li></ul><p>とりあえずは、ローカルマシン上での構築を目指します。構成としては以下の通りです。</p><p><img src=/images/20210122/purpose.drawio.png alt=purpose></p><h2 id=環境情報>環境情報</h2><ul><li>Mac OS X <code>11.1</code></li><li>Docker Desktop <code>3.0.0</code><ul><li>Docker <code>20.1.0</code></li><li>Kubernates <code>1.19.3</code></li></ul></li></ul><h2 id=構築手順>構築手順</h2><p>今回の手順は <a href=https://qiita.com/FY0323/items/72616d6e280ec7f2fdaf>Prometheus+GrafanaでKubernetesクラスターを監視する ~Binaryファイルから起動+yamlファイルから構築~</a> を参考にさせていただきつつ、個人的に欲しい部分を拡張しています。</p><h3 id=kubernates-contextを指定する>Kubernates Contextを指定する</h3><p>任意のコンテキストで構いませんが今回は <code>docker-desktop</code> を指定します。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span>kubectl config use-context docker-desktop</code></pre></div><p>また、今回のnamespaceを <code>monitoring</code> にしておきます。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span>kubectl create namespace monitoring</code></pre></div><script async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h3 id=clusterroleとclusterrolebindingの作成>ClusterRoleとClusterRoleBindingの作成</h3><p>まずは <code>ClusterRole</code> と <code>ClusterRoleBinding</code> を作成します。 <code>Role</code> と <code>RoleBinding</code> に変更して使ってもらっても構いません。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span>apiVersion: rbac.authorization.k8s.io/v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span>kind: ClusterRole
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span>  name: prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span>rules:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span>- apiGroups: [<span style=color:#e6db74>&#34;&#34;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span>  resources:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span>  - nodes
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span>  - nodes/proxy
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span>  - services
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span>  - endpoints
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span>  - pods
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span>  verbs: [<span style=color:#e6db74>&#34;get&#34;</span>, <span style=color:#e6db74>&#34;list&#34;</span>, <span style=color:#e6db74>&#34;watch&#34;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span>- apiGroups:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span>  - extensions
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span>  resources:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span>  - ingresses
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span>  verbs: [<span style=color:#e6db74>&#34;get&#34;</span>, <span style=color:#e6db74>&#34;list&#34;</span>, <span style=color:#e6db74>&#34;watch&#34;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span>- nonResourceURLs: [<span style=color:#e6db74>&#34;/metrics&#34;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span>  verbs: [<span style=color:#e6db74>&#34;get&#34;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span>apiVersion: rbac.authorization.k8s.io/v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span>kind: ClusterRoleBinding
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span>  name: prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span>roleRef:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span>  apiGroup: rbac.authorization.k8s.io
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span>  kind: ClusterRole
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span>  name: prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span>subjects:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span>- kind: ServiceAccount
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">32</span>  name: default
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">33</span>  namespace: monitoring</code></pre></div><h3 id=pushgatewayを作成する>pushgatewayを作成する</h3><p>次に <a href=https://github.com/prometheus/pushgateway>pushgateway</a> の定義を作成します。
+ここでは <code>Deployment</code> と <code>Service</code> を作成しています。
+以下の設定では、 別のPodからは <code>pushgateway-service:8120</code> で pushgateway にアクセスできるようになります。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span>apiVersion: apps/v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span>kind: Deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span>  name: pushgateway-deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span>    app: pushgateway-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span>  replicas: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span>  selector:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span>    matchLabels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span>      app: pushgateway-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span>  template:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span>    metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span>      labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span>        app: pushgateway-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span>    spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span>      containers:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span>        - name: pushgateway
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span>          image: prom/pushgateway:latest
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span>          ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span>            - containerPort: <span style=color:#ae81ff>9091</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span>kind: Service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span>  name: pushgateway-service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span>  selector: 
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span>    app: pushgateway-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span>  type: NodePort
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">32</span>  ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">33</span>    - port: <span style=color:#ae81ff>8120</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">34</span>      targetPort: <span style=color:#ae81ff>9091</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">35</span>      nodePort: <span style=color:#ae81ff>30040</span></code></pre></div><script async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h3 id=prometheusを作成する>Prometheusを作成する</h3><p>次に <a href=https://prometheus.io/>Prometheus</a> の定義を作成します。ここでは <code>Deployment</code> と <code>Service</code> 以外にも <code>ConfigMap</code> を作成します。</p><p><a href=https://prometheus.io/>Prometheus</a>の設定ファイル(<code>prometheus.yml</code>)をConfigMapに定義してマウントさせることで設定を外出しします。</p><p>また、別のPodからは <code>prometheus-service:8080</code> で Prometheus にアクセスできるようになります。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span>kind: ConfigMap
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span>  name: prometheus-server-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span>    name: prometheus-server-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span>data:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span>  prometheus.yml: |<span style=color:#e6db74>-
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span style=color:#e6db74>   </span><span style=color:#e6db74> </span><span style=color:#e6db74># my global config</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span>    global:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span>      scrape_interval:     15s <span style=color:#75715e># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span>      evaluation_interval: 15s <span style=color:#75715e># Evaluate rules every 15 seconds. The default is every 1 minute.</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span>      <span style=color:#75715e># scrape_timeout is set to the global default (10s).</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span>    <span style=color:#75715e># Alertmanager configuration</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span>    alerting:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span>      alertmanagers:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span>      - static_configs:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span>        - targets:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span>          <span style=color:#75715e># - alertmanager:9093</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span>    <span style=color:#75715e># Load rules once and periodically evaluate them according to the global &#39;evaluation_interval&#39;.</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span>    rule_files:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span>      <span style=color:#75715e># - &#34;first_rules.yml&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span>      <span style=color:#75715e># - &#34;second_rules.yml&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span>    <span style=color:#75715e># A scrape configuration containing exactly one endpoint to scrape:</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span>    <span style=color:#75715e># Here it&#39;s Prometheus itself.</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span>    scrape_configs:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span>      <span style=color:#75715e># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span>      - job_name: <span style=color:#e6db74>&#39;prometheus&#39;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span>        static_configs:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span>        - targets: [<span style=color:#e6db74>&#39;localhost:9090&#39;</span>]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">32</span>      
+<span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">33</span>      - job_name: <span style=color:#e6db74>&#39;pushgateway&#39;</span>
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">34</span>        honor_labels: <span style=color:#66d9ef>true</span>
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">35</span>        metrics_path: /metrics
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">36</span>        static_configs:
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">37</span>        - targets: [<span style=color:#e6db74>&#39;pushgateway-service:8120&#39;</span>]
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">38</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">39</span>apiVersion: apps/v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">40</span>kind: Deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">41</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">42</span>  name: prometheus-deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">43</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">44</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">45</span>    app: prometheus-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">46</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">47</span>  replicas: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">48</span>  selector:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">49</span>    matchLabels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">50</span>      app: prometheus-server  
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">51</span>  template:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">52</span>    metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">53</span>      labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">54</span>        app: prometheus-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">55</span>    spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">56</span>      containers:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">57</span>        - name: prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">58</span>          image: prom/prometheus:latest
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">59</span>          args:
+<span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">60</span>            - <span style=color:#e6db74>&#34;--config.file=/etc/config/prometheus.yml&#34;</span>
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">61</span>            - <span style=color:#e6db74>&#34;--storage.tsdb.path=/prometheus/&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">62</span>            - <span style=color:#e6db74>&#34;--storage.tsdb.retention=3d&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">63</span>          ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">64</span>            - containerPort: <span style=color:#ae81ff>9090</span>
+<span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">65</span>          volumeMounts:
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">66</span>            - name: config-vol
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">67</span>              mountPath: /etc/config
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">68</span>      volumes:
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">69</span>        - name: config-vol
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">70</span>          configMap:
+</span><span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">71</span>            name: prometheus-server-conf
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">72</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">73</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">74</span>kind: Service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">75</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">76</span>  name: prometheus-service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">77</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">78</span>  selector: 
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">79</span>    app: prometheus-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">80</span>  type: NodePort
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">81</span>  ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">82</span>    - port: <span style=color:#ae81ff>8080</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">83</span>      targetPort: <span style=color:#ae81ff>9090</span> 
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">84</span>      nodePort: <span style=color:#ae81ff>30000</span>            </code></pre></div><h3 id=grafanaを作成する>Grafanaを作成する</h3><p>次に <a href=https://grafana.com/>Grafana</a> の定義を作成します。ここでは <code>Deployment</code> と <code>Service</code> と <code>ConfigMap</code> を作成します。</p><p>定義ファイルが少し長くなってしまっていますが、ここでも同様に設定ファイルをConfigMapで作成しています。作成している定義ファイルは <code>データソースの定義</code> と <code>ダッシュボードの定義</code> と <code>ダッシュボードの設定</code> の3種類です。</p><p>ダッシュボードの設定については、設定ファイルから作成すると時間がかかるため、GUIから設定した定義をJSONとして出力して貼り付けると良いでしょう。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  1</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  2</span>kind: ConfigMap
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  3</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  4</span>  name: grafana-datasources-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  5</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  6</span>    name: grafana-datasources-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  7</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  8</span>data:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">  9</span>  datasources.yml: |<span style=color:#e6db74>-
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 10</span><span style=color:#e6db74>   </span><span style=color:#e6db74> </span><span style=color:#e6db74>apiVersion: 1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 11</span>    datasources:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 12</span>    - name: Prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 13</span>      type: prometheus
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 14</span>      access: proxy
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 15</span>      orgId: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 16</span>      uid: <span style=color:#ae81ff>1</span>
+<span style=display:block;width:100%;background-color:#3c3d38><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 17</span>      url: http://prometheus-service:<span style=color:#ae81ff>8080</span>/
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 18</span>      basicAuth: <span style=color:#66d9ef>false</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 19</span>      editable: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 20</span>      version: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 21</span>      isDefault: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 22</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 23</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 24</span>kind: ConfigMap
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 25</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 26</span>  name: grafana-dashboards-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 27</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 28</span>    name: grafana-dashboards-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 29</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 30</span>data:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 31</span>  dashboards.yml: |<span style=color:#e6db74>-
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 32</span><span style=color:#e6db74>   </span><span style=color:#e6db74> </span><span style=color:#e6db74>apiVersion: 1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 33</span>    providers:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 34</span>    - name: <span style=color:#e6db74>&#39;hoge&#39;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 35</span>      orgId: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 36</span>      folder: <span style=color:#e6db74>&#39;&#39;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 37</span>      type: file
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 38</span>      disableDeletion: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 39</span>      editable: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 40</span>      options:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 41</span>        path: /var/lib/grafana/dashboards
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 42</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 43</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 44</span>kind: ConfigMap
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 45</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 46</span>  name: grafana-dashboards-settings
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 47</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 48</span>    name: grafana-dashboards-settings
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 49</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 50</span>data:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 51</span>  hoge.json: <span style=color:#e6db74>|
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 52</span><span style=color:#e6db74>   </span><span style=color:#e6db74> </span><span style=color:#e6db74>{</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 53</span>      <span style=color:#e6db74>&#34;annotations&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 54</span>        <span style=color:#e6db74>&#34;list&#34;</span>: [
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 55</span>          {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 56</span>            <span style=color:#e6db74>&#34;builtIn&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 57</span>            <span style=color:#e6db74>&#34;datasource&#34;</span>: <span style=color:#e6db74>&#34;-- Grafana --&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 58</span>            <span style=color:#e6db74>&#34;enable&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 59</span>            <span style=color:#e6db74>&#34;hide&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 60</span>            <span style=color:#e6db74>&#34;iconColor&#34;</span>: <span style=color:#e6db74>&#34;rgba(0, 211, 255, 1)&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 61</span>            <span style=color:#e6db74>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;Annotations &amp; Alerts&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 62</span>            <span style=color:#e6db74>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;dashboard&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 63</span>          }
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 64</span>        ]
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 65</span>      },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 66</span>      <span style=color:#e6db74>&#34;editable&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 67</span>      <span style=color:#e6db74>&#34;gnetId&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 68</span>      <span style=color:#e6db74>&#34;graphTooltip&#34;</span>: <span style=color:#ae81ff>0</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 69</span>      <span style=color:#e6db74>&#34;id&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 70</span>      <span style=color:#e6db74>&#34;links&#34;</span>: [],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 71</span>      <span style=color:#e6db74>&#34;panels&#34;</span>: [
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 72</span>        {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 73</span>          <span style=color:#e6db74>&#34;aliasColors&#34;</span>: {},
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 74</span>          <span style=color:#e6db74>&#34;bars&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 75</span>          <span style=color:#e6db74>&#34;dashLength&#34;</span>: <span style=color:#ae81ff>10</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 76</span>          <span style=color:#e6db74>&#34;dashes&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 77</span>          <span style=color:#e6db74>&#34;datasource&#34;</span>: <span style=color:#e6db74>&#34;Prometheus&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 78</span>          <span style=color:#e6db74>&#34;fieldConfig&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 79</span>            <span style=color:#e6db74>&#34;defaults&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 80</span>              <span style=color:#e6db74>&#34;custom&#34;</span>: {}
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 81</span>            },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 82</span>            <span style=color:#e6db74>&#34;overrides&#34;</span>: []
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 83</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 84</span>          <span style=color:#e6db74>&#34;fill&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 85</span>          <span style=color:#e6db74>&#34;fillGradient&#34;</span>: <span style=color:#ae81ff>0</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 86</span>          <span style=color:#e6db74>&#34;gridPos&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 87</span>            <span style=color:#e6db74>&#34;h&#34;</span>: <span style=color:#ae81ff>9</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 88</span>            <span style=color:#e6db74>&#34;w&#34;</span>: <span style=color:#ae81ff>12</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 89</span>            <span style=color:#e6db74>&#34;x&#34;</span>: <span style=color:#ae81ff>0</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 90</span>            <span style=color:#e6db74>&#34;y&#34;</span>: <span style=color:#ae81ff>0</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 91</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 92</span>          <span style=color:#e6db74>&#34;hiddenSeries&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 93</span>          <span style=color:#e6db74>&#34;id&#34;</span>: <span style=color:#ae81ff>2</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 94</span>          <span style=color:#e6db74>&#34;legend&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 95</span>            <span style=color:#e6db74>&#34;avg&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 96</span>            <span style=color:#e6db74>&#34;current&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 97</span>            <span style=color:#e6db74>&#34;max&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 98</span>            <span style=color:#e6db74>&#34;min&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 99</span>            <span style=color:#e6db74>&#34;show&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">100</span>            <span style=color:#e6db74>&#34;total&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">101</span>            <span style=color:#e6db74>&#34;values&#34;</span>: <span style=color:#66d9ef>false</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">102</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">103</span>          <span style=color:#e6db74>&#34;lines&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">104</span>          <span style=color:#e6db74>&#34;linewidth&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">105</span>          <span style=color:#e6db74>&#34;nullPointMode&#34;</span>: <span style=color:#e6db74>&#34;null&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">106</span>          <span style=color:#e6db74>&#34;options&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">107</span>            <span style=color:#e6db74>&#34;alertThreshold&#34;</span>: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">108</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">109</span>          <span style=color:#e6db74>&#34;percentage&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">110</span>          <span style=color:#e6db74>&#34;pluginVersion&#34;</span>: <span style=color:#e6db74>&#34;7.3.7&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">111</span>          <span style=color:#e6db74>&#34;pointradius&#34;</span>: <span style=color:#ae81ff>2</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">112</span>          <span style=color:#e6db74>&#34;points&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">113</span>          <span style=color:#e6db74>&#34;renderer&#34;</span>: <span style=color:#e6db74>&#34;flot&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">114</span>          <span style=color:#e6db74>&#34;seriesOverrides&#34;</span>: [],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">115</span>          <span style=color:#e6db74>&#34;spaceLength&#34;</span>: <span style=color:#ae81ff>10</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">116</span>          <span style=color:#e6db74>&#34;stack&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">117</span>          <span style=color:#e6db74>&#34;steppedLine&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">118</span>          <span style=color:#e6db74>&#34;targets&#34;</span>: [
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">119</span>            {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">120</span>              <span style=color:#e6db74>&#34;expr&#34;</span>: <span style=color:#e6db74>&#34;go_gc_duration_seconds&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">121</span>              <span style=color:#e6db74>&#34;interval&#34;</span>: <span style=color:#e6db74>&#34;&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">122</span>              <span style=color:#e6db74>&#34;legendFormat&#34;</span>: <span style=color:#e6db74>&#34;&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">123</span>              <span style=color:#e6db74>&#34;refId&#34;</span>: <span style=color:#e6db74>&#34;A&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">124</span>            }
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">125</span>          ],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">126</span>          <span style=color:#e6db74>&#34;thresholds&#34;</span>: [],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">127</span>          <span style=color:#e6db74>&#34;timeFrom&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">128</span>          <span style=color:#e6db74>&#34;timeRegions&#34;</span>: [],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">129</span>          <span style=color:#e6db74>&#34;timeShift&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">130</span>          <span style=color:#e6db74>&#34;title&#34;</span>: <span style=color:#e6db74>&#34;Panel Title&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">131</span>          <span style=color:#e6db74>&#34;tooltip&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">132</span>            <span style=color:#e6db74>&#34;shared&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">133</span>            <span style=color:#e6db74>&#34;sort&#34;</span>: <span style=color:#ae81ff>0</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">134</span>            <span style=color:#e6db74>&#34;value_type&#34;</span>: <span style=color:#e6db74>&#34;individual&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">135</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">136</span>          <span style=color:#e6db74>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;graph&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">137</span>          <span style=color:#e6db74>&#34;xaxis&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">138</span>            <span style=color:#e6db74>&#34;buckets&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">139</span>            <span style=color:#e6db74>&#34;mode&#34;</span>: <span style=color:#e6db74>&#34;time&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">140</span>            <span style=color:#e6db74>&#34;name&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">141</span>            <span style=color:#e6db74>&#34;show&#34;</span>: <span style=color:#66d9ef>true</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">142</span>            <span style=color:#e6db74>&#34;values&#34;</span>: []
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">143</span>          },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">144</span>          <span style=color:#e6db74>&#34;yaxes&#34;</span>: [
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">145</span>            {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">146</span>              <span style=color:#e6db74>&#34;format&#34;</span>: <span style=color:#e6db74>&#34;short&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">147</span>              <span style=color:#e6db74>&#34;label&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">148</span>              <span style=color:#e6db74>&#34;logBase&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">149</span>              <span style=color:#e6db74>&#34;max&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">150</span>              <span style=color:#e6db74>&#34;min&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">151</span>              <span style=color:#e6db74>&#34;show&#34;</span>: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">152</span>            },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">153</span>            {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">154</span>              <span style=color:#e6db74>&#34;format&#34;</span>: <span style=color:#e6db74>&#34;short&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">155</span>              <span style=color:#e6db74>&#34;label&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">156</span>              <span style=color:#e6db74>&#34;logBase&#34;</span>: <span style=color:#ae81ff>1</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">157</span>              <span style=color:#e6db74>&#34;max&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">158</span>              <span style=color:#e6db74>&#34;min&#34;</span>: <span style=color:#66d9ef>null</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">159</span>              <span style=color:#e6db74>&#34;show&#34;</span>: <span style=color:#66d9ef>true</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">160</span>            }
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">161</span>          ],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">162</span>          <span style=color:#e6db74>&#34;yaxis&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">163</span>            <span style=color:#e6db74>&#34;align&#34;</span>: <span style=color:#66d9ef>false</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">164</span>            <span style=color:#e6db74>&#34;alignLevel&#34;</span>: <span style=color:#66d9ef>null</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">165</span>          }
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">166</span>        }
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">167</span>      ],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">168</span>      <span style=color:#e6db74>&#34;schemaVersion&#34;</span>: <span style=color:#ae81ff>26</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">169</span>      <span style=color:#e6db74>&#34;style&#34;</span>: <span style=color:#e6db74>&#34;dark&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">170</span>      <span style=color:#e6db74>&#34;tags&#34;</span>: [],
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">171</span>      <span style=color:#e6db74>&#34;templating&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">172</span>        <span style=color:#e6db74>&#34;list&#34;</span>: []
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">173</span>      },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">174</span>      <span style=color:#e6db74>&#34;time&#34;</span>: {
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">175</span>        <span style=color:#e6db74>&#34;from&#34;</span>: <span style=color:#e6db74>&#34;now-6h&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">176</span>        <span style=color:#e6db74>&#34;to&#34;</span>: <span style=color:#e6db74>&#34;now&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">177</span>      },
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">178</span>      <span style=color:#e6db74>&#34;timepicker&#34;</span>: {},
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">179</span>      <span style=color:#e6db74>&#34;timezone&#34;</span>: <span style=color:#e6db74>&#34;&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">180</span>      <span style=color:#e6db74>&#34;title&#34;</span>: <span style=color:#e6db74>&#34;sample&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">181</span>      <span style=color:#e6db74>&#34;uid&#34;</span>: <span style=color:#e6db74>&#34;UpBk6EfGz&#34;</span>,
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">182</span>      <span style=color:#e6db74>&#34;version&#34;</span>: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">183</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">184</span>apiVersion: apps/v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">185</span>kind: Deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">186</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">187</span>  name: grafana-deployment
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">188</span>  namespace: monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">189</span>  labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">190</span>    app: grafana-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">191</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">192</span>  replicas: <span style=color:#ae81ff>1</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">193</span>  selector:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">194</span>    matchLabels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">195</span>      app: grafana-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">196</span>  template:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">197</span>    metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">198</span>      labels:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">199</span>        app: grafana-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">200</span>    spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">201</span>      containers:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">202</span>        - name: grafana
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">203</span>          image: grafana/grafana:latest
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">204</span>          <span style=color:#75715e># args:</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">205</span>          <span style=color:#75715e>#  - &#34;--config=/etc/config/datasources/datasources.yml&#34;</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">206</span>          ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">207</span>            - containerPort: <span style=color:#ae81ff>3000</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">208</span>          volumeMounts:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">209</span>            - name: datasources-config-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">210</span>              mountPath: /etc/grafana/provisioning/datasources
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">211</span>            - name: dashboards-config-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">212</span>              mountPath: /etc/grafana/provisioning/dashboards
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">213</span>            - name: dashboards-settings-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">214</span>              mountPath: /var/lib/grafana/dashboards
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">215</span>      volumes:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">216</span>        - name: datasources-config-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">217</span>          configMap:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">218</span>            name: grafana-datasources-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">219</span>        - name: dashboards-config-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">220</span>          configMap:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">221</span>            name: grafana-dashboards-conf
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">222</span>        - name: dashboards-settings-vol
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">223</span>          configMap:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">224</span>            name: grafana-dashboards-settings
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">225</span>---
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">226</span>apiVersion: v1
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">227</span>kind: Service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">228</span>metadata:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">229</span>  name: grafana-service
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">230</span>spec:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">231</span>  selector: 
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">232</span>    app: grafana-server
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">233</span>  type: NodePort
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">234</span>  ports:
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">235</span>    - port: <span style=color:#ae81ff>8100</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">236</span>      targetPort: <span style=color:#ae81ff>3000</span>
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">237</span>      nodePort: <span style=color:#ae81ff>30020</span></code></pre></div><script async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block;text-align:center data-ad-layout=in-article data-ad-format=fluid data-ad-client=ca-pub-5005266309965277 data-ad-slot=7057233336></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><h3 id=applyする>applyする</h3><p>最後に <code>kubectl apply</code> コマンドを実行し、コンテナを展開します。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span>kubectl apply -f <span style=color:#e6db74>${</span>name of pushgateway k8s file<span style=color:#e6db74>}</span>.yml -n monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span>kubectl apply -f <span style=color:#e6db74>${</span>name of prometheus k8s file<span style=color:#e6db74>}</span>.yml -n monitoring
+<span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span>kubectl apply -f <span style=color:#e6db74>${</span>name of grafana k8s file<span style=color:#e6db74>}</span>.yml -n monitoring</code></pre></div><p>Docker Desktopのダッシュボードを開き、無事deploymentコンテナが作成されていることを確認しましょう。</p><p>その後、ブラウザを開き、以下にてサービスの画面が表示されることを確認しましょう。</p><ul><li>Prometheus: <code>http://localhost:30000/</code></li><li>grafana: <code>http://localhost:30020/</code></li></ul><h2 id=最後に>最後に</h2><p><a href=https://kubernetes.io/>Kubernates</a> 環境で <a href=https://prometheus.io/>Prometheus</a> と <a href=https://grafana.com/>Grafana</a> と <a href=https://github.com/prometheus/pushgateway>pushgateway</a> を構築する設定を作成しました。
+今回の作業範囲では <a href=https://prometheus.io/>Prometheus</a> のストレージボリュームを外部にマウントしていないので、必要な人は適宜設定してください。</p><h2 id=参考にさせていただいたリンク>参考にさせていただいたリンク</h2><ul><li><a href=https://qiita.com/FY0323/items/72616d6e280ec7f2fdaf>Prometheus+GrafanaでKubernetesクラスターを監視する ~Binaryファイルから起動+yamlファイルから構築~</a></li></ul></div><footer class=post__footer><div class="post__tags tags clearfix"><svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16"><path d="M16 9.5c0 .373-.24.74-.5 1l-5 5c-.275.26-.634.5-1 .5-.373.0-.74-.24-1-.5L1 8a2.853 2.853.0 01-.7-1C.113 6.55.0 5.973.0 5.6V1.4C0 1.034.134.669.401.401.67.134 1.034.0 1.4.0h4.2c.373.0.95.113 1.4.3s.732.432 1 .7l7.5 7.502c.26.274.5.632.5.998zM3.5 5a1.5 1.5.0 100-3 1.5 1.5.0 000 3z"/></svg><ul class=tags__list><li class=tags__item><a class="tags__link btn" href=/tags/docker/ rel=tag>docker</a></li><li class=tags__item><a class="tags__link btn" href=/tags/kubernates/ rel=tag>kubernates</a></li><li class=tags__item><a class="tags__link btn" href=/tags/prometheus/ rel=tag>prometheus</a></li><li class=tags__item><a class="tags__link btn" href=/tags/grafana/ rel=tag>grafana</a></li><li class=tags__item><a class="tags__link btn" href=/tags/pushgateway/ rel=tag>pushgateway</a></li></ul></div></footer></article><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=8973386323 data-ad-format=rectangle data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></main><h3>関連記事</h3><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/post/docker/install-minikube/><img src=/images/icons/k8s_icon.png alt=MinikubeでKubernatesのローカル環境を構築する></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/post/docker/install-minikube/ rel=bookmark>MinikubeでKubernatesのローカル環境を構築する</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16s8-3.6 8-8.0000003c0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4s6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2018-10-03T08:39:26>October 03, 2018</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/docker rel=category>docker</a></span></span></div></header></div></div><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/java/build-docker-image-with-jib/><img src=/images/20180717/jib.png alt=jibを使ってJavaアプリケーションのDockerイメージをビルドする></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/java/build-docker-image-with-jib/ rel=bookmark>jibを使ってJavaアプリケーションのDockerイメージをビルドする</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16s8-3.6 8-8.0000003c0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4s6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2018-07-17T00:00:00>July 17, 2018</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/java rel=category>java</a></span></span></div></header></div></div><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/aws/amazonlinux2-docker/><img src=/images/icons/ec2_icon.png alt="Amazon Linux2にdockerをインストールする"></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/aws/amazonlinux2-docker/ rel=bookmark>Amazon Linux2にdockerをインストールする</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16s8-3.6 8-8.0000003c0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4s6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2018-07-10T00:00:00>July 10, 2018</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/aws rel=category>aws</a></span></span></div></header></div></div><div class=list__item><figure class=list__thumbnail><a href=https://www.soudegesu.com/docker/image/build/><img src=/images/icons/docker_icon.png alt="Docker buildコマンドのimage作成〜コンテナ起動まで"></a></figure><div class="list__content clearfix"><header class=list__header><h4 class="list__title post__title"><a href=/docker/image/build/ rel=bookmark>Docker buildコマンドのimage作成〜コンテナ起動まで</a></h4><div class="list__meta meta"><svg class="icon icon-time" width="16" height="14" viewBox="0 0 16 16"><path d="m8-3e-7c-4.4.0-8 3.6-8 8C0 12.4 3.6 16 8 16s8-3.6 8-8.0000003c0-4.4-3.6-8-8-8zM8 14.4c-3.52.0-6.4-2.88-6.4-6.4000003.0-3.52 2.88-6.4 6.4-6.4s6.4 2.88 6.4 6.4C14.4 11.52 11.52 14.4 8 14.4zm.4-10.4000003H7.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg><time class="post__meta-date meta-date" datetime=2017-01-31T00:00:00>January 31, 2017</time>
+<span class="post__meta-categories meta-categories"><svg class="icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class=meta-categories__list><a class=meta-categories__link href=/categories/docker rel=category>docker</a></span></span></div></header></div></div><div class="authorbox clearfix"><figure class=authorbox__avatar><img alt="soudegesu avatar" src=/images/soudegesu.jpg class=avatar height=90 width=90></figure><div class=authorbox__header><span class=authorbox__name>soudegesu について</span></div><div class=authorbox__description>Software Engineer</div></div><nav class="post-nav flex"><div class="post-nav__item post-nav__item--prev"><a class=post-nav__link href=/post/javascript/recoil-context/ rel=prev><span class=post-nav__caption>«&#8201;前の記事</span><p class=post-nav__post-title>RecoilでReactの子孫要素がatomの値が取得できない時の対処法</p></a></div></nav><section class=comments><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"soudegesu"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></section></div><aside class=sidebar><div class="widget-search widget"><form class=widget-search__form role=search method=get action=https://google.com/search><label><input class=widget-search__field type=search placeholder=SEARCH... name=q></label>
+<input class=widget-search__submit type=submit value=Search>
+<input type=hidden name=sitesearch value=https://www.soudegesu.com></form></div><div class="widget-recent widget"><h4 class=widget__title>最近投稿された記事</h4><div class=widget__content><ul class=widget__list><li class=widget__item><a class=widget__link href=/post/docker/prometheus-on-kubernates/>KubernatesでPrometheusとGrafanaとpushgatewayを構築する</a></li><li class=widget__item><a class=widget__link href=/post/javascript/recoil-context/>RecoilでReactの子孫要素がatomの値が取得できない時の対処法</a></li><li class=widget__item><a class=widget__link href=/post/aws/provisioning-with-ansible-via-ssm/>プライベートネットワーク内のデバイスにAWS Session Managerを経由してAnsibleでプロビジョニングする</a></li><li class=widget__item><a class=widget__link href=/post/aws/pass-file-to-cloudformation-command-argument/>AWS CLIのCloudformationのParametersの値に外部ファイルを与える方法</a></li><li class=widget__item><a class=widget__link href=/post/jetson/setup-agx-with-virtualbox/>Jetson AGX Xavier Developer KitをVirtualbox + NVIDIA SDK Managerでセットアップする</a></li></ul></div></div><div class="widget-categories widget"><h4 class=widget__title>カテゴリ</h4><div class=widget__content><ul class=widget__list><li class=widget__item><a class=widget__link href=/categories/anaconda>Anaconda</a></li><li class=widget__item><a class=widget__link href=/categories/aws>Aws</a></li><li class=widget__item><a class=widget__link href=/categories/blog>Blog</a></li><li class=widget__item><a class=widget__link href=/categories/book>Book</a></li><li class=widget__item><a class=widget__link href=/categories/continuous-delivery>Continuous delivery</a></li><li class=widget__item><a class=widget__link href=/categories/dart>Dart</a></li><li class=widget__item><a class=widget__link href=/categories/design>Design</a></li><li class=widget__item><a class=widget__link href=/categories/docker>Docker</a></li><li class=widget__item><a class=widget__link href=/categories/docker-compose>Docker compose</a></li><li class=widget__item><a class=widget__link href=/categories/engineer-life>Engineer life</a></li><li class=widget__item><a class=widget__link href=/categories/ethereum>Ethereum</a></li><li class=widget__item><a class=widget__link href=/categories/event>Event</a></li><li class=widget__item><a class=widget__link href=/categories/fish>Fish</a></li><li class=widget__item><a class=widget__link href=/categories/gcp>Gcp</a></li><li class=widget__item><a class=widget__link href=/categories/go>Go</a></li><li class=widget__item><a class=widget__link href=/categories/java>Java</a></li><li class=widget__item><a class=widget__link href=/categories/javascript>Javascript</a></li><li class=widget__item><a class=widget__link href=/categories/jenkins>Jenkins</a></li><li class=widget__item><a class=widget__link href=/categories/jetson>Jetson</a></li><li class=widget__item><a class=widget__link href=/categories/linux>Linux</a></li><li class=widget__item><a class=widget__link href=/categories/mysql>Mysql</a></li><li class=widget__item><a class=widget__link href=/categories/nodejs>Nodejs</a></li><li class=widget__item><a class=widget__link href=/categories/pyenv>Pyenv</a></li><li class=widget__item><a class=widget__link href=/categories/python>Python</a></li><li class=widget__item><a class=widget__link href=/categories/q_sharp>Q sharp</a></li><li class=widget__item><a class=widget__link href=/categories/raspberry-pi>Raspberry pi</a></li><li class=widget__item><a class=widget__link href=/categories/rust>Rust</a></li><li class=widget__item><a class=widget__link href=/categories/security>Security</a></li><li class=widget__item><a class=widget__link href=/categories/tensorflow>Tensorflow</a></li><li class=widget__item><a class=widget__link href=/categories/vscode>Vscode</a></li></ul></div></div><div class="widget-social widget"><h4 class="widget-social__title widget__title">ソーシャル</h4><div class="widget-social__content widget__content"><div class="widget-social__item widget__item"><a class="widget-social__link widget__link btn" title=Twitter rel="noopener noreferrer" href=https://twitter.com/alten_manten target=_blank><svg class="widget-social__link-icon icon-twitter" viewBox="0 0 384 312" width="24" height="24" fill="#fff"><path d="m384 36.9c-14.1 6.3-29.3 10.5-45.2 12.4 16.3-9.7 28.8-25.2 34.6-43.6-15.2 9-32.1 15.6-50 19.1-14.4-15.2-34.9-24.8-57.5-24.8-43.5.0-78.8 35.3-78.8 78.8.0 6.2.7 12.2 2 17.9-65.5-3.3-123.5-34.6-162.4-82.3-6.7 11.6-10.6 25.2-10.6 39.6.0 27.3 13.9 51.4 35 65.6-12.9-.4-25.1-4-35.7-9.9v1c0 38.2 27.2 70 63.2 77.2-6.6 1.8-13.6 2.8-20.8 2.8-5.1.0-10-.5-14.8-1.4 10 31.3 39.1 54.1 73.6 54.7-27 21.1-60.9 33.7-97.8 33.7-6.4.0-12.6-.4-18.8-1.1 34.9 22.4 76.3 35.4 120.8 35.4 144.9.0 224.1-120 224.1-224.1.0-3.4-.1-6.8-.2-10.2 15.4-11.1 28.7-25 39.3-40.8z"/></svg><span>Twitter</span></a></div><div class="widget-social__item widget__item"><a class="widget-social__link widget__link btn" title=GitHub rel="noopener noreferrer" href=https://github.com/soudegesu target=_blank><svg class="widget-social__link-icon icon-github" viewBox="0 0 384 374" width="24" height="24" fill="#fff"><path d="m192 0C85.9.0.0 85.8.0 191.7c0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2.0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8.0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7.0.0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4.0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5.0 25.6-.2 46.3-.2 52.6.0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg><span>GitHub</span></a></div></div><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=1661016284 data-ad-format=auto data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><div class="widget-taglist widget"><h4 class=widget__title>タグ</h4><div class=widget__content><a class="widget-taglist__link widget__link btn" href=/tags/acm title=Acm>Acm</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/agile title=Agile>Agile</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/amazonlinux title=Amazonlinux>Amazonlinux</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/anaconda title=Anaconda>Anaconda</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/android title=Android>Android</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ansible title=Ansible>Ansible</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/athena title=Athena>Athena</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/aurora title=Aurora>Aurora</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/aws title=Aws>Aws</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/batch title=Batch>Batch</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/beginner title=Beginner>Beginner</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/blog title=Blog>Blog</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/book title=Book>Book</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/casperjs title=Casperjs>Casperjs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cloudfront title=Cloudfront>Cloudfront</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cloudwatchlogs title=Cloudwatchlogs>Cloudwatchlogs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/codebuild title=Codebuild>Codebuild</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/codecommit title=Codecommit>Codecommit</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/colaboratory title=Colaboratory>Colaboratory</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/continuous-delivery title="Continuous delivery">Continuous delivery</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/cyber-security title="Cyber security">Cyber security</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/dapps title=Dapps>Dapps</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/dart title=Dart>Dart</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/datadog title=Datadog>Datadog</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/design title=Design>Design</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/docker title=Docker>Docker</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ec2 title=Ec2>Ec2</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/engineer-life title="Engineer life">Engineer life</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ethereum title=Ethereum>Ethereum</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/event title=Event>Event</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/excel title=Excel>Excel</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/express title=Express>Express</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/fish title=Fish>Fish</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/flutter title=Flutter>Flutter</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ganache title=Ganache>Ganache</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/gcp title=Gcp>Gcp</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/glue title=Glue>Glue</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/go title=Go>Go</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/gradle title=Gradle>Gradle</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/grafana title=Grafana>Grafana</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/groovy title=Groovy>Groovy</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/html5 title=Html5>Html5</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/hugo title=Hugo>Hugo</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/iam title=Iam>Iam</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ios title=Ios>Ios</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/java title=Java>Java</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/javascript title=Javascript>Javascript</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jenkins title=Jenkins>Jenkins</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jetson title=Jetson>Jetson</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jib title=Jib>Jib</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/jpms title=Jpms>Jpms</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/kubernates title=Kubernates>Kubernates</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/lambda title=Lambda>Lambda</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/machine-learning title="Machine learning">Machine learning</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/matplotlib title=Matplotlib>Matplotlib</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/mysql title=Mysql>Mysql</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/nodejs title=Nodejs>Nodejs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/nuxtjs title=Nuxtjs>Nuxtjs</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/openpyxl title=Openpyxl>Openpyxl</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/packer title=Packer>Packer</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pandas title=Pandas>Pandas</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pdf title=Pdf>Pdf</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/prometheus title=Prometheus>Prometheus</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pushgateway title=Pushgateway>Pushgateway</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pyenv title=Pyenv>Pyenv</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pyenv-virtualenv title="Pyenv virtualenv">Pyenv virtualenv</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/pypdf2 title=Pypdf2>Pypdf2</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/python title=Python>Python</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/q title=Q#>Q#</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/raspberry-pi title="Raspberry pi">Raspberry pi</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/rds title=Rds>Rds</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/react title=React>React</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/reactor title=Reactor>Reactor</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/recoil title=Recoil>Recoil</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/route53 title=Route53>Route53</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/rust title=Rust>Rust</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/s3 title=S3>S3</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/selenium title=Selenium>Selenium</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/serverless title=Serverless>Serverless</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/sh title=Sh>Sh</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/spring title=Spring>Spring</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/springboot title=Springboot>Springboot</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/sql title=Sql>Sql</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ssl title=Ssl>Ssl</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/ssm title=Ssm>Ssm</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/stepfunction title=Stepfunction>Stepfunction</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/stepfunctions title=Stepfunctions>Stepfunctions</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/systemd title=Systemd>Systemd</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tensorflow title=Tensorflow>Tensorflow</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/terraform title=Terraform>Terraform</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tomcat title=Tomcat>Tomcat</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/tool title=Tool>Tool</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/truffle title=Truffle>Truffle</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/udemy title=Udemy>Udemy</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/vscode title=Vscode>Vscode</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/webauthn title=Webauthn>Webauthn</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/webflux title=Webflux>Webflux</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/zsh title=Zsh>Zsh</a>
+<a class="widget-taglist__link widget__link btn" href=/tags/%e7%b5%84%e7%b9%94%e8%ab%96 title=組織論>組織論</a></div><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-5005266309965277 data-ad-slot=2162982695 data-ad-format=auto data-full-width-responsive=true></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></aside></div></div><footer class=footer><div class="container container-inner"><div class=footer__copyright>&copy; 2021 そうなんでげす. <span class=footer__copyright-credits>Generated with <a href=https://gohugo.io/ rel="nofollow noopener" target=_blank>Hugo</a> and <a href=https://github.com/Vimux/Mainroad/ rel="nofollow noopener" target=_blank>Mainroad</a> theme.</span></div></div></footer></div><script>var navigation=responsiveNav(".menu",{navClass:"menu--collapse",});</script><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700"><script type=text/javascript src=/js/scripts.js></script><link rel="shortcut icon" href=/favicon.ico></body></html></div><script async defer src=/js/menu.js></script></body></html>
