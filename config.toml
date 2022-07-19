@@ -7,7 +7,6 @@ enableEmoji = true
 paginate = "10"
 publishDir = "docs"
 enableRobotsTXT = true
-disqusShortname = "soudegesu"
 googleAnalytics = "G-S6WHJPSK6V"
 hasCJKLanguage = true
 
