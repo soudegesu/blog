@@ -24,6 +24,7 @@ baseName = "feed"
 
 [Params]
     opengraph = true
+    schema = true
     twitter_cards = true
     readmore = true
     homeLayout = "content + sidebar" # Configure home page layout
@@ -31,7 +32,9 @@ baseName = "feed"
     singleLayout = "content + sidebar" # Configure layout for single pages
     authorbox = true
     toc = true
+    pager = true
     post_navigation = true
+    post_meta = ["author", "date", "categories", "translations"]
     postSections = ["post", "past"]
     mainSections = ["post", "past"]
     #postSections = ["blog", "news"] # alternative that shows more than one section's pages
@@ -42,20 +45,33 @@ baseName = "feed"
     googleSiteVerification = "cTEFKilSiC4rSg768JEVSgidHaZ0Kq9fbgnqqOYW9Uw"
     bingSiteVerification = "C58B4D4C2D3C5B99C7CF26F79733F9EB"
     yandexSiteVerification = "2f79a5310dc24118"
+    googleFontsLink = "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700"
+
+[Params.sidebar]
+  home = "right" # Configure layout for home page
+  list = "left"  # Configure layout for list pages
+  single = false # Configure layout for single pages
+  # Enable widgets in given order
+  widgets = ["search", "recent", "categories", "taglist", "social", "languages"]
+  # alternatively "ddg-search" can be used, to search via DuckDuckGo
+  # widgets = ["ddg-search", "recent", "categories", "taglist", "social", "languages"]
 
 [Params.widgets]
-    search = true
-    recent_articles = true
-    recent_articles_num = 5
-    categories = true
-    tags = true
-    tags_counter = false
+  recent_num = 5 # Set the number of articles in the "Recent articles" widget
+  categories_counter = false # Enable counter for each category in "Categories" widget
+  tags_counter = false # Enable counter for each tag in "Tags" widget
 
-    # Enable "Social" widget, if any of "social_*" set a value
-    social_twitter = "alten_manten"
-    social_github = "soudegesu"
-    #social_email = "example@example.com"
-    #social_google_plus = "profileid"
+[Params.widgets.social]
+  # Enable parts of social widget
+  # facebook = "username"
+  twitter = "alten_manten"
+  # instagram = "username"
+  # linkedin = "username"
+  # telegram = "username"
+  github = "soudegesu"
+  # gitlab = "username"
+  # bitbucket = "username"
+  # email = "example@example.com"
 
 [Languages]
 [Languages.ja]
