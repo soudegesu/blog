@@ -3,7 +3,7 @@ github pages with [Hugo](https://gohugo.io/).
 
 ## Preconditions
 * [Hugo](https://gohugo.io/)
-    * v0.59
+    * v0.101
 
 ## Quick Start
 
